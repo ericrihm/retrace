@@ -483,5 +483,62 @@ def export_kicad(image: str, output: str, title: str) -> None:
     )
 
 
+@main.command("batch")
+@click.argument("directory", type=click.Path(exists=True, file_okay=False))
+@click.option("--output", "-o", type=click.Path(), help="Output directory (default: <directory>_results)")
+@click.option("--format", "fmt", type=click.Choice(["json", "csv", "svg"]), default="json", show_default=True)
+@click.option("--report", is_flag=True, help="Generate HTML assessment report per board")
+@click.option("--kicad", is_flag=True, help="Generate KiCad netlist per board")
+@click.pass_context
+def batch(ctx: click.Context, directory: str, output: str, fmt: str, report: bool, kicad: bool) -> None:
+    """Scan all images in a directory — bulk analysis for multi-board assessments."""
+    from retrace.core.pipeline import Pipeline
+
+    src = Path(directory)
+    out = Path(output) if output else Path(f"{src.name}_results")
+    out.mkdir(parents=True, exist_ok=True)
+
+    exts = {".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif"}
+    images = sorted(p for p in src.iterdir() if p.suffix.lower() in exts)
+
+    if not images:
+        click.echo(f"No images found in {directory}")
+        raise SystemExit(1)
+
+    quiet = ctx.obj.get("quiet", False)
+    pipeline = Pipeline()
+    total_components = 0
+    total_traces = 0
+
+    for i, img_path in enumerate(images, 1):
+        stem = img_path.stem
+        if not quiet:
+            click.echo(f"[{i}/{len(images)}] {img_path.name}")
+
+        result = pipeline.run(str(img_path))
+        total_components += len(result.components)
+        total_traces += len(result.traces)
+
+        board_out = out / stem
+        board_out.mkdir(parents=True, exist_ok=True)
+        result.save(board_out, fmt=fmt)
+
+        if report:
+            from retrace.export.html_report import save_html_report
+            save_html_report(result, str(board_out / f"{stem}_report.html"), title=stem)
+
+        if kicad:
+            from retrace.export.kicad import save_kicad_netlist
+            save_kicad_netlist(result, str(board_out / f"{stem}.net"), title=stem)
+
+        if not quiet:
+            click.echo(f"    {len(result.components)} components, {len(result.traces)} traces → {board_out}/")
+
+    click.echo(
+        f"\nBatch complete: {len(images)} board{'s' if len(images) != 1 else ''}, "
+        f"{total_components} total components, {total_traces} total traces → {out}/"
+    )
+
+
 if __name__ == "__main__":
     main()

@@ -758,3 +758,51 @@ def test_export_kicad_default_output(runner, tmp_path):
         result = runner.invoke(main, ["export-kicad", str(img)])
     assert result.exit_code == 0
     assert "board.net" in result.output
+
+
+# ---------------------------------------------------------------------------
+# batch command
+# ---------------------------------------------------------------------------
+
+def test_batch_help(runner):
+    result = runner.invoke(main, ["batch", "--help"])
+    assert result.exit_code == 0
+    assert "directory" in result.output.lower() or "DIRECTORY" in result.output
+
+
+def test_batch_command(runner, tmp_path):
+    src = tmp_path / "boards"
+    src.mkdir()
+    (src / "board1.png").write_bytes(b"\x89PNG\r\n\x1a\n")
+    (src / "board2.jpg").write_bytes(b"\xff\xd8\xff\xe0")
+    out = tmp_path / "results"
+
+    mock_result = _make_analysis_result("board.png")
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result):
+        result = runner.invoke(main, ["batch", str(src), "-o", str(out)])
+    assert result.exit_code == 0
+    assert "Batch complete" in result.output
+    assert "2 boards" in result.output
+
+
+def test_batch_empty_directory(runner, tmp_path):
+    src = tmp_path / "empty"
+    src.mkdir()
+    result = runner.invoke(main, ["batch", str(src)])
+    assert result.exit_code != 0
+
+
+def test_batch_with_report(runner, tmp_path):
+    src = tmp_path / "boards"
+    src.mkdir()
+    (src / "board.png").write_bytes(b"\x89PNG\r\n\x1a\n")
+    out = tmp_path / "results"
+
+    mock_result = _make_analysis_result("board.png")
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.html_report.save_html_report") as mock_report:
+        result = runner.invoke(main, ["batch", str(src), "-o", str(out), "--report"])
+    assert result.exit_code == 0
+    mock_report.assert_called_once()

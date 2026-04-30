@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-89%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->671<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->8247<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->675<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->8304<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/)
 
@@ -300,6 +300,9 @@ retrace report-html board_photo.jpg --output assessment.html
 
 # KiCad netlist — import into EDA for schematic reconstruction
 retrace export-kicad board_photo.jpg --output board.net
+
+# Batch mode — scan an entire directory of board photos
+retrace batch ./board_photos --report --kicad --output ./assessment
 
 # Cross-board subcircuit pattern analysis — 15 known patterns
 retrace cross-board board_photo.jpg
@@ -646,8 +649,8 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->8247<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
-├── cli.py                               # Click CLI: 14 commands (scan, search, trace, advise, identify, debug, learn, compare, cross-board, export, export-kicad, report, report-html, ui)
+src/retrace/                             # <!-- STATS:loc -->8304<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
+├── cli.py                               # Click CLI: 15 commands (scan, search, trace, advise, identify, debug, learn, compare, cross-board, export, export-kicad, batch, report, report-html, ui)
 ├── web.py                               # Gradio web interface
 ├── core/
 │   ├── pipeline.py                      # Orchestrator: photo → AnalysisResult
@@ -684,10 +687,10 @@ src/retrace/                             # <!-- STATS:loc -->8247<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->671<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->675<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->23<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->8247<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->8304<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -699,7 +702,7 @@ src/retrace/                             # <!-- STATS:loc -->8247<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->671<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->675<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
