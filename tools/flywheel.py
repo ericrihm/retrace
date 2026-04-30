@@ -384,6 +384,112 @@ def flywheel_gaps(coverage_output: str = "") -> dict:
     return gaps
 
 
+def flywheel_regression(state: dict, metrics: dict) -> list[str]:
+    """Compare current metrics against previous run and flag regressions."""
+    _header("Regression analysis flywheel — delta tracking")
+    regressions: list[str] = []
+
+    checks = [
+        ("tests_passed", "Tests passed", True),
+        ("tests_failed", "Tests failed", False),
+        ("zero_coverage_count", "Modules at 0% coverage", False),
+        ("untested_source_count", "Untested source files", False),
+        ("todo_count", "TODO/FIXME comments", False),
+        ("untyped_function_count", "Untyped public functions", False),
+    ]
+
+    for key, label, higher_is_better in checks:
+        prev = state.get(key)
+        curr = metrics.get(key)
+        if prev is None or curr is None:
+            continue
+        if not isinstance(prev, (int, float)) or not isinstance(curr, (int, float)):
+            continue
+
+        delta = curr - prev
+        if delta == 0:
+            _ok(f"{label}: {curr} (unchanged)")
+        elif (higher_is_better and delta > 0) or (not higher_is_better and delta < 0):
+            _ok(f"{label}: {prev} → {curr} ({'+' if delta > 0 else ''}{delta}) ↑")
+        else:
+            msg = f"{label}: {prev} → {curr} ({'+' if delta > 0 else ''}{delta}) REGRESSION"
+            _warn(msg)
+            regressions.append(msg)
+
+    prev_cov = state.get("coverage_pct", "")
+    curr_cov = metrics.get("coverage_pct", "")
+    if prev_cov and curr_cov and prev_cov != "N/A" and curr_cov != "N/A":
+        try:
+            prev_pct = float(str(prev_cov).rstrip("%"))
+            curr_pct = float(str(curr_cov).rstrip("%"))
+            delta = curr_pct - prev_pct
+            if delta >= 0:
+                _ok(f"Coverage: {prev_cov} → {curr_cov} ({'+' if delta > 0 else ''}{delta:.1f}pp)")
+            else:
+                msg = f"Coverage: {prev_cov} → {curr_cov} ({delta:.1f}pp) REGRESSION"
+                _warn(msg)
+                regressions.append(msg)
+        except ValueError:
+            pass
+
+    history = state.get("regression_history", [])
+    now_iso = datetime.now(timezone.utc).isoformat()
+    history.append({
+        "timestamp": now_iso,
+        "regressions": regressions,
+        "tests_passed": metrics.get("tests_passed"),
+        "coverage": metrics.get("coverage_pct"),
+    })
+    state["regression_history"] = history[-50:]
+
+    if not regressions:
+        _ok("No regressions detected")
+    else:
+        _warn(f"{len(regressions)} regression(s) detected")
+
+    return regressions
+
+
+def flywheel_component_db() -> dict:
+    """Track component DB growth and identify missing categories."""
+    _header("Component DB flywheel — growth and coverage")
+
+    matcher_path = SRC_DIR / "identification" / "matcher.py"
+    if not matcher_path.exists():
+        _warn("matcher.py not found")
+        return {}
+
+    content = matcher_path.read_text(encoding="utf-8")
+
+    category_counts: dict[str, int] = {}
+    for m in re.finditer(r'"category"\s*:\s*"(\w+)"', content):
+        cat = m.group(1)
+        category_counts[cat] = category_counts.get(cat, 0) + 1
+
+    total = sum(category_counts.values())
+    _ok(f"Total component entries: {total}")
+    _ok(f"Categories: {len(category_counts)}")
+    for cat, count in sorted(category_counts.items(), key=lambda x: -x[1]):
+        _info(f"  {cat}: {count}")
+
+    expected_categories = {
+        "mcu", "memory", "regulator", "fpga", "network", "rf",
+        "secure_element", "sensor", "pmic", "display", "automotive",
+    }
+    missing = expected_categories - set(category_counts.keys())
+    if missing:
+        _warn(f"Missing categories: {', '.join(sorted(missing))}")
+    else:
+        _ok("All expected categories present")
+
+    return {
+        "component_total": total,
+        "component_categories": len(category_counts),
+        "component_by_category": category_counts,
+        "missing_categories": sorted(missing) if missing else [],
+    }
+
+
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
@@ -443,6 +549,14 @@ def run(quick: bool) -> None:
             "todo_count": gaps["todo_count"],
             "untyped_function_count": len(gaps["untyped_functions"]),
         })
+
+        # 7. Regression analysis
+        regressions = flywheel_regression(state, metrics)
+        metrics["regressions"] = regressions
+
+        # 8. Component DB tracking
+        db_metrics = flywheel_component_db()
+        metrics.update(db_metrics)
     else:
         coverage_pct = state.get("coverage_pct", "N/A")
         metrics["coverage_pct"] = coverage_pct
@@ -515,6 +629,17 @@ def status() -> None:
     _info(f"TODO/FIXME comments: {click.style(str(todos), fg=todos_style)}")
     _info(f"Untyped functions:   {click.style(str(untyped), fg=untyped_style)}")
 
+    # Component DB
+    comp_total = state.get("component_total", "N/A")
+    comp_cats = state.get("component_categories", "N/A")
+    click.echo("")
+    click.echo(click.style("  Component DB:", bold=True))
+    _info(f"Total entries:    {comp_total}")
+    _info(f"Categories:       {comp_cats}")
+    missing_cats = state.get("missing_categories", [])
+    if missing_cats:
+        _warn(f"Missing:          {', '.join(missing_cats)}")
+
     # Warn about failed tests from last run
     failed_ids = state.get("failed_test_ids", [])
     if failed_ids:
@@ -524,6 +649,21 @@ def status() -> None:
             _err(t)
         if len(failed_ids) > 10:
             _info(f"  ... and {len(failed_ids) - 10} more")
+
+    # Regression history
+    history = state.get("regression_history", [])
+    if history:
+        click.echo("")
+        click.echo(click.style("  Recent regression checks:", bold=True))
+        for entry in history[-5:]:
+            ts = entry.get("timestamp", "?")[:19]
+            regs = entry.get("regressions", [])
+            tests = entry.get("tests_passed", "?")
+            cov = entry.get("coverage", "?")
+            if regs:
+                _warn(f"{ts}  tests={tests} cov={cov}  {len(regs)} regression(s)")
+            else:
+                _ok(f"{ts}  tests={tests} cov={cov}  clean")
 
     click.echo("")
 
