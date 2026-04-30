@@ -762,6 +762,259 @@ def generate_svg(
     return "\n".join(lines)
 
 
+# ── Attack Surface SVG ───────────────────────────────────────────────
+
+def generate_attack_surface_svg(
+    result: AnalysisResult,
+    attack_paths: list[tuple[str, str, str]],  # (from_ref, to_ref, label)
+    security_refs: list[str],  # component refs to highlight
+    width: Optional[int] = None,
+    height: Optional[int] = None,
+    title: str = "",
+) -> str:
+    """Generate an attack-surface SVG highlighting security-critical components and attack paths."""
+    bw, bh = result.board_dimensions
+    svg_w = width or bw or 800
+    svg_h = height or bh or 600
+
+    comp_map = {c.id: c for c in result.components}
+    security_set = set(security_refs)
+
+    lines: list[str] = []
+    lines.append(
+        f'<svg xmlns="http://www.w3.org/2000/svg" '
+        f'width="{svg_w}" height="{svg_h}" '
+        f'viewBox="0 0 {svg_w} {svg_h}">'
+    )
+    lines.append('  <!-- re:trace SVG overlay — Attack Surface Analysis -->')
+
+    lines.append(_render_defs())
+    lines.append(_render_background(svg_w, svg_h))
+    lines.append(_render_title_bar(svg_w, title or "re:trace — Attack Surface Analysis", result))
+
+    # All components at 20% opacity (dimmed)
+    lines.append('  <g class="components-dimmed" opacity="0.2">')
+    for comp in result.components:
+        if comp.id not in security_set:
+            lines.append(_render_component(comp))
+    lines.append('  </g>')
+
+    # Security-critical components at full opacity with red glow
+    lines.append('  <g class="components-security">')
+    for comp in result.components:
+        if comp.id in security_set:
+            x, y, w, h = comp.bbox
+            color = _color_for(comp.label)
+            label_text = comp.part_number or comp.marking or comp.label
+            label_text = label_text[:20]
+            text_y = y - 4 if y > (_TITLE_H + 16) else y + h + 12
+
+            lines.append(
+                f'    <g class="component-security" data-id="{_escape(comp.id)}" '
+                f'filter="url(#glow-red)">'
+            )
+            lines.append(
+                f'      <rect x="{x}" y="{y}" width="{w}" height="{h}" '
+                f'fill="#ef4444" fill-opacity="0.15" '
+                f'stroke="#ef4444" stroke-width="2.5" rx="2"/>'
+            )
+            lines.append(
+                f'      <text x="{x + 3}" y="{y + 10}" font-family={_q(_FONT)} '
+                f'font-size="8" fill="#ef4444" fill-opacity="0.9">'
+                f'{_escape(comp.id)}</text>'
+            )
+            lines.append(
+                f'      <text x="{x + 2}" y="{text_y}" font-family={_q(_FONT)} '
+                f'font-size="{_FONT_SIZE}" fill="{color}" font-weight="bold">'
+                f'{_escape(label_text)}</text>'
+            )
+            lines.append('    </g>')
+    lines.append('  </g>')
+
+    # Attack path arrows
+    lines.append('  <g class="attack-paths">')
+    for from_ref, to_ref, label in attack_paths:
+        from_c = comp_map.get(from_ref)
+        to_c = comp_map.get(to_ref)
+        if not from_c or not to_c:
+            continue
+
+        tc = _center_of(to_c)
+        fc = _center_of(from_c)
+        p1 = _edge_point(from_c, tc[0], tc[1])
+        p2 = _edge_point(to_c, fc[0], fc[1])
+
+        # Thick red arrow line
+        lines.append(
+            f'    <line x1="{p1[0]}" y1="{p1[1]}" x2="{p2[0]}" y2="{p2[1]}" '
+            f'stroke="#ef4444" stroke-width="3" stroke-opacity="0.9" '
+            f'stroke-linecap="round" marker-end="url(#arrow)"/>'
+        )
+
+        # Endpoint dots
+        for px, py in (p1, p2):
+            lines.append(
+                f'    <circle cx="{px}" cy="{py}" r="4" '
+                f'fill="#ef4444" fill-opacity="0.9" stroke="{_BG}" stroke-width="1"/>'
+            )
+
+        # Label at midpoint
+        mx = (p1[0] + p2[0]) // 2
+        my = (p1[1] + p2[1]) // 2
+        lines.append(
+            f'    <text x="{mx}" y="{my - 8}" text-anchor="middle" '
+            f'font-family={_q(_FONT)} font-size="8" fill="#fca5a5" '
+            f'font-weight="bold">{_escape(label)}</text>'
+        )
+    lines.append('  </g>')
+
+    # Attack surface legend panel
+    n_paths = len(attack_paths)
+    n_sec = len(security_refs)
+    legend_line_h = 16
+    legend_h = BOM_PANEL_PAD * 2 + (n_paths + 3) * legend_line_h + 12
+    legend_w = 280
+    legend_x = 8
+    legend_y = svg_h - _FOOTER_H - legend_h - 8
+
+    lines.append('  <g class="attack-legend" filter="url(#panel-shadow)">')
+    lines.append(
+        f'    <rect x="{legend_x}" y="{legend_y}" width="{legend_w}" '
+        f'height="{legend_h}" rx="6" fill="{_PANEL_BG}" fill-opacity="0.92" '
+        f'stroke="#7f1d1d" stroke-width="1"/>'
+    )
+
+    tx = legend_x + BOM_PANEL_PAD
+    ty = legend_y + BOM_PANEL_PAD + 12
+
+    lines.append(
+        f'    <rect x="{tx}" y="{ty - 10}" width="8" height="8" rx="2" fill="#ef4444"/>'
+    )
+    lines.append(
+        f'    <text x="{tx + 12}" y="{ty - 2}" font-family={_q(_FONT)} '
+        f'font-size="11" fill="#ef4444" font-weight="bold">Attack Surface</text>'
+    )
+    ty += legend_line_h + 2
+    lines.append(
+        f'    <line x1="{tx}" y1="{ty - 8}" x2="{legend_x + legend_w - BOM_PANEL_PAD}" '
+        f'y2="{ty - 8}" stroke="#7f1d1d" stroke-width="0.5"/>'
+    )
+
+    lines.append(
+        f'    <text x="{tx}" y="{ty}" font-family={_q(_FONT)} '
+        f'font-size="8" fill="{_TEXT_MID}">'
+        f'{n_sec} critical components, {n_paths} attack paths</text>'
+    )
+    ty += legend_line_h + 2
+
+    for i, (from_ref, to_ref, label) in enumerate(attack_paths):
+        step_num = i + 1
+        lines.append(
+            f'    <text x="{tx}" y="{ty}" font-family={_q(_FONT)} '
+            f'font-size="8" fill="#fca5a5" font-weight="bold">[{step_num}]</text>'
+        )
+        lines.append(
+            f'    <text x="{tx + 22}" y="{ty}" font-family={_q(_FONT)} '
+            f'font-size="8" fill="{_TEXT_MID}">'
+            f'{_escape(from_ref)} → {_escape(to_ref)}: {_escape(label)}</text>'
+        )
+        ty += legend_line_h
+
+    lines.append('  </g>')
+
+    lines.append(_render_footer(svg_w, svg_h, result))
+
+    lines.append('</svg>')
+    return "\n".join(lines)
+
+
+# ── Zones-Only SVG ───────────────────────────────────────────────────
+
+def generate_zones_svg(
+    result: AnalysisResult,
+    zones: list[tuple[str, str, list[str]]],  # (name, zone_type, [comp_ids])
+    width: Optional[int] = None,
+    height: Optional[int] = None,
+    title: str = "",
+) -> str:
+    """Generate a clean functional-zone SVG — zones only, no trace clutter."""
+    bw, bh = result.board_dimensions
+    svg_w = width or bw or 800
+    svg_h = height or bh or 600
+
+    comp_map = {c.id: c for c in result.components}
+
+    lines: list[str] = []
+    lines.append(
+        f'<svg xmlns="http://www.w3.org/2000/svg" '
+        f'width="{svg_w}" height="{svg_h}" '
+        f'viewBox="0 0 {svg_w} {svg_h}">'
+    )
+    lines.append('  <!-- re:trace SVG overlay — Functional Zone Map -->')
+
+    lines.append(_render_defs())
+    lines.append(_render_background(svg_w, svg_h))
+    lines.append(_render_title_bar(svg_w, title or "re:trace — Functional Zone Map", result))
+
+    # Components at 15% opacity (very faint, just for context)
+    lines.append('  <g class="components-faint" opacity="0.15">')
+    for comp in result.components:
+        lines.append(_render_component(comp))
+    lines.append('  </g>')
+
+    # Zone rectangles rendered prominently
+    if zones:
+        lines.append('  <g class="zones-prominent">')
+        for name, zone_type, comp_ids in zones:
+            members = [comp_map[cid] for cid in comp_ids if cid in comp_map]
+            if not members:
+                continue
+
+            pad = 18
+            min_x = min(c.bbox[0] for c in members) - pad
+            min_y = min(c.bbox[1] for c in members) - pad
+            max_x = max(c.bbox[0] + c.bbox[2] for c in members) + pad
+            max_y = max(c.bbox[1] + c.bbox[3] for c in members) + pad
+
+            color = _ZONE_COLORS.get(zone_type, "#6b7280")
+            w = max_x - min_x
+            h = max_y - min_y
+            cx = min_x + w // 2
+            cy = min_y + h // 2
+            comp_count = len(members)
+
+            lines.append(
+                f'    <g class="zone" data-zone="{_escape(zone_type)}">'
+            )
+            # Zone fill — higher opacity, solid border
+            lines.append(
+                f'      <rect x="{min_x}" y="{min_y}" width="{w}" height="{h}" '
+                f'rx="8" fill="{color}" fill-opacity="0.15" '
+                f'stroke="{color}" stroke-width="1.5" stroke-opacity="0.6"/>'
+            )
+            # Zone name — larger font, centered
+            lines.append(
+                f'      <text x="{cx}" y="{cy - 2}" text-anchor="middle" '
+                f'font-family={_q(_FONT)} font-size="12" fill="{color}" '
+                f'fill-opacity="0.85" font-weight="bold">'
+                f'{_escape(name.upper())}</text>'
+            )
+            # Component count under zone name
+            lines.append(
+                f'      <text x="{cx}" y="{cy + 12}" text-anchor="middle" '
+                f'font-family={_q(_FONT)} font-size="9" fill="{color}" '
+                f'fill-opacity="0.6">'
+                f'{comp_count} component{"s" if comp_count != 1 else ""}</text>'
+            )
+            lines.append('    </g>')
+        lines.append('  </g>')
+
+    lines.append(_render_footer(svg_w, svg_h, result))
+
+    lines.append('</svg>')
+    return "\n".join(lines)
+
+
 def save_svg(result: AnalysisResult, output_path: str, **kwargs) -> None:
     """Write SVG to a file."""
     from pathlib import Path

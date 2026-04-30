@@ -40,7 +40,7 @@ from retrace.analysis.probe_advisor import (  # noqa: E402
     ProbeAdvisor,
 )
 from retrace.export.bom import bom_to_csv, bom_to_json, generate_bom  # noqa: E402
-from retrace.export.svg import generate_svg  # noqa: E402
+from retrace.export.svg import generate_svg, generate_attack_surface_svg, generate_zones_svg  # noqa: E402
 from retrace.plugins.builtin.debug_interfaces import detect_debug_interfaces  # noqa: E402
 
 
@@ -1732,6 +1732,29 @@ CISCO_ZONES: list[tuple[str, str, list[str]]] = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# Attack surface data — per-board attack paths for security SVG
+# ---------------------------------------------------------------------------
+
+# Xbox One attack paths (adjusted refs to match KNOWN_COMPONENTS)
+XBOX_ATTACK_PATHS = [
+    ("J5", "U1", "JTAG debug access"),
+    ("U1", "U7", "eMMC bus (firmware extraction)"),
+    ("U1", "U6", "Southbridge (peripheral control)"),
+]
+XBOX_SECURITY_REFS = ["J5", "U1", "U6", "U7", "TP1", "TP2", "TP3", "TP4", "TP5"]
+
+# Cisco ASA attack paths (Thrangrycat CVE-2019-1649)
+CISCO_ATTACK_PATHS = [
+    ("J15", "U1", "JTAG debug → CPU"),
+    ("J10", "U1", "Serial console → bootloader"),
+    ("U1", "U6", "CPU → FPGA Trust Anchor"),
+    ("U7", "U6", "Unencrypted SPI flash → FPGA bitstream"),
+    ("U1", "U7", "CPU SPI bus → flash R/W"),
+]
+CISCO_SECURITY_REFS = ["J15", "J10", "U1", "U6", "U7", "TP1", "TP2", "TP3", "TP4"]
+
+
 def _build_synthetic_result(
     image_path: str,
     comp_list: list[tuple] | None = None,
@@ -2042,26 +2065,28 @@ def _generate_one_board(
     net_labels: list[str] | None = None,
     solver_traces_override: list[SolverTrace] | None = None,
     zones: list[tuple[str, str, list[str]]] | None = None,
+    attack_paths: list[tuple[str, str, str]] | None = None,
+    security_refs: list[str] | None = None,
     seed: int = 42,
 ) -> None:
     from dataclasses import asdict as _asdict
 
     img_name = f"{prefix}_board.png"
     board_img = out / img_name
-    click.echo(f"  [1/6] Generating {prefix} PCB image → {board_img}")
+    click.echo(f"  [1/8] Generating {prefix} PCB image → {board_img}")
     generate_board_image(
         board_img, img_w, img_h, comp_list, trace_routes, vias,
         mounting_holes, silk_labels, board_title, seed,
     )
     click.echo(f"        Saved ({board_img.stat().st_size // 1024} KB)")
 
-    click.echo(f"  [2/6] Building {prefix} analysis result...")
+    click.echo(f"  [2/8] Building {prefix} analysis result...")
     result = _build_synthetic_result(
         str(board_img), comp_list, trace_routes, endpoints, img_w, img_h, layers,
     )
 
     det_json = out / f"{prefix}_detection.json"
-    click.echo(f"  [3/6] Writing → {det_json}")
+    click.echo(f"  [3/8] Writing → {det_json}")
     det_json.write_text(json.dumps({
         "version": result.pipeline_version, "timestamp": result.timestamp,
         "image": result.image_path, "board_dimensions": list(result.board_dimensions),
@@ -2076,25 +2101,47 @@ def _generate_one_board(
     (out / f"{prefix}_bom.csv").write_text(bom_to_csv(bom))
 
     svg_path = out / f"{prefix}_annotated.svg"
-    click.echo(f"  [4/6] Writing SVG overlay → {svg_path}")
+    click.echo(f"  [4/8] Writing SVG overlay → {svg_path}")
     svg_str = generate_svg(result, image_href=img_name, title=board_title, zones=zones)
     svg_path.write_text(svg_str, encoding="utf-8")
 
+    # Attack surface SVG
+    atk_svg_path = out / f"{prefix}_attack_surface.svg"
+    click.echo(f"  [5/8] Writing attack surface SVG → {atk_svg_path}")
+    atk_svg_str = generate_attack_surface_svg(
+        result,
+        attack_paths=attack_paths or [],
+        security_refs=security_refs or [],
+        title=f"{board_title} — Attack Surface",
+    )
+    atk_svg_path.write_text(atk_svg_str, encoding="utf-8")
+
+    # Zones-only SVG
+    zones_svg_path = out / f"{prefix}_zones.svg"
+    click.echo(f"  [6/8] Writing zones SVG → {zones_svg_path}")
+    zones_svg_str = generate_zones_svg(
+        result,
+        zones=zones or [],
+        title=f"{board_title} — Functional Zones",
+    )
+    zones_svg_path.write_text(zones_svg_str, encoding="utf-8")
+
     probe_path = out / f"{prefix}_probe.txt"
-    click.echo(f"  [5/6] Running probe advisor → {probe_path}")
+    click.echo(f"  [7/8] Running probe advisor → {probe_path}")
     probe_path.write_text(
         _run_probe_advisor(result, comp_list, net_labels, board_label=board_title)
     )
 
     solver_path = out / f"{prefix}_solver.txt"
     dbg_path = out / f"{prefix}_debug.txt"
-    click.echo(f"  [6/6] Running solver + debug detector → {solver_path}")
+    click.echo(f"  [8/8] Running solver + debug detector → {solver_path}")
     solver_path.write_text(
         _run_constraint_solver(result, comp_list, solver_traces_override, board_label=board_title)
     )
     dbg_path.write_text(_run_debug_interface_detection(result, board_label=board_title))
 
-    for p in [board_img, det_json, svg_path, probe_path, solver_path, dbg_path,
+    for p in [board_img, det_json, svg_path, atk_svg_path, zones_svg_path,
+              probe_path, solver_path, dbg_path,
               out / f"{prefix}_bom.json", out / f"{prefix}_bom.csv"]:
         if p.exists():
             click.echo(f"    ✓  {p.name}  ({p.stat().st_size:,} bytes)")
@@ -2121,7 +2168,10 @@ def generate(output_dir: str):
         trace_routes=TRACE_ROUTES,
         endpoints=XBOX_TRACE_ENDPOINTS,
         vias=VIAS, mounting_holes=MOUNTING_HOLES, silk_labels=SILK_LABELS,
-        layers=8, zones=XBOX_ZONES, seed=42,
+        layers=8, zones=XBOX_ZONES,
+        attack_paths=XBOX_ATTACK_PATHS,
+        security_refs=XBOX_SECURITY_REFS,
+        seed=42,
     )
 
     click.echo(click.style("\n═══ Cisco ASA 5506-X — Enterprise Firewall ═══", fg="red", bold=True))
@@ -2138,6 +2188,8 @@ def generate(output_dir: str):
         net_labels=CISCO_NET_LABELS,
         solver_traces_override=CISCO_SOLVER_TRACES,
         zones=CISCO_ZONES,
+        attack_paths=CISCO_ATTACK_PATHS,
+        security_refs=CISCO_SECURITY_REFS,
         seed=99,
     )
 
@@ -2175,7 +2227,8 @@ def clean(output_dir: str):
     out = Path(output_dir)
     removed = 0
     for prefix in ("xbox", "cisco"):
-        for suffix in ("_board.png", "_annotated.svg", "_detection.json",
+        for suffix in ("_board.png", "_annotated.svg", "_attack_surface.svg", "_zones.svg",
+                       "_detection.json",
                        "_bom.json", "_bom.csv", "_probe.txt", "_solver.txt", "_debug.txt"):
             fpath = out / f"{prefix}{suffix}"
             if fpath.exists():

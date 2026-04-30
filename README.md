@@ -2,9 +2,9 @@
 
 # re:trace
 
-**The first open-source photo-to-schematic PCB reverse engineering toolkit**
+**Open-source PCB reverse engineering toolkit -- photo in, attack surface out**
 
-*Photo in, schematic out. No design files required.*
+*Identifies components, extracts traces, maps trust chains, and tells you where to probe. No schematics. No NDA. No design files.*
 
 [![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://pypi.org/project/retrace-pcb/)
@@ -19,12 +19,19 @@
 
 ---
 
-Feed it a PCB photo. Get back identified components, traced connections, a bill of materials, and optimal probe points. No microscope. No schematic. No prior knowledge of the board required.
+Feed it a board photo. Get back identified components, traced connections, debug interfaces, and Bayesian-optimal probe points -- no microscope, no schematic, no prior knowledge of the board required.
 
 ```bash
 pip install retrace-pcb
 retrace scan board_photo.jpg
 ```
+
+### Built For
+
+- **Hardware penetration testing** -- map debug interfaces, trust chains, and glitch surfaces during IoT/embedded security assessments
+- **Supply chain verification** -- cross-reference component markings against known BOMs to flag counterfeit, remarked, or substituted parts
+- **Incident response** -- rapid board triage in the field when you have a device but no documentation
+- **Research and training** -- reproducible PCB RE methodology for academic labs, CTF challenges, and security training courses
 
 ### Demo: Dual-Board Analysis
 
@@ -53,7 +60,62 @@ Intel Atom C2508 (Rangeley), Xilinx Spartan-6 Trust Anchor FPGA, 4x DDR3 ECC —
 </tr>
 </table>
 
-> The Cisco ASA 5506-X is the target of **Thrangrycat (CVE-2019-1649)** — a FPGA bitstream manipulation attack that undermines Cisco's hardware root of trust — and the **ArcaneDoor** state-sponsored APT campaign (2024). CISA Emergency Directive ED 25-03 mandated immediate patching. re:trace maps the complete attack path: JTAG header → Intel Atom C2508 → Xilinx Spartan-6 FPGA ← unencrypted SPI flash (W25Q128JV).
+### Visualization Modes
+
+Three views per board -- from component overlay to attack surface:
+
+<table>
+<tr><th colspan="3">Cisco ASA 5506-X (Thrangrycat target)</th></tr>
+<tr>
+<td width="33%">
+
+**Annotated Board**
+<img src="docs/examples/cisco_annotated.svg" width="100%" alt="Cisco ASA 5506-X annotated board -- full BOM overlay, trace routing, security findings"/>
+Full component overlay with BOM, traces, and security findings
+
+</td>
+<td width="33%">
+
+**Attack Surface**
+<img src="docs/examples/cisco_attack_surface.svg" width="100%" alt="Cisco ASA 5506-X attack surface -- Thrangrycat path from JTAG to FPGA via unencrypted SPI flash"/>
+Thrangrycat path: JTAG (J15) -> CPU (U1) -> FPGA (U6) <- unencrypted SPI flash (U7, W25Q128JV)
+
+</td>
+<td width="33%">
+
+**Zone Map**
+<img src="docs/examples/cisco_zones.svg" width="100%" alt="Cisco ASA 5506-X functional zone map -- 16 zones including CPU, memory, VRM, network, Trust Anchor"/>
+16 functional zones -- CPU, memory, VRM, network, Trust Anchor FPGA
+
+</td>
+</tr>
+<tr><th colspan="3">Xbox One Model 1540 (Durango)</th></tr>
+<tr>
+<td width="33%">
+
+**Annotated Board**
+<img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One Model 1540 annotated board -- AMD Liverpool APU, 155 components"/>
+155 components -- APU, DDR3 banks, Southbridge, eMMC, debug headers
+
+</td>
+<td width="33%">
+
+**Attack Surface**
+<img src="docs/examples/xbox_attack_surface.svg" width="100%" alt="Xbox One Model 1540 attack surface -- JTAG header, APU debug interface, eMMC storage"/>
+JTAG (J5) -> AMD Liverpool APU (U1) -> eMMC (U8), Southbridge (U9)
+
+</td>
+<td width="33%">
+
+**Zone Map**
+<img src="docs/examples/xbox_zones.svg" width="100%" alt="Xbox One Model 1540 functional zone map -- 9 zones including CPU, memory, power, I/O, debug"/>
+9 functional zones -- CPU, memory, power, I/O, debug, storage, network
+
+</td>
+</tr>
+</table>
+
+> **How Thrangrycat works (CVE-2019-1649):** Cisco's Trust Anchor module (TAm) is a Xilinx Spartan-6 FPGA that verifies boot image integrity on ASA, IOS-XE, and NX-OS platforms. The FPGA loads its bitstream from an external SPI flash chip (W25Q128JV on the 5506-X) at power-on -- and that bitstream is **not authenticated or encrypted**. An attacker with root access (or physical access to the SPI flash) can modify the bitstream to disable secure boot verification entirely, creating a persistent backdoor that survives firmware updates. re:trace maps this path automatically: it identifies the FPGA, traces the SPI flash connection, flags the unencrypted bitstream interface, and marks the JTAG header that provides the initial access vector. This is the same attack surface exploited by the **ArcaneDoor** state-sponsored campaign (2024), which prompted CISA Emergency Directive ED 25-03.
 
 <details>
 <summary><b>Cisco ASA 5506-X — Debug Interface Detection</b></summary>
@@ -121,7 +183,7 @@ Total findings: 1  (HIGH=1)
 
 </details>
 
-> **Novel contributions** — re:trace is the first public tool to combine **(1)** Bayesian probe-point optimization using Shannon entropy for hardware RE, **(2)** AC-3 arc-consistency constraint propagation to infer missing PCB connections from partial traces, **(3)** cross-board pattern recognition that transfers subcircuit knowledge between boards, **(4)** automated trust chain mapping (FPGA → SPI flash → CPU) for hardware root-of-trust analysis, and **(5)** fault injection surface mapping from board photos. The Cisco ASA demo maps the exact Thrangrycat attack path. See [Prior Work](#prior-work) and [Design Decisions](#design-decisions) for the full competitive landscape and engineering rationale.
+> **What's new here** -- no public tool combines Bayesian probe optimization, AC-3 constraint inference, cross-board pattern transfer, trust chain mapping, and fault injection surface analysis in a single pipeline. The Cisco ASA demo maps the exact Thrangrycat attack path from a board photo. See [Prior Work](#prior-work) and [Design Decisions](#design-decisions) for the competitive landscape and engineering rationale.
 
 ## How It Works
 
@@ -450,45 +512,47 @@ photos = download_fcc_photos(results[0]["fcc_id"], dest_dir="./fcc_photos")
 
 ## For Security Researchers
 
-re:trace is built for hardware security assessments:
+re:trace maps to the standard hardware assessment workflow -- recon through reporting:
 
 | Assessment Phase | What You Need | re:trace Feature |
 |---|---|---|
-| **Recon** | Board photos without opening the case | FCC filing search (public domain photos) + iFixit teardown API |
-| **Attack surface mapping** | Identify MCUs, flash, FPGAs, crypto ICs | YOLO v8 detection + OCR + 128-part fuzzy matcher |
-| **Trust chain analysis** | Map FPGA ↔ SPI flash ↔ CPU paths | Automated trace extraction + constraint solver (see Thrangrycat demo) |
-| **Debug interface discovery** | Find JTAG, SWD, UART, SPI headers | Pattern-match detection with CWE severity ratings |
-| **Optimal probing** | Where to put the multimeter next | Bayesian advisor: 6–10 measurements to convergence |
+| **Recon** | Board photos without opening the case | FCC filing search (47 CFR 0.457, public domain) + iFixit teardown API |
+| **Attack surface mapping** | Identify MCUs, flash, FPGAs, crypto ICs | YOLO v8 detection + OCR + 128-part fuzzy matcher with datasheet links |
+| **Trust chain analysis** | Map FPGA ↔ SPI flash ↔ CPU paths | Automated trace extraction + constraint solver (see Thrangrycat path above) |
+| **Debug interface discovery** | Find JTAG, SWD, UART, SPI headers | Pattern-match detection with CWE references (CWE-1191, CWE-1299) |
+| **Optimal probing** | Where to put the multimeter next | Bayesian advisor: 6-10 measurements to convergence |
 | **Partial trace recovery** | Board has 60% visible traces | AC-3 constraint propagation infers the rest |
-| **Cross-board analysis** | Transfer knowledge between boards | 15 subcircuit patterns auto-recognized across boards |
-| **Fault injection recon** | Map glitch attack surfaces | Power rail tracing, VRM/LDO/clock identification |
-| **Reporting** | Deliverable for the client | SVG overlay, BOM (JSON/CSV), debug interface report |
+| **Cross-board analysis** | Transfer knowledge between targets | 15 subcircuit patterns auto-recognized across boards |
+| **Fault injection recon** | Map glitch surfaces before bringing equipment | Power rail tracing, VRM/LDO/clock identification, decoupling cap mapping |
+| **Reporting** | Deliverable for the client | SVG overlay, BOM (JSON/CSV), attack surface visualization, debug interface report |
+
+re:trace complements firmware analysis tools (Ghidra, Binary Ninja) and hardware debug tools (OpenOCD, JTAGulator) -- it bridges the gap between having a board in your hands and knowing where to probe.
 
 ## Design Decisions
 
-re:trace makes deliberate engineering trade-offs. This section documents why.
+Every design choice reflects a real constraint encountered during hardware assessments.
 
-**Dual-space color segmentation (HSV + LAB) over single-space.** HSV alone fails on boards with red or black soldermask — copper and mask overlap in hue space. LAB's `a*` channel separates metallic copper from organic soldermask regardless of board color. Running both and intersecting results costs ~15ms per frame but eliminates an entire failure class.
+**Dual-space color segmentation (HSV + LAB) over single-space.** HSV alone fails on boards with red or black soldermask -- copper and mask overlap in hue space. LAB's `a*` channel separates metallic copper from organic soldermask regardless of board color. Running both and intersecting costs ~15ms per frame but eliminates an entire class of false negatives on production boards.
 
-**AC-3 arc consistency over SAT/SMT solvers.** SAT solvers (MiniSat, Z3) can encode PCB constraints but scale poorly on boards with 200+ nodes — the constraint encoding itself becomes the bottleneck. AC-3 propagates in O(ed³) where e = constraints and d = domain size, which is fast enough for real-time probe feedback. The trade-off: AC-3 can't solve puzzles that require backtracking search. In practice, PCB constraints are sparse enough that AC-3 resolves 85–95% of inferable connections without search.
+**AC-3 arc consistency over SAT/SMT solvers.** Z3 can encode PCB constraints but the encoding itself becomes the bottleneck above 200 nodes. AC-3 propagates in O(ed^3) and is fast enough for real-time probe feedback. The trade-off: no backtracking search. In practice, PCB constraints are sparse enough that AC-3 resolves 85-95% of inferable connections without it.
 
-**Shannon entropy over random/heuristic probing.** Brute-force pin scanning (JTAGulator-style) requires O(n²) measurements for n pins. Bayesian information gain ranks probes by expected entropy reduction, converging in 6–10 measurements on typical boards. The Dirichlet prior means the advisor can incorporate domain knowledge (pin names, proximity to power planes) without hard-coding rules.
+**Shannon entropy over brute-force pin scanning.** JTAGulator-style exhaustive scanning requires O(n^2) measurements. Bayesian information gain converges in 6-10 measurements on typical boards. The Dirichlet prior incorporates domain knowledge (pin names, proximity to power planes) without hard-coded rules.
 
-**OpenCV contour fallback over requiring YOLO.** Many RE practitioners work on air-gapped systems or don't have CUDA. The contour-based detector uses adaptive threshold → morphological filtering → contour hierarchy classification. It's less accurate than YOLO v8 (no class labels, ~50% confidence) but runs anywhere Python runs. The pipeline transparently falls back without user intervention.
+**OpenCV contour fallback over requiring YOLO.** Many assessments happen on air-gapped systems without CUDA. The contour-based detector (adaptive threshold, morphological filtering, contour hierarchy) is less accurate but runs anywhere Python runs. The pipeline falls back transparently.
 
-**Local fuzzy matching over cloud APIs (Octopart, Digi-Key).** Cloud lookups require API keys, rate limits, and network access — none of which are available in a SCIF or during a field assessment. The built-in 128-part DB covers the ICs, connectors, and passives most commonly found in consumer/enterprise hardware. Unknown markings are flagged for later identification rather than blocking the pipeline.
+**Local fuzzy matching over cloud APIs (Octopart, Digi-Key).** Cloud lookups need API keys, rate limits, and network access -- none of which are available in a SCIF or during a field assessment. The built-in 128-part DB covers parts most commonly found in consumer and enterprise hardware. Unknown markings are queued for later identification rather than blocking the pipeline.
 
-**Zhang-Suen skeletonization over medial axis transform.** Medial axis produces cleaner centerlines but is 3–5x slower and sensitive to boundary noise. Zhang-Suen is a lookup-table thinning pass — fast, deterministic, and robust to the jagged edges that come from real PCB photos. The width estimation uses distance transform on the pre-skeleton mask, so skeleton quality doesn't affect width accuracy.
+**Zhang-Suen skeletonization over medial axis transform.** Medial axis produces cleaner centerlines but is 3-5x slower and sensitive to boundary noise from real PCB photos. Zhang-Suen is a lookup-table thinning pass -- fast, deterministic, and robust to jagged edges. Width estimation uses distance transform on the pre-skeleton mask, so skeleton quality does not affect width accuracy.
 
 ## Fault Injection Surface Mapping
 
-re:trace maps power delivery topology to flag potential fault injection attack surfaces:
+re:trace maps the power delivery topology to flag glitch surfaces before you bring equipment to the bench:
 
-- **Voltage glitching targets** — identifies VRMs, LDOs, and their output capacitors. Removing or tapping a decoupling cap near a processor's core rail is the standard voltage fault injection setup
-- **Clock glitching targets** — crystal oscillators and clock distribution components are flagged with package and frequency data
-- **Power rail tracing** — the constraint solver classifies power nets and maps which components share rails, identifying which glitch point affects which IC
+- **Voltage glitching targets** -- identifies VRMs, LDOs, and their output decoupling capacitors. Tapping or momentarily shorting a decoupling cap on a processor's core rail (VCC_CORE) is the standard voltage fault injection setup for bypassing secure boot checks
+- **Clock glitching targets** -- crystal oscillators and clock distribution ICs are flagged with package and frequency data, identifying where to inject a clock glitch to skip instruction cycles
+- **Power rail mapping** -- the constraint solver classifies power nets and traces which components share rails, so you know which glitch point affects which IC before powering anything on
 
-This maps directly to the methodology described in [Synacktiv's voltage fault injection research](https://www.synacktiv.com/en/publications/how-to-voltage-fault-injection) and IOActive's [HARRIS 2024 chip RE workshop](https://www.ioactive.com/ioactive-presents-at-harris-2024-chip-reverse-engineering-andrew-zonenberg/).
+This maps directly to the methodology in [Synacktiv's voltage fault injection research](https://www.synacktiv.com/en/publications/how-to-voltage-fault-injection) and IOActive's [HARRIS 2024 chip RE workshop](https://www.ioactive.com/ioactive-presents-at-harris-2024-chip-reverse-engineering-andrew-zonenberg/).
 
 ## Plugin System
 
@@ -571,15 +635,7 @@ CI runs on Python 3.10, 3.11, and 3.12 with coverage uploaded to Codecov.
 
 ## Responsible Use
 
-re:trace is a **read-only analysis tool**. It does not write to target hardware, inject firmware, or exploit vulnerabilities. It is designed for:
-
-- Authorized penetration testing and hardware security assessments
-- Academic research and education
-- Product teardowns and competitive analysis
-- Manufacturing QA and incoming inspection
-- CTF challenges and security training
-
-If you discover a vulnerability using re:trace, please follow [coordinated disclosure](https://www.cisa.gov/coordinated-vulnerability-disclosure-process) practices.
+re:trace is a **read-only analysis tool**. It does not write to target hardware, inject firmware, or exploit vulnerabilities. No exploit code is included or referenced. If you discover a vulnerability using re:trace, please follow [coordinated disclosure](https://www.cisa.gov/coordinated-vulnerability-disclosure-process) practices.
 
 ## Tested Hardware
 
@@ -606,4 +662,4 @@ MIT — use it for research, pentests, product teardowns, education, whatever.
 
 ## Author
 
-Built by [Eric Rihm](https://github.com/ericrihm) — hardware security researcher focused on embedded systems, PCB reverse engineering, and trust anchor analysis. Interested in hardware security roles — [hello@cobaltsystems.io](mailto:hello@cobaltsystems.io).
+Built by [Eric Rihm](https://github.com/ericrihm) -- [hello@cobaltsystems.io](mailto:hello@cobaltsystems.io)
