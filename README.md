@@ -62,7 +62,7 @@ Intel Atom C2508 (Rangeley), Xilinx Spartan-6 Trust Anchor FPGA, 4x DDR3 ECC —
 
 ### Visualization Modes
 
-Four output modes per board -- from component overlay to assessment report:
+Five output modes per board — static overlays plus an interactive layered SVG with Google Maps-style layer toggles:
 
 <table>
 <tr><th colspan="3">Cisco ASA 5506-X (Thrangrycat target)</th></tr>
@@ -693,7 +693,7 @@ src/retrace/                             # <!-- STATS:loc -->8304<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->730<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->767<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->24<!-- /STATS --> |
 | Lines of code | <!-- STATS:loc -->21028<!-- /STATS --> |

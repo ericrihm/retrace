@@ -1021,3 +1021,430 @@ def save_svg(result: AnalysisResult, output_path: str, **kwargs) -> None:
 
     svg = generate_svg(result, **kwargs)
     Path(output_path).write_text(svg, encoding="utf-8")
+
+
+# ── Interactive Layered SVG (Google Maps-style) ─────────────────────
+
+_LAYER_DEFS = [
+    ("board-image", "Board Image", True),
+    ("components", "Components", True),
+    ("traces", "Traces", True),
+    ("zones", "Zones", False),
+    ("security", "Security", False),
+    ("bom-panel", "BOM Panel", True),
+    ("net-labels", "Net Labels", False),
+    ("grid-ref", "Grid Reference", False),
+]
+
+_PRESET_DEFS = {
+    "analysis": {
+        "label": "Analysis",
+        "layers": ["board-image", "components", "traces", "bom-panel"],
+    },
+    "attack": {
+        "label": "Attack Surface",
+        "layers": ["board-image", "security", "traces"],
+    },
+    "zones": {
+        "label": "Zones",
+        "layers": ["board-image", "zones", "components"],
+    },
+    "debug": {
+        "label": "Debug",
+        "layers": ["board-image", "security", "net-labels"],
+    },
+    "clean": {
+        "label": "Clean Board",
+        "layers": ["board-image"],
+    },
+    "all": {
+        "label": "All Layers",
+        "layers": [ld[0] for ld in _LAYER_DEFS],
+    },
+}
+
+
+def _render_interactive_controls(svg_w: int) -> str:
+    """Render floating layer control panel with preset buttons and layer toggles."""
+    panel_w = 160
+    panel_x = svg_w - panel_w - 12
+    panel_y = _TITLE_H + 8
+
+    preset_count = len(_PRESET_DEFS)
+    layer_count = len(_LAYER_DEFS)
+    btn_h = 22
+    row_h = 20
+    header_h = 28
+    preset_section_h = header_h + preset_count * btn_h + 8
+    layer_section_h = header_h + layer_count * row_h + 8
+    panel_h = preset_section_h + layer_section_h + 16
+
+    parts: list[str] = []
+    parts.append(f'  <g id="layer-controls" class="controls">')
+    parts.append(
+        f'    <rect x="{panel_x}" y="{panel_y}" width="{panel_w}" '
+        f'height="{panel_h}" rx="8" fill="{_PANEL_BG}" fill-opacity="0.95" '
+        f'stroke="{_PANEL_BORDER}" stroke-width="1" filter="url(#panel-shadow)"/>'
+    )
+
+    tx = panel_x + 10
+    ty = panel_y + 18
+
+    parts.append(
+        f'    <text x="{tx}" y="{ty}" font-family={_q(_FONT)} '
+        f'font-size="10" fill="{_ACCENT}" font-weight="bold">VIEW PRESETS</text>'
+    )
+    ty += 8
+
+    for preset_id, preset in _PRESET_DEFS.items():
+        ty += btn_h
+        parts.append(
+            f'    <g class="preset-btn" data-preset="{preset_id}" '
+            f'onclick="setPreset(\'{preset_id}\')" style="cursor: pointer;">'
+        )
+        parts.append(
+            f'      <rect x="{tx}" y="{ty - 14}" width="{panel_w - 20}" height="{btn_h - 4}" '
+            f'rx="4" fill="{_PANEL_BORDER}" fill-opacity="0.6" class="preset-bg"/>'
+        )
+        parts.append(
+            f'      <text x="{tx + 8}" y="{ty}" font-family={_q(_FONT)} '
+            f'font-size="9" fill="{_TEXT_HI}">{_escape(preset["label"])}</text>'
+        )
+        parts.append('    </g>')
+
+    ty += 16
+
+    parts.append(
+        f'    <line x1="{tx}" y1="{ty}" x2="{panel_x + panel_w - 10}" y2="{ty}" '
+        f'stroke="{_PANEL_BORDER}" stroke-width="0.5"/>'
+    )
+    ty += 18
+
+    parts.append(
+        f'    <text x="{tx}" y="{ty}" font-family={_q(_FONT)} '
+        f'font-size="10" fill="{_ACCENT}" font-weight="bold">LAYERS</text>'
+    )
+    ty += 4
+
+    for layer_id, layer_label, default_on in _LAYER_DEFS:
+        ty += row_h
+        fill = _ACCENT if default_on else _PANEL_BORDER
+        parts.append(
+            f'    <g class="layer-toggle" data-layer="{layer_id}" '
+            f'onclick="toggleLayer(\'{layer_id}\')" style="cursor: pointer;">'
+        )
+        parts.append(
+            f'      <rect x="{tx}" y="{ty - 10}" width="12" height="12" rx="2" '
+            f'fill="{fill}" fill-opacity="0.8" stroke="{_TEXT_LO}" '
+            f'stroke-width="0.5" id="chk-{layer_id}"/>'
+        )
+        if default_on:
+            parts.append(
+                f'      <text x="{tx + 6}" y="{ty}" text-anchor="middle" '
+                f'font-family={_q(_FONT)} font-size="9" fill="{_BG}" '
+                f'font-weight="bold" id="tick-{layer_id}">✓</text>'
+            )
+        else:
+            parts.append(
+                f'      <text x="{tx + 6}" y="{ty}" text-anchor="middle" '
+                f'font-family={_q(_FONT)} font-size="9" fill="{_BG}" '
+                f'font-weight="bold" id="tick-{layer_id}" '
+                f'style="display:none">✓</text>'
+            )
+        parts.append(
+            f'      <text x="{tx + 18}" y="{ty}" font-family={_q(_FONT)} '
+            f'font-size="9" fill="{_TEXT_MID}" id="lbl-{layer_id}">'
+            f'{_escape(layer_label)}</text>'
+        )
+        parts.append('    </g>')
+
+    parts.append('  </g>')
+    return "\n".join(parts)
+
+
+def _render_interactive_script() -> str:
+    """JavaScript for layer toggling and preset switching."""
+    presets_js = "{"
+    for pid, pdef in _PRESET_DEFS.items():
+        layers_str = ",".join(f'"{l}"' for l in pdef["layers"])
+        presets_js += f'"{pid}":[{layers_str}],'
+    presets_js += "}"
+
+    all_layers_js = ",".join(f'"{ld[0]}"' for ld in _LAYER_DEFS)
+
+    return f"""  <script type="text/javascript">
+    // <![CDATA[
+    var presets = {presets_js};
+    var allLayers = [{all_layers_js}];
+
+    function toggleLayer(id) {{
+      var g = document.getElementById("layer-" + id);
+      if (!g) return;
+      var vis = g.getAttribute("visibility");
+      var show = vis === "hidden";
+      g.setAttribute("visibility", show ? "visible" : "hidden");
+      var chk = document.getElementById("chk-" + id);
+      var tick = document.getElementById("tick-" + id);
+      if (chk) chk.setAttribute("fill", show ? "{_ACCENT}" : "{_PANEL_BORDER}");
+      if (tick) tick.style.display = show ? "" : "none";
+    }}
+
+    function setPreset(name) {{
+      var layers = presets[name] || [];
+      allLayers.forEach(function(id) {{
+        var g = document.getElementById("layer-" + id);
+        if (!g) return;
+        var show = layers.indexOf(id) >= 0;
+        g.setAttribute("visibility", show ? "visible" : "hidden");
+        var chk = document.getElementById("chk-" + id);
+        var tick = document.getElementById("tick-" + id);
+        if (chk) chk.setAttribute("fill", show ? "{_ACCENT}" : "{_PANEL_BORDER}");
+        if (tick) tick.style.display = show ? "" : "none";
+      }});
+    }}
+    // ]]>
+  </script>"""
+
+
+def _render_grid_reference(svg_w: int, svg_h: int, spacing: int = 50) -> str:
+    """Render a coordinate grid overlay with labels."""
+    parts: list[str] = []
+    color = "#1a3050"
+    label_color = _TEXT_LO
+
+    y_start = _TITLE_H
+    y_end = svg_h - _FOOTER_H
+
+    for x in range(0, svg_w, spacing):
+        parts.append(
+            f'    <line x1="{x}" y1="{y_start}" x2="{x}" y2="{y_end}" '
+            f'stroke="{color}" stroke-width="0.5" stroke-opacity="0.4"/>'
+        )
+        if x > 0 and x % (spacing * 2) == 0:
+            parts.append(
+                f'    <text x="{x}" y="{y_start + 10}" font-family={_q(_FONT)} '
+                f'font-size="7" fill="{label_color}" fill-opacity="0.5">{x}</text>'
+            )
+
+    for y in range(y_start, y_end, spacing):
+        parts.append(
+            f'    <line x1="0" y1="{y}" x2="{svg_w}" y2="{y}" '
+            f'stroke="{color}" stroke-width="0.5" stroke-opacity="0.4"/>'
+        )
+        if y > y_start and (y - y_start) % (spacing * 2) == 0:
+            parts.append(
+                f'    <text x="2" y="{y + 3}" font-family={_q(_FONT)} '
+                f'font-size="7" fill="{label_color}" fill-opacity="0.5">{y}</text>'
+            )
+
+    return "\n".join(parts)
+
+
+def _render_net_labels(
+    traces: list[Trace],
+    comp_map: dict[str, Component],
+) -> str:
+    """Render net-type labels at trace midpoints."""
+    parts: list[str] = []
+    for trace in traces:
+        if not trace.points or len(trace.points) < 2:
+            if not (trace.from_component and trace.to_component):
+                continue
+            from_c = comp_map.get(trace.from_component)
+            to_c = comp_map.get(trace.to_component)
+            if from_c and to_c:
+                fc = _center_of(from_c)
+                tc = _center_of(to_c)
+                mx, my = (fc[0] + tc[0]) // 2, (fc[1] + tc[1]) // 2
+            else:
+                continue
+        else:
+            mid = len(trace.points) // 2
+            mx, my = trace.points[mid]
+
+        net_type = _classify_net(trace, comp_map)
+        color = _NET_COLORS.get(net_type, _NET_COLORS["unknown"])
+
+        parts.append(
+            f'    <rect x="{mx - 18}" y="{my - 8}" width="36" height="12" '
+            f'rx="3" fill="{_BG}" fill-opacity="0.8"/>'
+        )
+        parts.append(
+            f'    <text x="{mx}" y="{my + 1}" text-anchor="middle" '
+            f'font-family={_q(_FONT)} font-size="7" fill="{color}" '
+            f'font-weight="bold">{net_type.upper()}</text>'
+        )
+
+    return "\n".join(parts)
+
+
+def generate_interactive_svg(
+    result: AnalysisResult,
+    width: Optional[int] = None,
+    height: Optional[int] = None,
+    image_href: Optional[str] = None,
+    title: str = "",
+    zones: Optional[list[tuple[str, str, list[str]]]] = None,
+    attack_paths: Optional[list[tuple[str, str, str]]] = None,
+    security_refs: Optional[list[str]] = None,
+) -> str:
+    """Generate an interactive layered SVG with toggleable layers and view presets.
+
+    Like Google Maps: one SVG, multiple layer toggles (Components, Traces, Zones,
+    Security, BOM, Grid, Net Labels), and preset view buttons (Analysis, Attack
+    Surface, Zones, Debug, Clean Board, All Layers).
+    """
+    bw, bh = result.board_dimensions
+    svg_w = width or bw or 800
+    svg_h = height or bh or 600
+    comp_map = {c.id: c for c in result.components}
+    security_set = set(security_refs or [])
+
+    lines: list[str] = []
+    lines.append(
+        f'<svg xmlns="http://www.w3.org/2000/svg" '
+        f'width="{svg_w}" height="{svg_h}" '
+        f'viewBox="0 0 {svg_w} {svg_h}">'
+    )
+    lines.append('  <!-- re:trace interactive layered SVG — toggle layers like a map -->')
+
+    lines.append(_render_defs())
+    lines.append(_render_background(svg_w, svg_h))
+
+    resolved_href = _resolve_image_href(image_href)
+
+    lines.append(f'  <g id="layer-board-image" visibility="visible">')
+    if resolved_href:
+        lines.append(
+            f'    <image href="{_escape(resolved_href)}" x="0" y="{_TITLE_H}" '
+            f'width="{svg_w}" height="{svg_h - _TITLE_H - _FOOTER_H}" '
+            f'preserveAspectRatio="xMidYMid meet" opacity="0.85"/>'
+        )
+    lines.append('  </g>')
+
+    lines.append(f'  <g id="layer-grid-ref" visibility="hidden">')
+    lines.append(_render_grid_reference(svg_w, svg_h))
+    lines.append('  </g>')
+
+    lines.append(f'  <g id="layer-zones" visibility="hidden">')
+    if zones:
+        lines.append(_render_zones(zones, comp_map))
+    lines.append('  </g>')
+
+    lines.append(f'  <g id="layer-traces" visibility="visible">')
+    if result.traces:
+        lines.append('    <g class="traces">')
+        for trace in result.traces:
+            net_type = _classify_net(trace, comp_map)
+            lines.append(_render_trace(trace, net_type, comp_map))
+        lines.append('    </g>')
+    lines.append('  </g>')
+
+    lines.append(f'  <g id="layer-components" visibility="visible">')
+    lines.append('    <g class="components">')
+    for comp in result.components:
+        lines.append(_render_component(comp))
+    lines.append('    </g>')
+    lines.append('  </g>')
+
+    lines.append(f'  <g id="layer-security" visibility="hidden">')
+    if security_set:
+        lines.append('    <g class="security-highlights">')
+        for comp in result.components:
+            if comp.id in security_set:
+                x, y, w, h = comp.bbox
+                lines.append(
+                    f'      <rect x="{x - 4}" y="{y - 4}" '
+                    f'width="{w + 8}" height="{h + 8}" '
+                    f'rx="4" fill="#ef4444" fill-opacity="0.12" '
+                    f'stroke="#ef4444" stroke-width="2.5" '
+                    f'filter="url(#glow-red)"/>'
+                )
+        lines.append('    </g>')
+    if attack_paths:
+        lines.append('    <g class="attack-paths">')
+        for from_ref, to_ref, label in attack_paths:
+            from_c = comp_map.get(from_ref)
+            to_c = comp_map.get(to_ref)
+            if not from_c or not to_c:
+                continue
+            tc = _center_of(to_c)
+            fc = _center_of(from_c)
+            p1 = _edge_point(from_c, tc[0], tc[1])
+            p2 = _edge_point(to_c, fc[0], fc[1])
+            lines.append(
+                f'      <line x1="{p1[0]}" y1="{p1[1]}" x2="{p2[0]}" y2="{p2[1]}" '
+                f'stroke="#ef4444" stroke-width="3" stroke-opacity="0.9" '
+                f'stroke-linecap="round" marker-end="url(#arrow)"/>'
+            )
+            for px, py in (p1, p2):
+                lines.append(
+                    f'      <circle cx="{px}" cy="{py}" r="4" '
+                    f'fill="#ef4444" fill-opacity="0.9" stroke="{_BG}" stroke-width="1"/>'
+                )
+            mx = (p1[0] + p2[0]) // 2
+            my = (p1[1] + p2[1]) // 2
+            lines.append(
+                f'      <text x="{mx}" y="{my - 8}" text-anchor="middle" '
+                f'font-family={_q(_FONT)} font-size="8" fill="#fca5a5" '
+                f'font-weight="bold">{_escape(label)}</text>'
+            )
+        lines.append('    </g>')
+    sec_findings = _detect_security_findings(result)
+    if sec_findings:
+        lines.append(_render_security_panel(sec_findings, svg_w, svg_h))
+    lines.append('  </g>')
+
+    lines.append(f'  <g id="layer-net-labels" visibility="hidden">')
+    if result.traces:
+        lines.append(_render_net_labels(result.traces, comp_map))
+    lines.append('  </g>')
+
+    lines.append(f'  <g id="layer-bom-panel" visibility="visible">')
+    if result.components:
+        lines.append(_render_bom_panel(result, svg_w, svg_h))
+    lines.append('  </g>')
+
+    lines.append(_render_title_bar(svg_w, title or "re:trace — Interactive Analysis", result))
+    lines.append(_render_legend(svg_w))
+    lines.append(_render_footer(svg_w, svg_h, result))
+
+    lines.append(_render_interactive_controls(svg_w))
+    lines.append(_render_interactive_script())
+
+    lines.append('</svg>')
+    return "\n".join(lines)
+
+
+def _resolve_image_href(image_href: Optional[str]) -> Optional[str]:
+    """Resolve image href to base64 data URI if it's a local file."""
+    if not image_href:
+        return None
+    if image_href.strip().lower().startswith("javascript:"):
+        return None
+
+    href_lower = image_href.strip().lower()
+    if href_lower.startswith(("http://", "https://", "data:")):
+        return image_href
+
+    import base64
+    from pathlib import Path
+
+    img_path = Path(image_href)
+    if not img_path.is_file():
+        return None
+
+    raw = img_path.read_bytes()
+    b64 = base64.b64encode(raw).decode("ascii")
+    suffix = img_path.suffix.lower().lstrip(".")
+    mime = {"jpg": "jpeg", "jpeg": "jpeg", "png": "png",
+            "gif": "gif", "webp": "webp", "svg": "svg+xml"}.get(suffix, "png")
+    return f"data:image/{mime};base64,{b64}"
+
+
+def save_interactive_svg(result: AnalysisResult, output_path: str, **kwargs) -> None:
+    """Write interactive layered SVG to a file."""
+    from pathlib import Path
+
+    svg = generate_interactive_svg(result, **kwargs)
+    Path(output_path).write_text(svg, encoding="utf-8")

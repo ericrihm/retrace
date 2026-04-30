@@ -2145,6 +2145,16 @@ def _generate_one_board(
     )
     dbg_path.write_text(_run_debug_interface_detection(result, board_label=board_title))
 
+    interactive_svg_path = out / f"{prefix}_interactive.svg"
+    click.echo(f"  [+] Writing interactive layered SVG → {interactive_svg_path}")
+    from retrace.export.svg import generate_interactive_svg
+    interactive_svg_str = generate_interactive_svg(
+        result, image_href=img_name, title=board_title,
+        zones=zones, attack_paths=attack_paths or [],
+        security_refs=security_refs or [],
+    )
+    interactive_svg_path.write_text(interactive_svg_str, encoding="utf-8")
+
     report_path = out / f"{prefix}_report.html"
     report_html = generate_html_report(
         result, title=board_title, zones=zones,
@@ -2168,7 +2178,8 @@ def _generate_one_board(
         pinout_paths.append(pinout_path)
 
     for p in [board_img, det_json, svg_path, atk_svg_path, zones_svg_path,
-              bom_svg_path, report_path, kicad_path, probe_path, solver_path, dbg_path,
+              interactive_svg_path, bom_svg_path, report_path, kicad_path,
+              probe_path, solver_path, dbg_path,
               out / f"{prefix}_bom.json", out / f"{prefix}_bom.csv"] + pinout_paths:
         if p.exists():
             click.echo(f"    ✓  {p.name}  ({p.stat().st_size:,} bytes)")
