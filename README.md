@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-89%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->476<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->5595<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->470<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->5595<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -36,7 +36,7 @@ Two boards. Two worlds. Both analyzed from photos alone.
 
 **Xbox One — Gaming Hardware RE**
 
-<img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One — 28 components, 20 traced connections, color-coded net types"/>
+<img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One — 34 components, 34 traced connections, color-coded net types"/>
 
 AMD Jaguar APU, 8GB DDR3, Southbridge — 34 components detected, 34 traces classified (power, signal, debug, clock)
 
@@ -45,7 +45,7 @@ AMD Jaguar APU, 8GB DDR3, Southbridge — 34 components detected, 34 traces clas
 
 **Cisco ASA 5506-X — Enterprise Firewall RE**
 
-<img src="docs/examples/cisco_annotated.svg" width="100%" alt="Cisco ASA 5506-X — 42 components, 41 traced connections, Thrangrycat attack surface"/>
+<img src="docs/examples/cisco_annotated.svg" width="100%" alt="Cisco ASA 5506-X — 43 components, 41 traced connections, Thrangrycat attack surface"/>
 
 Intel Atom C2508, Xilinx Spartan-6 Trust Anchor FPGA, 4x DDR3 ECC — 43 components, 41 traces, full attack surface mapped
 
@@ -423,7 +423,7 @@ src/retrace/                             # <!-- STATS:loc -->5595<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->476<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->470<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->20<!-- /STATS --> |
 | Lines of code | <!-- STATS:loc -->5595<!-- /STATS --> |
@@ -438,7 +438,7 @@ src/retrace/                             # <!-- STATS:loc -->5595<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->476<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->470<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
