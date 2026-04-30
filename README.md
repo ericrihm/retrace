@@ -11,7 +11,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://pypi.org/project/retrace-pcb/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-**<!-- STATS:tests -->90<!-- /STATS --> tests** · **<!-- STATS:modules -->19<!-- /STATS --> modules** · **<!-- STATS:loc -->3753<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->273<!-- /STATS --> tests** · **<!-- STATS:modules -->19<!-- /STATS --> modules** · **<!-- STATS:loc -->4651<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -270,7 +270,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->3753<!-- /STATS --> lines across <!-- STATS:modules -->19<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->4651<!-- /STATS --> lines across <!-- STATS:modules -->19<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -305,11 +305,11 @@ src/retrace/                             # <!-- STATS:loc -->3753<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->90<!-- /STATS --> |
-| Coverage | <!-- STATS:coverage -->47%<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->273<!-- /STATS --> |
+| Coverage | <!-- STATS:coverage -->78%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->19<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->3753<!-- /STATS --> |
-| Component DB | <!-- STATS:components -->18<!-- /STATS --> parts |
+| Lines of code | <!-- STATS:loc -->4651<!-- /STATS --> |
+| Component DB | <!-- STATS:components -->114<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->5<!-- /STATS --> built-in |
 
 <sub>Auto-updated by <code>tools/readme_stats.py</code></sub>
@@ -320,7 +320,7 @@ src/retrace/                             # <!-- STATS:loc -->3753<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->90<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->273<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
