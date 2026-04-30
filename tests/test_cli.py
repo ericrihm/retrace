@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from unittest.mock import patch
 
 import pytest
@@ -151,3 +152,120 @@ def test_search_with_download(runner, tmp_path):
     assert result.exit_code == 0
     assert "Downloaded 3 images" in result.output
     mock_dl.assert_called_once()
+
+
+# ---------------------------------------------------------------------------
+# --quiet flag
+# ---------------------------------------------------------------------------
+
+def test_quiet_flag(runner):
+    result = runner.invoke(main, ["--quiet", "--help"])
+    assert result.exit_code == 0
+
+
+# ---------------------------------------------------------------------------
+# compare command
+# ---------------------------------------------------------------------------
+
+def test_compare_help(runner):
+    result = runner.invoke(main, ["compare", "--help"])
+    assert result.exit_code == 0
+    assert "IMAGE_A" in result.output or "compare" in result.output.lower()
+
+
+def test_compare_missing_file(runner):
+    result = runner.invoke(main, ["compare", "/no/such/file.jpg", "/also/no.jpg"])
+    assert result.exit_code != 0
+
+
+# ---------------------------------------------------------------------------
+# identify command
+# ---------------------------------------------------------------------------
+
+def test_identify_help(runner):
+    result = runner.invoke(main, ["identify", "--help"])
+    assert result.exit_code == 0
+    assert "MARKING" in result.output
+
+
+def test_identify_found(runner):
+    match = {
+        "part": "STM32F030C8T6",
+        "manufacturer": "STMicroelectronics",
+        "description": "ARM Cortex-M0",
+        "package": "LQFP48",
+        "category": "mcu",
+        "datasheet": "https://example.com/ds.pdf",
+    }
+    with patch("retrace.identification.matcher.lookup_part", return_value=match):
+        result = runner.invoke(main, ["identify", "STM32F030"])
+    assert result.exit_code == 0
+    assert "STM32F030C8T6" in result.output
+    assert "STMicroelectronics" in result.output
+
+
+def test_identify_not_found(runner):
+    with patch("retrace.identification.matcher.lookup_part", return_value=None):
+        result = runner.invoke(main, ["identify", "XYZNOPART"])
+    assert result.exit_code != 0
+
+
+def test_identify_json_output(runner):
+    match = {"part": "LM7805", "manufacturer": "TI", "description": "5V regulator"}
+    with patch("retrace.identification.matcher.lookup_part", return_value=match):
+        result = runner.invoke(main, ["identify", "LM7805", "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data["part"] == "LM7805"
+
+
+# ---------------------------------------------------------------------------
+# search --json
+# ---------------------------------------------------------------------------
+
+def test_search_json_output(runner):
+    fcc_results = [{"fcc_id": "ABC-123", "description": "Widget"}]
+    ifixit_results = [{"guideid": 1, "title": "Teardown"}]
+    with patch("retrace.sources.fcc.search_fcc", return_value=fcc_results), \
+         patch("retrace.sources.ifixit.search_ifixit", return_value=ifixit_results):
+        result = runner.invoke(main, ["search", "test", "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data["query"] == "test"
+    assert len(data["fcc"]) == 1
+
+
+# ---------------------------------------------------------------------------
+# report --json
+# ---------------------------------------------------------------------------
+
+def test_report_json_output(runner):
+    with patch("retrace.learning.engine.generate_report", return_value="report text"):
+        result = runner.invoke(main, ["report", "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert "report" in data
+
+
+# ---------------------------------------------------------------------------
+# new commands help
+# ---------------------------------------------------------------------------
+
+def test_debug_help(runner):
+    result = runner.invoke(main, ["debug", "--help"])
+    assert result.exit_code == 0
+
+
+def test_learn_help(runner):
+    result = runner.invoke(main, ["learn", "--help"])
+    assert result.exit_code == 0
+
+
+def test_cross_board_help(runner):
+    result = runner.invoke(main, ["cross-board", "--help"])
+    assert result.exit_code == 0
+
+
+def test_export_help(runner):
+    result = runner.invoke(main, ["export", "--help"])
+    assert result.exit_code == 0

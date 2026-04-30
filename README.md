@@ -9,9 +9,9 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://github.com/ericrihm/retrace)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Coverage](https://img.shields.io/badge/coverage-86%25-green.svg)](https://github.com/ericrihm/retrace)
+[![Coverage](https://img.shields.io/badge/coverage-85%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->533<!-- /STATS --> tests** · **<!-- STATS:modules -->21<!-- /STATS --> modules** · **<!-- STATS:loc -->6756<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->546<!-- /STATS --> tests** · **<!-- STATS:modules -->21<!-- /STATS --> modules** · **<!-- STATS:loc -->6890<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -261,6 +261,13 @@ retrace trace board_photo.jpg --output traces.svg
 
 # Bayesian probe advisor — where to measure next
 retrace advise board_photo.jpg
+
+# Compare two board revisions — diff components, traces, debug interfaces
+retrace compare board_v04.jpg board_v05.jpg
+
+# Machine-readable output for pipeline integration
+retrace identify STM32F030 --json
+retrace debug board_photo.jpg --json
 
 # Component knowledge report — cross-board stats
 retrace report
@@ -575,7 +582,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->6756<!-- /STATS --> lines across <!-- STATS:modules -->21<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->6890<!-- /STATS --> lines across <!-- STATS:modules -->21<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -611,10 +618,10 @@ src/retrace/                             # <!-- STATS:loc -->6756<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->533<!-- /STATS --> |
-| Coverage | <!-- STATS:coverage -->86%<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->546<!-- /STATS --> |
+| Coverage | <!-- STATS:coverage -->85%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->21<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->6756<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->6890<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -626,7 +633,7 @@ src/retrace/                             # <!-- STATS:loc -->6756<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->533<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->546<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```

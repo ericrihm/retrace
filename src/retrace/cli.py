@@ -12,9 +12,18 @@ from retrace import __version__
 @click.group()
 @click.version_option(__version__, prog_name="retrace")
 @click.option("-v", "--verbose", is_flag=True, help="Enable debug logging")
-def main(verbose: bool) -> None:
+@click.option("-q", "--quiet", is_flag=True, help="Suppress non-data output")
+@click.pass_context
+def main(ctx: click.Context, verbose: bool, quiet: bool) -> None:
     """re:trace -- AI-powered PCB reverse engineering toolkit."""
-    level = logging.DEBUG if verbose else logging.INFO
+    ctx.ensure_object(dict)
+    ctx.obj["quiet"] = quiet
+    if quiet:
+        level = logging.WARNING
+    elif verbose:
+        level = logging.DEBUG
+    else:
+        level = logging.INFO
     logging.basicConfig(level=level, format="%(asctime)s %(levelname)s %(message)s", datefmt="%H:%M:%S")
 
 
@@ -23,7 +32,8 @@ def main(verbose: bool) -> None:
 @click.option("--bom", is_flag=True, help="Generate bill of materials")
 @click.option("--output", "-o", type=click.Path(), help="Output directory")
 @click.option("--format", "fmt", type=click.Choice(["json", "csv", "svg"]), default="json")
-def scan(image: str, bom: bool, output: str, fmt: str) -> None:
+@click.pass_context
+def scan(ctx: click.Context, image: str, bom: bool, output: str, fmt: str) -> None:
     """Scan a PCB photo — detect components, extract traces, identify chips."""
     from retrace.core.pipeline import Pipeline
 
@@ -34,39 +44,48 @@ def scan(image: str, bom: bool, output: str, fmt: str) -> None:
         out_dir = Path(output)
         out_dir.mkdir(parents=True, exist_ok=True)
         result.save(out_dir, fmt=fmt)
-        click.echo(f"Results saved to {out_dir}")
+        if not ctx.obj.get("quiet"):
+            click.echo(f"Results saved to {out_dir}")
     else:
         click.echo(json.dumps(result.summary(), indent=2))
 
     if bom:
         from retrace.export.bom import generate_bom
         bom_data = generate_bom(result)
-        click.echo(f"\nBOM: {len(bom_data['components'])} components identified")
+        if not ctx.obj.get("quiet"):
+            click.echo(f"\nBOM: {len(bom_data['components'])} components identified")
 
 
 @main.command()
 @click.argument("query")
 @click.option("--download", is_flag=True, help="Download found images")
 @click.option("--limit", type=int, default=5, help="Max results")
-def search(query: str, download: bool, limit: int) -> None:
+@click.option("--json", "as_json", is_flag=True, help="Output results as JSON")
+@click.pass_context
+def search(ctx: click.Context, query: str, download: bool, limit: int, as_json: bool) -> None:
     """Search FCC filings and iFixit for board images."""
     from retrace.sources.fcc import search_fcc
     from retrace.sources.ifixit import search_ifixit
 
-    click.echo(f"\nSearching for: {query}\n")
-
     fcc_results = search_fcc(query)
+    ifixit_results = search_ifixit(query)
+
+    if as_json:
+        click.echo(json.dumps({
+            "query": query,
+            "fcc": fcc_results[:limit],
+            "ifixit": ifixit_results[:limit],
+        }, indent=2))
+        return
+
+    click.echo(f"\nSearching for: {query}\n")
     for r in fcc_results[:limit]:
         click.echo(f"  FCC: {r['fcc_id']} — {r.get('description', '')}")
-
-    ifixit_results = search_ifixit(query)
     for r in ifixit_results[:limit]:
         click.echo(f"  iFixit #{r['guideid']}: {r['title']}")
+    click.echo(f"\n  Found {len(fcc_results) + len(ifixit_results)} results")
 
-    total = len(fcc_results) + len(ifixit_results)
-    click.echo(f"\n  Found {total} results")
-
-    if download and total > 0:
+    if download and (fcc_results or ifixit_results):
         from retrace.sources.board_sourcer import download_all
         downloaded = download_all(query, fcc_results[:limit], ifixit_results[:limit])
         click.echo(f"  Downloaded {downloaded} images")
@@ -89,12 +108,17 @@ def trace(image: str, output: str) -> None:
 
 @main.command()
 @click.argument("image", type=click.Path(exists=True))
-def advise(image: str) -> None:
+@click.option("--json", "as_json", is_flag=True, help="Output as JSON")
+def advise(image: str, as_json: bool) -> None:
     """Bayesian probe point advisor — where to measure next."""
     from retrace.analysis.probe_advisor import ProbeAdvisor
 
     advisor = ProbeAdvisor()
     recommendations = advisor.recommend(image)
+
+    if as_json:
+        click.echo(json.dumps(recommendations[:10], indent=2))
+        return
 
     click.echo("\nRecommended probe points (by information gain):\n")
     for i, rec in enumerate(recommendations[:5], 1):
@@ -110,22 +134,35 @@ def ui() -> None:
 
 
 @main.command()
-def report() -> None:
+@click.option("--json", "as_json", is_flag=True, help="Output as JSON")
+def report(as_json: bool) -> None:
     """Show learning engine status and knowledge report."""
     from retrace.learning.engine import generate_report
-    click.echo(generate_report())
+    text = generate_report()
+    if as_json:
+        click.echo(json.dumps({"report": text}))
+    else:
+        click.echo(text)
 
 
 @main.command("identify")
 @click.argument("marking")
-def identify(marking: str) -> None:
+@click.option("--json", "as_json", is_flag=True, help="Output as JSON")
+def identify(marking: str, as_json: bool) -> None:
     """Look up a component by marking or part number."""
     from retrace.identification.matcher import lookup_part
 
     result = lookup_part(marking)
     if result is None:
-        click.echo(f"No match found for '{marking}'", err=True)
+        if as_json:
+            click.echo(json.dumps({"match": None, "query": marking}))
+        else:
+            click.echo(f"No match found for '{marking}'", err=True)
         raise SystemExit(1)
+
+    if as_json:
+        click.echo(json.dumps(result, indent=2))
+        return
 
     click.echo(f"{result['part']} ({result.get('manufacturer', 'Unknown')}) — {result.get('description', '')}")
     if result.get("package"):
@@ -138,7 +175,8 @@ def identify(marking: str) -> None:
 
 @main.command("debug")
 @click.argument("image", type=click.Path(exists=True))
-def debug(image: str) -> None:
+@click.option("--json", "as_json", is_flag=True, help="Output as JSON")
+def debug(image: str, as_json: bool) -> None:
     """Detect exposed debug interfaces (JTAG, SWD, UART, SPI) in a PCB photo."""
     from retrace.core.pipeline import Pipeline
     from retrace.plugins.builtin.debug_interfaces import DebugInterfaceAnalyzer
@@ -148,6 +186,10 @@ def debug(image: str) -> None:
 
     analyzer = DebugInterfaceAnalyzer()
     output = analyzer.analyze(result)
+
+    if as_json:
+        click.echo(json.dumps(output, indent=2))
+        return
 
     click.echo(output["summary"])
     findings = output.get("findings", [])
@@ -217,7 +259,8 @@ def learn(
 @main.command("cross-board")
 @click.argument("image", type=click.Path(exists=True))
 @click.option("--threshold", default=0.5, show_default=True, help="Minimum match score (0–1)")
-def cross_board(image: str, threshold: float) -> None:
+@click.option("--json", "as_json", is_flag=True, help="Output as JSON")
+def cross_board(image: str, threshold: float, as_json: bool) -> None:
     """Run cross-board subcircuit pattern analysis on a PCB photo."""
     from retrace.core.pipeline import Pipeline
     from retrace.analysis.cross_board import (
@@ -229,7 +272,6 @@ def cross_board(image: str, threshold: float) -> None:
     pipeline = Pipeline()
     result = pipeline.run(image)
 
-    # Convert pipeline components/traces into cross-board data structures
     cb_components = [
         BoardComponent(
             ref=c.id,
@@ -254,6 +296,24 @@ def cross_board(image: str, threshold: float) -> None:
 
     engine = CrossBoardEngine(match_threshold=threshold)
     analysis = engine.analyse(cb_components, cb_traces)
+
+    if as_json:
+        click.echo(json.dumps({
+            "components": len(result.components),
+            "matches": [
+                {
+                    "pattern": m.pattern_name,
+                    "score": m.score,
+                    "partial": m.is_partial,
+                    "description": m.description,
+                    "roles": m.component_roles,
+                }
+                for m in analysis.matches
+            ],
+            "coverage": analysis.coverage,
+            "novel_components": analysis.novel_components,
+        }, indent=2))
+        return
 
     click.echo(
         f"Analysed {len(result.components)} components — "
@@ -300,6 +360,80 @@ def export(image: str, fmt: str, output: str) -> None:
         f"Exported {summary['components']} component(s), "
         f"{summary['traces']} trace(s) to {out_dir}/ [{fmt}]"
     )
+
+
+@main.command("compare")
+@click.argument("image_a", type=click.Path(exists=True))
+@click.argument("image_b", type=click.Path(exists=True))
+@click.option("--json", "as_json", is_flag=True, help="Output diff as JSON")
+def compare(image_a: str, image_b: str, as_json: bool) -> None:
+    """Compare two PCB photos — diff components, traces, and debug interfaces."""
+    from retrace.core.pipeline import Pipeline
+
+    pipeline = Pipeline()
+    result_a = pipeline.run(image_a)
+    result_b = pipeline.run(image_b)
+
+    comps_a = {c.id: c for c in result_a.components}
+    comps_b = {c.id: c for c in result_b.components}
+
+    added = sorted(set(comps_b) - set(comps_a))
+    removed = sorted(set(comps_a) - set(comps_b))
+    common = sorted(set(comps_a) & set(comps_b))
+    changed = []
+    for cid in common:
+        a, b = comps_a[cid], comps_b[cid]
+        diffs = {}
+        if a.label != b.label:
+            diffs["label"] = {"a": a.label, "b": b.label}
+        if a.part_number != b.part_number:
+            diffs["part_number"] = {"a": a.part_number, "b": b.part_number}
+        if a.marking != b.marking:
+            diffs["marking"] = {"a": a.marking, "b": b.marking}
+        if diffs:
+            changed.append({"id": cid, "changes": diffs})
+
+    diff = {
+        "board_a": image_a,
+        "board_b": image_b,
+        "components_a": len(comps_a),
+        "components_b": len(comps_b),
+        "traces_a": len(result_a.traces),
+        "traces_b": len(result_b.traces),
+        "added": added,
+        "removed": removed,
+        "changed": changed,
+    }
+
+    if as_json:
+        click.echo(json.dumps(diff, indent=2))
+        return
+
+    click.echo(f"\nBoard A: {image_a} — {len(comps_a)} components, {len(result_a.traces)} traces")
+    click.echo(f"Board B: {image_b} — {len(comps_b)} components, {len(result_b.traces)} traces")
+    click.echo()
+
+    if added:
+        click.echo(f"  Added ({len(added)}):")
+        for cid in added:
+            c = comps_b[cid]
+            click.echo(f"    + {cid} ({c.label}) {c.marking or c.part_number or ''}")
+
+    if removed:
+        click.echo(f"  Removed ({len(removed)}):")
+        for cid in removed:
+            c = comps_a[cid]
+            click.echo(f"    - {cid} ({c.label}) {c.marking or c.part_number or ''}")
+
+    if changed:
+        click.echo(f"  Changed ({len(changed)}):")
+        for ch in changed:
+            click.echo(f"    ~ {ch['id']}:")
+            for field, vals in ch["changes"].items():
+                click.echo(f"        {field}: {vals['a']!r} → {vals['b']!r}")
+
+    if not added and not removed and not changed:
+        click.echo("  No differences found.")
 
 
 if __name__ == "__main__":
