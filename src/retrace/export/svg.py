@@ -147,7 +147,7 @@ def _is_security_component(comp: Component) -> bool:
 def _render_defs() -> str:
     return """  <defs>
     <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-      <circle cx="10" cy="10" r="0.5" fill="#1a2340"/>
+      <circle cx="10" cy="10" r="0.8" fill="#1a2a40"/>
     </pattern>
     <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
@@ -174,10 +174,61 @@ def _render_defs() -> str:
 # ── Background ────────────────────────────────────────────────────────
 
 def _render_background(svg_w: int, svg_h: int) -> str:
-    return (
-        f'  <rect width="{svg_w}" height="{svg_h}" fill="{_BG}"/>\n'
-        f'  <rect width="{svg_w}" height="{svg_h}" fill="url(#grid)"/>'
+    # Board margin for the PCB outline inset
+    margin = 6
+    bx = margin
+    by = _TITLE_H + margin
+    bw = svg_w - margin * 2
+    bh = svg_h - _TITLE_H - _FOOTER_H - margin * 2
+
+    parts: list[str] = []
+    # Base fill
+    parts.append(f'  <rect width="{svg_w}" height="{svg_h}" fill="{_BG}"/>')
+    # Grid dot pattern over the whole canvas
+    parts.append(f'  <rect width="{svg_w}" height="{svg_h}" fill="url(#grid)"/>')
+
+    # PCB soldermask board rectangle (slightly lighter than background)
+    parts.append(
+        f'  <rect x="{bx}" y="{by}" width="{bw}" height="{bh}" '
+        f'rx="4" ry="4" fill="#0b1120" fill-opacity="0.55" '
+        f'stroke="#1e2d40" stroke-width="1.5"/>'
     )
+
+    # Subtle copper-plane grid lines (horizontal + vertical, spaced 40px)
+    copper_color = "#1a3050"
+    copper_opacity = "0.35"
+    grid_step = 40
+    # Horizontal lines
+    y_line = by + grid_step
+    while y_line < by + bh:
+        parts.append(
+            f'  <line x1="{bx}" y1="{y_line}" x2="{bx + bw}" y2="{y_line}" '
+            f'stroke="{copper_color}" stroke-width="0.5" stroke-opacity="{copper_opacity}"/>'
+        )
+        y_line += grid_step
+    # Vertical lines
+    x_line = bx + grid_step
+    while x_line < bx + bw:
+        parts.append(
+            f'  <line x1="{x_line}" y1="{by}" x2="{x_line}" y2="{by + bh}" '
+            f'stroke="{copper_color}" stroke-width="0.5" stroke-opacity="{copper_opacity}"/>'
+        )
+        x_line += grid_step
+
+    # PCB board outline (beveled look: outer stroke + inner highlight)
+    parts.append(
+        f'  <rect x="{bx}" y="{by}" width="{bw}" height="{bh}" '
+        f'rx="4" ry="4" fill="none" '
+        f'stroke="#2a4060" stroke-width="2.5"/>'
+    )
+    # Inner highlight line (top-left edges only, simulating bevel)
+    parts.append(
+        f'  <path d="M{bx + 4},{by + bh - 4} L{bx + 4},{by + 4} L{bx + bw - 4},{by + 4}" '
+        f'fill="none" stroke="#2e5070" stroke-width="0.8" stroke-opacity="0.5" '
+        f'stroke-linecap="round"/>'
+    )
+
+    return "\n".join(parts)
 
 
 # ── Title bar ─────────────────────────────────────────────────────────
@@ -650,11 +701,35 @@ def generate_svg(
     lines.append(_render_background(svg_w, svg_h))
 
     if image_href and not image_href.strip().lower().startswith("javascript:"):
-        lines.append(
-            f'  <image href="{_escape(image_href)}" x="0" y="{_TITLE_H}" '
-            f'width="{svg_w}" height="{svg_h - _TITLE_H - _FOOTER_H}" '
-            f'preserveAspectRatio="xMidYMid meet" opacity="0.85"/>'
-        )
+        href_lower = image_href.strip().lower()
+        # Embed local files as base64 so the SVG is self-contained (e.g. on GitHub)
+        if not (
+            href_lower.startswith("http://")
+            or href_lower.startswith("https://")
+            or href_lower.startswith("data:")
+        ):
+            import base64
+            from pathlib import Path
+
+            img_path = Path(image_href)
+            if img_path.is_file():
+                raw = img_path.read_bytes()
+                b64 = base64.b64encode(raw).decode("ascii")
+                # Detect mime type from extension; default to png
+                suffix = img_path.suffix.lower().lstrip(".")
+                mime = {"jpg": "jpeg", "jpeg": "jpeg", "png": "png",
+                        "gif": "gif", "webp": "webp", "svg": "svg+xml"}.get(suffix, "png")
+                image_href = f"data:image/{mime};base64,{b64}"
+            else:
+                # Local file doesn't exist — skip the image tag entirely
+                image_href = None
+
+        if image_href:
+            lines.append(
+                f'  <image href="{_escape(image_href)}" x="0" y="{_TITLE_H}" '
+                f'width="{svg_w}" height="{svg_h - _TITLE_H - _FOOTER_H}" '
+                f'preserveAspectRatio="xMidYMid meet" opacity="0.85"/>'
+            )
 
     lines.append(_render_title_bar(svg_w, title, result))
     lines.append(_render_legend(svg_w))

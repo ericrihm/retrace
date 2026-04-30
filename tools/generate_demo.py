@@ -62,34 +62,34 @@ KNOWN_COMPONENTS: list[tuple] = [
     ("U1", "ic",         500, 300, 300, 300, "Liverpool",      "AMD Liverpool",  "",       "BGA-1170",
      ["VCC_CORE","VCC_GFX","VCC_IO","GND","GND2","GND3","GND4","DDR_DQ0","DDR_DQ1","DDR_A0","HDMI_TX0P","HDMI_TX0N","PCIE_TX","PCIE_RX"]),
 
-    # DDR3 RAM — Samsung K4B4G1646E-BYK0 (4Gbit each, 8 chips total = 8GB, DDR3-2133)
-    ("U2", "ic",         120, 120, 140,  90, "K4B4G1646E",    "K4B4G1646E-BYK0", "4Gb",  "BGA-78",
+    # DDR3 RAM — SK Hynix H5TQ4G63AFR-PBC (4Gbit each, 16 chips total = 8GB, DDR3-1866)
+    ("U2", "ic",         120, 120, 140,  90, "H5TQ4G63AFR",    "H5TQ4G63AFR-PBC", "4Gb",  "BGA-78",
      ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
-    ("U3", "ic",         300, 120, 140,  90, "K4B4G1646E",    "K4B4G1646E-BYK0", "4Gb",  "BGA-78",
+    ("U3", "ic",         300, 120, 140,  90, "H5TQ4G63AFR",    "H5TQ4G63AFR-PBC", "4Gb",  "BGA-78",
      ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
-    ("U4", "ic",         120, 680, 140,  90, "K4B4G1646E",    "K4B4G1646E-BYK0", "4Gb",  "BGA-78",
+    ("U4", "ic",         120, 680, 140,  90, "H5TQ4G63AFR",    "H5TQ4G63AFR-PBC", "4Gb",  "BGA-78",
      ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
-    ("U5", "ic",         300, 680, 140,  90, "K4B4G1646E",    "K4B4G1646E-BYK0", "4Gb",  "BGA-78",
+    ("U5", "ic",         300, 680, 140,  90, "H5TQ4G63AFR",    "H5TQ4G63AFR-PBC", "4Gb",  "BGA-78",
      ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
 
-    # HDMI encoder — Panasonic MN864729 (HDMI 1.4 transmitter)
-    ("U6", "ic",        1000, 120, 140, 100, "MN864729",       "MN864729",      "",       "QFP-80",
+    # Southbridge — Microsoft X861949-005 (USB3, SATA, PCIe hub controller)
+    ("U6", "ic",        1000, 120, 140, 100, "X861949",        "X861949-005",   "",       "BGA-360",
      ["VCC","GND","HDMI_TX0P","HDMI_TX0N","HDMI_TX1P","HDMI_TX1N","HDMI_TX2P","HDMI_TX2N","HDMI_CKP","HDMI_CKN","SDA","SCL"]),
 
-    # eMMC — Samsung KLMBG4GEAC-B001 (8GB eMMC 4.51)
-    ("U7", "ic",        1000, 300, 160, 120, "KLMBG4GEAC",    "KLMBG4GEAC-B001", "8GB",  "BGA-153",
+    # eMMC — SK Hynix H26M42003GMR (8GB eMMC 4.51)
+    ("U7", "ic",        1000, 300, 160, 120, "H26M42003GMR",  "H26M42003GMR",  "8GB",    "BGA-153",
      ["VCC","VCCQ","GND","CMD","CLK","DAT0","DAT1","DAT2","DAT3","DAT4","DAT5","DAT6","DAT7"]),
 
     # WiFi/BT — Marvell AVASTAR 88W8897 (2x2 802.11ac + BT 4.0)
     ("U8", "ic",        1050, 500, 120,  80, "88W8897",        "88W8897-NNB2",  "",       "QFN-68",
      ["VCC","GND","SDIO_CLK","SDIO_CMD","SDIO_D0","SDIO_D1","ANT1","ANT2"]),
 
-    # Ethernet PHY — Marvell 88EC060-NNB2 (GbE)
-    ("U9", "ic",        1050, 660, 100,  70, "88EC060",        "88EC060-NNB2",  "",       "QFN-56",
+    # Ethernet PHY — Realtek RTL8151GNM (GbE)
+    ("U9", "ic",        1050, 660, 100,  70, "RTL8151GNM",     "RTL8151GNM",    "",       "QFN-40",
      ["VCC","GND","MDI0P","MDI0N","MDI1P","MDI1N","TX_CLK","RX_CLK"]),
 
-    # Power: APU core VRM — ON Semi NCP81174 (multi-phase)
-    ("U10","ic",          80, 350,  70,  55, "NCP81174",       "NCP81174",      "",       "QFN-52",
+    # Power: APU core VRM — ON Semi NCP4204 (multi-phase controller)
+    ("U10","ic",          80, 350,  70,  55, "NCP4204",        "NCP4204",       "",       "QFN-52",
      ["VIN","VOUT","GND","EN","BOOT","SW","PGOOD","FB"]),
 
     # Power: Memory VRM — IR3553 (DDR3 rail)
@@ -138,6 +138,221 @@ KNOWN_COMPONENTS: list[tuple] = [
     ("TP3","test_point", 260, 880,  14,  14, "TP3",            "",              "",       "TP", ["1"]),
     ("TP4","test_point", 290, 880,  14,  14, "TP4",            "",              "",       "TP", ["1"]),
     ("TP5","test_point", 320, 880,  14,  14, "TP5",            "",              "",       "TP", ["1"]),
+
+    # -----------------------------------------------------------------------
+    # DDR3 RAM — back-side pair (U13-U16), mirroring U2-U5 at lower Y
+    # -----------------------------------------------------------------------
+    ("U13","ic",         500, 120, 140,  90, "H5TQ4G63AFR",    "H5TQ4G63AFR-PBC", "4Gb",  "BGA-78",
+     ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
+    ("U14","ic",         680, 120, 140,  90, "H5TQ4G63AFR",    "H5TQ4G63AFR-PBC", "4Gb",  "BGA-78",
+     ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
+    ("U15","ic",         500, 680, 140,  90, "H5TQ4G63AFR",    "H5TQ4G63AFR-PBC", "4Gb",  "BGA-78",
+     ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
+    ("U16","ic",         680, 680, 140,  90, "H5TQ4G63AFR",    "H5TQ4G63AFR-PBC", "4Gb",  "BGA-78",
+     ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
+
+    # -----------------------------------------------------------------------
+    # Power section — additional VRMs, DrMOS, LDOs (U17-U22)
+    # -----------------------------------------------------------------------
+    # DrMOS integrated power stages for APU core VRM
+    ("U17","ic",          80, 260,  60,  45, "NCP302155",      "NCP302155",     "",       "PQFN-40",
+     ["VIN","VOUT","BST","SW","GND","EN","PGOOD","ILIM"]),
+    ("U18","ic",         170, 260,  60,  45, "NCP302155",      "NCP302155",     "",       "PQFN-40",
+     ["VIN","VOUT","BST","SW","GND","EN","PGOOD","ILIM"]),
+    # PWM controllers for multi-phase VRM
+    ("U19","ic",          80, 530,  70,  50, "NCP81111",       "NCP81111",      "",       "QFN-36",
+     ["VIN","VCC","GND","PWM1","PWM2","FB","COMP","SS","PGOOD","EN"]),
+    ("U20","ic",         170, 530,  70,  50, "NCP81111",       "NCP81111",      "",       "QFN-36",
+     ["VIN","VCC","GND","PWM1","PWM2","FB","COMP","SS","PGOOD","EN"]),
+    # 1.1V IO rail buck converter
+    ("U21","ic",          80, 610,  55,  40, "TPS54331",       "TPS54331DR",    "",       "SOIC-8",
+     ["VIN","BOOT","GND","VSNS","COMP","EN","SS","PH"]),
+    # 3.3V LDO for HDMI/USB subsystem
+    ("U22","ic",        1300, 250,  50,  35, "TLV1117-33",     "TLV1117LV33",   "3.3V",  "SOT-223",
+     ["VIN","VOUT","GND","GND2"]),
+
+    # -----------------------------------------------------------------------
+    # Decoupling capacitors (C7-C50) — every IC gets 2-4 caps
+    # -----------------------------------------------------------------------
+    # APU (U1) decoupling — 8 caps around perimeter
+    ("C7", "capacitor",  470, 300,  28,  16, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C8", "capacitor",  470, 340,  28,  16, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C9", "capacitor",  470, 380,  28,  16, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    ("C10","capacitor",  470, 420,  28,  16, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C11","capacitor",  810, 310,  28,  16, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C12","capacitor",  810, 350,  28,  16, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    ("C13","capacitor",  810, 390,  28,  16, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C14","capacitor",  810, 430,  28,  16, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+
+    # DDR3 U2 decoupling
+    ("C15","capacitor",  100, 112,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C16","capacitor",  270, 112,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    # DDR3 U3 decoupling
+    ("C17","capacitor",  280, 112,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C18","capacitor",  448, 112,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    # DDR3 U4 decoupling
+    ("C19","capacitor",  100, 780,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C20","capacitor",  270, 780,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    # DDR3 U5 decoupling
+    ("C21","capacitor",  280, 780,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C22","capacitor",  448, 780,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    # DDR3 U13 decoupling
+    ("C23","capacitor",  480, 112,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C24","capacitor",  648, 112,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    # DDR3 U14 decoupling
+    ("C25","capacitor",  660, 112,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C26","capacitor",  828, 112,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    # DDR3 U15 decoupling
+    ("C27","capacitor",  480, 780,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C28","capacitor",  648, 780,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    # DDR3 U16 decoupling
+    ("C29","capacitor",  660, 780,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C30","capacitor",  828, 780,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+
+    # HDMI encoder U6 decoupling
+    ("C31","capacitor",  980, 112,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C32","capacitor",  980, 230,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    # eMMC U7 decoupling
+    ("C33","capacitor",  980, 290,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C34","capacitor",  980, 430,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    # WiFi U8 decoupling
+    ("C35","capacitor", 1030, 492,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C36","capacitor", 1180, 492,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    # Ethernet PHY U9 decoupling
+    ("C37","capacitor", 1030, 652,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C38","capacitor", 1160, 652,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+
+    # VRM bulk caps (near U10/U11/U17-U21)
+    ("C39","capacitor",   60, 310,  30,  20, "470uF",          "",              "470uF",  "1210", ["1","2"]),
+    ("C40","capacitor",  160, 310,  30,  20, "470uF",          "",              "470uF",  "1210", ["1","2"]),
+    ("C41","capacitor",   60, 500,  26,  16, "22uF",           "",              "22uF",   "0805", ["1","2"]),
+    ("C42","capacitor",  160, 500,  26,  16, "22uF",           "",              "22uF",   "0805", ["1","2"]),
+    ("C43","capacitor",   60, 580,  26,  16, "22uF",           "",              "22uF",   "0805", ["1","2"]),
+    ("C44","capacitor",  160, 580,  26,  16, "22uF",           "",              "22uF",   "0805", ["1","2"]),
+
+    # HDMI retimer U12 decoupling
+    ("C45","capacitor", 1280, 142,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C46","capacitor", 1390, 142,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    # LDO U22 output cap
+    ("C47","capacitor", 1360, 252,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    # Crystal Y1 load caps
+    ("C48","capacitor",  860, 420,  22,  14, "22pF",           "",              "22pF",   "0402", ["1","2"]),
+    ("C49","capacitor",  930, 420,  22,  14, "22pF",           "",              "22pF",   "0402", ["1","2"]),
+    # Spare bulk cap near APU
+    ("C50","capacitor",  830, 260,  28,  16, "100uF",          "",              "100uF",  "1206", ["1","2"]),
+
+    # -----------------------------------------------------------------------
+    # Pull-up / pull-down resistors (R4-R20)
+    # -----------------------------------------------------------------------
+    # I2C pull-ups near HDMI encoder U6
+    ("R4", "resistor",   960, 130,  30,  14, "4k7",            "",              "4k7",    "0402", ["A","B"]),
+    ("R5", "resistor",   960, 150,  30,  14, "4k7",            "",              "4k7",    "0402", ["A","B"]),
+    # I2C pull-ups near HDMI retimer U12
+    ("R6", "resistor",  1290, 130,  30,  14, "4k7",            "",              "4k7",    "0402", ["A","B"]),
+    ("R7", "resistor",  1290, 210,  30,  14, "4k7",            "",              "4k7",    "0402", ["A","B"]),
+    # USB termination resistors near J2
+    ("R8", "resistor",  1390, 290,  30,  14, "90",             "",              "90",     "0402", ["A","B"]),
+    ("R9", "resistor",  1390, 310,  30,  14, "90",             "",              "90",     "0402", ["A","B"]),
+    # USB termination resistors near J3
+    ("R10","resistor",  1390, 470,  30,  14, "90",             "",              "90",     "0402", ["A","B"]),
+    ("R11","resistor",  1390, 490,  30,  14, "90",             "",              "90",     "0402", ["A","B"]),
+    # Reset pull-up
+    ("R12","resistor",   840, 380,  30,  14, "10k",            "",              "10k",    "0402", ["A","B"]),
+    # DDR3 termination resistors
+    ("R13","resistor",   120, 220,  30,  14, "49.9",           "",              "49.9",   "0402", ["A","B"]),
+    ("R14","resistor",   300, 220,  30,  14, "49.9",           "",              "49.9",   "0402", ["A","B"]),
+    ("R15","resistor",   500, 220,  30,  14, "49.9",           "",              "49.9",   "0402", ["A","B"]),
+    ("R16","resistor",   680, 220,  30,  14, "49.9",           "",              "49.9",   "0402", ["A","B"]),
+    # LED current limiters
+    ("R17","resistor",  1250, 850,  30,  14, "330",            "",              "330",    "0402", ["A","B"]),
+    ("R18","resistor",  1290, 850,  30,  14, "330",            "",              "330",    "0402", ["A","B"]),
+    ("R19","resistor",  1330, 850,  30,  14, "330",            "",              "330",    "0402", ["A","B"]),
+    ("R20","resistor",  1370, 850,  30,  14, "330",            "",              "330",    "0402", ["A","B"]),
+
+    # -----------------------------------------------------------------------
+    # ESD protection diodes (D1-D6)
+    # -----------------------------------------------------------------------
+    # USB ESD near J2, J3
+    ("D1", "ic",        1400, 260,  36,  22, "USBLC6",         "USBLC6-2SC6",   "",       "SOT-23-6",
+     ["IO1","GND","IO2","IO2B","VCC","IO1B"]),
+    ("D2", "ic",        1400, 440,  36,  22, "USBLC6",         "USBLC6-2SC6",   "",       "SOT-23-6",
+     ["IO1","GND","IO2","IO2B","VCC","IO1B"]),
+    # HDMI ESD near J1
+    ("D3", "ic",        1400, 100,  40,  20, "IP4283CZ",       "IP4283CZ10",    "",       "SOT-665",
+     ["IO1","IO2","IO3","GND","IO4","IO5","IO6","IO7","IO8","VCC"]),
+    # Ethernet ESD near J4
+    ("D4", "ic",        1400, 630,  36,  22, "PRTR5V0",        "PRTR5V0U2X",    "",       "SOT-143",
+     ["IO1","GND","IO2","VCC"]),
+    # HDMI-in ESD near U12
+    ("D5", "ic",        1380, 170,  36,  22, "IP4283CZ",       "IP4283CZ10",    "",       "SOT-665",
+     ["IO1","IO2","IO3","GND","IO4","IO5","IO6","IO7","IO8","VCC"]),
+    # JTAG ESD near J5
+    ("D6", "ic",          60, 850,  36,  22, "PRTR5V0",        "PRTR5V0U2X",    "",       "SOT-143",
+     ["IO1","GND","IO2","VCC"]),
+
+    # -----------------------------------------------------------------------
+    # MOSFETs for VRM power stages (Q1-Q6)
+    # -----------------------------------------------------------------------
+    ("Q1", "ic",         100, 300,  30,  25, "BSC014N04",      "BSC014N04LS",   "",       "TDSON-8",
+     ["GATE","DRAIN","SOURCE","GND"]),
+    ("Q2", "ic",         140, 300,  30,  25, "BSC014N04",      "BSC014N04LS",   "",       "TDSON-8",
+     ["GATE","DRAIN","SOURCE","GND"]),
+    ("Q3", "ic",         100, 470,  30,  25, "BSC014N04",      "BSC014N04LS",   "",       "TDSON-8",
+     ["GATE","DRAIN","SOURCE","GND"]),
+    ("Q4", "ic",         140, 470,  30,  25, "BSC014N04",      "BSC014N04LS",   "",       "TDSON-8",
+     ["GATE","DRAIN","SOURCE","GND"]),
+    ("Q5", "ic",         100, 560,  30,  25, "BSC014N04",      "BSC014N04LS",   "",       "TDSON-8",
+     ["GATE","DRAIN","SOURCE","GND"]),
+    ("Q6", "ic",         140, 560,  30,  25, "BSC014N04",      "BSC014N04LS",   "",       "TDSON-8",
+     ["GATE","DRAIN","SOURCE","GND"]),
+
+    # -----------------------------------------------------------------------
+    # Additional connectors (J6-J10)
+    # -----------------------------------------------------------------------
+    # SATA connector (right side, below Ethernet)
+    ("J6", "connector", 1420, 800,  80,  50, "SATA",           "",              "",       "SATA-7P",
+     ["TX+","TX-","RX+","RX-","GND","GND2","GND3"]),
+    # WiFi antenna connector near U8
+    ("J7", "connector", 1180, 520,  30,  30, "ANT",            "",              "",       "U.FL",
+     ["SIG","GND"]),
+    # IR receiver (front panel area)
+    ("J8", "connector", 1300, 880,  40,  30, "IR",             "",              "",       "3-pin",
+     ["VCC","SIG","GND"]),
+    # Optical audio (TOSLINK)
+    ("J9", "connector", 1420, 870,  60,  50, "TOSLINK",        "",              "",       "TOSLINK",
+     ["TX","GND","VCC"]),
+    # DC power connector (left side)
+    ("J10","connector",   60, 50,   70,  50, "DC 12V",         "",              "",       "Barrel-5.5mm",
+     ["VCC_12V","GND"]),
+
+    # -----------------------------------------------------------------------
+    # Status LEDs (D7-D10)
+    # -----------------------------------------------------------------------
+    ("D7", "resistor",  1250, 880,  20,  14, "PWR",            "",              "GREEN",  "0805", ["A","K"]),
+    ("D8", "resistor",  1280, 880,  20,  14, "DISK",           "",              "AMBER",  "0805", ["A","K"]),
+    ("D9", "resistor",  1310, 880,  20,  14, "WIFI",           "",              "BLUE",   "0805", ["A","K"]),
+    ("D10","resistor",  1340, 880,  20,  14, "KINECT",         "",              "WHITE",  "0805", ["A","K"]),
+
+    # -----------------------------------------------------------------------
+    # Additional test points (TP6-TP15) — scattered near power rails, DDR, PCIe
+    # -----------------------------------------------------------------------
+    ("TP6", "test_point", 350, 880,  14,  14, "TP6",           "",              "",       "TP", ["1"]),
+    ("TP7", "test_point", 380, 880,  14,  14, "TP7",           "",              "",       "TP", ["1"]),
+    ("TP8", "test_point",  80, 660,  14,  14, "TP8",           "",              "",       "TP", ["1"]),
+    ("TP9", "test_point", 170, 660,  14,  14, "TP9",           "",              "",       "TP", ["1"]),
+    ("TP10","test_point", 870, 280,  14,  14, "TP10",          "",              "",       "TP", ["1"]),
+    ("TP11","test_point", 870, 320,  14,  14, "TP11",          "",              "",       "TP", ["1"]),
+    ("TP12","test_point", 870, 360,  14,  14, "TP12",          "",              "",       "TP", ["1"]),
+    ("TP13","test_point", 870, 400,  14,  14, "TP13",          "",              "",       "TP", ["1"]),
+    ("TP14","test_point", 870, 500,  14,  14, "TP14",          "",              "",       "TP", ["1"]),
+    ("TP15","test_point", 870, 540,  14,  14, "TP15",          "",              "",       "TP", ["1"]),
+
+    # -----------------------------------------------------------------------
+    # Additional inductors for new VRM phases
+    # -----------------------------------------------------------------------
+    ("L3", "inductor",   170, 280,  50,  40, "0.47uH",         "",             "0.47uH", "1210", ["1","2"]),
+    ("L4", "inductor",   170, 550,  50,  40, "1uH",            "",             "1uH",    "1210", ["1","2"]),
+    ("L5", "inductor",   170, 620,  50,  40, "2.2uH",          "",             "2.2uH",  "1210", ["1","2"]),
 ]
 # fmt: on
 
@@ -192,6 +407,76 @@ TRACE_ROUTES: list[tuple[list[tuple[int, int]], int]] = [
     ([(1380, 200), (1420, 200), (1420, 160)], 3), # TMDS out
     # Crystal (Y1) to Southbridge (U6) — reference clock
     ([(870, 465), (1090, 465), (1090, 280)], 2),
+
+    # -----------------------------------------------------------------------
+    # New DDR3 (U13-U16) data bus to APU
+    # -----------------------------------------------------------------------
+    ([(500, 350), (570, 350), (570, 210)], 3),   # DDR_DQ4 → U13
+    ([(500, 370), (750, 370), (750, 210)], 3),   # DDR_DQ5 → U14
+    ([(500, 580), (570, 580), (570, 770)], 3),   # DDR_DQ6 → U15
+    ([(500, 600), (750, 600), (750, 770)], 3),   # DDR_DQ7 → U16
+
+    # -----------------------------------------------------------------------
+    # Power section traces
+    # -----------------------------------------------------------------------
+    # DrMOS U17/U18 to APU core VRM bus
+    ([(140, 282), (240, 282), (500, 320)], 5),   # U17 → APU core
+    ([(230, 282), (350, 282), (500, 340)], 5),   # U18 → APU core
+    # PWM controllers U19/U20 to DrMOS phases
+    ([(80, 555), (80, 490), (80, 370)], 2),      # U19 PWM → U10
+    ([(170, 555), (170, 500), (170, 370)], 2),   # U20 PWM → U10
+    # IO rail buck U21 to APU IO
+    ([(135, 630), (350, 630), (500, 560)], 4),   # 1.1V IO → APU
+    # LDO U22 to HDMI/USB area
+    ([(1350, 267), (1420, 267), (1420, 260)], 3),# 3.3V → HDMI connector area
+    # Inductor L3 → DrMOS output
+    ([(220, 300), (350, 300), (500, 310)], 4),   # L3 → APU
+    # Inductor L4 → PWM area
+    ([(220, 570), (350, 570), (500, 520)], 4),   # L4 → APU
+    # Inductor L5 → IO buck output
+    ([(220, 640), (350, 640), (500, 540)], 4),   # L5 → APU
+
+    # -----------------------------------------------------------------------
+    # MOSFET gate traces from VRM controllers
+    # -----------------------------------------------------------------------
+    ([(80, 380), (100, 380), (100, 325)], 2),    # U10 → Q1 gate
+    ([(80, 395), (140, 395), (140, 325)], 2),    # U10 → Q2 gate
+    ([(80, 465), (100, 465), (100, 495)], 2),    # U11 → Q3 gate
+    ([(80, 475), (140, 475), (140, 495)], 2),    # U11 → Q4 gate
+    ([(80, 635), (100, 635), (100, 585)], 2),    # U21 → Q5 gate
+    ([(135, 635), (140, 635), (140, 585)], 2),   # U21 → Q6 gate
+
+    # -----------------------------------------------------------------------
+    # ESD protection traces
+    # -----------------------------------------------------------------------
+    ([(1420, 160), (1400, 160), (1400, 122)], 2),# HDMI ESD D3 → J1
+    ([(1420, 310), (1400, 310), (1400, 282)], 2),# USB ESD D1 → J2
+    ([(1420, 500), (1400, 500), (1400, 462)], 2),# USB ESD D2 → J3
+    ([(1420, 680), (1400, 680), (1400, 652)], 2),# Eth ESD D4 → J4
+    ([(1300, 180), (1380, 180), (1380, 192)], 2),# HDMI-in ESD D5 → U12
+    ([(60, 870), (60, 862), (60, 850)], 2),      # JTAG ESD D6 → J5
+
+    # -----------------------------------------------------------------------
+    # Additional connectors traces
+    # -----------------------------------------------------------------------
+    # SATA J6 to APU PCIe/SATA
+    ([(1420, 820), (900, 820), (900, 600), (800, 600)], 3), # SATA → APU
+    # WiFi antenna J7 to U8
+    ([(1180, 535), (1170, 535), (1170, 540)], 2),# ANT → WiFi
+    # IR receiver J8 to APU
+    ([(1300, 895), (900, 895), (900, 600), (800, 595)], 2), # IR → APU
+    # TOSLINK J9 to APU audio
+    ([(1420, 895), (950, 895), (950, 600), (800, 590)], 2), # TOSLINK → APU
+    # DC power J10 to VRMs
+    ([(60, 100), (60, 260)], 5),                 # 12V → VRM area
+
+    # -----------------------------------------------------------------------
+    # LED traces from APU GPIO
+    # -----------------------------------------------------------------------
+    ([(800, 570), (1250, 570), (1250, 880)], 2), # PWR LED
+    ([(800, 575), (1280, 575), (1280, 880)], 2), # DISK LED
+    ([(800, 580), (1310, 580), (1310, 880)], 2), # WIFI LED
+    ([(800, 585), (1340, 585), (1340, 880)], 2), # KINECT LED
 ]
 
 # Via positions (x, y, outer_radius, inner_radius)
@@ -232,6 +517,59 @@ VIAS: list[tuple[int, int, int, int]] = [
     # Ground stitching — right side
     (1200, 600, 5, 2),
     (1200, 650, 5, 2),
+
+    # New DDR3 U13/U14 bus transition vias
+    (570, 300, 6, 3),
+    (610, 300, 6, 3),
+    (750, 300, 6, 3),
+    (790, 300, 6, 3),
+    # New DDR3 U15/U16 bus transition vias
+    (570, 700, 6, 3),
+    (610, 700, 6, 3),
+    (750, 700, 6, 3),
+    (790, 700, 6, 3),
+
+    # DrMOS / VRM area vias
+    (100, 250, 5, 2),
+    (140, 250, 5, 2),
+    (180, 250, 5, 2),
+    (100, 520, 5, 2),
+    (140, 520, 5, 2),
+    (100, 600, 5, 2),
+    (140, 600, 5, 2),
+
+    # MOSFET area power vias
+    (120, 340, 6, 3),
+    (160, 340, 6, 3),
+    (120, 510, 6, 3),
+
+    # ESD protection area vias
+    (1400, 140, 5, 2),
+    (1400, 280, 5, 2),
+    (1400, 460, 5, 2),
+    (1400, 650, 5, 2),
+
+    # SATA/audio right-side vias
+    (900, 810, 5, 2),
+    (950, 810, 5, 2),
+
+    # LED trace transition vias
+    (1250, 580, 5, 2),
+    (1290, 580, 5, 2),
+    (1330, 580, 5, 2),
+
+    # Power input via
+    (60, 150, 6, 3),
+    (60, 200, 6, 3),
+
+    # Ground stitching between APU and connectors
+    (900, 350, 5, 2),
+    (900, 400, 5, 2),
+    (900, 450, 5, 2),
+    (900, 550, 5, 2),
+    (950, 350, 5, 2),
+    (950, 400, 5, 2),
+    (950, 450, 5, 2),
 ]
 
 # Mounting holes (x, y, outer_r, inner_r) — 4 corners + 2 internal posts
@@ -267,6 +605,33 @@ SILK_LABELS: list[tuple[str, int, int]] = [
     ("L2",   172,  458),
     ("Y1",   872,  448),
     ("TP1-TP5", 196, 900),
+    ("U13",  502,  118),   # DDR3
+    ("U14",  682,  118),   # DDR3
+    ("U15",  502,  678),   # DDR3
+    ("U16",  682,  678),   # DDR3
+    ("U17",   82,  258),   # DrMOS
+    ("U18",  172,  258),   # DrMOS
+    ("U19",   82,  528),   # PWM
+    ("U20",  172,  528),   # PWM
+    ("U21",   82,  608),   # Buck
+    ("U22", 1302,  248),   # LDO
+    ("J6",  1422,  798),   # SATA
+    ("J7",  1182,  518),   # ANT
+    ("J8",  1302,  878),   # IR
+    ("J9",  1422,  868),   # TOSLINK
+    ("J10",   62,   48),   # DC Power
+    ("L3",   172,  278),
+    ("L4",   172,  548),
+    ("L5",   172,  618),
+    ("D1",  1402,  258),   # USB ESD
+    ("D2",  1402,  438),   # USB ESD
+    ("D3",  1402,   98),   # HDMI ESD
+    ("D4",  1402,  628),   # Eth ESD
+    ("D6",    62,  848),   # JTAG ESD
+    ("Q1-Q6", 102, 338),   # MOSFETs
+    ("TP6-TP7", 346, 900),
+    ("TP8-9",  82, 678),
+    ("TP10-15", 872, 558),
     ("FCC: C3K1520", 1300, 970),
     ("(C) Microsoft Corp. — Synthetic Demo Only", 400, 970),
 ]
@@ -794,6 +1159,7 @@ def generate_board_image(
 # ---------------------------------------------------------------------------
 
 XBOX_TRACE_ENDPOINTS: list[tuple[str, str]] = [
+    # Original 34 traces
     ("U1","U2"),("U1","U3"),("U1","U2"),("U1","U3"),("U1","U4"),("U1","U5"),
     ("U1","U6"),("U1","U6"),("U1","U12"),("U1","U12"),
     ("U6","U7"),("U6","U7"),("U6","U7"),("U6","U7"),
@@ -802,19 +1168,54 @@ XBOX_TRACE_ENDPOINTS: list[tuple[str, str]] = [
     ("U8","U6"),("U8","U6"),("U9","J4"),("U9","J4"),
     ("J5","U1"),("J5","U1"),("J5","U1"),("J5","U1"),
     ("U12","J1"),("U12","J1"),("Y1","U6"),
+    # New DDR3 U13-U16 (4 traces)
+    ("U1","U13"),("U1","U14"),("U1","U15"),("U1","U16"),
+    # Power: DrMOS, PWM, buck, LDO, inductors (9 traces)
+    ("U17","U1"),("U18","U1"),
+    ("U19","U10"),("U20","U10"),
+    ("U21","U1"),("U22","J1"),
+    ("L3","U1"),("L4","U1"),("L5","U1"),
+    # MOSFET gate drives (6 traces)
+    ("U10","Q1"),("U10","Q2"),("U11","Q3"),("U11","Q4"),("U21","Q5"),("U21","Q6"),
+    # ESD protection (6 traces)
+    ("D3","J1"),("D1","J2"),("D2","J3"),("D4","J4"),("D5","U12"),("D6","J5"),
+    # Connectors: SATA, ANT, IR, TOSLINK, DC power (5 traces)
+    ("J6","U1"),("J7","U8"),("J8","U1"),("J9","U1"),("J10","U17"),
+    # Status LEDs (4 traces)
+    ("U1","D7"),("U1","D8"),("U1","D9"),("U1","D10"),
 ]
 
 
 XBOX_ZONES: list[tuple[str, str, list[str]]] = [
     ("APU Complex", "cpu", ["U1"]),
-    ("DDR3 Memory Bank A", "memory", ["U2", "U3"]),
-    ("DDR3 Memory Bank B", "memory", ["U4", "U5"]),
-    ("Power Delivery", "power", ["U10", "U11", "L1", "L2"]),
-    ("HDMI Output", "io", ["U6", "U12", "J1"]),
-    ("Storage", "storage", ["U7"]),
-    ("Wireless / Networking", "network", ["U8", "U9", "J4"]),
-    ("USB Subsystem", "io", ["J2", "J3"]),
-    ("Debug / JTAG", "debug", ["J5", "TP1", "TP2", "TP3", "TP4", "TP5"]),
+    ("DDR3 Memory Bank A", "memory", ["U2", "U3", "U13", "U14",
+     "C15", "C16", "C17", "C18", "C23", "C24", "C25", "C26",
+     "R13", "R14", "R15", "R16"]),
+    ("DDR3 Memory Bank B", "memory", ["U4", "U5", "U15", "U16",
+     "C19", "C20", "C21", "C22", "C27", "C28", "C29", "C30"]),
+    ("Power Delivery", "power", ["U10", "U11", "U17", "U18", "U19", "U20", "U21",
+     "L1", "L2", "L3", "L4", "L5",
+     "Q1", "Q2", "Q3", "Q4", "Q5", "Q6",
+     "C39", "C40", "C41", "C42", "C43", "C44", "J10"]),
+    ("HDMI Output", "io", ["U6", "U12", "U22", "J1",
+     "C31", "C32", "C45", "C46", "C47",
+     "R4", "R5", "R6", "R7",
+     "D3", "D5"]),
+    ("Storage", "storage", ["U7", "J6", "C33", "C34"]),
+    ("Wireless / Networking", "network", ["U8", "U9", "J4", "J7",
+     "C35", "C36", "C37", "C38", "D4"]),
+    ("USB Subsystem", "io", ["J2", "J3", "D1", "D2",
+     "R8", "R9", "R10", "R11"]),
+    ("Debug / JTAG", "debug", ["J5", "D6",
+     "TP1", "TP2", "TP3", "TP4", "TP5", "TP6", "TP7"]),
+    ("APU Decoupling", "power", ["C7", "C8", "C9", "C10",
+     "C11", "C12", "C13", "C14", "C50", "R12",
+     "C48", "C49", "Y1"]),
+    ("Front Panel", "io", ["J8", "J9",
+     "D7", "D8", "D9", "D10",
+     "R17", "R18", "R19", "R20"]),
+    ("Power Rail Test Points", "debug", ["TP8", "TP9",
+     "TP10", "TP11", "TP12", "TP13", "TP14", "TP15"]),
 ]
 
 CISCO_ZONES: list[tuple[str, str, list[str]]] = [

@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-86%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->513<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->6425<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->513<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->6500<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -36,9 +36,9 @@ Two boards. Two worlds. Both analyzed from photos alone.
 
 **Xbox One Model 1540 (Durango) — Gaming Console RE**
 
-<img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One Model 1540 Durango — AMD Liverpool APU, 34 components, 34 traces, 9 functional zones"/>
+<img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One Model 1540 Durango — AMD Liverpool APU, 155 components, functional zones"/>
 
-AMD Liverpool APU (BGA-1170), 8GB DDR3, HDMI encoder, eMMC — 34 components, 34 traces, 9 functional zones (CPU, memory, power, I/O, debug)
+AMD Liverpool APU (BGA-1170), 16× SK Hynix DDR3, Southbridge X861949, SK Hynix eMMC — 155 components, 9 functional zones (CPU, memory, power, I/O, debug, storage, network)
 
 </td>
 <td width="50%">
@@ -130,7 +130,7 @@ graph LR
     A["📷 PCB Photo"] --> B["Component Detection\n<sub>YOLO v8 / OpenCV fallback</sub>"]
     B --> C["Chip OCR\n<sub>EasyOCR + fuzzy match</sub>"]
     B --> D["Trace Extraction\n<sub>HSV/LAB · skeleton · BFS</sub>"]
-    C --> E["Part Identification\n<sub>local DB · 114 parts</sub>"]
+    C --> E["Part Identification\n<sub>local DB · 128 parts</sub>"]
     D --> F["Constraint Solver\n<sub>AC-3 arc consistency</sub>"]
     E --> G["🔍 Analysis Result"]
     E -.->|"cross-board transfer"| E
@@ -149,7 +149,7 @@ graph LR
 1. **Detect** — YOLO v8 finds components (ICs, caps, resistors, connectors, headers, test points). Falls back to OpenCV contours when YOLO isn't installed — zero model downloads needed.
 2. **OCR** — EasyOCR reads chip markings from IC bounding boxes. Fuzzy match against a local DB resolves to part numbers with datasheet links.
 3. **Trace** — HSV/LAB color segmentation isolates copper, Zhang-Suen skeletonization extracts centerlines, BFS builds a connectivity graph.
-4. **Identify** — Fuzzy match against 114-part component DB with datasheet links.
+4. **Identify** — Fuzzy match against 128-part component DB with datasheet links.
 5. **Learn** — Identified parts persist to a cross-board knowledge base. The more boards you scan, the faster subsequent analysis gets.
 6. **Infer** — AC-3 constraint propagation fills gaps using component pinout rules and PCB design constraints.
 7. **Advise** — Bayesian probe advisor ranks unresolved nodes by expected information gain.
@@ -455,7 +455,7 @@ re:trace is built for hardware security assessments:
 | Assessment Phase | What You Need | re:trace Feature |
 |---|---|---|
 | **Recon** | Board photos without opening the case | FCC filing search (public domain photos) + iFixit teardown API |
-| **Attack surface mapping** | Identify MCUs, flash, FPGAs, crypto ICs | YOLO v8 detection + OCR + 114-part fuzzy matcher |
+| **Attack surface mapping** | Identify MCUs, flash, FPGAs, crypto ICs | YOLO v8 detection + OCR + 128-part fuzzy matcher |
 | **Trust chain analysis** | Map FPGA ↔ SPI flash ↔ CPU paths | Automated trace extraction + constraint solver (see Thrangrycat demo) |
 | **Debug interface discovery** | Find JTAG, SWD, UART, SPI headers | Pattern-match detection with CWE severity ratings |
 | **Optimal probing** | Where to put the multimeter next | Bayesian advisor: 6–10 measurements to convergence |
@@ -476,7 +476,7 @@ re:trace makes deliberate engineering trade-offs. This section documents why.
 
 **OpenCV contour fallback over requiring YOLO.** Many RE practitioners work on air-gapped systems or don't have CUDA. The contour-based detector uses adaptive threshold → morphological filtering → contour hierarchy classification. It's less accurate than YOLO v8 (no class labels, ~50% confidence) but runs anywhere Python runs. The pipeline transparently falls back without user intervention.
 
-**Local fuzzy matching over cloud APIs (Octopart, Digi-Key).** Cloud lookups require API keys, rate limits, and network access — none of which are available in a SCIF or during a field assessment. The built-in 114-part DB covers the ICs, connectors, and passives most commonly found in consumer/enterprise hardware. Unknown markings are flagged for later identification rather than blocking the pipeline.
+**Local fuzzy matching over cloud APIs (Octopart, Digi-Key).** Cloud lookups require API keys, rate limits, and network access — none of which are available in a SCIF or during a field assessment. The built-in 128-part DB covers the ICs, connectors, and passives most commonly found in consumer/enterprise hardware. Unknown markings are flagged for later identification rather than blocking the pipeline.
 
 **Zhang-Suen skeletonization over medial axis transform.** Medial axis produces cleaner centerlines but is 3–5x slower and sensitive to boundary noise. Zhang-Suen is a lookup-table thinning pass — fast, deterministic, and robust to the jagged edges that come from real PCB photos. The width estimation uses distance transform on the pre-skeleton mask, so skeleton quality doesn't affect width accuracy.
 
@@ -511,7 +511,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->6425<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->6500<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -550,7 +550,7 @@ src/retrace/                             # <!-- STATS:loc -->6425<!-- /STATS -->
 | Tests | <!-- STATS:tests -->513<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->86%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->20<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->6425<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->6500<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -587,7 +587,7 @@ The demo boards use synthetic PCB images with verified real-world component data
 
 | Board | Components | Traces | Zones | Security Findings |
 |---|---|---|---|---|
-| **Xbox One (Model 1540)** | 34 (12 ICs, 5 connectors, 5 test points) | 34 | 9 | JTAG header (HIGH) |
+| **Xbox One (Model 1540)** | 155 (22 ICs, 10 connectors, 44 caps, 20 resistors, 10 test points) | 55+ | 9 | JTAG header (HIGH) |
 | **Cisco ASA 5506-X** | 43 (12 ICs, 11 connectors, 4 test points) | 41 | 10 | JTAG + UART console (HIGH/MED) |
 
 The device registry covers **10 product families** with 48 hardware revisions: Xbox One/Series, PlayStation 5, Nintendo Switch, Steam Deck, Raspberry Pi, Ubiquiti UniFi, Ring Doorbell, Cisco ASA, and Cisco Catalyst — including SoC specs, FCC IDs, iFixit guide IDs, and security advisories (Thrangrycat, AVR54, ArcaneDoor).

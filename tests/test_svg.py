@@ -379,10 +379,11 @@ class TestEmptyResult:
         assert "0 components" in svg
 
     def test_image_href_embedded(self):
+        # Non-existent local path is skipped entirely (SVG stays self-contained)
         result = _make_result()
         svg = generate_svg(result, image_href="/path/to/board.jpg")
-        assert "<image" in svg
-        assert "/path/to/board.jpg" in svg
+        assert "<image" not in svg
+        assert "/path/to/board.jpg" not in svg
 
     def test_no_image_href_no_image_element(self):
         result = _make_result()
@@ -429,10 +430,11 @@ class TestSvgSecurity:
         svg = generate_svg(result, image_href="data:image/png;base64,abc")
         assert "<image" in svg
 
-    def test_file_path_href_allowed(self):
+    def test_file_path_href_nonexistent_skipped(self):
+        # Non-existent local file paths are silently dropped so SVG is self-contained
         result = _make_result()
         svg = generate_svg(result, image_href="/path/to/image.jpg")
-        assert "<image" in svg
+        assert "<image" not in svg
 
 
 # ---------------------------------------------------------------------------

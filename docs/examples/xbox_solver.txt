@@ -2,86 +2,86 @@ re:trace Constraint Solver — Inferred Netlist
 ==================================================
 
 Board: Xbox One Model 1540 — Durango (AMD Liverpool APU, 28nm)
-Timestamp: 2026-04-30T21:06:59Z
-AC-3 iterations: 80
+Timestamp: 2026-04-30T21:38:54Z
+AC-3 iterations: 84
 
-Net Assignments (235 nodes):
+Net Assignments (574 nodes):
 
   [POWER]
+    C15.1
+    C35.1
+    C37.1
+    C39.1
+    C40.1
+    C41.1
+    C42.1
+    C43.1
+    C44.1
+    C45.1
+    C46.1
+    C47.1
+    D1.VCC
+    D2.VCC
+    D3.VCC
+    D4.VCC
+    D5.VCC
+    D6.VCC
     J1.5V
-    J5.TDI
-    J5.VCC
-    U1.PCIE_TX
-    U1.VCC_CORE
-    U1.VCC_GFX
-    U1.VCC_IO
-    U10.VIN
-    U11.VIN
-    U12.VCC
-    U2.VDD
-    U2.VDDQ
-    U3.VDD
-    U3.VDDQ
-    U4.VDD
-    U4.VDDQ
-    U5.VDD
-    U5.VDDQ
-    U6.VCC
-    U7.VCC
-    ... and 3 more
+    J10.VCC_12V
+    ... and 40 more
 
   [GROUND]
+    C15.2
+    C35.2
+    C37.2
+    C39.2
+    C40.2
+    C41.2
+    C42.2
+    C43.2
+    C44.2
+    C45.2
+    C46.2
+    C47.2
+    D1.GND
+    D2.GND
+    D3.GND
+    D4.GND
+    D5.GND
+    D6.GND
     J1.GND
-    J2.GND
-    J2.GND2
-    J3.GND
-    J3.GND2
-    J4.GND
-    J5.GND
-    J5.GND2
-    J5.GND3
-    U1.GND
-    U1.GND2
-    U1.GND3
-    U1.GND4
-    U1.PCIE_RX
-    U10.GND
-    U11.GND
-    U12.GND
-    U2.VSS
-    U2.VSSQ
-    U3.VSS
-    ... and 11 more
+    J10.GND
+    ... and 57 more
 
   [UNKNOWN]
     C1.1
     C1.2
-    C2.1
-    C2.2
-    C3.1
-    C3.2
-    C4.1
-    C4.2
-    C5.1
-    C5.2
-    C6.1
-    C6.2
-    J1.CEC
-    J1.CK+
-    J1.CK-
-    J1.HPD
-    J1.SCL
-    J1.SDA
-    J1.TMDS0+
-    J1.TMDS0-
-    ... and 161 more
+    C10.1
+    C10.2
+    C11.1
+    C11.2
+    C12.1
+    C12.2
+    C13.1
+    C13.2
+    C14.1
+    C14.2
+    C16.1
+    C16.2
+    C17.1
+    C17.2
+    C18.1
+    C18.2
+    C19.1
+    C19.2
+    ... and 417 more
 
 Inferred Connections (3):
   U1.VCC_CORE  <-->  J5.TDI
   U6.VCC  <-->  U1.PCIE_TX
   U6.GND  <-->  U1.PCIE_RX
 
-Ambiguous Nodes (170):
+Ambiguous Nodes (426):
   U1.DDR_DQ0
   U1.DDR_DQ1
   U1.DDR_A0
@@ -92,6 +92,6 @@ Ambiguous Nodes (170):
   U2.DQ2
   U2.DQ3
   U2.A0
-  ... and 160 more
+  ... and 416 more
 
 No constraint conflicts detected.

@@ -2,7 +2,7 @@
   <!-- re:trace SVG overlay — components, traces, BOM -->
   <defs>
     <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-      <circle cx="10" cy="10" r="0.5" fill="#1a2340"/>
+      <circle cx="10" cy="10" r="0.8" fill="#1a2a40"/>
     </pattern>
     <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
@@ -26,7 +26,71 @@
   </defs>
   <rect width="1600" height="1000" fill="#0a0e1a"/>
   <rect width="1600" height="1000" fill="url(#grid)"/>
-  <image href="cisco_board.png" x="0" y="32" width="1600" height="944" preserveAspectRatio="xMidYMid meet" opacity="0.85"/>
+  <rect x="6" y="38" width="1588" height="932" rx="4" ry="4" fill="#0b1120" fill-opacity="0.55" stroke="#1e2d40" stroke-width="1.5"/>
+  <line x1="6" y1="78" x2="1594" y2="78" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="118" x2="1594" y2="118" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="158" x2="1594" y2="158" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="198" x2="1594" y2="198" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="238" x2="1594" y2="238" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="278" x2="1594" y2="278" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="318" x2="1594" y2="318" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="358" x2="1594" y2="358" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="398" x2="1594" y2="398" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="438" x2="1594" y2="438" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="478" x2="1594" y2="478" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="518" x2="1594" y2="518" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="558" x2="1594" y2="558" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="598" x2="1594" y2="598" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="638" x2="1594" y2="638" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="678" x2="1594" y2="678" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="718" x2="1594" y2="718" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="758" x2="1594" y2="758" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="798" x2="1594" y2="798" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="838" x2="1594" y2="838" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="878" x2="1594" y2="878" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="918" x2="1594" y2="918" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="958" x2="1594" y2="958" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="46" y1="38" x2="46" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="86" y1="38" x2="86" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="126" y1="38" x2="126" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="166" y1="38" x2="166" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="206" y1="38" x2="206" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="246" y1="38" x2="246" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="286" y1="38" x2="286" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="326" y1="38" x2="326" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="366" y1="38" x2="366" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="406" y1="38" x2="406" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="446" y1="38" x2="446" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="486" y1="38" x2="486" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="526" y1="38" x2="526" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="566" y1="38" x2="566" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="606" y1="38" x2="606" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="646" y1="38" x2="646" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="686" y1="38" x2="686" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="726" y1="38" x2="726" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="766" y1="38" x2="766" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="806" y1="38" x2="806" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="846" y1="38" x2="846" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="886" y1="38" x2="886" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="926" y1="38" x2="926" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="966" y1="38" x2="966" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1006" y1="38" x2="1006" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1046" y1="38" x2="1046" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1086" y1="38" x2="1086" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1126" y1="38" x2="1126" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1166" y1="38" x2="1166" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1206" y1="38" x2="1206" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1246" y1="38" x2="1246" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1286" y1="38" x2="1286" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1326" y1="38" x2="1326" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1366" y1="38" x2="1366" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1406" y1="38" x2="1406" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1446" y1="38" x2="1446" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1486" y1="38" x2="1486" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1526" y1="38" x2="1526" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1566" y1="38" x2="1566" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <rect x="6" y="38" width="1588" height="932" rx="4" ry="4" fill="none" stroke="#2a4060" stroke-width="2.5"/>
+  <path d="M10,966 L10,42 L1590,42" fill="none" stroke="#2e5070" stroke-width="0.8" stroke-opacity="0.5" stroke-linecap="round"/>
   <g class="title-bar">
     <rect width="1600" height="32" fill="#111827" fill-opacity="0.92"/>
     <line x1="0" y1="32" x2="1600" y2="32" stroke="#22d3ee" stroke-width="1" stroke-opacity="0.4"/>

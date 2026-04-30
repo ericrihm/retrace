@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "timestamp": "2026-04-30T21:06:59Z",
+  "timestamp": "2026-04-30T21:38:54Z",
   "image": "docs/examples/cisco_board.png",
   "board_dimensions": [
     1600,
@@ -1557,6 +1557,7 @@
     },
     "traces": 41,
     "identified": 13,
+    "pattern_matches": 0,
     "duration_seconds": 0.0
   }
 }
