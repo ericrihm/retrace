@@ -183,6 +183,161 @@ def _builtin_patterns() -> List[SubcircuitPattern]:
                 PatternEdge("crystal", "", "cap_b", "", required=True),
             ],
         ),
+        SubcircuitPattern(
+            name="buck_converter",
+            description="Switching buck regulator: IC + inductor + output cap + catch diode",
+            nodes=[
+                PatternNode("regulator_ic", ["ic", "regulator"], [],
+                            {"role_hint": "switching_regulator"}),
+                PatternNode("inductor", ["inductor", "ferrite"], [],
+                            {"role_hint": "power_inductor"}),
+                PatternNode("output_cap", ["capacitor"], ["1", "2"],
+                            {"role_hint": "output_filter"}),
+                PatternNode("catch_diode", ["diode"], [],
+                            {"role_hint": "schottky_catch"}),
+            ],
+            edges=[
+                PatternEdge("regulator_ic", "", "inductor", "", required=True),
+                PatternEdge("inductor", "", "output_cap", "", required=True),
+                PatternEdge("regulator_ic", "", "catch_diode", "", required=True),
+                PatternEdge("output_cap", "", "catch_diode", "", required=False),
+            ],
+        ),
+        SubcircuitPattern(
+            name="usb_esd_protection",
+            description="ESD diode array protecting USB data lines near connector",
+            nodes=[
+                PatternNode("esd_array", ["ic", "diode"], [],
+                            {"role_hint": "esd_tvs"}),
+                PatternNode("usb_connector", ["connector", "ic"], [],
+                            {"role_hint": "usb_connector"}),
+            ],
+            edges=[
+                PatternEdge("usb_connector", "", "esd_array", "", required=True),
+            ],
+        ),
+        SubcircuitPattern(
+            name="i2c_pullup_pair",
+            description="Matched pull-up resistors on I2C SDA and SCL lines",
+            nodes=[
+                PatternNode("sda_pullup", ["resistor"], ["A", "B", "1", "2"],
+                            {"role_hint": "sda_pullup"}),
+                PatternNode("scl_pullup", ["resistor"], ["A", "B", "1", "2"],
+                            {"role_hint": "scl_pullup"}),
+            ],
+            edges=[
+                PatternEdge("sda_pullup", "", "scl_pullup", "", required=True),
+            ],
+        ),
+        SubcircuitPattern(
+            name="spi_flash_circuit",
+            description="SPI NOR flash with decoupling cap and CS pull-up",
+            nodes=[
+                PatternNode("flash_ic", ["ic", "flash"], [],
+                            {"role_hint": "spi_flash"}),
+                PatternNode("decoupling_cap", ["capacitor"], ["1", "2"],
+                            {"role_hint": "vcc_decoupling"}),
+                PatternNode("cs_pullup", ["resistor"], ["A", "B", "1", "2"],
+                            {"role_hint": "cs_pullup"}),
+            ],
+            edges=[
+                PatternEdge("flash_ic", "", "decoupling_cap", "", required=True),
+                PatternEdge("flash_ic", "", "cs_pullup", "", required=True),
+                PatternEdge("decoupling_cap", "", "cs_pullup", "", required=False),
+            ],
+        ),
+        SubcircuitPattern(
+            name="uart_level_shifter",
+            description="Level-shift IC between MCU UART and external connector",
+            nodes=[
+                PatternNode("level_shift_ic", ["ic"], [],
+                            {"role_hint": "level_shifter"}),
+                PatternNode("connector", ["connector", "ic"], [],
+                            {"role_hint": "uart_connector"}),
+            ],
+            edges=[
+                PatternEdge("level_shift_ic", "", "connector", "", required=True),
+            ],
+        ),
+        SubcircuitPattern(
+            name="h_bridge",
+            description="H-bridge motor driver: 4 FETs/transistors for bidirectional motor control",
+            nodes=[
+                PatternNode("high_side_a", ["ic", "transistor", "mosfet"], [],
+                            {"role_hint": "high_side_switch"}),
+                PatternNode("low_side_a", ["ic", "transistor", "mosfet"], [],
+                            {"role_hint": "low_side_switch"}),
+                PatternNode("high_side_b", ["ic", "transistor", "mosfet"], [],
+                            {"role_hint": "high_side_switch"}),
+                PatternNode("low_side_b", ["ic", "transistor", "mosfet"], [],
+                            {"role_hint": "low_side_switch"}),
+            ],
+            edges=[
+                PatternEdge("high_side_a", "", "low_side_a", "", required=True),
+                PatternEdge("high_side_b", "", "low_side_b", "", required=True),
+                PatternEdge("high_side_a", "", "high_side_b", "", required=False),
+                PatternEdge("low_side_a", "", "low_side_b", "", required=False),
+            ],
+        ),
+        SubcircuitPattern(
+            name="reset_circuit",
+            description="RC network on MCU reset pin (power-on reset delay)",
+            nodes=[
+                PatternNode("reset_resistor", ["resistor"], ["A", "B", "1", "2"],
+                            {"role_hint": "reset_pullup"}),
+                PatternNode("reset_cap", ["capacitor"], ["1", "2"],
+                            {"role_hint": "reset_filter"}),
+            ],
+            edges=[
+                PatternEdge("reset_resistor", "", "reset_cap", "", required=True),
+            ],
+        ),
+        SubcircuitPattern(
+            name="usb_connector_circuit",
+            description="USB connector with ESD protection, series resistors, and decoupling",
+            nodes=[
+                PatternNode("usb_conn", ["connector", "ic"], [],
+                            {"role_hint": "usb_connector"}),
+                PatternNode("dp_resistor", ["resistor"], ["A", "B", "1", "2"],
+                            {"role_hint": "usb_dp_series"}),
+                PatternNode("dm_resistor", ["resistor"], ["A", "B", "1", "2"],
+                            {"role_hint": "usb_dm_series"}),
+                PatternNode("decoupling_cap", ["capacitor"], ["1", "2"],
+                            {"role_hint": "vbus_decoupling"}),
+            ],
+            edges=[
+                PatternEdge("usb_conn", "", "dp_resistor", "", required=True),
+                PatternEdge("usb_conn", "", "dm_resistor", "", required=True),
+                PatternEdge("usb_conn", "", "decoupling_cap", "", required=False),
+                PatternEdge("dp_resistor", "", "dm_resistor", "", required=False),
+            ],
+        ),
+        SubcircuitPattern(
+            name="differential_pair_termination",
+            description="Matched termination resistors on a differential signal pair",
+            nodes=[
+                PatternNode("term_resistor_p", ["resistor"], ["A", "B", "1", "2"],
+                            {"role_hint": "diff_p_term"}),
+                PatternNode("term_resistor_n", ["resistor"], ["A", "B", "1", "2"],
+                            {"role_hint": "diff_n_term"}),
+            ],
+            edges=[
+                PatternEdge("term_resistor_p", "", "term_resistor_n", "", required=True),
+            ],
+        ),
+        SubcircuitPattern(
+            name="power_indicator_led",
+            description="LED with current-limiting resistor on a power rail",
+            nodes=[
+                PatternNode("led", ["led", "diode"], [],
+                            {"role_hint": "indicator_led"}),
+                PatternNode("current_resistor", ["resistor"], ["A", "B", "1", "2"],
+                            {"role_hint": "current_limit"}),
+            ],
+            edges=[
+                PatternEdge("current_resistor", "", "led", "", required=True),
+            ],
+        ),
     ]
 
 

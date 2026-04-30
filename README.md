@@ -11,7 +11,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://pypi.org/project/retrace-pcb/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-**<!-- STATS:tests -->273<!-- /STATS --> tests** · **<!-- STATS:modules -->19<!-- /STATS --> modules** · **<!-- STATS:loc -->4651<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->273<!-- /STATS --> tests** · **<!-- STATS:modules -->19<!-- /STATS --> modules** · **<!-- STATS:loc -->4806<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -151,7 +151,7 @@ The knowledge flywheel — each board analyzed teaches subcircuit patterns that 
 | `pull_up_resistor` | Resistor near IC | I2C/SPI pull-up |
 | `crystal_oscillator` | Crystal + 2 capacitors | Clock oscillator circuit |
 
-<!-- STATS:patterns -->5<!-- /STATS --> built-in patterns. Extensible via plugins.
+<!-- STATS:patterns -->15<!-- /STATS --> built-in patterns. Extensible via plugins.
 
 ### Component Detection
 
@@ -270,7 +270,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->4651<!-- /STATS --> lines across <!-- STATS:modules -->19<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->4806<!-- /STATS --> lines across <!-- STATS:modules -->19<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -308,9 +308,9 @@ src/retrace/                             # <!-- STATS:loc -->4651<!-- /STATS -->
 | Tests | <!-- STATS:tests -->273<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->78%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->19<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->4651<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->4806<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->114<!-- /STATS --> parts |
-| Circuit patterns | <!-- STATS:patterns -->5<!-- /STATS --> built-in |
+| Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
 <sub>Auto-updated by <code>tools/readme_stats.py</code></sub>
 
