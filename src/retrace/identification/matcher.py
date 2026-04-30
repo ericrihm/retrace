@@ -1081,6 +1081,144 @@ _COMPONENT_DB: list[dict] = [
         "datasheet": "https://www.ti.com/lit/ds/symlink/tpa3116d2.pdf",
         "description": "2×50W stereo Class D amplifier",
     },
+    # -----------------------------------------------------------------------
+    # TPM (Trusted Platform Module)
+    # -----------------------------------------------------------------------
+    {
+        "part": "SLB9670",
+        "aliases": ["SLB9670", "SLB 9670", "INFINEON SLB9670"],
+        "category": "tpm",
+        "manufacturer": "Infineon",
+        "package": "QFN-32",
+        "datasheet": "https://www.infineon.com/dgdl/Infineon-SLB9670VQ12-DataSheet-v14_10-EN.pdf",
+        "description": "TPM 2.0, SPI interface, FIPS 140-2 certified",
+    },
+    {
+        "part": "NPCT750",
+        "aliases": ["NPCT750", "NPCT750A", "NUVOTON NPCT750"],
+        "category": "tpm",
+        "manufacturer": "Nuvoton",
+        "package": "QFP-32",
+        "datasheet": "https://www.nuvoton.com/resource-files/NPCT750_DS_Ver1.0.pdf",
+        "description": "TPM 2.0, LPC interface",
+    },
+    {
+        "part": "ST33TPHF2ESPI",
+        "aliases": ["ST33TPHF2ESPI", "ST33TPH", "ST33"],
+        "category": "tpm",
+        "manufacturer": "STMicroelectronics",
+        "package": "UFQFPN-32",
+        "datasheet": "https://www.st.com/resource/en/datasheet/st33tphf2espi.pdf",
+        "description": "TPM 2.0, SPI interface, Common Criteria EAL4+",
+    },
+    # -----------------------------------------------------------------------
+    # Secure Elements & CryptoAuth
+    # -----------------------------------------------------------------------
+    {
+        "part": "SE050",
+        "aliases": ["SE050", "NXP SE050", "SE050C2"],
+        "category": "secure_element",
+        "manufacturer": "NXP",
+        "package": "HX2QFN-20",
+        "datasheet": "https://www.nxp.com/docs/en/data-sheet/SE050-DATASHEET.pdf",
+        "description": "Secure Element, I2C, IoT security middleware, CC EAL 6+",
+    },
+    {
+        "part": "ATECC608B",
+        "aliases": ["ATECC608B", "ATECC608"],
+        "category": "secure_element",
+        "manufacturer": "Microchip",
+        "package": "UDFN-8",
+        "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/ATECC608B-CryptoAuthentication-Device-Summary-Data-Sheet-DS40002239B.pdf",
+        "description": "CryptoAuthentication device, ECDH/ECDSA, hardware key storage (B revision)",
+    },
+    {
+        "part": "SLS32AIA",
+        "aliases": ["SLS32AIA", "SLS32", "INFINEON SLS32"],
+        "category": "secure_element",
+        "manufacturer": "Infineon",
+        "package": "SPI",
+        "datasheet": "https://www.infineon.com/cms/en/product/security-smart-card-solutions/optiga-embedded-security-solutions/optiga-trust/",
+        "description": "OPTIGA Trust Anchor, SPI, mutual authentication",
+    },
+    {
+        "part": "STSAFE-A110",
+        "aliases": ["STSAFE-A110", "STSAFEA110", "STSAFE"],
+        "category": "secure_element",
+        "manufacturer": "STMicroelectronics",
+        "package": "SO8N",
+        "datasheet": "https://www.st.com/resource/en/datasheet/stsafe-a110.pdf",
+        "description": "Secure Element, I2C, CC EAL5+ certified, TLS/IoT auth",
+    },
+    # -----------------------------------------------------------------------
+    # FPGAs & CPLDs
+    # -----------------------------------------------------------------------
+    {
+        "part": "XC7A35T",
+        "aliases": ["XC7A35T", "ARTIX-7", "ARTIX7", "XC7A35"],
+        "category": "fpga",
+        "manufacturer": "Xilinx",
+        "package": "BGA-236",
+        "datasheet": "https://www.xilinx.com/support/documentation/data_sheets/ds180_7Series_Overview.pdf",
+        "description": "Artix-7 FPGA, 33280 LUTs, PCIe, 6.6Gb/s transceivers",
+    },
+    {
+        "part": "XC6SLX9",
+        "aliases": ["XC6SLX9", "SPARTAN-6", "SPARTAN6", "XC6SLX9-2"],
+        "category": "fpga",
+        "manufacturer": "Xilinx",
+        "package": "TQFP-144",
+        "datasheet": "https://www.xilinx.com/support/documentation/data_sheets/ds160.pdf",
+        "description": "Spartan-6 FPGA, 9152 LUTs, low-power, LPDDR support",
+    },
+    {
+        "part": "iCE40UP5K",
+        "aliases": ["ICE40UP5K", "ICE40", "ICE40UP5K-SG48"],
+        "category": "fpga",
+        "manufacturer": "Lattice",
+        "package": "QFN-48",
+        "datasheet": "https://www.latticesemi.com/view_document?document_id=51968",
+        "description": "iCE40 UltraPlus FPGA, 5280 LUTs, DSP, SPRAM, open-source toolchain",
+    },
+    {
+        "part": "10M08SAE144C8G",
+        "aliases": ["MAX10", "10M08", "INTEL MAX10", "MAX10 10M08"],
+        "category": "fpga",
+        "manufacturer": "Intel",
+        "package": "EQFP-144",
+        "datasheet": "https://www.intel.com/content/www/us/en/programmable/documentation/mcn1397700832153.html",
+        "description": "Intel MAX 10 FPGA, 8000 LEs, instant-on, non-volatile",
+    },
+    # -----------------------------------------------------------------------
+    # Ethernet PHYs
+    # -----------------------------------------------------------------------
+    {
+        "part": "88E1512",
+        "aliases": ["88E1512", "MARVELL 88E1512", "88E1512-A0-NNP2C000"],
+        "category": "ethernet",
+        "manufacturer": "Marvell",
+        "package": "QFN-56",
+        "datasheet": "https://www.marvell.com/content/dam/marvell/en/public-collateral/transceivers/marvell-phys-transceivers-alaska-88e1512-datasheet.pdf",
+        "description": "Gigabit Ethernet PHY, SGMII/RGMII/MDIO, copper+fiber combo",
+    },
+    {
+        "part": "BCM5482",
+        "aliases": ["BCM5482", "BROADCOM BCM5482"],
+        "category": "ethernet",
+        "manufacturer": "Broadcom",
+        "package": "BGA-196",
+        "datasheet": "https://www.broadcom.com/products/ethernet-connectivity/phy-and-poe/copper/gigabit/bcm5482",
+        "description": "Dual-port Gigabit Ethernet PHY, RGMII, SerDes",
+    },
+    {
+        "part": "RTL8211F",
+        "aliases": ["RTL8211F", "RTL8211FD", "REALTEK RTL8211F"],
+        "category": "ethernet",
+        "manufacturer": "Realtek",
+        "package": "QFN-48",
+        "datasheet": "https://www.realtek.com/en/products/communications-network-ics/item/rtl8211f-i-cg",
+        "description": "Gigabit Ethernet PHY, RGMII/MII/GMII, MDIO/MDC",
+    },
 ]
 
 

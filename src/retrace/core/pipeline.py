@@ -247,7 +247,7 @@ class Pipeline:
                 engine = CrossBoardEngine.from_dict(data)
                 logger.info("Phase 6: Loaded cross-board engine state")
             except Exception:
-                logger.warning("Phase 6: Could not load cross-board state, starting fresh")
+                logger.warning("Phase 6: Could not load cross-board state, starting fresh", exc_info=True)
                 engine = CrossBoardEngine()
         else:
             engine = CrossBoardEngine()
@@ -305,7 +305,7 @@ class Pipeline:
             state_file.write_text(json.dumps(engine.to_dict(), indent=2) + "\n")
             logger.info("  Saved cross-board engine state")
         except Exception:
-            logger.warning("  Could not save cross-board engine state")
+            logger.warning("  Could not save cross-board engine state", exc_info=True)
 
     def _record_learnings(self, result: AnalysisResult) -> None:
         try:

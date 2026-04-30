@@ -44,6 +44,7 @@ dev = [
     "pytest>=7.4",
     "pytest-cov>=4.1",
     "ruff>=0.3",
+    "mypy>=1.8",
 ]
 
 [project.scripts]
@@ -53,6 +54,9 @@ retrace = "retrace.cli:main"
 Homepage = "https://github.com/ericrihm/retrace"
 Documentation = "https://github.com/ericrihm/retrace#readme"
 Issues = "https://github.com/ericrihm/retrace/issues"
+
+[project.entry-points."retrace.plugins"]
+debug_interfaces = "retrace.plugins.builtin.debug_interfaces:DebugInterfaceAnalyzer"
 
 [tool.setuptools.packages.find]
 where = ["src"]
