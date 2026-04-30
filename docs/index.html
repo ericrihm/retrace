@@ -396,8 +396,49 @@ footer a { color: var(--text-mid); }
       <div class="pipe-stage"><div class="stage-name">Analyze</div><div class="stage-tech">CVSS / ATT&amp;CK</div></div>
       <div class="pipe-arrow">&rarr;</div>
       <div class="pipe-stage"><div class="stage-name">Pinout</div><div class="stage-tech">Probe diagrams</div></div>
-      <div class="pipe-stage"><div class="stage-name">Export</div><div class="stage-tech">HTML / KiCad / SVG</div></div>
+      <div class="pipe-arrow">&rarr;</div>
+      <div class="pipe-stage"><div class="stage-name">Export</div><div class="stage-tech">Layered SVG / HTML / KiCad</div></div>
     </div>
+  </div>
+</section>
+
+<!-- ═══ Interactive Layers ═══════════════════════════ -->
+<section id="layers" style="padding: 3em 0;">
+  <div class="container">
+    <h2>Interactive Analysis Layers</h2>
+    <p class="section-sub">One SVG. Eight toggleable layers. Six view presets. Like switching between satellite and terrain on a map.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 1.5em;">
+      <div class="report-card" style="border-left: 3px solid #22d3ee;">
+        <h3 style="font-size: 0.95em; color: #e2e8f0;">Analysis View</h3>
+        <p style="font-size: 0.8em; color: #94a3b8;">Components + traces + BOM. Default view for reverse engineering.</p>
+      </div>
+      <div class="report-card" style="border-left: 3px solid #ef4444;">
+        <h3 style="font-size: 0.95em; color: #e2e8f0;">Attack Surface</h3>
+        <p style="font-size: 0.8em; color: #94a3b8;">Security-critical components highlighted. Attack path arrows. CVSS scores.</p>
+      </div>
+      <div class="report-card" style="border-left: 3px solid #a855f7;">
+        <h3 style="font-size: 0.95em; color: #e2e8f0;">Zone Map</h3>
+        <p style="font-size: 0.8em; color: #94a3b8;">Functional zones: CPU, memory, power, I/O, debug, storage, network.</p>
+      </div>
+      <div class="report-card" style="border-left: 3px solid #f59e0b;">
+        <h3 style="font-size: 0.95em; color: #e2e8f0;">Debug View</h3>
+        <p style="font-size: 0.8em; color: #94a3b8;">Debug interfaces + net classification labels. JTAG, SWD, UART, SPI, I2C.</p>
+      </div>
+      <div class="report-card" style="border-left: 3px solid #22c55e;">
+        <h3 style="font-size: 0.95em; color: #e2e8f0;">Net Labels</h3>
+        <p style="font-size: 0.8em; color: #94a3b8;">Auto-classified net types at each trace midpoint: power, data, clock, debug.</p>
+      </div>
+      <div class="report-card" style="border-left: 3px solid #6b7280;">
+        <h3 style="font-size: 0.95em; color: #e2e8f0;">Grid Reference</h3>
+        <p style="font-size: 0.8em; color: #94a3b8;">Pixel coordinate overlay for precise location referencing in reports.</p>
+      </div>
+    </div>
+
+    <p style="margin-top: 1.5em; font-size: 0.85em; color: #64748b; text-align: center;">
+      <code style="background: #1e293b; padding: 2px 8px; border-radius: 4px;">retrace scan board.jpg --format svg</code> &mdash;
+      self-contained SVG with JavaScript layer controls. Open in any browser.
+    </p>
   </div>
 </section>
 

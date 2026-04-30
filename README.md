@@ -132,6 +132,8 @@ Grouped by type, color-coded badges, per-component confidence bars
 </tr>
 </table>
 
+> **Interactive layered SVG**: `retrace scan board.jpg --format svg` generates a single self-contained SVG with **8 toggleable layers** and **6 view presets** — like switching between satellite and terrain on Google Maps. Layers: Board Image, Components, Traces, Zones, Security, BOM Panel, Net Labels, Grid Reference. Presets: Analysis (default), Attack Surface, Zones, Debug, Clean Board, All Layers. JavaScript-powered floating control panel — open in any browser, no server needed.
+
 > **Assessment reports**: `retrace report-html board.jpg` generates a self-contained HTML deliverable with executive summary, security findings (CWE hyperlinks, CVSS 3.1 scores, MITRE ATT&CK technique IDs), sortable component inventory (datasheet links), and print-friendly styling. Live previews: [Cisco ASA 5506-X report](https://ericrihm.github.io/retrace/examples/cisco_report.html) · [Xbox One report](https://ericrihm.github.io/retrace/examples/xbox_report.html)
 
 > **How Thrangrycat works (CVE-2019-1649):** Cisco's Trust Anchor module (TAm) is a Xilinx Spartan-6 FPGA that verifies boot image integrity on ASA, IOS-XE, and NX-OS platforms. The FPGA loads its bitstream from an external SPI flash chip (W25Q128JV on the 5506-X) at power-on -- and that bitstream is **not authenticated or encrypted**. An attacker with root access (or physical access to the SPI flash) can modify the bitstream to disable secure boot verification entirely, creating a persistent backdoor that survives firmware updates. re:trace maps this path automatically: it identifies the FPGA, traces the SPI flash connection, flags the unencrypted bitstream interface, and marks the JTAG header that provides the initial access vector. This is the same attack surface exploited by the **ArcaneDoor** state-sponsored campaign (2024), which prompted CISA Emergency Directive ED 25-03.
@@ -696,7 +698,7 @@ src/retrace/                             # <!-- STATS:loc -->8304<!-- /STATS -->
 | Tests | <!-- STATS:tests -->767<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->24<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->21028<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->21850<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
