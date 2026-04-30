@@ -1,0 +1,254 @@
+{
+  "metadata": {
+    "image_path": "docs/examples/synthetic_board.png",
+    "board_dimensions": [
+      1200,
+      800
+    ],
+    "pipeline_version": "0.1.0",
+    "timestamp": "2026-04-30T19:28:01Z",
+    "duration_seconds": 0.17
+  },
+  "summary": {
+    "total_components": 14,
+    "identified": 3,
+    "unidentified": 11,
+    "identification_rate": 0.2143,
+    "by_label": {
+      "ic": 2,
+      "capacitor": 3,
+      "resistor": 2,
+      "crystal": 1,
+      "connector": 1,
+      "inductor": 1,
+      "test_point": 4
+    },
+    "total_traces": 8
+  },
+  "components": [
+    {
+      "id": "U1",
+      "label": "ic",
+      "part_number": "STM32F407",
+      "marking": "STM32F407VGT6",
+      "value": "",
+      "package": "LQFP-100",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        80,
+        80,
+        220,
+        200
+      ]
+    },
+    {
+      "id": "U2",
+      "label": "ic",
+      "part_number": "W25Q128",
+      "marking": "W25Q128JVSIQ",
+      "value": "128Mbit",
+      "package": "SOIC-8",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        450,
+        60,
+        180,
+        160
+      ]
+    },
+    {
+      "id": "C1",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "100nF",
+      "value": "100nF",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        340,
+        100,
+        28,
+        16
+      ]
+    },
+    {
+      "id": "C2",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "10uF",
+      "value": "10uF",
+      "package": "0603",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        380,
+        100,
+        28,
+        16
+      ]
+    },
+    {
+      "id": "C3",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "100nF",
+      "value": "100nF",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        340,
+        130,
+        28,
+        16
+      ]
+    },
+    {
+      "id": "R1",
+      "label": "resistor",
+      "part_number": "",
+      "marking": "10k",
+      "value": "10k",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        680,
+        110,
+        32,
+        14
+      ]
+    },
+    {
+      "id": "R2",
+      "label": "resistor",
+      "part_number": "",
+      "marking": "4k7",
+      "value": "4k7",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        680,
+        136,
+        32,
+        14
+      ]
+    },
+    {
+      "id": "Y1",
+      "label": "crystal",
+      "part_number": "ABLS-8.000MHZ-B4-T",
+      "marking": "8MHz",
+      "value": "8MHz",
+      "package": "HC-49S",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        780,
+        100,
+        52,
+        28
+      ]
+    },
+    {
+      "id": "J1",
+      "label": "connector",
+      "part_number": "",
+      "marking": "SWD/JTAG",
+      "value": "",
+      "package": "2x5 2.54mm",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        970,
+        60,
+        80,
+        180
+      ]
+    },
+    {
+      "id": "L1",
+      "label": "inductor",
+      "part_number": "",
+      "marking": "10uH",
+      "value": "10uH",
+      "package": "1210",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        680,
+        200,
+        44,
+        40
+      ]
+    },
+    {
+      "id": "TP1",
+      "label": "test_point",
+      "part_number": "",
+      "marking": "TP1",
+      "value": "",
+      "package": "TP",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        340,
+        440,
+        14,
+        14
+      ]
+    },
+    {
+      "id": "TP2",
+      "label": "test_point",
+      "part_number": "",
+      "marking": "TP2",
+      "value": "",
+      "package": "TP",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        370,
+        440,
+        14,
+        14
+      ]
+    },
+    {
+      "id": "TP3",
+      "label": "test_point",
+      "part_number": "",
+      "marking": "TP3",
+      "value": "",
+      "package": "TP",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        400,
+        440,
+        14,
+        14
+      ]
+    },
+    {
+      "id": "TP4",
+      "label": "test_point",
+      "part_number": "",
+      "marking": "TP4",
+      "value": "",
+      "package": "TP",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        430,
+        440,
+        14,
+        14
+      ]
+    }
+  ]
+}

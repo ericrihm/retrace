@@ -1,0 +1,43 @@
+re:trace Bayesian Probe Advisor — Top 5 Probe Recommendations
+=================================================================
+
+Board: docs/examples/synthetic_board.png
+Timestamp: 2026-04-30T19:28:01Z
+
+Ranked by Expected Information Gain (EIG, bits):
+
+  #1  U1.PA0
+       Location : (190, 180) px
+       EIG      : 3.1699 bits
+       Rationale: EIG=3.170 bits; most likely net: VCC (11.1%). Probing U1.PA0 will resolve ~3.17 bits of uncertainty.
+
+  #2  U1.PA1
+       Location : (190, 180) px
+       EIG      : 3.1699 bits
+       Rationale: EIG=3.170 bits; most likely net: VCC (11.1%). Probing U1.PA1 will resolve ~3.17 bits of uncertainty.
+
+  #3  U1.PB0
+       Location : (190, 180) px
+       EIG      : 3.1699 bits
+       Rationale: EIG=3.170 bits; most likely net: VCC (11.1%). Probing U1.PB0 will resolve ~3.17 bits of uncertainty.
+
+  #4  U1.PB1
+       Location : (190, 180) px
+       EIG      : 3.1699 bits
+       Rationale: EIG=3.170 bits; most likely net: VCC (11.1%). Probing U1.PB1 will resolve ~3.17 bits of uncertainty.
+
+  #5  U1.SWDIO
+       Location : (190, 180) px
+       EIG      : 3.1699 bits
+       Rationale: EIG=3.170 bits; most likely net: VCC (11.1%). Probing U1.SWDIO will resolve ~3.17 bits of uncertainty.
+
+Methodology
+-----------
+The ProbeAdvisor maintains a Dirichlet belief distribution over
+possible net labels for each unknown node. Expected Information
+Gain (EIG) is approximated as H(prior) minus expected posterior
+entropy after observing a measurement — equivalent to mutual
+information I(net_label ; measurement).
+
+Pin-name priors boost probability for power (VCC/VDD) and
+ground (GND/VSS) nets before any measurements are taken.

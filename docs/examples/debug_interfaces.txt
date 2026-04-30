@@ -1,0 +1,25 @@
+re:trace Debug Interface Detector
+========================================
+
+Board: docs/examples/synthetic_board.png
+Timestamp: 2026-04-30T19:28:01Z
+Total findings: 2  (HIGH=2  MEDIUM=0  LOW=0)
+
+  [HIGH]  JTAG
+         Component : J1  (connector)
+         Marking   : SWD/JTAG
+         Detail    : JTAG debug interface — full CPU debug/program access
+         Reference : CWE-1191
+
+  [HIGH]  SWD
+         Component : J1  (connector)
+         Marking   : SWD/JTAG
+         Detail    : ARM Serial Wire Debug — CoreSight access, firmware extraction risk
+         Reference : CWE-1191
+
+Methodology
+-----------
+Detection uses keyword matching against component markings and
+labels, cross-referenced with known pin-count signatures for
+JTAG (20/14/10-pin), SWD (10/4/2-pin), UART, SPI, and I2C.
+Severity follows CWE-1191 (debug/test interface exposure).

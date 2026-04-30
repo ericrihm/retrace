@@ -1,0 +1,391 @@
+{
+  "version": "0.1.0",
+  "timestamp": "2026-04-30T19:28:01Z",
+  "image": "docs/examples/synthetic_board.png",
+  "board_dimensions": [
+    1200,
+    800
+  ],
+  "layer_count_estimate": 4,
+  "duration_seconds": 0.173,
+  "components": [
+    {
+      "id": "U1",
+      "label": "ic",
+      "confidence": 0.88,
+      "bbox": [
+        80,
+        80,
+        220,
+        200
+      ],
+      "marking": "STM32F407VGT6",
+      "part_number": "STM32F407",
+      "datasheet_url": "",
+      "value": "",
+      "package": "LQFP-100"
+    },
+    {
+      "id": "U2",
+      "label": "ic",
+      "confidence": 0.93,
+      "bbox": [
+        450,
+        60,
+        180,
+        160
+      ],
+      "marking": "W25Q128JVSIQ",
+      "part_number": "W25Q128",
+      "datasheet_url": "",
+      "value": "128Mbit",
+      "package": "SOIC-8"
+    },
+    {
+      "id": "C1",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        340,
+        100,
+        28,
+        16
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C2",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        380,
+        100,
+        28,
+        16
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0603"
+    },
+    {
+      "id": "C3",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        340,
+        130,
+        28,
+        16
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "R1",
+      "label": "resistor",
+      "confidence": 0.98,
+      "bbox": [
+        680,
+        110,
+        32,
+        14
+      ],
+      "marking": "10k",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10k",
+      "package": "0402"
+    },
+    {
+      "id": "R2",
+      "label": "resistor",
+      "confidence": 0.88,
+      "bbox": [
+        680,
+        136,
+        32,
+        14
+      ],
+      "marking": "4k7",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "4k7",
+      "package": "0402"
+    },
+    {
+      "id": "Y1",
+      "label": "crystal",
+      "confidence": 0.93,
+      "bbox": [
+        780,
+        100,
+        52,
+        28
+      ],
+      "marking": "8MHz",
+      "part_number": "ABLS-8.000MHZ-B4-T",
+      "datasheet_url": "",
+      "value": "8MHz",
+      "package": "HC-49S"
+    },
+    {
+      "id": "J1",
+      "label": "connector",
+      "confidence": 0.98,
+      "bbox": [
+        970,
+        60,
+        80,
+        180
+      ],
+      "marking": "SWD/JTAG",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "2x5 2.54mm"
+    },
+    {
+      "id": "L1",
+      "label": "inductor",
+      "confidence": 0.88,
+      "bbox": [
+        680,
+        200,
+        44,
+        40
+      ],
+      "marking": "10uH",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uH",
+      "package": "1210"
+    },
+    {
+      "id": "TP1",
+      "label": "test_point",
+      "confidence": 0.93,
+      "bbox": [
+        340,
+        440,
+        14,
+        14
+      ],
+      "marking": "TP1",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TP"
+    },
+    {
+      "id": "TP2",
+      "label": "test_point",
+      "confidence": 0.98,
+      "bbox": [
+        370,
+        440,
+        14,
+        14
+      ],
+      "marking": "TP2",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TP"
+    },
+    {
+      "id": "TP3",
+      "label": "test_point",
+      "confidence": 0.88,
+      "bbox": [
+        400,
+        440,
+        14,
+        14
+      ],
+      "marking": "TP3",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TP"
+    },
+    {
+      "id": "TP4",
+      "label": "test_point",
+      "confidence": 0.93,
+      "bbox": [
+        430,
+        440,
+        14,
+        14
+      ],
+      "marking": "TP4",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TP"
+    }
+  ],
+  "traces": [
+    {
+      "id": "T000",
+      "points": [
+        [
+          190,
+          130
+        ],
+        [
+          340,
+          130
+        ],
+        [
+          340,
+          108
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U1",
+      "to_component": "U1"
+    },
+    {
+      "id": "T001",
+      "points": [
+        [
+          190,
+          175
+        ],
+        [
+          354,
+          175
+        ],
+        [
+          354,
+          116
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U1",
+      "to_component": "U2"
+    },
+    {
+      "id": "T002",
+      "points": [
+        [
+          300,
+          95
+        ],
+        [
+          450,
+          95
+        ]
+      ],
+      "width_px": 3.0,
+      "from_component": "U1",
+      "to_component": "C1"
+    },
+    {
+      "id": "T003",
+      "points": [
+        [
+          300,
+          115
+        ],
+        [
+          450,
+          115
+        ]
+      ],
+      "width_px": 3.0,
+      "from_component": "U1",
+      "to_component": "C2"
+    },
+    {
+      "id": "T004",
+      "points": [
+        [
+          300,
+          135
+        ],
+        [
+          450,
+          135
+        ]
+      ],
+      "width_px": 3.0,
+      "from_component": "U1",
+      "to_component": "C3"
+    },
+    {
+      "id": "T005",
+      "points": [
+        [
+          300,
+          155
+        ],
+        [
+          450,
+          155
+        ]
+      ],
+      "width_px": 3.0,
+      "from_component": "U1",
+      "to_component": "R1"
+    },
+    {
+      "id": "T006",
+      "points": [
+        [
+          300,
+          178
+        ],
+        [
+          970,
+          178
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U1",
+      "to_component": "R2"
+    },
+    {
+      "id": "T007",
+      "points": [
+        [
+          300,
+          194
+        ],
+        [
+          970,
+          194
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U1",
+      "to_component": "Y1"
+    }
+  ],
+  "summary": {
+    "image": "docs/examples/synthetic_board.png",
+    "components": 14,
+    "components_by_type": {
+      "ic": 2,
+      "capacitor": 3,
+      "resistor": 2,
+      "crystal": 1,
+      "connector": 1,
+      "inductor": 1,
+      "test_point": 4
+    },
+    "traces": 8,
+    "identified": 3,
+    "duration_seconds": 0.17
+  }
+}

@@ -26,6 +26,77 @@ pip install retrace-pcb
 retrace scan board_photo.jpg
 ```
 
+### Demo: Synthetic Board Analysis
+
+<table>
+<tr>
+<td width="50%">
+
+**Input: PCB photo**
+
+<img src="docs/examples/synthetic_board.png" width="100%" alt="Synthetic PCB board with STM32F407, W25Q128, passives, and debug header"/>
+
+</td>
+<td width="50%">
+
+**Output: Annotated SVG overlay**
+
+<img src="docs/examples/annotated_board.svg" width="100%" alt="Detected components with color-coded bounding boxes"/>
+
+</td>
+</tr>
+</table>
+
+<details>
+<summary><b>Probe Advisor Output</b> — where to measure next for maximum information gain</summary>
+
+```
+re:trace Bayesian Probe Advisor — Top 5 Probe Recommendations
+=================================================================
+
+  #1  U1.PA0       EIG: 3.170 bits    most likely net: VCC (11.1%)
+  #2  U1.PA1       EIG: 3.170 bits    most likely net: VCC (11.1%)
+  #3  U1.PB0       EIG: 3.170 bits    most likely net: VCC (11.1%)
+  #4  U1.PB1       EIG: 3.170 bits    most likely net: VCC (11.1%)
+  #5  U1.SWDIO     EIG: 3.170 bits    most likely net: VCC (11.1%)
+
+Methodology: Dirichlet belief over net labels, ranked by
+expected Shannon entropy reduction (mutual information).
+```
+
+</details>
+
+<details>
+<summary><b>Constraint Solver Output</b> — inferred power network from partial traces</summary>
+
+```
+AC-3 iterations: 20  |  48 nodes  |  3 inferred connections
+
+  [POWER]   U1.VCC, U2.VCC, C1.1, J1.VCC, L1.1
+  [GROUND]  U1.GND, U2.GND, C1.2, J1.GND, Y1.GND
+
+  Inferred: C1.1 ↔ U1.VCC  (decoupling cap)
+  Inferred: C1.2 ↔ U1.GND  (decoupling cap)
+  Inferred: L1.1 ↔ J1.VCC  (power inductor)
+```
+
+</details>
+
+<details>
+<summary><b>Debug Interface Detection</b> — automatic security assessment</summary>
+
+```
+Total findings: 2  (HIGH=2)
+
+  [HIGH]  JTAG on J1 (connector, marking: SWD/JTAG)
+          Full CPU debug/program access — CWE-1191
+
+  [HIGH]  SWD on J1 (connector, marking: SWD/JTAG)
+          ARM CoreSight access, firmware extraction risk — CWE-1191
+```
+
+</details>
+
 > **Novel contributions** — re:trace is the first public tool to combine **(1)** Bayesian probe-point optimization using Shannon entropy for hardware RE, **(2)** AC-3 arc-consistency constraint propagation to infer missing PCB connections from partial traces, and **(3)** cross-board pattern recognition that transfers subcircuit knowledge between boards. No other open-source or academic PCB RE tool implements any of these three capabilities. See [Prior Work](#prior-work) for the full competitive landscape.
 
 ## How It Works

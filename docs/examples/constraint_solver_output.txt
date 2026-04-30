@@ -1,0 +1,68 @@
+re:trace Constraint Solver — Inferred Netlist
+==================================================
+
+Board: docs/examples/synthetic_board.png
+Timestamp: 2026-04-30T19:28:01Z
+AC-3 iterations: 20
+
+Net Assignments (48 nodes):
+
+  [POWER]
+    C1.1
+    J1.VCC
+    L1.1
+    U1.VCC
+    U2.VCC
+
+  [GROUND]
+    C1.2
+    J1.GND
+    J1.GND2
+    J1.GND3
+    U1.GND
+    U2.GND
+    Y1.GND
+    Y1.GND2
+
+  [UNKNOWN]
+    C2.1
+    C2.2
+    C3.1
+    C3.2
+    J1.NC
+    J1.NC2
+    J1.NC3
+    J1.NC4
+    J1.SWDCLK
+    J1.SWDIO
+    L1.2
+    R1.A
+    R1.B
+    R2.A
+    R2.B
+    TP1.1
+    TP2.1
+    TP3.1
+    TP4.1
+    U1.BOOT0
+    ... and 15 more
+
+Inferred Connections (3):
+  C1.1  <-->  U1.VCC
+  C1.2  <-->  U1.GND
+  L1.1  <-->  J1.VCC
+
+Ambiguous Nodes (35):
+  U1.PA0
+  U1.PA1
+  U1.PB0
+  U1.PB1
+  U1.SWDIO
+  U1.SWDCLK
+  U1.NRST
+  U1.BOOT0
+  U2.MOSI
+  U2.MISO
+  ... and 25 more
+
+No constraint conflicts detected.
