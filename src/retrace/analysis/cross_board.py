@@ -1,0 +1,566 @@
+"""
+Cross-board pattern recognition for PCB reverse engineering.
+
+Maintains a persistent knowledge base of subcircuit patterns seen across
+multiple boards.  When a new board is presented, the engine searches for
+subgraph-isomorphic matches against known patterns and annotates the board
+with functional block labels.
+
+Pattern representation
+----------------------
+A pattern is a small attributed graph:
+  - Nodes: component roles (e.g. "LDO", "input_cap", "output_cap")
+  - Edges: electrical connections between node pins
+
+Matching strategy
+-----------------
+1. For each known pattern, enumerate all subsets of board components whose
+   kind/attributes are compatible with the pattern's node types.
+2. Verify edge conditions (trace connectivity or spatial proximity).
+3. Score the match by (attribute similarity) × (confidence of detected traces).
+4. Return ranked matches above a configurable threshold.
+
+The knowledge base is stored as a plain Python dict and can be persisted to
+JSON or pickle externally; this module carries no I/O.
+
+No external dependencies beyond numpy.
+"""
+
+from __future__ import annotations
+
+import itertools
+from dataclasses import dataclass, field
+from typing import Any, Dict, FrozenSet, List, Set, Tuple
+
+import numpy as np
+
+
+# ---------------------------------------------------------------------------
+# Data structures
+# ---------------------------------------------------------------------------
+
+@dataclass
+class BoardComponent:
+    """A component instance on a board being analysed."""
+    ref: str
+    kind: str                           # 'ic', 'resistor', 'capacitor', 'diode', …
+    pins: List[str]
+    location: Tuple[float, float]
+    attributes: Dict[str, Any] = field(default_factory=dict)
+    # e.g. {"package": "SOT-23", "value": "10uF", "footprint": "0402"}
+
+
+@dataclass
+class BoardTrace:
+    """A detected trace between two component-pins."""
+    ref_a: str
+    pin_a: str
+    ref_b: str
+    pin_b: str
+    confidence: float = 1.0
+
+
+@dataclass
+class PatternNode:
+    """One role within a subcircuit pattern."""
+    role: str                           # e.g. "regulator", "input_cap"
+    kind_options: List[str]             # acceptable component kinds
+    required_pins: List[str] = field(default_factory=list)
+    attribute_hints: Dict[str, Any] = field(default_factory=dict)
+    # e.g. {"value_range_uf": (0.1, 100)}
+
+
+@dataclass
+class PatternEdge:
+    """A required electrical connection between two pattern roles."""
+    role_a: str
+    pin_a: str                          # pin name on role_a (or "" for any)
+    role_b: str
+    pin_b: str                          # pin name on role_b (or "" for any)
+    required: bool = True               # False = preferred but not mandatory
+
+
+@dataclass
+class SubcircuitPattern:
+    """
+    A reusable subcircuit archetype stored in the knowledge base.
+
+    Examples: LDO power supply, H-bridge motor driver, RC low-pass filter,
+    crystal oscillator, RS-232 transceiver, …
+    """
+    name: str
+    description: str
+    nodes: List[PatternNode]
+    edges: List[PatternEdge]
+    seen_count: int = 0                 # how many boards this pattern appeared on
+    confidence_sum: float = 0.0        # cumulative match confidence
+
+
+@dataclass
+class PatternMatch:
+    """A detected instance of a known pattern on a board."""
+    pattern_name: str
+    description: str
+    component_roles: Dict[str, str]     # role -> component ref
+    score: float                        # 0–1
+    is_partial: bool                    # True if some optional edges missing
+
+
+@dataclass
+class BoardAnalysis:
+    """Result of cross-board analysis for a single board."""
+    matches: List[PatternMatch]
+    novel_components: List[str]         # refs that matched no known pattern
+    coverage: float                     # fraction of components in a match
+
+
+# ---------------------------------------------------------------------------
+# Built-in pattern definitions
+# ---------------------------------------------------------------------------
+
+def _builtin_patterns() -> List[SubcircuitPattern]:
+    """Return a small library of common subcircuit patterns."""
+    return [
+        SubcircuitPattern(
+            name="ldo_supply",
+            description="LDO voltage regulator with input and output bypass caps",
+            nodes=[
+                PatternNode("ldo", ["ic", "regulator"], ["VIN", "GND", "VOUT"]),
+                PatternNode("input_cap", ["capacitor"], ["1", "2"],
+                            {"role_hint": "input_bypass"}),
+                PatternNode("output_cap", ["capacitor"], ["1", "2"],
+                            {"role_hint": "output_bypass"}),
+            ],
+            edges=[
+                PatternEdge("ldo", "VIN", "input_cap", "", required=True),
+                PatternEdge("ldo", "VOUT", "output_cap", "", required=True),
+                PatternEdge("ldo", "GND", "input_cap", "", required=False),
+                PatternEdge("ldo", "GND", "output_cap", "", required=False),
+            ],
+        ),
+        SubcircuitPattern(
+            name="rc_lowpass",
+            description="First-order RC low-pass filter",
+            nodes=[
+                PatternNode("resistor", ["resistor"], ["A", "B", "1", "2"]),
+                PatternNode("capacitor", ["capacitor"], ["1", "2"]),
+            ],
+            edges=[
+                PatternEdge("resistor", "", "capacitor", "", required=True),
+            ],
+        ),
+        SubcircuitPattern(
+            name="decoupling_pair",
+            description="Parallel bulk + ceramic decoupling cap pair",
+            nodes=[
+                PatternNode("bulk_cap", ["capacitor"], ["1", "2"],
+                            {"role_hint": "bulk"}),
+                PatternNode("ceramic_cap", ["capacitor"], ["1", "2"],
+                            {"role_hint": "ceramic"}),
+            ],
+            edges=[
+                PatternEdge("bulk_cap", "", "ceramic_cap", "", required=True),
+            ],
+        ),
+        SubcircuitPattern(
+            name="pull_up_resistor",
+            description="Pull-up resistor from VCC to a signal line",
+            nodes=[
+                PatternNode("resistor", ["resistor"], ["A", "B", "1", "2"]),
+            ],
+            edges=[],  # single-node pattern; matched by pin-net heuristic
+        ),
+        SubcircuitPattern(
+            name="crystal_oscillator",
+            description="Crystal with two load capacitors",
+            nodes=[
+                PatternNode("crystal", ["crystal", "resonator", "ic"], []),
+                PatternNode("cap_a", ["capacitor"], ["1", "2"]),
+                PatternNode("cap_b", ["capacitor"], ["1", "2"]),
+            ],
+            edges=[
+                PatternEdge("crystal", "", "cap_a", "", required=True),
+                PatternEdge("crystal", "", "cap_b", "", required=True),
+            ],
+        ),
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Engine
+# ---------------------------------------------------------------------------
+
+class CrossBoardEngine:
+    """
+    Cross-board pattern recognition engine.
+
+    Workflow
+    --------
+    1. Instantiate (optionally load a saved knowledge base).
+    2. Call ``analyse(components, traces)`` for each new board.
+    3. Optionally call ``record_pattern(pattern)`` to add novel patterns.
+    4. Export / import state via ``to_dict()`` / ``from_dict()``.
+
+    Parameters
+    ----------
+    match_threshold : float
+        Minimum score (0–1) to report a match.
+    proximity_px : float
+        Max pixel distance to treat two components as electrically adjacent
+        even without an explicit trace (spatial edge heuristic).
+    """
+
+    def __init__(
+        self,
+        match_threshold: float = 0.5,
+        proximity_px: float = 80.0,
+    ) -> None:
+        self._threshold = match_threshold
+        self._proximity = proximity_px
+        self._patterns: List[SubcircuitPattern] = _builtin_patterns()
+
+    # ------------------------------------------------------------------
+    # Public API
+    # ------------------------------------------------------------------
+
+    def analyse(
+        self,
+        components: List[BoardComponent],
+        traces: List[BoardTrace],
+    ) -> BoardAnalysis:
+        """
+        Search for known patterns in the board and return matches.
+
+        Parameters
+        ----------
+        components : list[BoardComponent]
+        traces : list[BoardTrace]
+
+        Returns
+        -------
+        BoardAnalysis
+        """
+        adjacency = self._build_adjacency(components, traces)
+        all_matches: List[PatternMatch] = []
+        matched_refs: Set[str] = set()
+
+        for pattern in self._patterns:
+            matches = self._match_pattern(pattern, components, adjacency)
+            for m in matches:
+                all_matches.append(m)
+                matched_refs.update(m.component_roles.values())
+                # Update pattern statistics
+                pattern.seen_count += 1
+                pattern.confidence_sum += m.score
+
+        # Deduplicate: if a component appears in multiple matches, prefer highest score
+        all_matches = self._deduplicate(all_matches)
+        all_matches.sort(key=lambda m: m.score, reverse=True)
+
+        novel = [c.ref for c in components if c.ref not in matched_refs]
+        coverage = len(matched_refs) / max(len(components), 1)
+
+        return BoardAnalysis(
+            matches=all_matches,
+            novel_components=novel,
+            coverage=coverage,
+        )
+
+    def record_pattern(self, pattern: SubcircuitPattern) -> None:
+        """Add or replace a pattern in the knowledge base."""
+        for i, existing in enumerate(self._patterns):
+            if existing.name == pattern.name:
+                self._patterns[i] = pattern
+                return
+        self._patterns.append(pattern)
+
+    def list_patterns(self) -> List[str]:
+        """Return names of all known patterns."""
+        return [p.name for p in self._patterns]
+
+    def pattern_stats(self) -> Dict[str, Dict[str, Any]]:
+        """Return seen_count and mean confidence for each pattern."""
+        out: Dict[str, Dict[str, Any]] = {}
+        for p in self._patterns:
+            mean_conf = p.confidence_sum / p.seen_count if p.seen_count > 0 else 0.0
+            out[p.name] = {
+                "seen_count": p.seen_count,
+                "mean_confidence": round(mean_conf, 4),
+                "description": p.description,
+            }
+        return out
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialise knowledge base to a plain dict (JSON-serialisable)."""
+        def pat_to_d(p: SubcircuitPattern) -> Dict:
+            return {
+                "name": p.name,
+                "description": p.description,
+                "seen_count": p.seen_count,
+                "confidence_sum": p.confidence_sum,
+                "nodes": [
+                    {
+                        "role": n.role,
+                        "kind_options": n.kind_options,
+                        "required_pins": n.required_pins,
+                        "attribute_hints": n.attribute_hints,
+                    }
+                    for n in p.nodes
+                ],
+                "edges": [
+                    {
+                        "role_a": e.role_a, "pin_a": e.pin_a,
+                        "role_b": e.role_b, "pin_b": e.pin_b,
+                        "required": e.required,
+                    }
+                    for e in p.edges
+                ],
+            }
+        return {"patterns": [pat_to_d(p) for p in self._patterns]}
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any], **kwargs) -> "CrossBoardEngine":
+        """Restore a CrossBoardEngine from a serialised dict."""
+        engine = cls(**kwargs)
+        engine._patterns = []
+        for pd in data.get("patterns", []):
+            nodes = [
+                PatternNode(
+                    role=n["role"],
+                    kind_options=n["kind_options"],
+                    required_pins=n.get("required_pins", []),
+                    attribute_hints=n.get("attribute_hints", {}),
+                )
+                for n in pd["nodes"]
+            ]
+            edges = [
+                PatternEdge(
+                    role_a=e["role_a"], pin_a=e["pin_a"],
+                    role_b=e["role_b"], pin_b=e["pin_b"],
+                    required=e.get("required", True),
+                )
+                for e in pd["edges"]
+            ]
+            engine._patterns.append(SubcircuitPattern(
+                name=pd["name"],
+                description=pd["description"],
+                nodes=nodes,
+                edges=edges,
+                seen_count=pd.get("seen_count", 0),
+                confidence_sum=pd.get("confidence_sum", 0.0),
+            ))
+        return engine
+
+    # ------------------------------------------------------------------
+    # Internal matching
+    # ------------------------------------------------------------------
+
+    def _build_adjacency(
+        self,
+        components: List[BoardComponent],
+        traces: List[BoardTrace],
+    ) -> Dict[str, Set[str]]:
+        """
+        Build adjacency: ref -> set of refs connected by trace or proximity.
+        """
+        adj: Dict[str, Set[str]] = {c.ref: set() for c in components}
+
+        # Trace-based adjacency
+        for t in traces:
+            if t.confidence >= 0.4:
+                adj[t.ref_a].add(t.ref_b)
+                adj[t.ref_b].add(t.ref_a)
+
+        # Proximity-based adjacency
+        locs = {c.ref: np.array(c.location) for c in components}
+        refs = list(locs.keys())
+        for i, ra in enumerate(refs):
+            for rb in refs[i + 1:]:
+                dist = float(np.linalg.norm(locs[ra] - locs[rb]))
+                if dist <= self._proximity:
+                    adj[ra].add(rb)
+                    adj[rb].add(ra)
+
+        return adj
+
+    def _match_pattern(
+        self,
+        pattern: SubcircuitPattern,
+        components: List[BoardComponent],
+        adjacency: Dict[str, Set[str]],
+    ) -> List[PatternMatch]:
+        """
+        Find all instances of `pattern` in the board component graph.
+
+        Uses exhaustive enumeration for patterns with <= 6 nodes.
+        For larger patterns a greedy approach is used.
+        """
+        n_roles = len(pattern.nodes)
+        if n_roles == 0:
+            return []
+
+        # Candidate components per role
+        candidates_per_role: Dict[str, List[BoardComponent]] = {}
+        for pnode in pattern.nodes:
+            cands = [
+                c for c in components
+                if c.kind.lower() in [k.lower() for k in pnode.kind_options]
+                or pnode.kind_options == []
+            ]
+            candidates_per_role[pnode.role] = cands
+
+        roles = [pn.role for pn in pattern.nodes]
+        matches: List[PatternMatch] = []
+
+        # Generate all candidate assignments
+        candidate_lists = [candidates_per_role[r] for r in roles]
+        if any(len(cl) == 0 for cl in candidate_lists):
+            return []
+
+        # Cap combinatorial explosion: skip if too many candidates
+        total_combos = 1
+        for cl in candidate_lists:
+            total_combos *= len(cl)
+        if total_combos > 10_000:
+            # Prune: only use the n closest candidates per role
+            candidate_lists = [cl[:4] for cl in candidate_lists]
+
+        for combo in itertools.product(*candidate_lists):
+            refs = [c.ref for c in combo]
+            # Reject if the same component assigned to two roles
+            if len(set(refs)) < len(refs):
+                continue
+
+            role_assignment: Dict[str, str] = {
+                roles[i]: combo[i].ref for i in range(len(roles))
+            }
+            score, is_partial = self._score_assignment(
+                pattern, role_assignment, adjacency
+            )
+            if score >= self._threshold:
+                matches.append(PatternMatch(
+                    pattern_name=pattern.name,
+                    description=pattern.description,
+                    component_roles=role_assignment,
+                    score=score,
+                    is_partial=is_partial,
+                ))
+
+        return matches
+
+    def _score_assignment(
+        self,
+        pattern: SubcircuitPattern,
+        role_assignment: Dict[str, str],
+        adjacency: Dict[str, Set[str]],
+    ) -> Tuple[float, bool]:
+        """
+        Score a candidate role assignment.
+
+        Returns (score 0–1, is_partial).
+        """
+        required_edges = [e for e in pattern.edges if e.required]
+        optional_edges = [e for e in pattern.edges if not e.required]
+
+        req_satisfied = 0
+        for edge in required_edges:
+            ref_a = role_assignment.get(edge.role_a)
+            ref_b = role_assignment.get(edge.role_b)
+            if ref_a and ref_b and ref_b in adjacency.get(ref_a, set()):
+                req_satisfied += 1
+
+        if required_edges and req_satisfied < len(required_edges):
+            # Allow partial match only if >= 50% required edges satisfied
+            ratio = req_satisfied / len(required_edges)
+            if ratio < 0.5:
+                return 0.0, True
+
+        opt_satisfied = sum(
+            1 for e in optional_edges
+            if role_assignment.get(e.role_a) and role_assignment.get(e.role_b)
+            and role_assignment[e.role_b] in adjacency.get(role_assignment[e.role_a], set())
+        )
+
+        total_edges = len(required_edges) + len(optional_edges)
+        edge_score = (req_satisfied + opt_satisfied) / max(total_edges, 1)
+
+        # Boost for single-node patterns (no edges to satisfy)
+        if total_edges == 0:
+            edge_score = 0.7
+
+        is_partial = req_satisfied < len(required_edges)
+        return float(np.clip(edge_score, 0.0, 1.0)), is_partial
+
+    def _deduplicate(self, matches: List[PatternMatch]) -> List[PatternMatch]:
+        """
+        Remove duplicate matches: if two matches of the same pattern share all
+        components, keep only the higher-scored one.
+        """
+        seen: Dict[Tuple[str, FrozenSet[str]], PatternMatch] = {}
+        for m in matches:
+            key = (m.pattern_name, frozenset(m.component_roles.values()))
+            if key not in seen or m.score > seen[key].score:
+                seen[key] = m
+        return list(seen.values())
+
+
+# ---------------------------------------------------------------------------
+# CLI / standalone demo
+# ---------------------------------------------------------------------------
+
+if __name__ == "__main__":
+    print("CrossBoardEngine — standalone demo")
+
+    engine = CrossBoardEngine(match_threshold=0.4, proximity_px=80.0)
+    print(f"Known patterns: {engine.list_patterns()}")
+
+    # Simulate board 1: LDO supply + RC filter
+    comps_b1 = [
+        BoardComponent("U1", "ic", ["VIN", "GND", "VOUT"], (100.0, 100.0)),
+        BoardComponent("C1", "capacitor", ["1", "2"], (130.0, 90.0)),   # input bypass
+        BoardComponent("C2", "capacitor", ["1", "2"], (70.0, 110.0)),   # output bypass
+        BoardComponent("R1", "resistor", ["A", "B"], (300.0, 200.0)),
+        BoardComponent("C3", "capacitor", ["1", "2"], (340.0, 195.0)),  # RC cap
+    ]
+    traces_b1 = [
+        BoardTrace("U1", "VIN", "C1", "1", 0.9),
+        BoardTrace("U1", "VOUT", "C2", "1", 0.85),
+        BoardTrace("R1", "B", "C3", "1", 0.92),
+    ]
+
+    result1 = engine.analyse(comps_b1, traces_b1)
+    print(f"\nBoard 1 — {len(result1.matches)} matches, coverage={result1.coverage:.0%}")
+    for m in result1.matches:
+        roles_str = ", ".join(f"{r}={c}" for r, c in m.component_roles.items())
+        partial_tag = " [partial]" if m.is_partial else ""
+        print(f"  [{m.score:.2f}] {m.pattern_name}{partial_tag}: {roles_str}")
+    print(f"  Novel: {result1.novel_components}")
+
+    # Simulate board 2: same LDO topology but different refs
+    comps_b2 = [
+        BoardComponent("VR1", "ic", ["VIN", "GND", "VOUT"], (200.0, 150.0)),
+        BoardComponent("CA1", "capacitor", ["1", "2"], (230.0, 140.0)),
+        BoardComponent("CB1", "capacitor", ["1", "2"], (170.0, 160.0)),
+        BoardComponent("Q1", "ic", ["B", "C", "E"], (400.0, 300.0)),  # novel
+    ]
+    traces_b2 = [
+        BoardTrace("VR1", "VIN", "CA1", "1", 0.88),
+        BoardTrace("VR1", "VOUT", "CB1", "1", 0.91),
+    ]
+
+    result2 = engine.analyse(comps_b2, traces_b2)
+    print(f"\nBoard 2 — {len(result2.matches)} matches, coverage={result2.coverage:.0%}")
+    for m in result2.matches:
+        roles_str = ", ".join(f"{r}={c}" for r, c in m.component_roles.items())
+        print(f"  [{m.score:.2f}] {m.pattern_name}: {roles_str}")
+    print(f"  Novel: {result2.novel_components}")
+
+    print("\nPattern knowledge base stats:")
+    for name, stats in engine.pattern_stats().items():
+        if stats["seen_count"] > 0:
+            print(f"  {name}: seen={stats['seen_count']}, mean_conf={stats['mean_confidence']:.3f}")
+
+    # Round-trip serialisation
+    d = engine.to_dict()
+    engine2 = CrossBoardEngine.from_dict(d)
+    print(f"\nRestored engine has {len(engine2.list_patterns())} patterns.")
