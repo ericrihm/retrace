@@ -9,9 +9,9 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://github.com/ericrihm/retrace)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Coverage](https://img.shields.io/badge/coverage-83%25-green.svg)](https://github.com/ericrihm/retrace)
+[![Coverage](https://img.shields.io/badge/coverage-89%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->597<!-- /STATS --> tests** · **<!-- STATS:modules -->22<!-- /STATS --> modules** · **<!-- STATS:loc -->7959<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->623<!-- /STATS --> tests** · **<!-- STATS:modules -->22<!-- /STATS --> modules** · **<!-- STATS:loc -->7959<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -62,7 +62,7 @@ Intel Atom C2508 (Rangeley), Xilinx Spartan-6 Trust Anchor FPGA, 4x DDR3 ECC —
 
 ### Visualization Modes
 
-Three views per board -- from component overlay to attack surface:
+Four output modes per board -- from component overlay to assessment report:
 
 <table>
 <tr><th colspan="3">Cisco ASA 5506-X (Thrangrycat target)</th></tr>
@@ -113,7 +113,26 @@ JTAG (J5) -> AMD Liverpool APU (U1) -> eMMC (U8), Southbridge (U9)
 
 </td>
 </tr>
+<tr><th colspan="3">Bill of Materials — Dark-Themed SVG Tables</th></tr>
+<tr>
+<td width="50%" colspan="2">
+
+**Cisco ASA 5506-X BOM**
+<img src="docs/examples/cisco_bom_table.svg" width="100%" alt="Cisco ASA 5506-X BOM — grouped components with type badges and confidence bars"/>
+Grouped by type, color-coded badges, per-component confidence bars
+
+</td>
+<td width="50%">
+
+**Xbox One Model 1540 BOM**
+<img src="docs/examples/xbox_bom_table.svg" width="100%" alt="Xbox One Model 1540 BOM — 155 components with identification confidence"/>
+155 components with OCR confidence and part identification
+
+</td>
+</tr>
 </table>
+
+> **Assessment reports**: `retrace report-html board.jpg` generates a self-contained HTML deliverable with executive summary, security findings (CWE hyperlinks), sortable component inventory (datasheet links), and print-friendly styling. See [cisco_report.html](docs/examples/cisco_report.html) and [xbox_report.html](docs/examples/xbox_report.html).
 
 > **How Thrangrycat works (CVE-2019-1649):** Cisco's Trust Anchor module (TAm) is a Xilinx Spartan-6 FPGA that verifies boot image integrity on ASA, IOS-XE, and NX-OS platforms. The FPGA loads its bitstream from an external SPI flash chip (W25Q128JV on the 5506-X) at power-on -- and that bitstream is **not authenticated or encrypted**. An attacker with root access (or physical access to the SPI flash) can modify the bitstream to disable secure boot verification entirely, creating a persistent backdoor that survives firmware updates. re:trace maps this path automatically: it identifies the FPGA, traces the SPI flash connection, flags the unencrypted bitstream interface, and marks the JTAG header that provides the initial access vector. This is the same attack surface exploited by the **ArcaneDoor** state-sponsored campaign (2024), which prompted CISA Emergency Directive ED 25-03.
 
@@ -622,8 +641,8 @@ src/retrace/                             # <!-- STATS:loc -->7959<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->597<!-- /STATS --> |
-| Coverage | <!-- STATS:coverage -->83%<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->623<!-- /STATS --> |
+| Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->22<!-- /STATS --> |
 | Lines of code | <!-- STATS:loc -->7959<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
@@ -637,7 +656,7 @@ src/retrace/                             # <!-- STATS:loc -->7959<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->597<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->623<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
