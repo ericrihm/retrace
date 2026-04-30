@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-89%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->461<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->5589<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->476<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->5595<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -38,7 +38,7 @@ Two boards. Two worlds. Both analyzed from photos alone.
 
 <img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One — 28 components, 20 traced connections, color-coded net types"/>
 
-AMD Jaguar APU, 8GB DDR3, Southbridge — 28 components detected, 20 traces classified (power, signal, debug, clock)
+AMD Jaguar APU, 8GB DDR3, Southbridge — 34 components detected, 34 traces classified (power, signal, debug, clock)
 
 </td>
 <td width="50%">
@@ -47,7 +47,7 @@ AMD Jaguar APU, 8GB DDR3, Southbridge — 28 components detected, 20 traces clas
 
 <img src="docs/examples/cisco_annotated.svg" width="100%" alt="Cisco ASA 5506-X — 42 components, 41 traced connections, Thrangrycat attack surface"/>
 
-Intel Atom C2508, Xilinx Spartan-6 Trust Anchor FPGA, 4x DDR3 ECC — 42 components, 41 traces, full attack surface mapped
+Intel Atom C2508, Xilinx Spartan-6 Trust Anchor FPGA, 4x DDR3 ECC — 43 components, 41 traces, full attack surface mapped
 
 </td>
 </tr>
@@ -387,7 +387,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->5589<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->5595<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -423,10 +423,10 @@ src/retrace/                             # <!-- STATS:loc -->5589<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->461<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->476<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->20<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->5589<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->5595<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->114<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -438,7 +438,7 @@ src/retrace/                             # <!-- STATS:loc -->5589<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->461<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->476<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```

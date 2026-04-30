@@ -325,10 +325,10 @@ _RING = DeviceFamily(
     category="iot",
     revisions=[
         HardwareRevision(
-            "Ring Video Doorbell (Gen 1)", "?"  , "2AEUP-BAH01",
-            year=2018,
+            "Ring Video Doorbell (Gen 1)", "?", "2AEUP-BAH01",
+            year=2014,
             soc="Ambarella S2L", ram="256MB",
-            notes="1080p, 802.11b/g/n, battery or hardwired",
+            notes="1080p, 802.11b/g/n, battery or hardwired, Kickstarter launch",
         ),
         HardwareRevision(
             "Ring Video Doorbell 2", "5UM5E5", "2AEUP-0DG00I",
@@ -372,7 +372,7 @@ _CISCO_ASA = DeviceFamily(
             storage="8GB eUSB + 50GB mSATA SSD",
             notes="8-port GbE, FirePOWER IPS, Thrangrycat (CVE-2019-1649), ArcaneDoor APT, "
                   "CISA ED 25-03, Intel AVR54 clock bug, Xilinx Spartan-6 Trust Anchor FPGA, "
-                  "wired-only (no FCC ID), EOL Aug 2026, board revs V02-V06",
+                  "wired-only (no FCC ID), EoSale Jul 2021, EoSupport Aug 2026, board revs V02-V06",
         ),
         HardwareRevision(
             "ASA 5506W-X", "ASA5506W-A-K9", "LDKASA-AP702",
@@ -398,7 +398,7 @@ _CISCO_ASA = DeviceFamily(
         HardwareRevision(
             "ASA 5515-X", "ASA5515-K9", "LDK102068",
             year=2012,
-            soc="Intel Core i5 (Sandy Bridge)", ram="8GB DDR3",
+            soc="Intel multi-core x86 (Clarkdale-era)", ram="8GB DDR3",
             storage="8GB SSD",
             notes="6-port GbE, 250K connections, IPS module slot, predecessor to 5506-X",
         ),
@@ -469,6 +469,8 @@ def search_registry(query: str) -> list[tuple[DeviceFamily, list[HardwareRevisio
     specific revision name, codename, or model number, only those revisions
     are included.
     """
+    if not query or not query.strip():
+        return []
     q = query.lower().strip()
     results: list[tuple[DeviceFamily, list[HardwareRevision]]] = []
 
@@ -492,6 +494,8 @@ def search_registry(query: str) -> list[tuple[DeviceFamily, list[HardwareRevisio
 
 def get_family(name: str) -> DeviceFamily | None:
     """Get a device family by exact name (case-insensitive)."""
+    if not name:
+        return None
     for f in DEVICE_FAMILIES:
         if f.name.lower() == name.lower():
             return f
@@ -500,6 +504,8 @@ def get_family(name: str) -> DeviceFamily | None:
 
 def get_revision_by_fcc_id(fcc_id: str) -> tuple[DeviceFamily, HardwareRevision] | None:
     """Look up a specific revision by FCC ID."""
+    if not fcc_id:
+        return None
     fcc_upper = fcc_id.upper()
     for family in DEVICE_FAMILIES:
         for rev in family.revisions:

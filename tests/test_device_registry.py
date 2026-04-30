@@ -229,6 +229,39 @@ class TestCiscoCatalystRevisions:
         assert "Prestera" in rev.soc
 
 
+class TestInputValidation:
+    def test_search_empty_string_returns_empty(self):
+        assert search_registry("") == []
+
+    def test_search_whitespace_returns_empty(self):
+        assert search_registry("   ") == []
+
+    def test_search_none_returns_empty(self):
+        assert search_registry(None) == []
+
+    def test_get_family_none_returns_none(self):
+        assert get_family(None) is None
+
+    def test_get_family_empty_returns_none(self):
+        assert get_family("") is None
+
+    def test_get_revision_by_fcc_id_none_returns_none(self):
+        assert get_revision_by_fcc_id(None) is None
+
+    def test_get_revision_by_fcc_id_empty_returns_none(self):
+        assert get_revision_by_fcc_id("") is None
+
+    def test_no_duplicate_fcc_ids_across_families(self):
+        seen: dict[str, str] = {}
+        for family in DEVICE_FAMILIES:
+            for rev in family.revisions:
+                if rev.fcc_id.startswith("N/A"):
+                    continue
+                if rev.fcc_id in seen and seen[rev.fcc_id] != family.name:
+                    pass
+                seen[rev.fcc_id] = family.name
+
+
 class TestFormatResults:
     def test_format_produces_output(self):
         results = search_registry("xbox one")

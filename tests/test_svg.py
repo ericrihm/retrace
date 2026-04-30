@@ -391,6 +391,51 @@ class TestEmptyResult:
 
 
 # ---------------------------------------------------------------------------
+# Security
+# ---------------------------------------------------------------------------
+
+class TestSvgSecurity:
+    def test_bom_label_xss_escaped(self):
+        comp = _make_component("X1", '<script>alert(1)</script>')
+        result = _make_result(components=[comp])
+        svg = generate_svg(result)
+        assert "<script>" not in svg
+        assert "&lt;script&gt;" in svg
+
+    def test_component_id_xss_escaped(self):
+        comp = _make_component(cid='"><script>alert(1)</script>')
+        result = _make_result(components=[comp])
+        svg = generate_svg(result)
+        assert "<script>" not in svg
+
+    def test_marking_xss_escaped(self):
+        comp = _make_component(marking='</text><script>x</script>')
+        result = _make_result(components=[comp])
+        svg = generate_svg(result)
+        assert "<script>" not in svg
+
+    def test_javascript_uri_rejected(self):
+        result = _make_result()
+        svg = generate_svg(result, image_href="javascript:alert(1)")
+        assert "<image" not in svg
+
+    def test_javascript_uri_case_insensitive(self):
+        result = _make_result()
+        svg = generate_svg(result, image_href="  JavaScript:alert(1)")
+        assert "<image" not in svg
+
+    def test_valid_image_href_allowed(self):
+        result = _make_result()
+        svg = generate_svg(result, image_href="data:image/png;base64,abc")
+        assert "<image" in svg
+
+    def test_file_path_href_allowed(self):
+        result = _make_result()
+        svg = generate_svg(result, image_href="/path/to/image.jpg")
+        assert "<image" in svg
+
+
+# ---------------------------------------------------------------------------
 # save_svg writes to file
 # ---------------------------------------------------------------------------
 

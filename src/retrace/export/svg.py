@@ -232,7 +232,7 @@ def _render_bom_panel(
         )
         parts.append(
             f'      <text x="{tx + 12}" y="{ty}" font-family="{_FONT}" '
-            f'font-size="9" fill="#ccc">{label}: {count}{id_str}</text>'
+            f'font-size="9" fill="#ccc">{_escape(label)}: {count}{id_str}</text>'
         )
         ty += BOM_LINE_H
 
@@ -324,7 +324,7 @@ def generate_svg(
     )
     lines.append('  <!-- re:trace SVG overlay — components, traces, BOM -->')
 
-    if image_href:
+    if image_href and not image_href.strip().lower().startswith("javascript:"):
         lines.append(
             f'  <image href="{_escape(image_href)}" x="0" y="0" '
             f'width="{svg_w}" height="{svg_h}" preserveAspectRatio="xMidYMid meet"/>'
