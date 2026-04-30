@@ -242,7 +242,7 @@ The closest academic precedents are [Kleber et al. (USENIX WOOT 2017)](https://w
 
 ```bash
 # Install — works immediately, no model downloads
-pip install retrace-pcb
+pip install git+https://github.com/ericrihm/retrace.git
 
 # Full analysis: detect + OCR + trace + identify + advise
 retrace scan board_photo.jpg
@@ -266,17 +266,17 @@ retrace advise board_photo.jpg
 retrace report
 
 # Web UI (install gradio first)
-pip install retrace-pcb[web]
+pip install "retrace-pcb[web] @ git+https://github.com/ericrihm/retrace.git"
 retrace ui
 ```
 
 ### Optional ML dependencies
 
 ```bash
-pip install retrace-pcb[detection]   # YOLO v8 + ONNX Runtime
-pip install retrace-pcb[ocr]         # EasyOCR
-pip install retrace-pcb[web]         # Gradio web UI
-pip install retrace-pcb[all]         # Everything
+pip install "retrace-pcb[detection] @ git+https://github.com/ericrihm/retrace.git"  # YOLO v8 + ONNX Runtime
+pip install "retrace-pcb[ocr] @ git+https://github.com/ericrihm/retrace.git"        # EasyOCR
+pip install "retrace-pcb[web] @ git+https://github.com/ericrihm/retrace.git"        # Gradio web UI
+pip install "retrace-pcb[all] @ git+https://github.com/ericrihm/retrace.git"        # Everything
 ```
 
 ## Deep Dive
@@ -412,7 +412,7 @@ Every `retrace scan` builds your component knowledge automatically:
 
 [YOLO v8](https://docs.ultralytics.com/) fine-tuned on the [FPIC-Component dataset](https://www.mdpi.com/2079-9292/12/11/2450) — 6,260 images, 29,639 labeled objects, 25 component classes. Detects ICs, capacitors, resistors, connectors, inductors, crystals, test points, debug headers, diodes, and transistors.
 
-Falls back to OpenCV contour detection (adaptive threshold → morphological filtering → contour hierarchy) when YOLO isn't installed. **The entire pipeline works with `pip install retrace-pcb` — zero GPU, zero model downloads.**
+Falls back to OpenCV contour detection (adaptive threshold → morphological filtering → contour hierarchy) when YOLO isn't installed. **The entire pipeline works with `pip install git+https://github.com/ericrihm/retrace.git` — zero GPU, zero model downloads.**
 
 ### Copper Trace Extraction
 
