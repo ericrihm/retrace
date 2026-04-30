@@ -358,7 +358,7 @@ footer a { color: var(--text-mid); }
   <p class="tagline">Photo in, attack surface out. The first open-source toolkit that identifies PCB components, extracts traces, maps trust chains, and tells you where to probe.</p>
 
   <div class="stats">
-    <div class="stat"><div class="stat-val">779</div><div class="stat-label">Tests</div></div>
+    <div class="stat"><div class="stat-val">790</div><div class="stat-label">Tests</div></div>
     <div class="stat"><div class="stat-val">90%</div><div class="stat-label">Coverage</div></div>
     <div class="stat"><div class="stat-val">24</div><div class="stat-label">Modules</div></div>
     <div class="stat"><div class="stat-val">128</div><div class="stat-label">Components DB</div></div>
@@ -406,38 +406,71 @@ footer a { color: var(--text-mid); }
 <section id="layers" style="padding: 3em 0;">
   <div class="container">
     <h2>Interactive Analysis Layers</h2>
-    <p class="section-sub">One SVG. Eight toggleable layers. Six view presets. Like switching between satellite and terrain on a map.</p>
+    <p class="section-sub">One SVG. Nine layers. Ten view presets. Three rendering styles. Like switching between Satellite and Terrain on Google Maps.</p>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 1.5em;">
+    <h3 style="font-size: 0.85em; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 1.5em;">Rendering Styles</h3>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 0.5em;">
       <div class="report-card" style="border-left: 3px solid #22d3ee;">
-        <h3 style="font-size: 0.95em; color: #e2e8f0;">Analysis View</h3>
-        <p style="font-size: 0.8em; color: #94a3b8;">Components + traces + BOM. Default view for reverse engineering.</p>
-      </div>
-      <div class="report-card" style="border-left: 3px solid #ef4444;">
-        <h3 style="font-size: 0.95em; color: #e2e8f0;">Attack Surface</h3>
-        <p style="font-size: 0.8em; color: #94a3b8;">Security-critical components highlighted. Attack path arrows. CVSS scores.</p>
+        <h3 style="font-size: 0.95em; color: #e2e8f0;">&#x1F4F7; Photo</h3>
+        <p style="font-size: 0.8em; color: #94a3b8;">Board image with translucent overlays. Default mode &mdash; like Google Maps satellite view.</p>
       </div>
       <div class="report-card" style="border-left: 3px solid #a855f7;">
-        <h3 style="font-size: 0.95em; color: #e2e8f0;">Zone Map</h3>
-        <p style="font-size: 0.8em; color: #94a3b8;">Functional zones: CPU, memory, power, I/O, debug, storage, network.</p>
+        <h3 style="font-size: 0.95em; color: #e2e8f0;">&#x1F4D0; Schematic</h3>
+        <p style="font-size: 0.8em; color: #94a3b8;">Vector-only, no photo. Opaque component outlines, thick traces, bold labels. Like Google Maps roadmap view.</p>
       </div>
       <div class="report-card" style="border-left: 3px solid #f59e0b;">
-        <h3 style="font-size: 0.95em; color: #e2e8f0;">Debug View</h3>
-        <p style="font-size: 0.8em; color: #94a3b8;">Debug interfaces + net classification labels. JTAG, SWD, UART, SPI, I2C.</p>
+        <h3 style="font-size: 0.95em; color: #e2e8f0;">&#x2622; X-Ray</h3>
+        <p style="font-size: 0.8em; color: #94a3b8;">Dimmed photo with high-contrast overlays. Everything visible at once. Like a hybrid satellite + roadmap.</p>
+      </div>
+    </div>
+
+    <h3 style="font-size: 0.85em; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 1.5em;">View Presets</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 0.5em;">
+      <div class="report-card" style="border-left: 3px solid #6b7280;">
+        <h3 style="font-size: 0.9em; color: #e2e8f0;">Satellite</h3>
+        <p style="font-size: 0.75em; color: #94a3b8;">Board photo only. Clean view for orientation.</p>
+      </div>
+      <div class="report-card" style="border-left: 3px solid #22d3ee;">
+        <h3 style="font-size: 0.9em; color: #e2e8f0;">Analysis</h3>
+        <p style="font-size: 0.75em; color: #94a3b8;">Components + traces + BOM. Default RE view.</p>
+      </div>
+      <div class="report-card" style="border-left: 3px solid #a855f7;">
+        <h3 style="font-size: 0.9em; color: #e2e8f0;">Schematic</h3>
+        <p style="font-size: 0.75em; color: #94a3b8;">Vector-only view with net labels and grid.</p>
+      </div>
+      <div class="report-card" style="border-left: 3px solid #f59e0b;">
+        <h3 style="font-size: 0.9em; color: #e2e8f0;">X-Ray</h3>
+        <p style="font-size: 0.75em; color: #94a3b8;">All layers with dimmed photo. Full visibility.</p>
+      </div>
+      <div class="report-card" style="border-left: 3px solid #ef4444;">
+        <h3 style="font-size: 0.9em; color: #e2e8f0;">Attack Surface</h3>
+        <p style="font-size: 0.75em; color: #94a3b8;">Security findings + attack path arrows.</p>
+      </div>
+      <div class="report-card" style="border-left: 3px solid #f97316;">
+        <h3 style="font-size: 0.9em; color: #e2e8f0;">Recon</h3>
+        <p style="font-size: 0.75em; color: #94a3b8;">Pentester first look: security + power rails + net labels.</p>
+      </div>
+      <div class="report-card" style="border-left: 3px solid #eab308;">
+        <h3 style="font-size: 0.9em; color: #e2e8f0;">Power Map</h3>
+        <p style="font-size: 0.75em; color: #94a3b8;">VRMs, LDOs, rails, decoupling caps highlighted.</p>
+      </div>
+      <div class="report-card" style="border-left: 3px solid #8b5cf6;">
+        <h3 style="font-size: 0.9em; color: #e2e8f0;">Zones</h3>
+        <p style="font-size: 0.75em; color: #94a3b8;">Functional zone overlay: CPU, memory, power, I/O.</p>
       </div>
       <div class="report-card" style="border-left: 3px solid #22c55e;">
-        <h3 style="font-size: 0.95em; color: #e2e8f0;">Net Labels</h3>
-        <p style="font-size: 0.8em; color: #94a3b8;">Auto-classified net types at each trace midpoint: power, data, clock, debug.</p>
+        <h3 style="font-size: 0.9em; color: #e2e8f0;">Debug</h3>
+        <p style="font-size: 0.75em; color: #94a3b8;">Debug interfaces + net classification labels.</p>
       </div>
-      <div class="report-card" style="border-left: 3px solid #6b7280;">
-        <h3 style="font-size: 0.95em; color: #e2e8f0;">Grid Reference</h3>
-        <p style="font-size: 0.8em; color: #94a3b8;">Pixel coordinate overlay for precise location referencing in reports.</p>
+      <div class="report-card" style="border-left: 3px solid #64748b;">
+        <h3 style="font-size: 0.9em; color: #e2e8f0;">All Layers</h3>
+        <p style="font-size: 0.75em; color: #94a3b8;">Everything visible. Full analysis mode.</p>
       </div>
     </div>
 
     <p style="margin-top: 1.5em; font-size: 0.85em; color: #64748b; text-align: center;">
       <code style="background: #1e293b; padding: 2px 8px; border-radius: 4px;">retrace scan board.jpg --format svg</code> &mdash;
-      self-contained SVG with JavaScript layer controls. Open in any browser.
+      self-contained SVG with JavaScript layer controls and style switching. Open in any browser, no server needed.
     </p>
   </div>
 </section>
@@ -488,8 +521,8 @@ footer a { color: var(--text-mid); }
             <div class="artifact-link">Grouped by type &middot; confidence bars &middot; part numbers</div>
           </div>
           <div class="view-panel" data-view="interactive">
-            <img src="examples/cisco_interactive.svg" alt="Cisco ASA 5506-X — interactive layered SVG with 8 toggleable layers" loading="lazy">
-            <div class="artifact-link">8 toggleable layers &middot; 6 view presets &middot; JavaScript controls &middot; <a href="examples/cisco_interactive.svg" target="_blank">Open full SVG &rarr;</a></div>
+            <img src="examples/cisco_interactive.svg" alt="Cisco ASA 5506-X — interactive layered SVG with 9 layers, 3 rendering styles" loading="lazy">
+            <div class="artifact-link">9 layers &middot; 10 presets &middot; 3 styles (Photo / Schematic / X-Ray) &middot; <a href="examples/cisco_interactive.svg" target="_blank">Open full SVG &rarr;</a></div>
           </div>
           <div class="view-panel" data-view="pinout-jtag">
             <img src="examples/cisco_JTAG_pinout.svg" alt="Cisco ASA 5506-X — JTAG pinout diagram with probe wiring guide" loading="lazy">
@@ -539,8 +572,8 @@ footer a { color: var(--text-mid); }
             <div class="artifact-link">150 components &middot; OCR confidence &middot; part identification</div>
           </div>
           <div class="view-panel" data-view="interactive">
-            <img src="examples/xbox_interactive.svg" alt="Xbox One Model 1540 — interactive layered SVG with 8 toggleable layers" loading="lazy">
-            <div class="artifact-link">8 toggleable layers &middot; 6 view presets &middot; JavaScript controls &middot; <a href="examples/xbox_interactive.svg" target="_blank">Open full SVG &rarr;</a></div>
+            <img src="examples/xbox_interactive.svg" alt="Xbox One Model 1540 — interactive layered SVG with 9 layers, 3 rendering styles" loading="lazy">
+            <div class="artifact-link">9 layers &middot; 10 presets &middot; 3 styles (Photo / Schematic / X-Ray) &middot; <a href="examples/xbox_interactive.svg" target="_blank">Open full SVG &rarr;</a></div>
           </div>
           <div class="view-panel" data-view="pinout-jtag">
             <img src="examples/xbox_JTAG_pinout.svg" alt="Xbox One Model 1540 — JTAG pinout diagram with probe wiring guide" loading="lazy">
@@ -663,11 +696,11 @@ footer a { color: var(--text-mid); }
       </div>
       <div class="report-card">
         <h3>Interactive Layered SVG</h3>
-        <p>Self-contained SVG with 8 toggleable layers and 6 view presets. JavaScript-powered floating control panel. Open in any browser, no server needed.</p>
+        <p>Self-contained SVG with 9 layers, 10 presets, and 3 rendering styles (Photo, Schematic, X-Ray). Switch between views like Google Maps Satellite/Terrain/Roadmap.</p>
         <div class="report-meta">
           <a href="examples/cisco_interactive.svg">cisco interactive</a> &middot;
           <a href="examples/xbox_interactive.svg">xbox interactive</a> &middot;
-          Google Maps&ndash;style layer toggles
+          Power Rails &middot; Recon &middot; Schematic &middot; X-Ray
         </div>
       </div>
     </div>

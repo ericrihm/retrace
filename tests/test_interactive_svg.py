@@ -59,13 +59,20 @@ class TestLayerDefinitions:
                     f"Preset {preset_id!r} references unknown layer {layer_id!r}"
 
     def test_all_presets_exist(self):
-        expected = {"analysis", "attack", "zones", "debug", "clean", "all"}
+        expected = {"satellite", "analysis", "schematic", "xray", "attack",
+                    "recon", "power", "zones", "debug", "all"}
         assert set(_PRESET_DEFS.keys()) == expected
 
     def test_analysis_preset_is_default(self):
         default_on = {ld[0] for ld in _LAYER_DEFS if ld[2]}
         analysis_layers = set(_PRESET_DEFS["analysis"]["layers"])
         assert default_on == analysis_layers
+
+    def test_preset_style_modes(self):
+        for pid, pdef in _PRESET_DEFS.items():
+            assert "style" in pdef, f"Preset {pid!r} missing 'style' key"
+            assert pdef["style"] in ("photo", "schematic", "xray"), \
+                f"Preset {pid!r} has unknown style {pdef['style']!r}"
 
     def test_all_preset_includes_everything(self):
         all_ids = {ld[0] for ld in _LAYER_DEFS}
@@ -265,6 +272,7 @@ class TestScript:
         script = _render_interactive_script()
         assert "function toggleLayer" in script
         assert "function setPreset" in script
+        assert "function setStyle" in script
 
     def test_contains_presets(self):
         script = _render_interactive_script()
@@ -275,6 +283,73 @@ class TestScript:
         script = _render_interactive_script()
         for layer_id, _, _ in _LAYER_DEFS:
             assert f'"{layer_id}"' in script
+
+    def test_preset_style_in_script(self):
+        script = _render_interactive_script()
+        assert '"style"' in script or "'style'" in script
+
+
+class TestStyleModes:
+    def test_style_defs_rendered(self):
+        from retrace.export.svg import _render_style_defs
+        css = _render_style_defs()
+        assert ".style-photo" in css
+        assert ".style-schematic" in css
+        assert ".style-xray" in css
+
+    def test_svg_has_default_style_class(self):
+        result = _make_result()
+        svg = generate_interactive_svg(result)
+        assert 'class="style-photo"' in svg
+
+    def test_style_defs_in_output(self):
+        result = _make_result()
+        svg = generate_interactive_svg(result)
+        assert ".style-schematic" in svg
+        assert ".style-xray" in svg
+
+    def test_schematic_preset_hides_board_image(self):
+        preset = _PRESET_DEFS["schematic"]
+        assert "board-image" not in preset["layers"]
+        assert preset["style"] == "schematic"
+
+    def test_xray_preset_includes_all_overlays(self):
+        preset = _PRESET_DEFS["xray"]
+        assert "board-image" in preset["layers"]
+        assert "components" in preset["layers"]
+        assert "traces" in preset["layers"]
+        assert preset["style"] == "xray"
+
+    def test_satellite_preset_board_only(self):
+        preset = _PRESET_DEFS["satellite"]
+        assert preset["layers"] == ["board-image"]
+
+
+class TestPowerRails:
+    def test_power_rails_layer_exists(self):
+        result = _make_result()
+        svg = generate_interactive_svg(result)
+        assert 'id="layer-power-rails"' in svg
+
+    def test_power_components_highlighted(self):
+        comps = [
+            Component("U10", "ic", 0.9, (100, 100, 60, 40),
+                      marking="TPS54331", part_number="TPS54331"),
+            Component("L1", "inductor", 0.85, (170, 100, 30, 20),
+                      marking="4.7uH"),
+            Component("C1", "capacitor", 0.9, (210, 100, 12, 8),
+                      value="10uF"),
+        ]
+        result = _make_result(components=comps)
+        from retrace.export.svg import _render_power_rails
+        comp_map = {c.id: c for c in comps}
+        html = _render_power_rails(comps, [], comp_map)
+        assert "U10" not in html or "f59e0b" in html
+        assert "f59e0b" in html
+
+    def test_power_preset_includes_layer(self):
+        preset = _PRESET_DEFS["power"]
+        assert "power-rails" in preset["layers"]
 
 
 class TestSaveToDisk:

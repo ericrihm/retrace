@@ -1031,35 +1031,70 @@ _LAYER_DEFS = [
     ("traces", "Traces", True),
     ("zones", "Zones", False),
     ("security", "Security", False),
+    ("power-rails", "Power Rails", False),
     ("bom-panel", "BOM Panel", True),
     ("net-labels", "Net Labels", False),
     ("grid-ref", "Grid Reference", False),
 ]
 
+_STYLE_MODES = {
+    "photo": "Board photo with overlays",
+    "schematic": "Vector-only schematic view, no photo",
+    "xray": "Dimmed photo with high-contrast overlays",
+}
+
 _PRESET_DEFS = {
+    "satellite": {
+        "label": "📡 Satellite",
+        "layers": ["board-image"],
+        "style": "photo",
+    },
     "analysis": {
-        "label": "Analysis",
+        "label": "🔍 Analysis",
         "layers": ["board-image", "components", "traces", "bom-panel"],
+        "style": "photo",
+    },
+    "schematic": {
+        "label": "📐 Schematic",
+        "layers": ["components", "traces", "net-labels", "grid-ref", "bom-panel"],
+        "style": "schematic",
+    },
+    "xray": {
+        "label": "☢ X-Ray",
+        "layers": ["board-image", "components", "traces", "zones",
+                   "security", "power-rails", "net-labels"],
+        "style": "xray",
     },
     "attack": {
-        "label": "Attack Surface",
+        "label": "🎯 Attack Surface",
         "layers": ["board-image", "security", "traces"],
+        "style": "photo",
+    },
+    "recon": {
+        "label": "🔦 Recon",
+        "layers": ["board-image", "security", "traces", "power-rails",
+                   "net-labels"],
+        "style": "xray",
+    },
+    "power": {
+        "label": "⚡ Power Map",
+        "layers": ["board-image", "power-rails", "zones", "components"],
+        "style": "photo",
     },
     "zones": {
-        "label": "Zones",
+        "label": "🗺 Zones",
         "layers": ["board-image", "zones", "components"],
+        "style": "photo",
     },
     "debug": {
-        "label": "Debug",
+        "label": "🐛 Debug",
         "layers": ["board-image", "security", "net-labels"],
-    },
-    "clean": {
-        "label": "Clean Board",
-        "layers": ["board-image"],
+        "style": "photo",
     },
     "all": {
-        "label": "All Layers",
+        "label": "🌐 All Layers",
         "layers": [ld[0] for ld in _LAYER_DEFS],
+        "style": "photo",
     },
 }
 
@@ -1162,20 +1197,47 @@ def _render_interactive_controls(svg_w: int) -> str:
     return "\n".join(parts)
 
 
+def _render_style_defs() -> str:
+    """CSS style rules for view modes (photo, schematic, x-ray)."""
+    return f"""  <style type="text/css">
+    /* Photo mode — default */
+    .style-photo #layer-board-image {{ opacity: 0.85; }}
+    .style-photo .comp-rect {{ fill-opacity: 0.15; }}
+    .style-photo .comp-label {{ fill-opacity: 0.9; }}
+
+    /* Schematic mode — no photo, opaque component rendering */
+    .style-schematic #layer-board-image {{ opacity: 0; }}
+    .style-schematic .comp-rect {{ fill-opacity: 0.35; stroke-width: 2; }}
+    .style-schematic .comp-label {{ fill: {_TEXT_HI}; font-weight: bold; }}
+    .style-schematic .traces line {{ stroke-width: 3; stroke-opacity: 1; }}
+    .style-schematic .traces polyline {{ stroke-width: 3; stroke-opacity: 1; }}
+
+    /* X-Ray mode — dimmed photo, high-contrast overlays */
+    .style-xray #layer-board-image {{ opacity: 0.3; }}
+    .style-xray .comp-rect {{ fill-opacity: 0.4; stroke-width: 2.5; }}
+    .style-xray .comp-label {{ fill: {_TEXT_HI}; font-weight: bold; }}
+    .style-xray .traces line {{ stroke-width: 2.5; stroke-opacity: 0.95; }}
+    .style-xray .traces polyline {{ stroke-width: 2.5; stroke-opacity: 0.95; }}
+  </style>"""
+
+
 def _render_interactive_script() -> str:
-    """JavaScript for layer toggling and preset switching."""
+    """JavaScript for layer toggling, preset switching, and style modes."""
     presets_js = "{"
     for pid, pdef in _PRESET_DEFS.items():
         layers_str = ",".join(f'"{l}"' for l in pdef["layers"])
-        presets_js += f'"{pid}":[{layers_str}],'
+        style = pdef.get("style", "photo")
+        presets_js += f'"{pid}":{{"layers":[{layers_str}],"style":"{style}"}},'
     presets_js += "}"
 
     all_layers_js = ",".join(f'"{ld[0]}"' for ld in _LAYER_DEFS)
+    styles_js = ",".join(f'"{s}"' for s in _STYLE_MODES)
 
     return f"""  <script type="text/javascript">
     // <![CDATA[
     var presets = {presets_js};
     var allLayers = [{all_layers_js}];
+    var allStyles = [{styles_js}];
 
     function toggleLayer(id) {{
       var g = document.getElementById("layer-" + id);
@@ -1189,8 +1251,18 @@ def _render_interactive_script() -> str:
       if (tick) tick.style.display = show ? "" : "none";
     }}
 
+    function setStyle(mode) {{
+      var root = document.querySelector("svg");
+      allStyles.forEach(function(s) {{
+        root.classList.remove("style-" + s);
+      }});
+      root.classList.add("style-" + mode);
+    }}
+
     function setPreset(name) {{
-      var layers = presets[name] || [];
+      var p = presets[name];
+      if (!p) return;
+      var layers = p.layers || [];
       allLayers.forEach(function(id) {{
         var g = document.getElementById("layer-" + id);
         if (!g) return;
@@ -1201,6 +1273,7 @@ def _render_interactive_script() -> str:
         if (chk) chk.setAttribute("fill", show ? "{_ACCENT}" : "{_PANEL_BORDER}");
         if (tick) tick.style.display = show ? "" : "none";
       }});
+      setStyle(p.style || "photo");
     }}
     // ]]>
   </script>"""
@@ -1278,6 +1351,63 @@ def _render_net_labels(
     return "\n".join(parts)
 
 
+_POWER_KEYWORDS = frozenset({
+    "vcc", "vdd", "vin", "vout", "vcore", "vrm", "ldo", "regulator",
+    "buck", "boost", "pmic", "power", "pwr", "dc-dc", "inductor",
+})
+
+_POWER_LABELS = frozenset({"inductor", "diode", "transistor"})
+
+
+def _render_power_rails(
+    components: list[Component],
+    traces: list[Trace],
+    comp_map: dict[str, Component],
+) -> str:
+    """Highlight power delivery topology — VRMs, LDOs, rails, decoupling caps."""
+    parts: list[str] = []
+    power_ids: set[str] = set()
+
+    for c in components:
+        text = f"{c.marking} {c.part_number} {c.id}".lower()
+        is_power = any(kw in text for kw in _POWER_KEYWORDS)
+        if c.label in _POWER_LABELS:
+            is_power = True
+        if c.label == "capacitor" and c.value:
+            v = c.value.lower()
+            if any(u in v for u in ("uf", "µf", "100nf")):
+                is_power = True
+        if not is_power:
+            continue
+        power_ids.add(c.id)
+        x, y, w, h = c.bbox
+        parts.append(
+            f'    <rect x="{x - 3}" y="{y - 3}" width="{w + 6}" height="{h + 6}" '
+            f'rx="3" fill="#f59e0b" fill-opacity="0.18" '
+            f'stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,2"/>'
+        )
+        parts.append(
+            f'    <text x="{x + w + 5}" y="{y + h // 2 + 3}" '
+            f'font-family={_q(_FONT)} font-size="7" fill="#fbbf24" '
+            f'font-weight="bold">⚡</text>'
+        )
+
+    for trace in traces:
+        if trace.from_component in power_ids or trace.to_component in power_ids:
+            from_c = comp_map.get(trace.from_component)
+            to_c = comp_map.get(trace.to_component)
+            if from_c and to_c:
+                fc = _center_of(from_c)
+                tc = _center_of(to_c)
+                parts.append(
+                    f'    <line x1="{fc[0]}" y1="{fc[1]}" x2="{tc[0]}" y2="{tc[1]}" '
+                    f'stroke="#f59e0b" stroke-width="3" stroke-opacity="0.6" '
+                    f'stroke-dasharray="6,3"/>'
+                )
+
+    return "\n".join(parts)
+
+
 def generate_interactive_svg(
     result: AnalysisResult,
     width: Optional[int] = None,
@@ -1303,11 +1433,13 @@ def generate_interactive_svg(
     lines: list[str] = []
     lines.append(
         f'<svg xmlns="http://www.w3.org/2000/svg" '
+        f'class="style-photo" '
         f'width="{svg_w}" height="{svg_h}" '
         f'viewBox="0 0 {svg_w} {svg_h}">'
     )
     lines.append('  <!-- re:trace interactive layered SVG — toggle layers like a map -->')
 
+    lines.append(_render_style_defs())
     lines.append(_render_defs())
     lines.append(_render_background(svg_w, svg_h))
 
@@ -1318,7 +1450,7 @@ def generate_interactive_svg(
         lines.append(
             f'    <image href="{_escape(resolved_href)}" x="0" y="{_TITLE_H}" '
             f'width="{svg_w}" height="{svg_h - _TITLE_H - _FOOTER_H}" '
-            f'preserveAspectRatio="xMidYMid meet" opacity="0.85"/>'
+            f'preserveAspectRatio="xMidYMid meet"/>'
         )
     lines.append('  </g>')
 
@@ -1393,6 +1525,10 @@ def generate_interactive_svg(
     sec_findings = _detect_security_findings(result)
     if sec_findings:
         lines.append(_render_security_panel(sec_findings, svg_w, svg_h))
+    lines.append('  </g>')
+
+    lines.append(f'  <g id="layer-power-rails" visibility="hidden">')
+    lines.append(_render_power_rails(result.components, result.traces, comp_map))
     lines.append('  </g>')
 
     lines.append(f'  <g id="layer-net-labels" visibility="hidden">')

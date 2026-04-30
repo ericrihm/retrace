@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-90%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->779<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->22282<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->790<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->22493<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/)
 
@@ -160,20 +160,20 @@ JTAG debug header. Pin labels, J-Link / Bus Pirate / FTDI / OpenOCD wiring table
 
 **Cisco ASA 5506-X**
 <img src="docs/examples/cisco_interactive.svg" width="100%" alt="Cisco ASA 5506-X interactive SVG -- 8 toggleable layers, 6 view presets"/>
-8 layers: Board Image, Components, Traces, Zones, Security, BOM, Net Labels, Grid Ref. 6 presets: Analysis, Attack Surface, Zones, Debug, Clean, All. [Open in browser →](https://ericrihm.github.io/retrace/examples/cisco_interactive.svg)
+9 layers, 10 presets, 3 styles (Photo / Schematic / X-Ray). Satellite, Analysis, Schematic, X-Ray, Attack Surface, Recon, Power Map, Zones, Debug, All. [Open in browser →](https://ericrihm.github.io/retrace/examples/cisco_interactive.svg)
 
 </td>
 <td width="50%">
 
 **Xbox One Model 1540**
 <img src="docs/examples/xbox_interactive.svg" width="100%" alt="Xbox One Model 1540 interactive SVG -- 8 toggleable layers"/>
-Self-contained SVG with JavaScript-powered floating control panel. No server needed. [Open in browser →](https://ericrihm.github.io/retrace/examples/xbox_interactive.svg)
+Switch between Photo, Schematic (vector-only), and X-Ray (dimmed photo + high-contrast) rendering. [Open in browser →](https://ericrihm.github.io/retrace/examples/xbox_interactive.svg)
 
 </td>
 </tr>
 </table>
 
-> **Interactive layered SVG**: `retrace scan board.jpg --format svg` generates a single self-contained SVG with **8 toggleable layers** and **6 view presets** — like switching between satellite and terrain on Google Maps. Layers: Board Image, Components, Traces, Zones, Security, BOM Panel, Net Labels, Grid Reference. Presets: Analysis (default), Attack Surface, Zones, Debug, Clean Board, All Layers. JavaScript-powered floating control panel — open in any browser, no server needed.
+> **Interactive layered SVG**: `retrace scan board.jpg --format svg` generates a single self-contained SVG with **9 toggleable layers**, **10 view presets**, and **3 rendering styles** — like switching between Satellite, Terrain, and Roadmap on Google Maps. **Layers:** Board Image, Components, Traces, Zones, Security, Power Rails, BOM Panel, Net Labels, Grid Reference. **Styles:** Photo (board image with overlays), Schematic (vector-only, no photo), X-Ray (dimmed photo, high-contrast overlays). **Presets:** Satellite (photo only), Analysis (default), Schematic, X-Ray, Attack Surface, Recon, Power Map, Zones, Debug, All Layers. JavaScript-powered floating control panel — open in any browser, no server needed.
 
 > **Pinout diagrams**: `retrace pinout board.jpg` crops the board image around each detected debug interface, labels every pin by function (data, clock, power, ground, control, debug), and includes probe wiring guides for J-Link, Bus Pirate, FTDI FT232H, ST-Link V2, flashrom, and OpenOCD. Supports JTAG (20/14/10-pin), SWD (10/4/2-pin), UART (4/3/6-pin), SPI (8/6/4-pin), and I2C (4/2-pin) layouts. Voltage warnings and common baud rate references included.
 
@@ -702,7 +702,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->9776<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->9912<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: 17 commands (scan, search, trace, advise, identify, debug, solve, learn, compare, cross-board, export, export-kicad, batch, pinout, report, report-html, ui)
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -741,10 +741,10 @@ src/retrace/                             # <!-- STATS:loc -->9776<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->779<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->790<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->90%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->23<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->22282<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->22493<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -756,7 +756,7 @@ src/retrace/                             # <!-- STATS:loc -->9776<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->779<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->790<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
