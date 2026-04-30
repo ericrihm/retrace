@@ -647,7 +647,7 @@ my_analyzer = "my_package:MyAnalyzer"
 
 ```
 src/retrace/                             # <!-- STATS:loc -->8247<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
-├── cli.py                               # Click CLI: 16 commands (scan, search, trace, advise, identify, debug, learn, compare, cross-board, export, export-kicad, report, report-html, ui)
+├── cli.py                               # Click CLI: 14 commands (scan, search, trace, advise, identify, debug, learn, compare, cross-board, export, export-kicad, report, report-html, ui)
 ├── web.py                               # Gradio web interface
 ├── core/
 │   ├── pipeline.py                      # Orchestrator: photo → AnalysisResult
