@@ -57,46 +57,47 @@ IMG_W, IMG_H = 1600, 1000
 KNOWN_COMPONENTS: list[tuple] = [
     # ref        label         x    y    w    h    marking           part_number      value    package       pins
 
-    # Main APU — custom AMD Jaguar 8-core + GCN GPU (X877730-001)
-    ("U1", "ic",         500, 300, 300, 300, "X877730-001",    "X877730",       "",       "BGA-1152",
+    # Main APU — AMD "Liverpool" custom SoC: 8-core Jaguar x86-64 + GCN 1.1 (12 CU, 768 shaders)
+    # TSMC 28nm, ~363mm² die. No separate southbridge — USB3, SATA, PCIe integrated on-die.
+    ("U1", "ic",         500, 300, 300, 300, "Liverpool",      "AMD Liverpool",  "",       "BGA-1170",
      ["VCC_CORE","VCC_GFX","VCC_IO","GND","GND2","GND3","GND4","DDR_DQ0","DDR_DQ1","DDR_A0","HDMI_TX0P","HDMI_TX0N","PCIE_TX","PCIE_RX"]),
 
-    # DDR3 RAM — Samsung K4B4G0846E (4x visible on top side)
-    ("U2", "ic",         120, 120, 140,  90, "K4B4G0846E",    "K4B4G0846E",   "4Gb",    "BGA-78",
+    # DDR3 RAM — Samsung K4B4G1646E-BYK0 (4Gbit each, 8 chips total = 8GB, DDR3-2133)
+    ("U2", "ic",         120, 120, 140,  90, "K4B4G1646E",    "K4B4G1646E-BYK0", "4Gb",  "BGA-78",
      ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
-    ("U3", "ic",         300, 120, 140,  90, "K4B4G0846E",    "K4B4G0846E",   "4Gb",    "BGA-78",
+    ("U3", "ic",         300, 120, 140,  90, "K4B4G1646E",    "K4B4G1646E-BYK0", "4Gb",  "BGA-78",
      ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
-    ("U4", "ic",         120, 680, 140,  90, "K4B4G0846E",    "K4B4G0846E",   "4Gb",    "BGA-78",
+    ("U4", "ic",         120, 680, 140,  90, "K4B4G1646E",    "K4B4G1646E-BYK0", "4Gb",  "BGA-78",
      ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
-    ("U5", "ic",         300, 680, 140,  90, "K4B4G0846E",    "K4B4G0846E",   "4Gb",    "BGA-78",
+    ("U5", "ic",         300, 680, 140,  90, "K4B4G1646E",    "K4B4G1646E-BYK0", "4Gb",  "BGA-78",
      ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
 
-    # Southbridge — Microsoft custom (X861949-005)
-    ("U6", "ic",        1000, 120, 180, 160, "X861949-005",    "X861949",       "",       "BGA-360",
-     ["VCC","GND","USB0_DP","USB0_DN","USB1_DP","USB1_DN","SATA_TX","SATA_RX","SPI_MOSI","SPI_MISO","SPI_CLK","SPI_CS"]),
+    # HDMI encoder — Panasonic MN864729 (HDMI 1.4 transmitter)
+    ("U6", "ic",        1000, 120, 140, 100, "MN864729",       "MN864729",      "",       "QFP-80",
+     ["VCC","GND","HDMI_TX0P","HDMI_TX0N","HDMI_TX1P","HDMI_TX1N","HDMI_TX2P","HDMI_TX2N","HDMI_CKP","HDMI_CKN","SDA","SCL"]),
 
-    # eMMC NAND — SK Hynix H27QCG8T2E5R (64 GB)
-    ("U7", "ic",        1000, 380, 160, 120, "H27QCG8T2E5R",  "H27QCG8T2E5R", "64GB",   "BGA-153",
+    # eMMC — Samsung KLMBG4GEAC-B001 (8GB eMMC 4.51)
+    ("U7", "ic",        1000, 300, 160, 120, "KLMBG4GEAC",    "KLMBG4GEAC-B001", "8GB",  "BGA-153",
      ["VCC","VCCQ","GND","CMD","CLK","DAT0","DAT1","DAT2","DAT3","DAT4","DAT5","DAT6","DAT7"]),
 
-    # WiFi/BT — Marvell AVASTAR 88W8897
-    ("U8", "ic",        1050, 600, 120,  80, "88W8897",        "88W8897",       "",       "QFN-68",
+    # WiFi/BT — Marvell AVASTAR 88W8897 (2x2 802.11ac + BT 4.0)
+    ("U8", "ic",        1050, 500, 120,  80, "88W8897",        "88W8897-NNB2",  "",       "QFN-68",
      ["VCC","GND","SDIO_CLK","SDIO_CMD","SDIO_D0","SDIO_D1","ANT1","ANT2"]),
 
-    # Ethernet PHY — Marvell 88E1512
-    ("U9", "ic",        1050, 760, 100,  70, "88E1512",        "88E1512",       "",       "QFN-56",
+    # Ethernet PHY — Marvell 88EC060-NNB2 (GbE)
+    ("U9", "ic",        1050, 660, 100,  70, "88EC060",        "88EC060-NNB2",  "",       "QFN-56",
      ["VCC","GND","MDI0P","MDI0N","MDI1P","MDI1N","TX_CLK","RX_CLK"]),
 
-    # Power: Core VRM — TI TPS51611
-    ("U10","ic",          80, 350,  70,  55, "TPS51611",       "TPS51611",      "",       "QFN-20",
+    # Power: APU core VRM — ON Semi NCP81174 (multi-phase)
+    ("U10","ic",          80, 350,  70,  55, "NCP81174",       "NCP81174",      "",       "QFN-52",
      ["VIN","VOUT","GND","EN","BOOT","SW","PGOOD","FB"]),
 
-    # Power: Memory VRM — IR3553
+    # Power: Memory VRM — IR3553 (DDR3 rail)
     ("U11","ic",          80, 440,  70,  55, "IR3553",         "IR3553",        "",       "PQFN-25",
      ["VIN","VOUT","GND","EN","SW","FB","PGOOD"]),
 
-    # HDMI retimer — Pericom PI3HDMI412
-    ("U12","ic",        1300, 150,  80,  60, "PI3HDMI412",     "PI3HDMI412",    "",       "QFN-40",
+    # HDMI-in mux — TI TMDS442 (HDMI passthrough switching)
+    ("U12","ic",        1300, 150,  80,  60, "TMDS442",        "TMDS442",       "",       "QFP-48",
      ["VCC","GND","HDMI_IN0","HDMI_IN1","HDMI_IN2","HDMI_OUT0","HDMI_OUT1","HDMI_OUT2","HPD","DDC_SCL","DDC_SDA"]),
 
     # Connectors
@@ -719,7 +720,7 @@ def _draw_component_footprint(
 def _draw_silkscreen(
     img: np.ndarray,
     labels: list[tuple] | None = None,
-    title: str = "XBOX ONE REF v1.0",
+    title: str = "XBOX ONE 1540 (Durango) X877750-003",
     img_w: int = IMG_W,
     img_h: int = IMG_H,
 ) -> None:
@@ -739,7 +740,7 @@ def generate_board_image(
     vias: list[tuple] | None = None,
     mounting_holes: list[tuple] | None = None,
     silk_labels: list[tuple] | None = None,
-    board_title: str = "XBOX ONE REF v1.0",
+    board_title: str = "XBOX ONE 1540 (Durango) X877750-003",
     seed: int = 42,
 ) -> None:
     """Render a synthetic PCB and save to output_path."""
@@ -801,6 +802,32 @@ XBOX_TRACE_ENDPOINTS: list[tuple[str, str]] = [
     ("U8","U6"),("U8","U6"),("U9","J4"),("U9","J4"),
     ("J5","U1"),("J5","U1"),("J5","U1"),("J5","U1"),
     ("U12","J1"),("U12","J1"),("Y1","U6"),
+]
+
+
+XBOX_ZONES: list[tuple[str, str, list[str]]] = [
+    ("APU Complex", "cpu", ["U1"]),
+    ("DDR3 Memory Bank A", "memory", ["U2", "U3"]),
+    ("DDR3 Memory Bank B", "memory", ["U4", "U5"]),
+    ("Power Delivery", "power", ["U10", "U11", "L1", "L2"]),
+    ("HDMI Output", "io", ["U6", "U12", "J1"]),
+    ("Storage", "storage", ["U7"]),
+    ("Wireless / Networking", "network", ["U8", "U9", "J4"]),
+    ("USB Subsystem", "io", ["J2", "J3"]),
+    ("Debug / JTAG", "debug", ["J5", "TP1", "TP2", "TP3", "TP4", "TP5"]),
+]
+
+CISCO_ZONES: list[tuple[str, str, list[str]]] = [
+    ("Intel Atom C2508 CPU", "cpu", ["U1"]),
+    ("DDR3 ECC Memory", "memory", ["U2", "U3", "U4", "U5"]),
+    ("Trust Anchor Module", "debug", ["U6", "U7"]),
+    ("Power Delivery", "power", ["U10", "U11", "U12", "L1", "L2"]),
+    ("Intel I354 NIC", "network", ["U8"]),
+    ("Data Plane Ports", "network", ["J1", "J2", "J3", "J4", "J5", "J7", "J8", "J9"]),
+    ("Management / Console", "io", ["J10", "J11", "J12", "J13"]),
+    ("Storage", "storage", ["U9", "J6"]),
+    ("JTAG Debug Chain", "debug", ["J15", "TP1", "TP2", "TP3", "TP4"]),
+    ("DC Power Input", "power", ["J14"]),
 ]
 
 
@@ -1111,6 +1138,7 @@ def _generate_one_board(
     layers: int,
     net_labels: list[str] | None = None,
     solver_traces_override: list[SolverTrace] | None = None,
+    zones: list[tuple[str, str, list[str]]] | None = None,
     seed: int = 42,
 ) -> None:
     from dataclasses import asdict as _asdict
@@ -1146,7 +1174,7 @@ def _generate_one_board(
 
     svg_path = out / f"{prefix}_annotated.svg"
     click.echo(f"  [4/6] Writing SVG overlay → {svg_path}")
-    svg_str = generate_svg(result, image_href=img_name, title=board_title)
+    svg_str = generate_svg(result, image_href=img_name, title=board_title, zones=zones)
     svg_path.write_text(svg_str, encoding="utf-8")
 
     probe_path = out / f"{prefix}_probe.txt"
@@ -1180,13 +1208,13 @@ def generate(output_dir: str):
     click.echo(click.style("\n═══ Xbox One — Gaming Console ═══", fg="cyan", bold=True))
     _generate_one_board(
         out, prefix="xbox",
-        board_title="XBOX ONE REF v1.0",
+        board_title="Xbox One Model 1540 — Durango (AMD Liverpool APU, 28nm)",
         img_w=IMG_W, img_h=IMG_H,
         comp_list=KNOWN_COMPONENTS,
         trace_routes=TRACE_ROUTES,
         endpoints=XBOX_TRACE_ENDPOINTS,
         vias=VIAS, mounting_holes=MOUNTING_HOLES, silk_labels=SILK_LABELS,
-        layers=8, seed=42,
+        layers=8, zones=XBOX_ZONES, seed=42,
     )
 
     click.echo(click.style("\n═══ Cisco ASA 5506-X — Enterprise Firewall ═══", fg="red", bold=True))
@@ -1202,6 +1230,7 @@ def generate(output_dir: str):
         layers=10,
         net_labels=CISCO_NET_LABELS,
         solver_traces_override=CISCO_SOLVER_TRACES,
+        zones=CISCO_ZONES,
         seed=99,
     )
 

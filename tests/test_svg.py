@@ -543,6 +543,91 @@ class TestSecurityPanel:
         assert 'fill="#ef4444" fill-opacity="0.9"' in svg
 
 
+class TestZoneOverlays:
+    def test_zones_rendered_when_provided(self):
+        c1 = _make_component("U1", "ic", (100, 100, 80, 60))
+        c2 = _make_component("U2", "ic", (200, 100, 80, 60))
+        result = _make_result(components=[c1, c2])
+        zones = [("CPU Complex", "cpu", ["U1", "U2"])]
+        svg = generate_svg(result, zones=zones)
+        assert 'class="zones"' in svg
+        assert 'data-zone="cpu"' in svg
+        assert "CPU COMPLEX" in svg
+
+    def test_no_zones_no_zone_group(self):
+        result = _make_result(components=[_make_component()])
+        svg = generate_svg(result)
+        assert 'class="zones"' not in svg
+
+    def test_empty_zones_list_no_zone_group(self):
+        result = _make_result(components=[_make_component()])
+        svg = generate_svg(result, zones=[])
+        assert 'class="zones"' not in svg
+
+    def test_zone_with_missing_components_skipped(self):
+        c1 = _make_component("U1", "ic", (100, 100, 80, 60))
+        result = _make_result(components=[c1])
+        zones = [("Ghost Zone", "io", ["NONEXISTENT"])]
+        svg = generate_svg(result, zones=zones)
+        assert "GHOST ZONE" not in svg
+
+    def test_zone_with_partial_components(self):
+        c1 = _make_component("U1", "ic", (100, 100, 80, 60))
+        result = _make_result(components=[c1])
+        zones = [("Partial", "memory", ["U1", "MISSING"])]
+        svg = generate_svg(result, zones=zones)
+        assert 'data-zone="memory"' in svg
+
+    def test_multiple_zones_rendered(self):
+        c1 = _make_component("U1", "ic", (50, 50, 80, 60))
+        c2 = _make_component("U2", "ic", (200, 200, 80, 60))
+        c3 = _make_component("J1", "connector", (400, 400, 60, 40))
+        result = _make_result(components=[c1, c2, c3])
+        zones = [
+            ("CPU", "cpu", ["U1"]),
+            ("Memory", "memory", ["U2"]),
+            ("I/O", "io", ["J1"]),
+        ]
+        svg = generate_svg(result, zones=zones)
+        assert 'data-zone="cpu"' in svg
+        assert 'data-zone="memory"' in svg
+        assert 'data-zone="io"' in svg
+
+    def test_zone_uses_correct_color(self):
+        c1 = _make_component("U1", "ic", (100, 100, 80, 60))
+        result = _make_result(components=[c1])
+        zones = [("Power", "power", ["U1"])]
+        svg = generate_svg(result, zones=zones)
+        assert "#f59e0b" in svg
+
+    def test_zone_xss_escaped(self):
+        c1 = _make_component("U1", "ic", (100, 100, 80, 60))
+        result = _make_result(components=[c1])
+        zones = [('<script>alert(1)</script>', "cpu", ["U1"])]
+        svg = generate_svg(result, zones=zones)
+        assert "<script>" not in svg
+        assert "&lt;SCRIPT&gt;" in svg
+
+    def test_zone_dashed_border(self):
+        c1 = _make_component("U1", "ic", (100, 100, 80, 60))
+        result = _make_result(components=[c1])
+        zones = [("Test", "cpu", ["U1"])]
+        svg = generate_svg(result, zones=zones)
+        assert 'stroke-dasharray="6,4"' in svg
+
+    def test_zones_rendered_before_traces(self):
+        c1 = _make_component("U1", "ic", (10, 10, 50, 50))
+        c2 = _make_component("U2", "ic", (200, 200, 50, 50))
+        trace = Trace(id="T001", points=[(35, 35), (225, 225)], width_px=2.0,
+                      from_component="U1", to_component="U2")
+        result = _make_result(components=[c1, c2], traces=[trace])
+        zones = [("CPU", "cpu", ["U1"])]
+        svg = generate_svg(result, zones=zones)
+        zone_pos = svg.index('class="zones"')
+        trace_pos = svg.index('class="traces"')
+        assert zone_pos < trace_pos
+
+
 class TestTraceEnhancements:
     def test_debug_trace_has_dash(self):
         jtag = _make_component("J5", "connector", (10, 10, 50, 50), marking="JTAG")

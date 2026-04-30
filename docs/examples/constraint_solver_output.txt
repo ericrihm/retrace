@@ -2,10 +2,10 @@ re:trace Constraint Solver — Inferred Netlist
 ==================================================
 
 Board: docs/examples/synthetic_board.png
-Timestamp: 2026-04-30T20:43:25Z
-AC-3 iterations: 74
+Timestamp: 2026-04-30T20:56:20Z
+AC-3 iterations: 80
 
-Net Assignments (229 nodes):
+Net Assignments (235 nodes):
 
   [POWER]
     J1.5V
@@ -74,14 +74,14 @@ Net Assignments (229 nodes):
     J1.SDA
     J1.TMDS0+
     J1.TMDS0-
-    ... and 155 more
+    ... and 161 more
 
 Inferred Connections (3):
   U1.VCC_CORE  <-->  J5.TDI
   U6.VCC  <-->  U1.PCIE_TX
   U6.GND  <-->  U1.PCIE_RX
 
-Ambiguous Nodes (175):
+Ambiguous Nodes (170):
   U1.DDR_DQ0
   U1.DDR_DQ1
   U1.DDR_A0
@@ -92,6 +92,6 @@ Ambiguous Nodes (175):
   U2.DQ2
   U2.DQ3
   U2.A0
-  ... and 165 more
+  ... and 160 more
 
 No constraint conflicts detected.

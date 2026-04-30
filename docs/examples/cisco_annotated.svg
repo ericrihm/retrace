@@ -70,6 +70,48 @@
     <line x1="14" y1="280" x2="24" y2="280" stroke="#6b7280" stroke-width="2.5" stroke-linecap="round"/>
     <text x="28" y="284" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#94a3b8">unknown</text>
   </g>
+  <g class="zones">
+    <g class="zone" data-zone="cpu">
+      <rect x="402" y="262" width="296" height="296" rx="8" fill="#06b6d4" fill-opacity="0.06" stroke="#06b6d4" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="406" y="258" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#06b6d4" fill-opacity="0.5" font-weight="bold">INTEL ATOM C2508 CPU</text>
+    </g>
+    <g class="zone" data-zone="memory">
+      <rect x="112" y="162" width="156" height="566" rx="8" fill="#8b5cf6" fill-opacity="0.06" stroke="#8b5cf6" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="116" y="158" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#8b5cf6" fill-opacity="0.5" font-weight="bold">DDR3 ECC MEMORY</text>
+    </g>
+    <g class="zone" data-zone="debug">
+      <rect x="732" y="142" width="296" height="176" rx="8" fill="#ef4444" fill-opacity="0.06" stroke="#ef4444" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="736" y="138" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#ef4444" fill-opacity="0.5" font-weight="bold">TRUST ANCHOR MODULE</text>
+    </g>
+    <g class="zone" data-zone="power">
+      <rect x="42" y="82" width="346" height="432" rx="8" fill="#f59e0b" fill-opacity="0.06" stroke="#f59e0b" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="46" y="78" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#f59e0b" fill-opacity="0.5" font-weight="bold">POWER DELIVERY</text>
+    </g>
+    <g class="zone" data-zone="network">
+      <rect x="882" y="462" width="186" height="166" rx="8" fill="#3b82f6" fill-opacity="0.06" stroke="#3b82f6" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="886" y="458" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#3b82f6" fill-opacity="0.5" font-weight="bold">INTEL I354 NIC</text>
+    </g>
+    <g class="zone" data-zone="network">
+      <rect x="832" y="782" width="666" height="116" rx="8" fill="#3b82f6" fill-opacity="0.06" stroke="#3b82f6" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="836" y="778" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#3b82f6" fill-opacity="0.5" font-weight="bold">DATA PLANE PORTS</text>
+    </g>
+    <g class="zone" data-zone="io">
+      <rect x="502" y="782" width="1076" height="116" rx="8" fill="#22c55e" fill-opacity="0.06" stroke="#22c55e" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="506" y="778" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#22c55e" fill-opacity="0.5" font-weight="bold">MANAGEMENT / CONSOLE</text>
+    </g>
+    <g class="zone" data-zone="storage">
+      <rect x="82" y="632" width="366" height="236" rx="8" fill="#14b8a6" fill-opacity="0.06" stroke="#14b8a6" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="86" y="628" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#14b8a6" fill-opacity="0.5" font-weight="bold">STORAGE</text>
+    </g>
+    <g class="zone" data-zone="debug">
+      <rect x="632" y="112" width="228" height="66" rx="8" fill="#ef4444" fill-opacity="0.06" stroke="#ef4444" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="636" y="108" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#ef4444" fill-opacity="0.5" font-weight="bold">JTAG DEBUG CHAIN</text>
+    </g>
+    <g class="zone" data-zone="power">
+      <rect x="32" y="782" width="96" height="96" rx="8" fill="#f59e0b" fill-opacity="0.06" stroke="#f59e0b" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="36" y="778" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#f59e0b" fill-opacity="0.5" font-weight="bold">DC POWER INPUT</text>
+    </g>
+  </g>
   <g class="traces">
     <g class="trace" data-id="T000" data-net="signal">
       <polyline points="420,350 250,350 250,250" fill="none" stroke="#06b6d4" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>

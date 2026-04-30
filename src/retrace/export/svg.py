@@ -42,6 +42,16 @@ _NET_COLORS: dict[str, str] = {
     "unknown": "#6b7280",
 }
 
+_ZONE_COLORS: dict[str, str] = {
+    "cpu": "#06b6d4",
+    "memory": "#8b5cf6",
+    "power": "#f59e0b",
+    "io": "#22c55e",
+    "debug": "#ef4444",
+    "network": "#3b82f6",
+    "storage": "#14b8a6",
+}
+
 _SECURITY_KEYWORDS = {
     "JTAG": ("JTAG debug — full CPU access", "HIGH", "CWE-1191"),
     "SWD": ("SWD debug — ARM CoreSight", "HIGH", "CWE-1191"),
@@ -418,6 +428,53 @@ def _detect_security_findings(
     return findings
 
 
+def _render_zones(
+    zones: list[tuple[str, str, list[str]]],
+    comp_map: dict[str, Component],
+) -> str:
+    """Render functional zone overlays from (name, zone_type, [component_ids])."""
+    if not zones:
+        return ""
+
+    parts: list[str] = []
+    parts.append('  <g class="zones">')
+
+    for name, zone_type, comp_ids in zones:
+        members = [comp_map[cid] for cid in comp_ids if cid in comp_map]
+        if not members:
+            continue
+
+        pad = 18
+        min_x = min(c.bbox[0] for c in members) - pad
+        min_y = min(c.bbox[1] for c in members) - pad
+        max_x = max(c.bbox[0] + c.bbox[2] for c in members) + pad
+        max_y = max(c.bbox[1] + c.bbox[3] for c in members) + pad
+
+        color = _ZONE_COLORS.get(zone_type, "#6b7280")
+        w = max_x - min_x
+        h = max_y - min_y
+
+        parts.append(
+            f'    <g class="zone" data-zone="{_escape(zone_type)}">'
+        )
+        parts.append(
+            f'      <rect x="{min_x}" y="{min_y}" width="{w}" height="{h}" '
+            f'rx="8" fill="{color}" fill-opacity="0.06" '
+            f'stroke="{color}" stroke-width="1" stroke-opacity="0.3" '
+            f'stroke-dasharray="6,4"/>'
+        )
+        parts.append(
+            f'      <text x="{min_x + 4}" y="{min_y - 4}" '
+            f'font-family={_q(_FONT)} font-size="8" fill="{color}" '
+            f'fill-opacity="0.5" font-weight="bold">'
+            f'{_escape(name.upper())}</text>'
+        )
+        parts.append('    </g>')
+
+    parts.append('  </g>')
+    return "\n".join(parts)
+
+
 def _render_security_panel(
     findings: list[tuple[str, str, str, Component]],
     svg_w: int,
@@ -573,21 +630,8 @@ def generate_svg(
     show_traces: bool = True,
     show_bom: bool = True,
     title: str = "",
+    zones: Optional[list[tuple[str, str, list[str]]]] = None,
 ) -> str:
-    """Generate a dark-themed SVG with components, traces, BOM, and security panel.
-
-    Args:
-        result: Completed AnalysisResult from Pipeline.run().
-        width:  Override SVG canvas width (pixels).
-        height: Override SVG canvas height (pixels).
-        image_href: Optional path or data-URI for background board photo.
-        show_traces: Render traced connections between components.
-        show_bom: Render the BOM summary panel.
-        title: Board name shown in the title bar.
-
-    Returns:
-        UTF-8 SVG string.
-    """
     bw, bh = result.board_dimensions
     svg_w = width or bw or 800
     svg_h = height or bh or 600
@@ -614,6 +658,9 @@ def generate_svg(
 
     lines.append(_render_title_bar(svg_w, title, result))
     lines.append(_render_legend(svg_w))
+
+    if zones:
+        lines.append(_render_zones(zones, comp_map))
 
     if show_traces and result.traces:
         lines.append('  <g class="traces">')

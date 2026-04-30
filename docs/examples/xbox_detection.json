@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "timestamp": "2026-04-30T20:43:25Z",
+  "timestamp": "2026-04-30T20:56:20Z",
   "image": "docs/examples/xbox_board.png",
   "board_dimensions": [
     1600,
@@ -18,11 +18,11 @@
         300,
         300
       ],
-      "marking": "X877730-001",
-      "part_number": "X877730",
+      "marking": "Liverpool",
+      "part_number": "AMD Liverpool",
       "datasheet_url": "",
       "value": "",
-      "package": "BGA-1152"
+      "package": "BGA-1170"
     },
     {
       "id": "U2",
@@ -34,8 +34,8 @@
         140,
         90
       ],
-      "marking": "K4B4G0846E",
-      "part_number": "K4B4G0846E",
+      "marking": "K4B4G1646E",
+      "part_number": "K4B4G1646E-BYK0",
       "datasheet_url": "",
       "value": "4Gb",
       "package": "BGA-78"
@@ -50,8 +50,8 @@
         140,
         90
       ],
-      "marking": "K4B4G0846E",
-      "part_number": "K4B4G0846E",
+      "marking": "K4B4G1646E",
+      "part_number": "K4B4G1646E-BYK0",
       "datasheet_url": "",
       "value": "4Gb",
       "package": "BGA-78"
@@ -66,8 +66,8 @@
         140,
         90
       ],
-      "marking": "K4B4G0846E",
-      "part_number": "K4B4G0846E",
+      "marking": "K4B4G1646E",
+      "part_number": "K4B4G1646E-BYK0",
       "datasheet_url": "",
       "value": "4Gb",
       "package": "BGA-78"
@@ -82,8 +82,8 @@
         140,
         90
       ],
-      "marking": "K4B4G0846E",
-      "part_number": "K4B4G0846E",
+      "marking": "K4B4G1646E",
+      "part_number": "K4B4G1646E-BYK0",
       "datasheet_url": "",
       "value": "4Gb",
       "package": "BGA-78"
@@ -95,14 +95,14 @@
       "bbox": [
         1000,
         120,
-        180,
-        160
+        140,
+        100
       ],
-      "marking": "X861949-005",
-      "part_number": "X861949",
+      "marking": "MN864729",
+      "part_number": "MN864729",
       "datasheet_url": "",
       "value": "",
-      "package": "BGA-360"
+      "package": "QFP-80"
     },
     {
       "id": "U7",
@@ -110,14 +110,14 @@
       "confidence": 0.88,
       "bbox": [
         1000,
-        380,
+        300,
         160,
         120
       ],
-      "marking": "H27QCG8T2E5R",
-      "part_number": "H27QCG8T2E5R",
+      "marking": "KLMBG4GEAC",
+      "part_number": "KLMBG4GEAC-B001",
       "datasheet_url": "",
-      "value": "64GB",
+      "value": "8GB",
       "package": "BGA-153"
     },
     {
@@ -126,12 +126,12 @@
       "confidence": 0.93,
       "bbox": [
         1050,
-        600,
+        500,
         120,
         80
       ],
       "marking": "88W8897",
-      "part_number": "88W8897",
+      "part_number": "88W8897-NNB2",
       "datasheet_url": "",
       "value": "",
       "package": "QFN-68"
@@ -142,12 +142,12 @@
       "confidence": 0.98,
       "bbox": [
         1050,
-        760,
+        660,
         100,
         70
       ],
-      "marking": "88E1512",
-      "part_number": "88E1512",
+      "marking": "88EC060",
+      "part_number": "88EC060-NNB2",
       "datasheet_url": "",
       "value": "",
       "package": "QFN-56"
@@ -162,11 +162,11 @@
         70,
         55
       ],
-      "marking": "TPS51611",
-      "part_number": "TPS51611",
+      "marking": "NCP81174",
+      "part_number": "NCP81174",
       "datasheet_url": "",
       "value": "",
-      "package": "QFN-20"
+      "package": "QFN-52"
     },
     {
       "id": "U11",
@@ -194,11 +194,11 @@
         80,
         60
       ],
-      "marking": "PI3HDMI412",
-      "part_number": "PI3HDMI412",
+      "marking": "TMDS442",
+      "part_number": "TMDS442",
       "datasheet_url": "",
       "value": "",
-      "package": "QFN-40"
+      "package": "QFP-48"
     },
     {
       "id": "J1",

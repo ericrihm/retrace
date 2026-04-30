@@ -2,7 +2,7 @@ re:trace Debug Interface Detector
 ========================================
 
 Board: docs/examples/synthetic_board.png
-Timestamp: 2026-04-30T20:43:25Z
+Timestamp: 2026-04-30T20:56:20Z
 Total findings: 2  (HIGH=1  MEDIUM=1  LOW=0)
 
   [HIGH]  JTAG
