@@ -4,44 +4,609 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>re:trace — PCB Reverse Engineering Toolkit</title>
+<meta name="description" content="Open-source PCB reverse engineering toolkit. Photo in, attack surface out. Identifies components, extracts traces, maps trust chains.">
+<meta property="og:title" content="re:trace — PCB Reverse Engineering Toolkit">
+<meta property="og:description" content="Photo in, attack surface out. Identifies components, extracts traces, maps trust chains, and tells you where to probe.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ericrihm.github.io/retrace/">
+<meta property="og:image" content="https://ericrihm.github.io/retrace/examples/cisco_annotated.svg">
 <style>
-body { font-family: -apple-system, system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; color: #e2e8f0; background: #0a0e1a; }
-a { color: #22d3ee; }
-h1 { font-size: 1.8rem; }
-h2 { font-size: 1.2rem; color: #94a3b8; margin-top: 2rem; }
-ul { list-style: none; padding: 0; }
-li { margin: 0.5rem 0; }
-li::before { content: "\2192\00a0"; color: #22d3ee; }
+:root {
+  --bg: #0a0e1a;
+  --surface: #111827;
+  --border: #1e293b;
+  --text: #e2e8f0;
+  --text-mid: #94a3b8;
+  --text-dim: #64748b;
+  --accent: #22d3ee;
+  --accent-glow: rgba(34,211,238,0.15);
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --green: #22c55e;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* ── Hero ───────────────────────────────────────────── */
+.hero {
+  text-align: center;
+  padding: 80px 24px 48px;
+  position: relative;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+}
+.hero h1 span { color: var(--accent); }
+
+.hero .tagline {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  color: var(--text-mid);
+  max-width: 640px;
+  margin: 0 auto 24px;
+}
+
+.hero .stats {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+.hero .stat {
+  text-align: center;
+}
+.hero .stat-val {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.hero .stat-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hero .links {
+  margin-top: 32px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.hero .links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg) !important;
+}
+.btn-primary:hover { background: #06b6d4; text-decoration: none !important; }
+.btn-ghost {
+  border: 1px solid var(--border);
+  color: var(--text-mid) !important;
+}
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent) !important; text-decoration: none !important; }
+
+/* ── Section ────────────────────────────────────────── */
+section {
+  padding: 64px 0;
+}
+section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+section .section-sub {
+  color: var(--text-dim);
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+
+/* ── Board cards ────────────────────────────────────── */
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+}
+.board-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.board-card:hover { border-color: var(--accent); }
+
+.board-card .card-header {
+  padding: 20px 20px 12px;
+}
+.board-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.board-card .card-desc {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.board-card .card-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 0 20px 12px;
+}
+.chip {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.chip-red { background: rgba(239,68,68,0.15); color: var(--red); }
+.chip-amber { background: rgba(245,158,11,0.15); color: var(--amber); }
+.chip-green { background: rgba(34,197,94,0.15); color: var(--green); }
+.chip-cyan { background: var(--accent-glow); color: var(--accent); }
+
+/* ── View tabs ──────────────────────────────────────── */
+.view-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  gap: 0;
+  overflow-x: auto;
+}
+.view-tab {
+  padding: 10px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  font-family: inherit;
+}
+.view-tab:hover { color: var(--text); }
+.view-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.view-content {
+  padding: 16px 20px 20px;
+}
+.view-panel { display: none; }
+.view-panel.active { display: block; }
+
+.view-panel img, .view-panel object {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.view-panel .artifact-link {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+.view-panel .artifact-link:hover { color: var(--accent); }
+
+/* ── Findings table ─────────────────────────────────── */
+.findings-section {
+  margin-top: 48px;
+}
+.findings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.findings-table th {
+  text-align: left;
+  padding: 10px 12px;
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+}
+.findings-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.findings-table tr:hover td { background: rgba(34,211,238,0.03); }
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.badge-high { background: rgba(239,68,68,0.15); color: var(--red); }
+.badge-medium { background: rgba(245,158,11,0.15); color: var(--amber); }
+
+.cvss-score {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.attack-link {
+  font-size: 0.8rem;
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+}
+
+/* ── Pipeline ───────────────────────────────────────── */
+.pipeline {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 32px 0;
+}
+.pipe-stage {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 16px;
+  text-align: center;
+  min-width: 100px;
+  position: relative;
+}
+.pipe-stage .stage-name {
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.pipe-stage .stage-tech {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+.pipe-arrow {
+  display: flex;
+  align-items: center;
+  color: var(--text-dim);
+  font-size: 1.2rem;
+}
+
+/* ── Reports section ────────────────────────────────── */
+.report-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+.report-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  transition: border-color 0.2s;
+}
+.report-card:hover { border-color: var(--accent); text-decoration: none; }
+.report-card h3 { font-size: 1rem; margin-bottom: 8px; }
+.report-card p { color: var(--text-dim); font-size: 0.85rem; }
+.report-card .report-meta {
+  margin-top: 12px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* ── Footer ─────────────────────────────────────────── */
+footer {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+}
+footer a { color: var(--text-mid); }
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 640px) {
+  .hero { padding: 48px 16px 32px; }
+  .hero .stats { gap: 20px; }
+  .board-grid { grid-template-columns: 1fr; }
+  .pipeline { gap: 8px; }
+  .pipe-arrow { display: none; }
+}
 </style>
 </head>
 <body>
-<h1>re:trace</h1>
-<p>Open-source PCB reverse engineering toolkit. <a href="https://github.com/ericrihm/retrace">GitHub</a></p>
 
-<h2>Demo Assessment Reports</h2>
-<ul>
-<li><a href="examples/cisco_report.html">Cisco ASA 5506-X V05 (Rangeley) — Enterprise Firewall</a></li>
-<li><a href="examples/xbox_report.html">Xbox One Model 1540 (Durango) — Gaming Console</a></li>
-</ul>
+<!-- ═══ Hero ══════════════════════════════════════════ -->
+<div class="hero">
+  <h1>re<span>:</span>trace</h1>
+  <p class="tagline">Photo in, attack surface out. The first open-source toolkit that identifies PCB components, extracts traces, maps trust chains, and tells you where to probe.</p>
 
-<h2>Demo Visualizations</h2>
-<ul>
-<li><a href="examples/cisco_annotated.svg">Cisco — Annotated Board</a></li>
-<li><a href="examples/cisco_attack_surface.svg">Cisco — Attack Surface Map</a></li>
-<li><a href="examples/cisco_zones.svg">Cisco — Functional Zone Map</a></li>
-<li><a href="examples/cisco_bom_table.svg">Cisco — BOM Table</a></li>
-<li><a href="examples/xbox_annotated.svg">Xbox — Annotated Board</a></li>
-<li><a href="examples/xbox_attack_surface.svg">Xbox — Attack Surface Map</a></li>
-<li><a href="examples/xbox_zones.svg">Xbox — Functional Zone Map</a></li>
-<li><a href="examples/xbox_bom_table.svg">Xbox — BOM Table</a></li>
-</ul>
+  <div class="stats">
+    <div class="stat"><div class="stat-val">671</div><div class="stat-label">Tests</div></div>
+    <div class="stat"><div class="stat-val">89%</div><div class="stat-label">Coverage</div></div>
+    <div class="stat"><div class="stat-val">23</div><div class="stat-label">Modules</div></div>
+    <div class="stat"><div class="stat-val">128</div><div class="stat-label">Components DB</div></div>
+    <div class="stat"><div class="stat-val">16</div><div class="stat-label">CLI Commands</div></div>
+  </div>
 
-<h2>Demo Data</h2>
-<ul>
-<li><a href="examples/cisco.net">Cisco — KiCad Netlist</a></li>
-<li><a href="examples/xbox.net">Xbox — KiCad Netlist</a></li>
-<li><a href="examples/cisco_bom.json">Cisco — BOM (JSON)</a></li>
-<li><a href="examples/xbox_bom.json">Xbox — BOM (JSON)</a></li>
-</ul>
+  <div class="links">
+    <a href="https://github.com/ericrihm/retrace" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      Source Code
+    </a>
+    <a href="#boards" class="btn-ghost">View Analysis</a>
+    <a href="#reports" class="btn-ghost">Assessment Reports</a>
+  </div>
+</div>
+
+<!-- ═══ Pipeline ═════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <h2>Pipeline</h2>
+    <p class="section-sub">Eight stages. One command. No design files required.</p>
+    <div class="pipeline">
+      <div class="pipe-stage"><div class="stage-name">Detect</div><div class="stage-tech">YOLO v8 / OpenCV</div></div>
+      <div class="pipe-arrow">&rarr;</div>
+      <div class="pipe-stage"><div class="stage-name">OCR</div><div class="stage-tech">EasyOCR</div></div>
+      <div class="pipe-arrow">&rarr;</div>
+      <div class="pipe-stage"><div class="stage-name">Trace</div><div class="stage-tech">HSV+LAB / Zhang-Suen</div></div>
+      <div class="pipe-arrow">&rarr;</div>
+      <div class="pipe-stage"><div class="stage-name">Identify</div><div class="stage-tech">128-part fuzzy DB</div></div>
+      <div class="pipe-arrow">&rarr;</div>
+      <div class="pipe-stage"><div class="stage-name">Infer</div><div class="stage-tech">AC-3 constraint</div></div>
+      <div class="pipe-arrow">&rarr;</div>
+      <div class="pipe-stage"><div class="stage-name">Advise</div><div class="stage-tech">Bayesian entropy</div></div>
+      <div class="pipe-arrow">&rarr;</div>
+      <div class="pipe-stage"><div class="stage-name">Analyze</div><div class="stage-tech">CVSS / ATT&amp;CK</div></div>
+      <div class="pipe-arrow">&rarr;</div>
+      <div class="pipe-stage"><div class="stage-name">Export</div><div class="stage-tech">HTML / KiCad / SVG</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Board Analysis ═══════════════════════════════ -->
+<section id="boards">
+  <div class="container">
+    <h2>Board Analysis</h2>
+    <p class="section-sub">Two targets. Both analyzed from photos alone.</p>
+
+    <div class="board-grid">
+      <!-- Cisco -->
+      <div class="board-card" id="cisco-card">
+        <div class="card-header">
+          <h3>Cisco ASA 5506-X V05</h3>
+          <div class="card-desc">Enterprise firewall — Thrangrycat target (CVE-2019-1649)</div>
+        </div>
+        <div class="card-chips">
+          <span class="chip chip-red">JTAG CVSS 7.6</span>
+          <span class="chip chip-amber">UART CVSS 6.8</span>
+          <span class="chip chip-cyan">177 components</span>
+          <span class="chip chip-green">88 traces</span>
+        </div>
+        <div class="view-tabs" data-board="cisco">
+          <button class="view-tab active" data-view="annotated">Annotated</button>
+          <button class="view-tab" data-view="attack">Attack Surface</button>
+          <button class="view-tab" data-view="zones">Zones</button>
+          <button class="view-tab" data-view="bom">BOM</button>
+        </div>
+        <div class="view-content">
+          <div class="view-panel active" data-view="annotated">
+            <img src="examples/cisco_annotated.svg" alt="Cisco ASA 5506-X — annotated board overlay with 177 components" loading="lazy">
+            <div class="artifact-link">Intel Atom C2508 &middot; Xilinx Spartan-6 Trust Anchor &middot; 4&times; DDR3 ECC &middot; W25Q128JV SPI flash</div>
+          </div>
+          <div class="view-panel" data-view="attack">
+            <img src="examples/cisco_attack_surface.svg" alt="Cisco ASA 5506-X — Thrangrycat attack path" loading="lazy">
+            <div class="artifact-link">JTAG (J15) &rarr; CPU (U1) &rarr; FPGA (U6) &larr; unencrypted SPI flash (U7)</div>
+          </div>
+          <div class="view-panel" data-view="zones">
+            <img src="examples/cisco_zones.svg" alt="Cisco ASA 5506-X — 16 functional zones" loading="lazy">
+            <div class="artifact-link">16 zones &mdash; CPU, memory, VRM, network, Trust Anchor FPGA</div>
+          </div>
+          <div class="view-panel" data-view="bom">
+            <img src="examples/cisco_bom_table.svg" alt="Cisco ASA 5506-X — BOM table" loading="lazy">
+            <div class="artifact-link">Grouped by type &middot; confidence bars &middot; part numbers</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Xbox -->
+      <div class="board-card" id="xbox-card">
+        <div class="card-header">
+          <h3>Xbox One Model 1540</h3>
+          <div class="card-desc">Gaming console — AMD Liverpool APU (Durango)</div>
+        </div>
+        <div class="card-chips">
+          <span class="chip chip-red">JTAG CVSS 7.6</span>
+          <span class="chip chip-cyan">155 components</span>
+          <span class="chip chip-green">72 traces</span>
+        </div>
+        <div class="view-tabs" data-board="xbox">
+          <button class="view-tab active" data-view="annotated">Annotated</button>
+          <button class="view-tab" data-view="attack">Attack Surface</button>
+          <button class="view-tab" data-view="zones">Zones</button>
+          <button class="view-tab" data-view="bom">BOM</button>
+        </div>
+        <div class="view-content">
+          <div class="view-panel active" data-view="annotated">
+            <img src="examples/xbox_annotated.svg" alt="Xbox One Model 1540 — annotated board with 155 components" loading="lazy">
+            <div class="artifact-link">AMD Liverpool APU (BGA-1170) &middot; 16&times; SK Hynix DDR3 &middot; Southbridge X861949</div>
+          </div>
+          <div class="view-panel" data-view="attack">
+            <img src="examples/xbox_attack_surface.svg" alt="Xbox One Model 1540 — attack surface map" loading="lazy">
+            <div class="artifact-link">JTAG (J5) &rarr; APU (U1) &rarr; eMMC (U8) &middot; Southbridge (U9)</div>
+          </div>
+          <div class="view-panel" data-view="zones">
+            <img src="examples/xbox_zones.svg" alt="Xbox One Model 1540 — 9 functional zones" loading="lazy">
+            <div class="artifact-link">9 zones &mdash; CPU, memory, power, I/O, debug, storage</div>
+          </div>
+          <div class="view-panel" data-view="bom">
+            <img src="examples/xbox_bom_table.svg" alt="Xbox One Model 1540 — BOM table" loading="lazy">
+            <div class="artifact-link">155 components &middot; OCR confidence &middot; part identification</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Findings table -->
+    <div class="findings-section">
+      <h2>Security Findings</h2>
+      <p class="section-sub">Automatically detected debug interfaces with CVSS 3.1 scoring and MITRE ATT&CK mapping.</p>
+      <table class="findings-table">
+        <thead>
+          <tr>
+            <th>Severity</th>
+            <th>CVSS</th>
+            <th>Interface</th>
+            <th>Target</th>
+            <th>Component</th>
+            <th>CWE</th>
+            <th>ATT&CK</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-high">HIGH</span></td>
+            <td class="cvss-score">7.6</td>
+            <td>JTAG</td>
+            <td>Cisco ASA 5506-X</td>
+            <td>J15</td>
+            <td><a href="https://cwe.mitre.org/data/definitions/1191.html" target="_blank" rel="noopener">CWE-1191</a></td>
+            <td class="attack-link"><a href="https://attack.mitre.org/techniques/T1200/" target="_blank" rel="noopener">T1200</a>, <a href="https://attack.mitre.org/techniques/T0839/" target="_blank" rel="noopener">T0839</a></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-medium">MEDIUM</span></td>
+            <td class="cvss-score">6.8</td>
+            <td>UART</td>
+            <td>Cisco ASA 5506-X</td>
+            <td>J10</td>
+            <td><a href="https://cwe.mitre.org/data/definitions/1299.html" target="_blank" rel="noopener">CWE-1299</a></td>
+            <td class="attack-link"><a href="https://attack.mitre.org/techniques/T1200/" target="_blank" rel="noopener">T1200</a></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-high">HIGH</span></td>
+            <td class="cvss-score">7.6</td>
+            <td>JTAG</td>
+            <td>Xbox One 1540</td>
+            <td>J5</td>
+            <td><a href="https://cwe.mitre.org/data/definitions/1191.html" target="_blank" rel="noopener">CWE-1191</a></td>
+            <td class="attack-link"><a href="https://attack.mitre.org/techniques/T1200/" target="_blank" rel="noopener">T1200</a>, <a href="https://attack.mitre.org/techniques/T0839/" target="_blank" rel="noopener">T0839</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Assessment Reports ═══════════════════════════ -->
+<section id="reports">
+  <div class="container">
+    <h2>Assessment Reports</h2>
+    <p class="section-sub">Self-contained HTML deliverables. Sortable BOM, datasheet hyperlinks, print-friendly. What a consultancy ships to clients.</p>
+
+    <div class="report-cards">
+      <a href="examples/cisco_report.html" class="report-card">
+        <h3>Cisco ASA 5506-X V05</h3>
+        <p>Enterprise firewall assessment. Intel Atom C2508, Xilinx Spartan-6 Trust Anchor, Thrangrycat attack path mapped. 2 findings, 177 components, 88 traces.</p>
+        <div class="report-meta">CVSS 7.6 (HIGH) &middot; CWE-1191, CWE-1299 &middot; T1200, T0839</div>
+      </a>
+      <a href="examples/xbox_report.html" class="report-card">
+        <h3>Xbox One Model 1540 (Durango)</h3>
+        <p>Gaming console assessment. AMD Liverpool APU, 16x DDR3 banks, Southbridge X861949, SK Hynix eMMC. 1 finding, 155 components, 72 traces.</p>
+        <div class="report-meta">CVSS 7.6 (HIGH) &middot; CWE-1191 &middot; T1200, T0839</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Exports ══════════════════════════════════════ -->
+<section id="exports">
+  <div class="container">
+    <h2>Export Formats</h2>
+    <p class="section-sub">Every artifact from a single scan.</p>
+    <div class="board-grid">
+      <div class="report-card">
+        <h3>KiCad Netlist</h3>
+        <p>Reconstructed schematic netlist. Components mapped to KiCad footprint libraries, nets from trace extraction.</p>
+        <div class="report-meta">
+          <a href="examples/cisco.net">cisco.net</a> (54 KB) &middot;
+          <a href="examples/xbox.net">xbox.net</a> (44 KB)
+        </div>
+      </div>
+      <div class="report-card">
+        <h3>BOM (JSON / CSV)</h3>
+        <p>Machine-readable bill of materials. Part numbers, markings, confidence scores, datasheet URLs.</p>
+        <div class="report-meta">
+          <a href="examples/cisco_bom.json">cisco_bom.json</a> &middot;
+          <a href="examples/xbox_bom.json">xbox_bom.json</a>
+        </div>
+      </div>
+      <div class="report-card">
+        <h3>Detection JSON</h3>
+        <p>Raw pipeline output. Component bounding boxes, trace polylines, pattern matches, timing metadata.</p>
+        <div class="report-meta">
+          <a href="examples/cisco_detection.json">cisco_detection.json</a> &middot;
+          <a href="examples/xbox_detection.json">xbox_detection.json</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Footer ═══════════════════════════════════════ -->
+<footer>
+  <div class="container">
+    <p>re:trace &middot; MIT License &middot; <a href="https://github.com/ericrihm/retrace">github.com/ericrihm/retrace</a></p>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.view-tabs').forEach(tabBar => {
+  tabBar.querySelectorAll('.view-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const card = tab.closest('.board-card');
+      card.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+      card.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      card.querySelector(`.view-panel[data-view="${tab.dataset.view}"]`).classList.add('active');
+    });
+  });
+});
+</script>
 </body>
 </html>
