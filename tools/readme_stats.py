@@ -306,5 +306,83 @@ def update(dry_run: bool, readme: str) -> None:
     sys.exit(0)
 
 
+SHOWCASE = REPO_ROOT / "docs" / "index.html"
+
+_SHOWCASE_PATTERNS = {
+    "tests": (re.compile(r'(<div class="stat-val">)\d+(</div><div class="stat-label">Tests</div>)'), r"\g<1>{val}\g<2>"),
+    "coverage": (re.compile(r'(<div class="stat-val">)\d+%(</div><div class="stat-label">Coverage</div>)'), r"\g<1>{val}\g<2>"),
+    "cli_commands": (re.compile(r'(<div class="stat-val">)\d+(</div><div class="stat-label">CLI Commands</div>)'), r"\g<1>{val}\g<2>"),
+}
+
+
+@cli.command()
+@click.option("--dry-run", is_flag=True, help="Print changes without writing.")
+def sync_showcase(dry_run: bool) -> None:
+    """Sync showcase page (docs/index.html) stats with current values."""
+    if not SHOWCASE.exists():
+        click.echo(f"ERROR: {SHOWCASE} not found", err=True)
+        sys.exit(1)
+
+    click.echo("Gathering stats for showcase...")
+    stats = _gather_stats()
+
+    cli_count = 0
+    try:
+        src_path = str(REPO_ROOT / "src")
+        if src_path not in sys.path:
+            sys.path.insert(0, src_path)
+        from retrace.cli import main as cli_main
+        cli_count = len(cli_main.commands)
+    except Exception:
+        pass
+
+    content = SHOWCASE.read_text(encoding="utf-8")
+    changed: list[str] = []
+
+    updates = {
+        "tests": stats.get("tests", "0"),
+        "coverage": stats.get("coverage", "N/A"),
+        "cli_commands": str(cli_count),
+    }
+
+    for key, (pattern, template) in _SHOWCASE_PATTERNS.items():
+        val = updates.get(key, "")
+        if not val:
+            continue
+        replacement = template.replace("{val}", val)
+        new_content = pattern.sub(replacement, content)
+        if new_content != content:
+            changed.append(key)
+            content = new_content
+
+    for key in updates:
+        status = " (changed)" if key in changed else " (unchanged)"
+        click.echo(f"  {key}: {updates[key]}{status}")
+
+    if not changed:
+        click.echo("Showcase stats already up to date.")
+        sys.exit(0)
+
+    if dry_run:
+        click.echo(f"[dry-run] Would update {len(changed)} stat(s) in showcase")
+        sys.exit(0)
+
+    SHOWCASE.write_text(content, encoding="utf-8")
+    click.echo(f"Updated {SHOWCASE.name} — {len(changed)} stat(s) changed")
+
+
+@cli.command()
+def design() -> None:
+    """Run the design psychology audit on README.md."""
+    try:
+        from flywheel import flywheel_design_audit
+    except ImportError:
+        sys.path.insert(0, str(Path(__file__).parent))
+        from flywheel import flywheel_design_audit
+
+    result = flywheel_design_audit()
+    sys.exit(0 if result.get("design_pct", 0) >= 80 else 1)
+
+
 if __name__ == "__main__":
     cli()

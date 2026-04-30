@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-90%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->790<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->22493<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->801<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->22872<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/)
 
@@ -702,7 +702,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->9912<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: 17 commands (scan, search, trace, advise, identify, debug, solve, learn, compare, cross-board, export, export-kicad, batch, pinout, report, report-html, ui)
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -741,10 +741,10 @@ src/retrace/                             # <!-- STATS:loc -->9912<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->790<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->801<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->90%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->23<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->22493<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->22872<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -756,7 +756,7 @@ src/retrace/                             # <!-- STATS:loc -->9912<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->790<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->801<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
