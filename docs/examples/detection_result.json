@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "timestamp": "2026-04-30T21:38:54Z",
+  "timestamp": "2026-04-30T21:47:36Z",
   "image": "docs/examples/xbox_board.png",
   "board_dimensions": [
     1600,
@@ -2231,6 +2231,182 @@
       "datasheet_url": "",
       "value": "2.2uH",
       "package": "1210"
+    },
+    {
+      "id": "C51",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        60,
+        260,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C52",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        240,
+        260,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C53",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        60,
+        555,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C54",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        248,
+        555,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C55",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        1030,
+        590,
+        24,
+        14
+      ],
+      "marking": "1uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "1uF",
+      "package": "0402"
+    },
+    {
+      "id": "C56",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        1400,
+        800,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "R21",
+      "label": "resistor",
+      "confidence": 0.93,
+      "bbox": [
+        1030,
+        740,
+        30,
+        14
+      ],
+      "marking": "33",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "33",
+      "package": "0402"
+    },
+    {
+      "id": "R22",
+      "label": "resistor",
+      "confidence": 0.98,
+      "bbox": [
+        1070,
+        740,
+        30,
+        14
+      ],
+      "marking": "33",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "33",
+      "package": "0402"
+    },
+    {
+      "id": "R23",
+      "label": "resistor",
+      "confidence": 0.88,
+      "bbox": [
+        1390,
+        810,
+        30,
+        14
+      ],
+      "marking": "0",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "0",
+      "package": "0402"
+    },
+    {
+      "id": "R24",
+      "label": "resistor",
+      "confidence": 0.93,
+      "bbox": [
+        1050,
+        480,
+        30,
+        14
+      ],
+      "marking": "10k",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10k",
+      "package": "0402"
+    },
+    {
+      "id": "R25",
+      "label": "resistor",
+      "confidence": 0.98,
+      "bbox": [
+        840,
+        460,
+        30,
+        14
+      ],
+      "marking": "1k",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "1k",
+      "package": "0402"
     }
   ],
   "traces": [
@@ -3569,12 +3745,12 @@
   ],
   "summary": {
     "image": "docs/examples/xbox_board.png",
-    "components": 139,
+    "components": 150,
     "components_by_type": {
       "ic": 34,
       "connector": 10,
-      "capacitor": 50,
-      "resistor": 24,
+      "capacitor": 56,
+      "resistor": 29,
       "inductor": 5,
       "crystal": 1,
       "test_point": 15

@@ -45,9 +45,9 @@ AMD Liverpool APU (BGA-1170), 16× SK Hynix DDR3, Southbridge X861949, SK Hynix 
 
 **Cisco ASA 5506-X V05 (Rangeley) — Enterprise Firewall RE**
 
-<img src="docs/examples/cisco_annotated.svg" width="100%" alt="Cisco ASA 5506-X V05 — Intel Atom C2508, Xilinx Spartan-6 Trust Anchor, 43 components, 41 traces, 10 functional zones"/>
+<img src="docs/examples/cisco_annotated.svg" width="100%" alt="Cisco ASA 5506-X V05 — Intel Atom C2508, Xilinx Spartan-6 Trust Anchor, 177 components, 88 traces, 16 functional zones"/>
 
-Intel Atom C2508 (Rangeley), Xilinx Spartan-6 Trust Anchor FPGA, 4x DDR3 ECC — 43 components, 41 traces, 10 functional zones, full Thrangrycat attack path mapped
+Intel Atom C2508 (Rangeley), Xilinx Spartan-6 Trust Anchor FPGA, 4x DDR3 ECC — 177 components, 88 traces, 16 functional zones, full Thrangrycat attack path mapped
 
 </td>
 </tr>
@@ -588,7 +588,7 @@ The demo boards use synthetic PCB images with verified real-world component data
 | Board | Components | Traces | Zones | Security Findings |
 |---|---|---|---|---|
 | **Xbox One (Model 1540)** | 155 (22 ICs, 10 connectors, 44 caps, 20 resistors, 10 test points) | 55+ | 9 | JTAG header (HIGH) |
-| **Cisco ASA 5506-X** | 43 (12 ICs, 11 connectors, 4 test points) | 41 | 10 | JTAG + UART console (HIGH/MED) |
+| **Cisco ASA 5506-X** | 177 (20 ICs, 8 RJ45, 20 CPU caps, 10 FPGA caps, 8 DDR3 caps, 16 VRMs, 16 network magnetics, 10 test points) | 88 | 16 | JTAG + UART console + Thrangrycat SPI path (HIGH/MED) |
 
 The device registry covers **10 product families** with 48 hardware revisions: Xbox One/Series, PlayStation 5, Nintendo Switch, Steam Deck, Raspberry Pi, Ubiquiti UniFi, Ring Doorbell, Cisco ASA, and Cisco Catalyst — including SoC specs, FCC IDs, iFixit guide IDs, and security advisories (Thrangrycat, AVR54, ArcaneDoor).
 

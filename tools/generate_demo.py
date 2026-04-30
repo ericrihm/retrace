@@ -353,6 +353,29 @@ KNOWN_COMPONENTS: list[tuple] = [
     ("L3", "inductor",   170, 280,  50,  40, "0.47uH",         "",             "0.47uH", "1210", ["1","2"]),
     ("L4", "inductor",   170, 550,  50,  40, "1uH",            "",             "1uH",    "1210", ["1","2"]),
     ("L5", "inductor",   170, 620,  50,  40, "2.2uH",          "",             "2.2uH",  "1210", ["1","2"]),
+
+    # -----------------------------------------------------------------------
+    # Additional passives to fill board density (C51-C56, R21-R25)
+    # -----------------------------------------------------------------------
+    # DrMOS U17/U18 input bypass caps
+    ("C51","capacitor",   60, 260,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    ("C52","capacitor",  240, 260,  24,  14, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    # PWM controller U19/U20 bypass
+    ("C53","capacitor",   60, 555,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C54","capacitor",  248, 555,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    # WiFi module U8 additional bypass
+    ("C55","capacitor", 1030, 590,  24,  14, "1uF",            "",              "1uF",    "0402", ["1","2"]),
+    # SATA connector J6 decoupling
+    ("C56","capacitor", 1400, 800,  24,  14, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    # Ethernet PHY RGMII termination
+    ("R21","resistor",  1030, 740,  30,  14, "33",             "",              "33",     "0402", ["A","B"]),
+    ("R22","resistor",  1070, 740,  30,  14, "33",             "",              "33",     "0402", ["A","B"]),
+    # SATA AC coupling
+    ("R23","resistor",  1390, 810,  30,  14, "0",              "",              "0",      "0402", ["A","B"]),
+    # WiFi SDIO pull-up
+    ("R24","resistor",  1050, 480,  30,  14, "10k",            "",              "10k",    "0402", ["A","B"]),
+    # APU PLL filter resistor
+    ("R25","resistor",   840, 460,  30,  14, "1k",             "",              "1k",     "0402", ["A","B"]),
 ]
 # fmt: on
 
@@ -764,6 +787,259 @@ CISCO_COMPONENTS: list[tuple] = [
     ("TP2", "test_point", 790, 130, 12, 12, "TP2", "", "", "TP", ["1"]),
     ("TP3", "test_point", 810, 130, 12, 12, "TP3", "", "", "TP", ["1"]),
     ("TP4", "test_point", 830, 130, 12, 12, "R182", "", "", "TP", ["1"]),
+
+    # -----------------------------------------------------------------------
+    # CPU decoupling (C_CPU1-C_CPU20) — 20 caps around the Intel Atom C2508
+    # -----------------------------------------------------------------------
+    ("C_CPU1", "capacitor", 390, 280, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_CPU2", "capacitor", 390, 310, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_CPU3", "capacitor", 390, 340, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_CPU4", "capacitor", 390, 370, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_CPU5", "capacitor", 390, 400, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_CPU6", "capacitor", 390, 430, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C_CPU7", "capacitor", 390, 460, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C_CPU8", "capacitor", 390, 490, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_CPU9", "capacitor", 390, 520, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_CPU10","capacitor", 700, 280, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_CPU11","capacitor", 700, 310, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_CPU12","capacitor", 700, 340, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C_CPU13","capacitor", 700, 370, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_CPU14","capacitor", 700, 400, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_CPU15","capacitor", 700, 430, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C_CPU16","capacitor", 700, 460, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_CPU17","capacitor", 700, 490, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_CPU18","capacitor", 700, 520, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_CPU19","capacitor", 440, 560, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C_CPU20","capacitor", 480, 560, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+
+    # -----------------------------------------------------------------------
+    # FPGA decoupling (C_FPGA1-C_FPGA10) — 10 caps around Xilinx Spartan-6
+    # -----------------------------------------------------------------------
+    ("C_FPGA1", "capacitor", 730, 155, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_FPGA2", "capacitor", 730, 180, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_FPGA3", "capacitor", 730, 205, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C_FPGA4", "capacitor", 730, 230, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_FPGA5", "capacitor", 730, 255, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_FPGA6", "capacitor", 920, 160, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_FPGA7", "capacitor", 920, 185, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C_FPGA8", "capacitor", 920, 240, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_FPGA9", "capacitor", 920, 265, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_FPGA10","capacitor", 920, 290, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+
+    # -----------------------------------------------------------------------
+    # DDR3 decoupling (C_DDR1-C_DDR8) — 2 per DDR3 chip
+    # -----------------------------------------------------------------------
+    ("C_DDR1", "capacitor", 110, 175, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_DDR2", "capacitor", 260, 190, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C_DDR3", "capacitor", 110, 355, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_DDR4", "capacitor", 260, 370, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C_DDR5", "capacitor", 110, 495, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_DDR6", "capacitor", 260, 510, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C_DDR7", "capacitor", 110, 635, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_DDR8", "capacitor", 260, 650, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+
+    # -----------------------------------------------------------------------
+    # VRM section — multi-phase VRMs for CPU core, FPGA, DDR3, IO
+    # -----------------------------------------------------------------------
+    # CPU core VRM — IR3564B multi-phase controller
+    ("U_VRM1", "ic", 270, 60, 55, 40, "IR3564B", "IR3564B", "", "QFN-48",
+     ["VIN","VOUT","GND","EN","FB","SS","PGOOD","SW","PWM1","PWM2","PWM3"]),
+    # FPGA core VRM — TPS54620 4.5-17V step-down
+    ("U_VRM2", "ic", 780, 60, 55, 40, "TPS54620", "TPS54620RGY", "", "QFN-14",
+     ["VIN","VOUT","GND","EN","FB","SW","BOOT"]),
+    # DDR3 VDDQ VRM — TPS54231 step-down
+    ("U_VRM3", "ic", 80, 385, 55, 40, "TPS54231", "TPS54231DR", "", "SOIC-8",
+     ["VIN","VOUT","GND","EN","FB","SS","COMP","PH"]),
+    # IO 3.3V VRM — TPS54331 step-down
+    ("U_VRM4", "ic", 80, 560, 55, 40, "TPS54331", "TPS54331DR", "", "SOIC-8",
+     ["VIN","VOUT","GND","EN","FB","SS","COMP","PH"]),
+    # MOSFETs — high-side / low-side for each VRM phase
+    ("Q1", "ic", 260, 105, 28, 22, "BSC014N", "BSC014N04LS", "", "TDSON-8",
+     ["GATE","DRAIN","SOURCE","GND"]),
+    ("Q2", "ic", 295, 105, 28, 22, "BSC014N", "BSC014N04LS", "", "TDSON-8",
+     ["GATE","DRAIN","SOURCE","GND"]),
+    ("Q3", "ic", 330, 105, 28, 22, "BSC014N", "BSC014N04LS", "", "TDSON-8",
+     ["GATE","DRAIN","SOURCE","GND"]),
+    ("Q4", "ic", 365, 105, 28, 22, "BSC014N", "BSC014N04LS", "", "TDSON-8",
+     ["GATE","DRAIN","SOURCE","GND"]),
+    ("Q5", "ic", 770, 105, 28, 22, "BSC014N", "BSC014N04LS", "", "TDSON-8",
+     ["GATE","DRAIN","SOURCE","GND"]),
+    ("Q6", "ic", 805, 105, 28, 22, "BSC014N", "BSC014N04LS", "", "TDSON-8",
+     ["GATE","DRAIN","SOURCE","GND"]),
+    ("Q7", "ic", 60, 425, 28, 22, "BSC014N", "BSC014N04LS", "", "TDSON-8",
+     ["GATE","DRAIN","SOURCE","GND"]),
+    ("Q8", "ic", 60, 600, 28, 22, "BSC014N", "BSC014N04LS", "", "TDSON-8",
+     ["GATE","DRAIN","SOURCE","GND"]),
+    # VRM output inductors
+    ("L_VRM1", "inductor", 330, 60, 42, 36, "0.47uH", "", "0.47uH", "1210", ["1","2"]),
+    ("L_VRM2", "inductor", 840, 60, 42, 36, "0.68uH", "", "0.68uH", "1210", ["1","2"]),
+    ("L_VRM3", "inductor", 140, 385, 42, 36, "1uH", "", "1uH", "1210", ["1","2"]),
+    ("L_VRM4", "inductor", 140, 560, 42, 36, "2.2uH", "", "2.2uH", "1210", ["1","2"]),
+
+    # -----------------------------------------------------------------------
+    # Network PHY / switch (U_NET1-U_NET2)
+    # -----------------------------------------------------------------------
+    # Intel i350-AM4 quad GbE PHY (second, for ports 5-8)
+    ("U_NET1", "ic", 1100, 480, 140, 120, "I350-AM4", "I350-AM4", "", "BGA-576",
+     ["VCC","GND","P0_TX","P0_RX","P1_TX","P1_RX","P2_TX","P2_RX","P3_TX","P3_RX",
+      "PCIE_TX","PCIE_RX","MDIO","MDC","LED0","LED1"]),
+    # Marvell 88E6176 managed switch fabric
+    ("U_NET2", "ic", 1100, 360, 140, 100, "88E6176", "88E6176-TFJ2", "", "QFP-176",
+     ["VCC","GND","P0_TX","P0_RX","P1_TX","P1_RX","P2_TX","P2_RX","P3_TX","P3_RX",
+      "MDIO","MDC","RESET","LED0","LED1"]),
+
+    # -----------------------------------------------------------------------
+    # Network decoupling and magnetics (C_NET1-C_NET16, FL1-FL8)
+    # -----------------------------------------------------------------------
+    # Decoupling for I354 (U8)
+    ("C_NET1", "capacitor", 880, 470, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_NET2", "capacitor", 880, 495, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_NET3", "capacitor", 880, 520, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C_NET4", "capacitor", 880, 545, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    # Decoupling for I350-AM4 (U_NET1)
+    ("C_NET5", "capacitor", 1080, 475, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_NET6", "capacitor", 1080, 500, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_NET7", "capacitor", 1080, 525, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C_NET8", "capacitor", 1080, 550, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    # Decoupling for 88E6176 (U_NET2)
+    ("C_NET9", "capacitor", 1080, 355, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_NET10","capacitor", 1080, 380, 24, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C_NET11","capacitor", 1250, 365, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_NET12","capacitor", 1250, 390, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    # RJ45 magnetics-side decoupling (bulk)
+    ("C_NET13","capacitor", 850, 780, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_NET14","capacitor", 1010, 780, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_NET15","capacitor", 1170, 780, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_NET16","capacitor", 1330, 780, 24, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    # Ethernet magnetic modules (FL1-FL8) — one per GbE port
+    ("FL1", "inductor", 850, 750, 36, 28, "HX1198", "", "", "SOP-16", ["TX+","TX-","RX+","RX-"]),
+    ("FL2", "inductor", 930, 750, 36, 28, "HX1198", "", "", "SOP-16", ["TX+","TX-","RX+","RX-"]),
+    ("FL3", "inductor", 1010, 750, 36, 28, "HX1198", "", "", "SOP-16", ["TX+","TX-","RX+","RX-"]),
+    ("FL4", "inductor", 1090, 750, 36, 28, "HX1198", "", "", "SOP-16", ["TX+","TX-","RX+","RX-"]),
+    ("FL5", "inductor", 1170, 750, 36, 28, "HX1198", "", "", "SOP-16", ["TX+","TX-","RX+","RX-"]),
+    ("FL6", "inductor", 1250, 750, 36, 28, "HX1198", "", "", "SOP-16", ["TX+","TX-","RX+","RX-"]),
+    ("FL7", "inductor", 1330, 750, 36, 28, "HX1198", "", "", "SOP-16", ["TX+","TX-","RX+","RX-"]),
+    ("FL8", "inductor", 1410, 750, 36, 28, "HX1198", "", "", "SOP-16", ["TX+","TX-","RX+","RX-"]),
+
+    # -----------------------------------------------------------------------
+    # SPI flash decoupling (C_SPI1-C_SPI4) — around W25Q128JV
+    # -----------------------------------------------------------------------
+    ("C_SPI1", "capacitor", 930, 195, 22, 12, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_SPI2", "capacitor", 1015, 195, 22, 12, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C_SPI3", "capacitor", 1015, 215, 22, 12, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C_SPI4", "capacitor", 1015, 235, 22, 12, "100nF", "", "100nF", "0402", ["1","2"]),
+
+    # -----------------------------------------------------------------------
+    # Boot flash (U_BOOT1) — eUSB boot module (redundant)
+    # -----------------------------------------------------------------------
+    ("U_BOOT1", "ic", 450, 650, 70, 45, "eUSB 4GB", "SATADOM-SH", "4GB", "eUSB",
+     ["VCC","GND","USB_DP","USB_DN"]),
+
+    # -----------------------------------------------------------------------
+    # Clock / PLL (U_CLK1-U_CLK2, Y_CLK1-Y_CLK2)
+    # -----------------------------------------------------------------------
+    # IDT 5V49EE504 clock generator — CPU, FPGA, PCIe ref clocks
+    ("U_CLK1", "ic", 530, 140, 55, 40, "5V49EE504", "5V49EE504", "", "QFN-32",
+     ["VCC","GND","CLK_OUT0","CLK_OUT1","CLK_OUT2","CLK_OUT3","REF_IN","SDA","SCL"]),
+    # SI5351 programmable clock — low-jitter PLL for GbE
+    ("U_CLK2", "ic", 1300, 480, 50, 35, "SI5351A", "SI5351A-B-GT", "", "MSOP-10",
+     ["VCC","GND","CLK0","CLK1","CLK2","XTAL_IN","XTAL_OUT","SDA","SCL"]),
+    # 25MHz crystal for CPU PLL
+    ("Y_CLK1", "crystal", 530, 190, 44, 22, "25MHz", "ABLS-25.000MHZ", "25MHz", "HC-49S",
+     ["1","2","GND","GND2"]),
+    # 50MHz crystal for clock generator
+    ("Y_CLK2", "crystal", 600, 140, 44, 22, "50MHz", "ABLS-50.000MHZ", "50MHz", "HC-49S",
+     ["1","2","GND","GND2"]),
+
+    # -----------------------------------------------------------------------
+    # Power management (U_PM1-U_PM2) — PMIC, power sequencer
+    # -----------------------------------------------------------------------
+    # LTC2977 8-channel power manager
+    ("U_PM1", "ic", 160, 60, 65, 45, "LTC2977", "LTC2977", "", "QFN-64",
+     ["VCC","GND","V1","V2","V3","V4","V5","V6","V7","V8","PGOOD","ALERT","SDA","SCL"]),
+    # UCD9090A power sequencer / monitor
+    ("U_PM2", "ic", 160, 110, 60, 40, "UCD9090A", "UCD9090ARGCT", "", "QFN-40",
+     ["VCC","GND","MON1","MON2","MON3","MON4","EN1","EN2","EN3","EN4","PMBUS_SDA","PMBUS_SCL"]),
+
+    # -----------------------------------------------------------------------
+    # Reset supervisor (U_RST1)
+    # -----------------------------------------------------------------------
+    ("U_RST1", "ic", 600, 60, 40, 28, "TPS3808", "TPS3808G01", "", "SOT-23-6",
+     ["VDD","GND","CT","MR","RESET","SENSE"]),
+
+    # -----------------------------------------------------------------------
+    # ESD protection (D1-D8) — TVS on USB, console, network ports
+    # -----------------------------------------------------------------------
+    ("D1", "ic", 580, 780, 32, 18, "USBLC6", "USBLC6-2SC6", "", "SOT-23-6",
+     ["IO1","GND","IO2","IO2B","VCC","IO1B"]),
+    ("D2", "ic", 500, 780, 32, 18, "USBLC6", "USBLC6-2SC6", "", "SOT-23-6",
+     ["IO1","GND","IO2","IO2B","VCC","IO1B"]),
+    ("D3", "ic", 680, 780, 32, 18, "PRTR5V0", "PRTR5V0U2X", "", "SOT-143",
+     ["IO1","GND","IO2","VCC"]),
+    ("D4", "ic", 1490, 780, 32, 18, "PRTR5V0", "PRTR5V0U2X", "", "SOT-143",
+     ["IO1","GND","IO2","VCC"]),
+    ("D5", "ic", 830, 780, 32, 18, "SRV05", "SRV05-4HTG", "", "SOT-23-6",
+     ["IO1","IO2","GND","IO3","IO4","VCC"]),
+    ("D6", "ic", 1090, 780, 32, 18, "SRV05", "SRV05-4HTG", "", "SOT-23-6",
+     ["IO1","IO2","GND","IO3","IO4","VCC"]),
+    ("D7", "ic", 1330, 780, 32, 18, "SRV05", "SRV05-4HTG", "", "SOT-23-6",
+     ["IO1","IO2","GND","IO3","IO4","VCC"]),
+    ("D8", "ic", 630, 118, 32, 18, "PRTR5V0", "PRTR5V0U2X", "", "SOT-143",
+     ["IO1","GND","IO2","VCC"]),
+
+    # -----------------------------------------------------------------------
+    # Status LEDs (D_LED1-D_LED4)
+    # -----------------------------------------------------------------------
+    ("D_LED1", "resistor", 1380, 920, 18, 12, "PWR", "", "GREEN", "0805", ["A","K"]),
+    ("D_LED2", "resistor", 1410, 920, 18, 12, "STATUS", "", "AMBER", "0805", ["A","K"]),
+    ("D_LED3", "resistor", 1440, 920, 18, 12, "ACT", "", "GREEN", "0805", ["A","K"]),
+    ("D_LED4", "resistor", 1470, 920, 18, 12, "ALARM", "", "RED", "0805", ["A","K"]),
+
+    # -----------------------------------------------------------------------
+    # Additional test points (TP_NEW1-TP_NEW10) — power, debug, signal
+    # -----------------------------------------------------------------------
+    ("TP_NEW1", "test_point", 340, 60, 12, 12, "VCORE", "", "", "TP", ["1"]),
+    ("TP_NEW2", "test_point", 360, 60, 12, 12, "1V0", "", "", "TP", ["1"]),
+    ("TP_NEW3", "test_point", 380, 60, 12, 12, "3V3", "", "", "TP", ["1"]),
+    ("TP_NEW4", "test_point", 860, 60, 12, 12, "VTT", "", "", "TP", ["1"]),
+    ("TP_NEW5", "test_point", 880, 60, 12, 12, "1V8", "", "", "TP", ["1"]),
+    ("TP_NEW6", "test_point", 1300, 300, 12, 12, "PCIE_CLK", "", "", "TP", ["1"]),
+    ("TP_NEW7", "test_point", 1320, 300, 12, 12, "MDIO", "", "", "TP", ["1"]),
+    ("TP_NEW8", "test_point", 1340, 300, 12, 12, "SPI_CLK", "", "", "TP", ["1"]),
+    ("TP_NEW9", "test_point", 550, 700, 12, 12, "UART_TX", "", "", "TP", ["1"]),
+    ("TP_NEW10","test_point", 570, 700, 12, 12, "UART_RX", "", "", "TP", ["1"]),
+
+    # -----------------------------------------------------------------------
+    # Pull-up / termination resistors (R_NEW1-R_NEW20)
+    # -----------------------------------------------------------------------
+    # I2C pull-ups for PMBUS / clock gen
+    ("R_NEW1", "resistor", 230, 60, 26, 12, "4k7", "", "4k7", "0402", ["A","B"]),
+    ("R_NEW2", "resistor", 230, 78, 26, 12, "4k7", "", "4k7", "0402", ["A","B"]),
+    # DDR3 termination resistors (per channel)
+    ("R_NEW3", "resistor", 260, 190, 26, 12, "49.9", "", "49.9", "0402", ["A","B"]),
+    ("R_NEW4", "resistor", 260, 370, 26, 12, "49.9", "", "49.9", "0402", ["A","B"]),
+    ("R_NEW5", "resistor", 260, 510, 26, 12, "49.9", "", "49.9", "0402", ["A","B"]),
+    ("R_NEW6", "resistor", 260, 650, 26, 12, "49.9", "", "49.9", "0402", ["A","B"]),
+    # SPI flash pull-ups (CS, HOLD, WP)
+    ("R_NEW7", "resistor", 1020, 200, 26, 12, "10k", "", "10k", "0402", ["A","B"]),
+    ("R_NEW8", "resistor", 1020, 218, 26, 12, "10k", "", "10k", "0402", ["A","B"]),
+    ("R_NEW9", "resistor", 1020, 236, 26, 12, "10k", "", "10k", "0402", ["A","B"]),
+    # JTAG pull-ups (TMS, TRST)
+    ("R_NEW10","resistor", 635, 118, 26, 12, "10k", "", "10k", "0402", ["A","B"]),
+    ("R_NEW11","resistor", 738, 118, 26, 12, "10k", "", "10k", "0402", ["A","B"]),
+    # Reset supervisor threshold resistors
+    ("R_NEW12","resistor", 600, 95, 26, 12, "100k", "", "100k", "0402", ["A","B"]),
+    ("R_NEW13","resistor", 640, 95, 26, 12, "47k", "", "47k", "0402", ["A","B"]),
+    # LED current limiters
+    ("R_NEW14","resistor", 1380, 940, 26, 12, "330", "", "330", "0402", ["A","B"]),
+    ("R_NEW15","resistor", 1410, 940, 26, 12, "330", "", "330", "0402", ["A","B"]),
+    ("R_NEW16","resistor", 1440, 940, 26, 12, "330", "", "330", "0402", ["A","B"]),
+    ("R_NEW17","resistor", 1470, 940, 26, 12, "330", "", "330", "0402", ["A","B"]),
+    # Network MDIO pull-ups
+    ("R_NEW18","resistor", 1250, 480, 26, 12, "4k7", "", "4k7", "0402", ["A","B"]),
+    ("R_NEW19","resistor", 1250, 498, 26, 12, "4k7", "", "4k7", "0402", ["A","B"]),
+    # Clock generator filter resistor
+    ("R_NEW20","resistor", 530, 120, 26, 12, "1k", "", "1k", "0402", ["A","B"]),
 ]
 # fmt: on
 
@@ -827,6 +1103,105 @@ CISCO_TRACE_ROUTES: list[tuple[list[tuple[int, int]], int]] = [
     ([(398, 582), (420, 582), (420, 540)], 2),
     # R182 (AVR54 rework location) — LPC clock fix resistor
     ([(830, 136), (680, 136), (680, 280)], 1),   # LPC_CLK fix path
+
+    # -----------------------------------------------------------------------
+    # VRM section traces — power delivery to CPU, FPGA, DDR3, IO
+    # -----------------------------------------------------------------------
+    # CPU core VRM (U_VRM1) → output inductor L_VRM1 → CPU
+    ([(325, 80), (372, 80), (420, 280)], 5),     # Vcore → CPU
+    # U_VRM1 → MOSFET gates Q1-Q4
+    ([(270, 80), (260, 105)], 2),                # VRM1 → Q1
+    ([(280, 80), (295, 105)], 2),                # VRM1 → Q2
+    ([(290, 80), (330, 105)], 2),                # VRM1 → Q3
+    ([(300, 80), (365, 105)], 2),                # VRM1 → Q4
+    # FPGA VRM (U_VRM2) → L_VRM2 → FPGA
+    ([(835, 80), (882, 80), (750, 160)], 4),     # Vfpga → FPGA
+    # U_VRM2 → MOSFETs Q5-Q6
+    ([(780, 80), (770, 105)], 2),                # VRM2 → Q5
+    ([(790, 80), (805, 105)], 2),                # VRM2 → Q6
+    # DDR3 VRM (U_VRM3) → L_VRM3 → DDR3 rail
+    ([(135, 403), (182, 403), (182, 350), (130, 250)], 4),  # VDDQ → DDR3
+    # U_VRM3 → Q7
+    ([(80, 405), (60, 425)], 2),                 # VRM3 → Q7
+    # IO VRM (U_VRM4) → L_VRM4 → IO rail
+    ([(135, 580), (182, 580), (182, 540), (420, 540)], 4),  # 3.3V → CPU IO
+    # U_VRM4 → Q8
+    ([(80, 580), (60, 600)], 2),                 # VRM4 → Q8
+    # DC power → VRM inputs (12V distribution)
+    ([(110, 830), (110, 60), (160, 60)], 5),     # 12V → U_PM1
+    ([(160, 80), (270, 80)], 4),                 # PM → CPU VRM
+    ([(160, 80), (780, 60)], 4),                 # PM → FPGA VRM
+
+    # -----------------------------------------------------------------------
+    # Network switch fabric traces
+    # -----------------------------------------------------------------------
+    # I354 (U8) → switch fabric (U_NET2) — MDIO management
+    ([(1050, 520), (1100, 520), (1100, 460)], 2),# MDIO
+    # Switch fabric (U_NET2) → I350 (U_NET1) — inter-switch link
+    ([(1100, 460), (1100, 480)], 3),             # ISL data
+    # I350 (U_NET1) → GbE ports J5-J8 via magnetics
+    ([(1240, 540), (1210, 540), (1210, 750)], 3),# NET1 → FL5 → J5
+    ([(1240, 560), (1290, 560), (1290, 750)], 3),# NET1 → FL6 → J7
+    ([(1240, 580), (1370, 580), (1370, 750)], 3),# NET1 → FL7 → J8
+    ([(1240, 600), (1450, 600), (1450, 750)], 3),# NET1 → FL8 → J9
+    # Magnetics FL1-FL4 → GbE ports J1-J4
+    ([(886, 764), (886, 800)], 3),               # FL1 → J1
+    ([(966, 764), (966, 800)], 3),               # FL2 → J2
+    ([(1046, 764), (1046, 800)], 3),             # FL3 → J3
+    ([(1126, 764), (1126, 800)], 3),             # FL4 → J4
+
+    # -----------------------------------------------------------------------
+    # Clock generator traces
+    # -----------------------------------------------------------------------
+    # Clock gen (U_CLK1) → CPU ref clock
+    ([(585, 160), (420, 160), (420, 280)], 2),   # CLK_OUT0 → CPU
+    # Clock gen (U_CLK1) → FPGA ref clock
+    ([(585, 170), (750, 170), (750, 160)], 2),   # CLK_OUT1 → FPGA
+    # SI5351 (U_CLK2) → I354 (U8) ref clock
+    ([(1300, 497), (1050, 497), (1050, 480)], 2),# CLK2 → I354
+    # SI5351 (U_CLK2) → I350 (U_NET1) ref clock
+    ([(1300, 507), (1240, 507), (1240, 480)], 2),# CLK2 → I350
+
+    # -----------------------------------------------------------------------
+    # Power management traces
+    # -----------------------------------------------------------------------
+    # LTC2977 (U_PM1) → VRM enable signals
+    ([(225, 75), (270, 75)], 2),                 # PGOOD → CPU VRM
+    ([(225, 85), (780, 65)], 2),                 # PGOOD → FPGA VRM
+    # UCD9090A (U_PM2) → monitored rails
+    ([(220, 130), (300, 130), (300, 140)], 2),   # MON → CPU VRM
+    ([(220, 140), (420, 280)], 2),               # MON → CPU
+
+    # -----------------------------------------------------------------------
+    # Reset supervisor traces
+    # -----------------------------------------------------------------------
+    # TPS3808 (U_RST1) → CPU reset pin
+    ([(640, 74), (680, 74), (680, 280)], 2),     # RESET → CPU
+
+    # -----------------------------------------------------------------------
+    # ESD protection traces
+    # -----------------------------------------------------------------------
+    ([(580, 789), (600, 800)], 2),               # D1 → USB-A (J12)
+    ([(500, 789), (520, 800)], 2),               # D2 → USB Mini-B (J13)
+    ([(680, 789), (700, 800)], 2),               # D3 → Console (J10)
+    ([(1490, 789), (1490, 800)], 2),             # D4 → MGMT (J11)
+    ([(830, 789), (850, 800)], 2),               # D5 → GbE-1 (J1)
+    ([(1090, 789), (1090, 800)], 2),             # D6 → GbE-4 (J4)
+    ([(1330, 789), (1330, 800)], 2),             # D7 → GbE-7 (J8)
+    ([(630, 136), (650, 136)], 2),               # D8 → JTAG (J15)
+
+    # -----------------------------------------------------------------------
+    # Boot flash trace
+    # -----------------------------------------------------------------------
+    ([(450, 672), (420, 672), (420, 540)], 2),   # U_BOOT1 → CPU USB
+
+    # -----------------------------------------------------------------------
+    # LED traces from CPU GPIO
+    # -----------------------------------------------------------------------
+    ([(680, 300), (1380, 300), (1380, 920)], 2), # PWR LED
+    ([(680, 310), (1410, 310), (1410, 920)], 2), # STATUS LED
+    ([(680, 320), (1440, 320), (1440, 920)], 2), # ACT LED
+    ([(680, 330), (1470, 330), (1470, 920)], 2), # ALARM LED
 ]
 
 CISCO_TRACE_ENDPOINTS: list[tuple[str, str]] = [
@@ -846,6 +1221,36 @@ CISCO_TRACE_ENDPOINTS: list[tuple[str, str]] = [
     ("J14","U10"),                                        # DC power→VRM
     ("Y1","U1"),                                          # Crystal→CPU
     ("TP4","U1"),                                         # AVR54 rework
+    # VRM section traces
+    ("U_VRM1","U1"),                                      # CPU core VRM → CPU
+    ("U_VRM1","Q1"), ("U_VRM1","Q2"), ("U_VRM1","Q3"), ("U_VRM1","Q4"),  # VRM1 → MOSFETs
+    ("U_VRM2","U6"),                                      # FPGA VRM → FPGA
+    ("U_VRM2","Q5"), ("U_VRM2","Q6"),                     # VRM2 → MOSFETs
+    ("U_VRM3","U2"),                                      # DDR3 VRM → DDR3
+    ("U_VRM3","Q7"),                                      # VRM3 → MOSFET
+    ("U_VRM4","U1"),                                      # IO VRM → CPU IO
+    ("U_VRM4","Q8"),                                      # VRM4 → MOSFET
+    ("J14","U_PM1"), ("U_PM1","U_VRM1"), ("U_PM1","U_VRM2"),  # DC → PM → VRMs
+    # Network switch fabric traces
+    ("U8","U_NET2"),                                      # I354 → switch MDIO
+    ("U_NET2","U_NET1"),                                  # switch → I350 ISL
+    ("U_NET1","J5"), ("U_NET1","J7"), ("U_NET1","J8"), ("U_NET1","J9"),  # I350 → ports
+    ("FL1","J1"), ("FL2","J2"), ("FL3","J3"), ("FL4","J4"),  # magnetics → ports
+    # Clock traces
+    ("U_CLK1","U1"), ("U_CLK1","U6"),                     # clk gen → CPU, FPGA
+    ("U_CLK2","U8"), ("U_CLK2","U_NET1"),                 # SI5351 → NICs
+    # Power management traces
+    ("U_PM1","U_VRM1"), ("U_PM1","U_VRM2"),               # PM PGOOD → VRMs
+    ("U_PM2","U_VRM1"), ("U_PM2","U1"),                   # sequencer → VRM/CPU
+    # Reset supervisor
+    ("U_RST1","U1"),                                      # reset → CPU
+    # ESD protection
+    ("D1","J12"), ("D2","J13"), ("D3","J10"), ("D4","J11"),  # ESD → connectors
+    ("D5","J1"), ("D6","J4"), ("D7","J8"), ("D8","J15"),  # ESD → ports/JTAG
+    # Boot flash
+    ("U_BOOT1","U1"),                                     # boot flash → CPU
+    # LEDs
+    ("U1","D_LED1"), ("U1","D_LED2"), ("U1","D_LED3"), ("U1","D_LED4"),  # CPU → LEDs
 ]
 
 CISCO_VIAS: list[tuple[int, int, int, int]] = [
@@ -867,6 +1272,41 @@ CISCO_VIAS: list[tuple[int, int, int, int]] = [
     # Ground stitching near RJ45s
     (900,780,5,2),(960,780,5,2),(1020,780,5,2),(1080,780,5,2),
     (1140,780,5,2),(1200,780,5,2),(1260,780,5,2),(1320,780,5,2),
+    # VRM section vias — power plane transitions
+    (300,90,6,3),(330,90,6,3),(360,90,6,3),(390,90,6,3),
+    (810,90,6,3),(840,90,6,3),(870,90,6,3),
+    (100,400,5,2),(140,400,5,2),(180,400,5,2),
+    (100,575,5,2),(140,575,5,2),(180,575,5,2),
+    # MOSFET drain/source vias
+    (274,130,5,2),(309,130,5,2),(344,130,5,2),(379,130,5,2),
+    (784,130,5,2),(819,130,5,2),
+    (74,450,5,2),(74,625,5,2),
+    # I350 / switch fabric area vias
+    (1090,470,5,2),(1130,470,5,2),(1170,470,5,2),(1210,470,5,2),
+    (1090,360,5,2),(1130,360,5,2),(1170,360,5,2),(1210,360,5,2),
+    (1250,360,5,2),
+    # Clock generator area vias
+    (550,155,5,2),(570,155,5,2),(590,155,5,2),(610,155,5,2),
+    # Power management area vias
+    (190,75,5,2),(210,75,5,2),(230,75,5,2),
+    (190,125,5,2),(210,125,5,2),
+    # Reset supervisor vias
+    (620,75,5,2),(640,75,5,2),
+    # ESD protection area vias
+    (590,790,5,2),(510,790,5,2),(690,790,5,2),(840,790,5,2),
+    (1100,790,5,2),(1340,790,5,2),(1500,790,5,2),
+    # SPI flash area vias
+    (940,200,5,2),(960,200,5,2),(980,200,5,2),
+    # LED area vias
+    (1380,900,5,2),(1410,900,5,2),(1440,900,5,2),(1470,900,5,2),
+    # Ground stitching — magnetics area
+    (870,740,5,2),(950,740,5,2),(1030,740,5,2),(1110,740,5,2),
+    (1190,740,5,2),(1270,740,5,2),(1350,740,5,2),(1430,740,5,2),
+    # Boot flash area
+    (460,670,5,2),(480,670,5,2),
+    # Test point area vias
+    (350,75,5,2),(370,75,5,2),(870,75,5,2),(890,75,5,2),
+    (1310,310,5,2),(1330,310,5,2),
 ]
 
 CISCO_MOUNTING_HOLES: list[tuple[int, int, int, int]] = [
@@ -882,6 +1322,30 @@ CISCO_SILK_LABELS: list[tuple[str, int, int]] = [
     ("J14 DC",52,798),("J15 JTAG",652,128),
     ("L1",202,108),("L2",62,458),("Y1",352,568),
     ("R182/AVR54",830,118),
+    # VRM section labels
+    ("U_VRM1",272,58),("U_VRM2",782,58),("U_VRM3",82,383),("U_VRM4",82,558),
+    ("Q1-Q4",262,100),("Q5-Q6",772,100),("Q7",62,423),("Q8",62,598),
+    ("L_VRM1",332,58),("L_VRM2",842,58),("L_VRM3",142,383),("L_VRM4",142,558),
+    # Network labels
+    ("U_NET1 I350",1102,478),("U_NET2 88E6176",1102,358),
+    ("FL1-FL8",870,738),
+    # Clock / PLL labels
+    ("U_CLK1",532,138),("U_CLK2",1302,478),
+    ("Y_CLK1",532,188),("Y_CLK2",602,138),
+    # Power management labels
+    ("U_PM1 LTC2977",162,58),("U_PM2 UCD9090A",162,108),
+    # Reset supervisor
+    ("U_RST1",602,58),
+    # Boot flash
+    ("U_BOOT1",452,648),
+    # ESD protection
+    ("D1",582,778),("D2",502,778),("D3",682,778),("D4",1492,778),
+    ("D5",832,778),("D6",1092,778),("D7",1332,778),("D8",632,116),
+    # LEDs
+    ("D_LED1-4",1382,918),
+    # Test points
+    ("TP_NEW1-5",342,55),("TP_NEW6-8",1302,298),("TP_NEW9-10",552,698),
+    # Board markings
     ("800-XXXXX-XX  V05",1300,970),
     ("Cisco ASA 5506-X — Synthetic Demo Only",350,970),
     ("TRUST ANCHOR",770,308),
@@ -1196,20 +1660,23 @@ XBOX_ZONES: list[tuple[str, str, list[str]]] = [
     ("Power Delivery", "power", ["U10", "U11", "U17", "U18", "U19", "U20", "U21",
      "L1", "L2", "L3", "L4", "L5",
      "Q1", "Q2", "Q3", "Q4", "Q5", "Q6",
-     "C39", "C40", "C41", "C42", "C43", "C44", "J10"]),
+     "C39", "C40", "C41", "C42", "C43", "C44",
+     "C51", "C52", "C53", "C54", "J10"]),
     ("HDMI Output", "io", ["U6", "U12", "U22", "J1",
      "C31", "C32", "C45", "C46", "C47",
      "R4", "R5", "R6", "R7",
      "D3", "D5"]),
-    ("Storage", "storage", ["U7", "J6", "C33", "C34"]),
+    ("Storage", "storage", ["U7", "J6", "C33", "C34", "C56", "R23"]),
     ("Wireless / Networking", "network", ["U8", "U9", "J4", "J7",
-     "C35", "C36", "C37", "C38", "D4"]),
+     "C35", "C36", "C37", "C38", "C55", "D4",
+     "R21", "R22", "R24"]),
     ("USB Subsystem", "io", ["J2", "J3", "D1", "D2",
      "R8", "R9", "R10", "R11"]),
     ("Debug / JTAG", "debug", ["J5", "D6",
      "TP1", "TP2", "TP3", "TP4", "TP5", "TP6", "TP7"]),
-    ("APU Decoupling", "power", ["C7", "C8", "C9", "C10",
-     "C11", "C12", "C13", "C14", "C50", "R12",
+    ("APU Decoupling", "power", ["C1", "C2", "C3", "C4", "C5", "C6",
+     "C7", "C8", "C9", "C10",
+     "C11", "C12", "C13", "C14", "C50", "R1", "R2", "R3", "R12", "R25",
      "C48", "C49", "Y1"]),
     ("Front Panel", "io", ["J8", "J9",
      "D7", "D8", "D9", "D10",
@@ -1219,16 +1686,49 @@ XBOX_ZONES: list[tuple[str, str, list[str]]] = [
 ]
 
 CISCO_ZONES: list[tuple[str, str, list[str]]] = [
-    ("Intel Atom C2508 CPU", "cpu", ["U1"]),
-    ("DDR3 ECC Memory", "memory", ["U2", "U3", "U4", "U5"]),
-    ("Trust Anchor Module", "debug", ["U6", "U7"]),
-    ("Power Delivery", "power", ["U10", "U11", "U12", "L1", "L2"]),
-    ("Intel I354 NIC", "network", ["U8"]),
-    ("Data Plane Ports", "network", ["J1", "J2", "J3", "J4", "J5", "J7", "J8", "J9"]),
-    ("Management / Console", "io", ["J10", "J11", "J12", "J13"]),
-    ("Storage", "storage", ["U9", "J6"]),
-    ("JTAG Debug Chain", "debug", ["J15", "TP1", "TP2", "TP3", "TP4"]),
+    ("Intel Atom C2508 CPU", "cpu", ["U1",
+     "C_CPU1", "C_CPU2", "C_CPU3", "C_CPU4", "C_CPU5", "C_CPU6", "C_CPU7",
+     "C_CPU8", "C_CPU9", "C_CPU10", "C_CPU11", "C_CPU12", "C_CPU13", "C_CPU14",
+     "C_CPU15", "C_CPU16", "C_CPU17", "C_CPU18", "C_CPU19", "C_CPU20"]),
+    ("DDR3 ECC Memory", "memory", ["U2", "U3", "U4", "U5",
+     "C_DDR1", "C_DDR2", "C_DDR3", "C_DDR4", "C_DDR5", "C_DDR6", "C_DDR7", "C_DDR8",
+     "R_NEW3", "R_NEW4", "R_NEW5", "R_NEW6"]),
+    ("Trust Anchor Module", "debug", ["U6", "U7",
+     "C_FPGA1", "C_FPGA2", "C_FPGA3", "C_FPGA4", "C_FPGA5",
+     "C_FPGA6", "C_FPGA7", "C_FPGA8", "C_FPGA9", "C_FPGA10",
+     "C_SPI1", "C_SPI2", "C_SPI3", "C_SPI4",
+     "R_NEW7", "R_NEW8", "R_NEW9"]),
+    ("Power Delivery", "power", ["U10", "U11", "U12", "L1", "L2",
+     "U_VRM1", "U_VRM2", "U_VRM3", "U_VRM4",
+     "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8",
+     "L_VRM1", "L_VRM2", "L_VRM3", "L_VRM4",
+     "U_PM1", "U_PM2", "U_RST1",
+     "TP_NEW1", "TP_NEW2", "TP_NEW3", "TP_NEW4", "TP_NEW5",
+     "R_NEW1", "R_NEW2", "R_NEW12", "R_NEW13"]),
+    ("Intel I354 NIC", "network", ["U8",
+     "C_NET1", "C_NET2", "C_NET3", "C_NET4"]),
+    ("Intel I350 / Switch Fabric", "network", ["U_NET1", "U_NET2",
+     "C_NET5", "C_NET6", "C_NET7", "C_NET8",
+     "C_NET9", "C_NET10", "C_NET11", "C_NET12",
+     "R_NEW18", "R_NEW19"]),
+    ("Data Plane Ports", "network", ["J1", "J2", "J3", "J4", "J5", "J7", "J8", "J9",
+     "FL1", "FL2", "FL3", "FL4", "FL5", "FL6", "FL7", "FL8",
+     "C_NET13", "C_NET14", "C_NET15", "C_NET16",
+     "D5", "D6", "D7"]),
+    ("Management / Console", "io", ["J10", "J11", "J12", "J13",
+     "D1", "D2", "D3", "D4"]),
+    ("Storage", "storage", ["U9", "J6", "U_BOOT1"]),
+    ("JTAG Debug Chain", "debug", ["J15", "TP1", "TP2", "TP3", "TP4", "D8",
+     "R_NEW10", "R_NEW11"]),
     ("DC Power Input", "power", ["J14"]),
+    ("Clock / PLL", "io", ["U_CLK1", "U_CLK2", "Y_CLK1", "Y_CLK2", "Y1",
+     "R_NEW20"]),
+    ("CPU Decoupling", "power", ["C1", "C2", "C3", "C4", "C5", "C6"]),
+    ("Status LEDs", "io", ["D_LED1", "D_LED2", "D_LED3", "D_LED4",
+     "R_NEW14", "R_NEW15", "R_NEW16", "R_NEW17"]),
+    ("Signal Test Points", "debug", ["TP_NEW6", "TP_NEW7", "TP_NEW8",
+     "TP_NEW9", "TP_NEW10"]),
+    ("Passives", "power", ["R1", "R2", "R3"]),
 ]
 
 

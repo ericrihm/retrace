@@ -6,19 +6,19 @@
       1000
     ],
     "pipeline_version": "0.1.0",
-    "timestamp": "2026-04-30T21:38:54Z",
+    "timestamp": "2026-04-30T21:47:36Z",
     "duration_seconds": 0.0
   },
   "summary": {
-    "total_components": 139,
+    "total_components": 150,
     "identified": 35,
-    "unidentified": 104,
-    "identification_rate": 0.2518,
+    "unidentified": 115,
+    "identification_rate": 0.2333,
     "by_label": {
       "ic": 34,
       "connector": 10,
-      "capacitor": 50,
-      "resistor": 24,
+      "capacitor": 56,
+      "resistor": 29,
       "inductor": 5,
       "crystal": 1,
       "test_point": 15
@@ -2248,6 +2248,182 @@
         620,
         50,
         40
+      ]
+    },
+    {
+      "id": "C51",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "10uF",
+      "value": "10uF",
+      "package": "0805",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        60,
+        260,
+        24,
+        14
+      ]
+    },
+    {
+      "id": "C52",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "10uF",
+      "value": "10uF",
+      "package": "0805",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        240,
+        260,
+        24,
+        14
+      ]
+    },
+    {
+      "id": "C53",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "100nF",
+      "value": "100nF",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        60,
+        555,
+        24,
+        14
+      ]
+    },
+    {
+      "id": "C54",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "100nF",
+      "value": "100nF",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        248,
+        555,
+        24,
+        14
+      ]
+    },
+    {
+      "id": "C55",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "1uF",
+      "value": "1uF",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        1030,
+        590,
+        24,
+        14
+      ]
+    },
+    {
+      "id": "C56",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "100nF",
+      "value": "100nF",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        1400,
+        800,
+        24,
+        14
+      ]
+    },
+    {
+      "id": "R21",
+      "label": "resistor",
+      "part_number": "",
+      "marking": "33",
+      "value": "33",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        1030,
+        740,
+        30,
+        14
+      ]
+    },
+    {
+      "id": "R22",
+      "label": "resistor",
+      "part_number": "",
+      "marking": "33",
+      "value": "33",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        1070,
+        740,
+        30,
+        14
+      ]
+    },
+    {
+      "id": "R23",
+      "label": "resistor",
+      "part_number": "",
+      "marking": "0",
+      "value": "0",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        1390,
+        810,
+        30,
+        14
+      ]
+    },
+    {
+      "id": "R24",
+      "label": "resistor",
+      "part_number": "",
+      "marking": "10k",
+      "value": "10k",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        1050,
+        480,
+        30,
+        14
+      ]
+    },
+    {
+      "id": "R25",
+      "label": "resistor",
+      "part_number": "",
+      "marking": "1k",
+      "value": "1k",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        840,
+        460,
+        30,
+        14
       ]
     }
   ]

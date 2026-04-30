@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "timestamp": "2026-04-30T21:38:54Z",
+  "timestamp": "2026-04-30T21:47:36Z",
   "image": "docs/examples/cisco_board.png",
   "board_dimensions": [
     1600,
@@ -695,6 +695,2150 @@
       "datasheet_url": "",
       "value": "",
       "package": "TP"
+    },
+    {
+      "id": "C_CPU1",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        390,
+        280,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_CPU2",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        390,
+        310,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_CPU3",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        390,
+        340,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_CPU4",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        390,
+        370,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_CPU5",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        390,
+        400,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_CPU6",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        390,
+        430,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_CPU7",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        390,
+        460,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_CPU8",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        390,
+        490,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_CPU9",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        390,
+        520,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_CPU10",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        700,
+        280,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_CPU11",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        700,
+        310,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_CPU12",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        700,
+        340,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_CPU13",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        700,
+        370,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_CPU14",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        700,
+        400,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_CPU15",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        700,
+        430,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_CPU16",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        700,
+        460,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_CPU17",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        700,
+        490,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_CPU18",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        700,
+        520,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_CPU19",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        440,
+        560,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_CPU20",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        480,
+        560,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_FPGA1",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        730,
+        155,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_FPGA2",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        730,
+        180,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_FPGA3",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        730,
+        205,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_FPGA4",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        730,
+        230,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_FPGA5",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        730,
+        255,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_FPGA6",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        920,
+        160,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_FPGA7",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        920,
+        185,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_FPGA8",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        920,
+        240,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_FPGA9",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        920,
+        265,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_FPGA10",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        920,
+        290,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_DDR1",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        110,
+        175,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_DDR2",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        260,
+        190,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_DDR3",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        110,
+        355,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_DDR4",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        260,
+        370,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_DDR5",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        110,
+        495,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_DDR6",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        260,
+        510,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_DDR7",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        110,
+        635,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_DDR8",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        260,
+        650,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "U_VRM1",
+      "label": "ic",
+      "confidence": 0.88,
+      "bbox": [
+        270,
+        60,
+        55,
+        40
+      ],
+      "marking": "IR3564B",
+      "part_number": "IR3564B",
+      "datasheet_url": "",
+      "value": "",
+      "package": "QFN-48"
+    },
+    {
+      "id": "U_VRM2",
+      "label": "ic",
+      "confidence": 0.93,
+      "bbox": [
+        780,
+        60,
+        55,
+        40
+      ],
+      "marking": "TPS54620",
+      "part_number": "TPS54620RGY",
+      "datasheet_url": "",
+      "value": "",
+      "package": "QFN-14"
+    },
+    {
+      "id": "U_VRM3",
+      "label": "ic",
+      "confidence": 0.98,
+      "bbox": [
+        80,
+        385,
+        55,
+        40
+      ],
+      "marking": "TPS54231",
+      "part_number": "TPS54231DR",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOIC-8"
+    },
+    {
+      "id": "U_VRM4",
+      "label": "ic",
+      "confidence": 0.88,
+      "bbox": [
+        80,
+        560,
+        55,
+        40
+      ],
+      "marking": "TPS54331",
+      "part_number": "TPS54331DR",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOIC-8"
+    },
+    {
+      "id": "Q1",
+      "label": "ic",
+      "confidence": 0.93,
+      "bbox": [
+        260,
+        105,
+        28,
+        22
+      ],
+      "marking": "BSC014N",
+      "part_number": "BSC014N04LS",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TDSON-8"
+    },
+    {
+      "id": "Q2",
+      "label": "ic",
+      "confidence": 0.98,
+      "bbox": [
+        295,
+        105,
+        28,
+        22
+      ],
+      "marking": "BSC014N",
+      "part_number": "BSC014N04LS",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TDSON-8"
+    },
+    {
+      "id": "Q3",
+      "label": "ic",
+      "confidence": 0.88,
+      "bbox": [
+        330,
+        105,
+        28,
+        22
+      ],
+      "marking": "BSC014N",
+      "part_number": "BSC014N04LS",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TDSON-8"
+    },
+    {
+      "id": "Q4",
+      "label": "ic",
+      "confidence": 0.93,
+      "bbox": [
+        365,
+        105,
+        28,
+        22
+      ],
+      "marking": "BSC014N",
+      "part_number": "BSC014N04LS",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TDSON-8"
+    },
+    {
+      "id": "Q5",
+      "label": "ic",
+      "confidence": 0.98,
+      "bbox": [
+        770,
+        105,
+        28,
+        22
+      ],
+      "marking": "BSC014N",
+      "part_number": "BSC014N04LS",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TDSON-8"
+    },
+    {
+      "id": "Q6",
+      "label": "ic",
+      "confidence": 0.88,
+      "bbox": [
+        805,
+        105,
+        28,
+        22
+      ],
+      "marking": "BSC014N",
+      "part_number": "BSC014N04LS",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TDSON-8"
+    },
+    {
+      "id": "Q7",
+      "label": "ic",
+      "confidence": 0.93,
+      "bbox": [
+        60,
+        425,
+        28,
+        22
+      ],
+      "marking": "BSC014N",
+      "part_number": "BSC014N04LS",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TDSON-8"
+    },
+    {
+      "id": "Q8",
+      "label": "ic",
+      "confidence": 0.98,
+      "bbox": [
+        60,
+        600,
+        28,
+        22
+      ],
+      "marking": "BSC014N",
+      "part_number": "BSC014N04LS",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TDSON-8"
+    },
+    {
+      "id": "L_VRM1",
+      "label": "inductor",
+      "confidence": 0.88,
+      "bbox": [
+        330,
+        60,
+        42,
+        36
+      ],
+      "marking": "0.47uH",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "0.47uH",
+      "package": "1210"
+    },
+    {
+      "id": "L_VRM2",
+      "label": "inductor",
+      "confidence": 0.93,
+      "bbox": [
+        840,
+        60,
+        42,
+        36
+      ],
+      "marking": "0.68uH",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "0.68uH",
+      "package": "1210"
+    },
+    {
+      "id": "L_VRM3",
+      "label": "inductor",
+      "confidence": 0.98,
+      "bbox": [
+        140,
+        385,
+        42,
+        36
+      ],
+      "marking": "1uH",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "1uH",
+      "package": "1210"
+    },
+    {
+      "id": "L_VRM4",
+      "label": "inductor",
+      "confidence": 0.88,
+      "bbox": [
+        140,
+        560,
+        42,
+        36
+      ],
+      "marking": "2.2uH",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "2.2uH",
+      "package": "1210"
+    },
+    {
+      "id": "U_NET1",
+      "label": "ic",
+      "confidence": 0.93,
+      "bbox": [
+        1100,
+        480,
+        140,
+        120
+      ],
+      "marking": "I350-AM4",
+      "part_number": "I350-AM4",
+      "datasheet_url": "",
+      "value": "",
+      "package": "BGA-576"
+    },
+    {
+      "id": "U_NET2",
+      "label": "ic",
+      "confidence": 0.98,
+      "bbox": [
+        1100,
+        360,
+        140,
+        100
+      ],
+      "marking": "88E6176",
+      "part_number": "88E6176-TFJ2",
+      "datasheet_url": "",
+      "value": "",
+      "package": "QFP-176"
+    },
+    {
+      "id": "C_NET1",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        880,
+        470,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_NET2",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        880,
+        495,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_NET3",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        880,
+        520,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_NET4",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        880,
+        545,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_NET5",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        1080,
+        475,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_NET6",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        1080,
+        500,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_NET7",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        1080,
+        525,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_NET8",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        1080,
+        550,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_NET9",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        1080,
+        355,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_NET10",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        1080,
+        380,
+        24,
+        14
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_NET11",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        1250,
+        365,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_NET12",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        1250,
+        390,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_NET13",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        850,
+        780,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_NET14",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        1010,
+        780,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_NET15",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        1170,
+        780,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_NET16",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        1330,
+        780,
+        24,
+        14
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "FL1",
+      "label": "inductor",
+      "confidence": 0.93,
+      "bbox": [
+        850,
+        750,
+        36,
+        28
+      ],
+      "marking": "HX1198",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOP-16"
+    },
+    {
+      "id": "FL2",
+      "label": "inductor",
+      "confidence": 0.98,
+      "bbox": [
+        930,
+        750,
+        36,
+        28
+      ],
+      "marking": "HX1198",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOP-16"
+    },
+    {
+      "id": "FL3",
+      "label": "inductor",
+      "confidence": 0.88,
+      "bbox": [
+        1010,
+        750,
+        36,
+        28
+      ],
+      "marking": "HX1198",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOP-16"
+    },
+    {
+      "id": "FL4",
+      "label": "inductor",
+      "confidence": 0.93,
+      "bbox": [
+        1090,
+        750,
+        36,
+        28
+      ],
+      "marking": "HX1198",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOP-16"
+    },
+    {
+      "id": "FL5",
+      "label": "inductor",
+      "confidence": 0.98,
+      "bbox": [
+        1170,
+        750,
+        36,
+        28
+      ],
+      "marking": "HX1198",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOP-16"
+    },
+    {
+      "id": "FL6",
+      "label": "inductor",
+      "confidence": 0.88,
+      "bbox": [
+        1250,
+        750,
+        36,
+        28
+      ],
+      "marking": "HX1198",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOP-16"
+    },
+    {
+      "id": "FL7",
+      "label": "inductor",
+      "confidence": 0.93,
+      "bbox": [
+        1330,
+        750,
+        36,
+        28
+      ],
+      "marking": "HX1198",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOP-16"
+    },
+    {
+      "id": "FL8",
+      "label": "inductor",
+      "confidence": 0.98,
+      "bbox": [
+        1410,
+        750,
+        36,
+        28
+      ],
+      "marking": "HX1198",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOP-16"
+    },
+    {
+      "id": "C_SPI1",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        930,
+        195,
+        22,
+        12
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_SPI2",
+      "label": "capacitor",
+      "confidence": 0.93,
+      "bbox": [
+        1015,
+        195,
+        22,
+        12
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "C_SPI3",
+      "label": "capacitor",
+      "confidence": 0.98,
+      "bbox": [
+        1015,
+        215,
+        22,
+        12
+      ],
+      "marking": "10uF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10uF",
+      "package": "0805"
+    },
+    {
+      "id": "C_SPI4",
+      "label": "capacitor",
+      "confidence": 0.88,
+      "bbox": [
+        1015,
+        235,
+        22,
+        12
+      ],
+      "marking": "100nF",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100nF",
+      "package": "0402"
+    },
+    {
+      "id": "U_BOOT1",
+      "label": "ic",
+      "confidence": 0.93,
+      "bbox": [
+        450,
+        650,
+        70,
+        45
+      ],
+      "marking": "eUSB 4GB",
+      "part_number": "SATADOM-SH",
+      "datasheet_url": "",
+      "value": "4GB",
+      "package": "eUSB"
+    },
+    {
+      "id": "U_CLK1",
+      "label": "ic",
+      "confidence": 0.98,
+      "bbox": [
+        530,
+        140,
+        55,
+        40
+      ],
+      "marking": "5V49EE504",
+      "part_number": "5V49EE504",
+      "datasheet_url": "",
+      "value": "",
+      "package": "QFN-32"
+    },
+    {
+      "id": "U_CLK2",
+      "label": "ic",
+      "confidence": 0.88,
+      "bbox": [
+        1300,
+        480,
+        50,
+        35
+      ],
+      "marking": "SI5351A",
+      "part_number": "SI5351A-B-GT",
+      "datasheet_url": "",
+      "value": "",
+      "package": "MSOP-10"
+    },
+    {
+      "id": "Y_CLK1",
+      "label": "crystal",
+      "confidence": 0.93,
+      "bbox": [
+        530,
+        190,
+        44,
+        22
+      ],
+      "marking": "25MHz",
+      "part_number": "ABLS-25.000MHZ",
+      "datasheet_url": "",
+      "value": "25MHz",
+      "package": "HC-49S"
+    },
+    {
+      "id": "Y_CLK2",
+      "label": "crystal",
+      "confidence": 0.98,
+      "bbox": [
+        600,
+        140,
+        44,
+        22
+      ],
+      "marking": "50MHz",
+      "part_number": "ABLS-50.000MHZ",
+      "datasheet_url": "",
+      "value": "50MHz",
+      "package": "HC-49S"
+    },
+    {
+      "id": "U_PM1",
+      "label": "ic",
+      "confidence": 0.88,
+      "bbox": [
+        160,
+        60,
+        65,
+        45
+      ],
+      "marking": "LTC2977",
+      "part_number": "LTC2977",
+      "datasheet_url": "",
+      "value": "",
+      "package": "QFN-64"
+    },
+    {
+      "id": "U_PM2",
+      "label": "ic",
+      "confidence": 0.93,
+      "bbox": [
+        160,
+        110,
+        60,
+        40
+      ],
+      "marking": "UCD9090A",
+      "part_number": "UCD9090ARGCT",
+      "datasheet_url": "",
+      "value": "",
+      "package": "QFN-40"
+    },
+    {
+      "id": "U_RST1",
+      "label": "ic",
+      "confidence": 0.98,
+      "bbox": [
+        600,
+        60,
+        40,
+        28
+      ],
+      "marking": "TPS3808",
+      "part_number": "TPS3808G01",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOT-23-6"
+    },
+    {
+      "id": "D1",
+      "label": "ic",
+      "confidence": 0.88,
+      "bbox": [
+        580,
+        780,
+        32,
+        18
+      ],
+      "marking": "USBLC6",
+      "part_number": "USBLC6-2SC6",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOT-23-6"
+    },
+    {
+      "id": "D2",
+      "label": "ic",
+      "confidence": 0.93,
+      "bbox": [
+        500,
+        780,
+        32,
+        18
+      ],
+      "marking": "USBLC6",
+      "part_number": "USBLC6-2SC6",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOT-23-6"
+    },
+    {
+      "id": "D3",
+      "label": "ic",
+      "confidence": 0.98,
+      "bbox": [
+        680,
+        780,
+        32,
+        18
+      ],
+      "marking": "PRTR5V0",
+      "part_number": "PRTR5V0U2X",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOT-143"
+    },
+    {
+      "id": "D4",
+      "label": "ic",
+      "confidence": 0.88,
+      "bbox": [
+        1490,
+        780,
+        32,
+        18
+      ],
+      "marking": "PRTR5V0",
+      "part_number": "PRTR5V0U2X",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOT-143"
+    },
+    {
+      "id": "D5",
+      "label": "ic",
+      "confidence": 0.93,
+      "bbox": [
+        830,
+        780,
+        32,
+        18
+      ],
+      "marking": "SRV05",
+      "part_number": "SRV05-4HTG",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOT-23-6"
+    },
+    {
+      "id": "D6",
+      "label": "ic",
+      "confidence": 0.98,
+      "bbox": [
+        1090,
+        780,
+        32,
+        18
+      ],
+      "marking": "SRV05",
+      "part_number": "SRV05-4HTG",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOT-23-6"
+    },
+    {
+      "id": "D7",
+      "label": "ic",
+      "confidence": 0.88,
+      "bbox": [
+        1330,
+        780,
+        32,
+        18
+      ],
+      "marking": "SRV05",
+      "part_number": "SRV05-4HTG",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOT-23-6"
+    },
+    {
+      "id": "D8",
+      "label": "ic",
+      "confidence": 0.93,
+      "bbox": [
+        630,
+        118,
+        32,
+        18
+      ],
+      "marking": "PRTR5V0",
+      "part_number": "PRTR5V0U2X",
+      "datasheet_url": "",
+      "value": "",
+      "package": "SOT-143"
+    },
+    {
+      "id": "D_LED1",
+      "label": "resistor",
+      "confidence": 0.98,
+      "bbox": [
+        1380,
+        920,
+        18,
+        12
+      ],
+      "marking": "PWR",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "GREEN",
+      "package": "0805"
+    },
+    {
+      "id": "D_LED2",
+      "label": "resistor",
+      "confidence": 0.88,
+      "bbox": [
+        1410,
+        920,
+        18,
+        12
+      ],
+      "marking": "STATUS",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "AMBER",
+      "package": "0805"
+    },
+    {
+      "id": "D_LED3",
+      "label": "resistor",
+      "confidence": 0.93,
+      "bbox": [
+        1440,
+        920,
+        18,
+        12
+      ],
+      "marking": "ACT",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "GREEN",
+      "package": "0805"
+    },
+    {
+      "id": "D_LED4",
+      "label": "resistor",
+      "confidence": 0.98,
+      "bbox": [
+        1470,
+        920,
+        18,
+        12
+      ],
+      "marking": "ALARM",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "RED",
+      "package": "0805"
+    },
+    {
+      "id": "TP_NEW1",
+      "label": "test_point",
+      "confidence": 0.88,
+      "bbox": [
+        340,
+        60,
+        12,
+        12
+      ],
+      "marking": "VCORE",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TP"
+    },
+    {
+      "id": "TP_NEW2",
+      "label": "test_point",
+      "confidence": 0.93,
+      "bbox": [
+        360,
+        60,
+        12,
+        12
+      ],
+      "marking": "1V0",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TP"
+    },
+    {
+      "id": "TP_NEW3",
+      "label": "test_point",
+      "confidence": 0.98,
+      "bbox": [
+        380,
+        60,
+        12,
+        12
+      ],
+      "marking": "3V3",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TP"
+    },
+    {
+      "id": "TP_NEW4",
+      "label": "test_point",
+      "confidence": 0.88,
+      "bbox": [
+        860,
+        60,
+        12,
+        12
+      ],
+      "marking": "VTT",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TP"
+    },
+    {
+      "id": "TP_NEW5",
+      "label": "test_point",
+      "confidence": 0.93,
+      "bbox": [
+        880,
+        60,
+        12,
+        12
+      ],
+      "marking": "1V8",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TP"
+    },
+    {
+      "id": "TP_NEW6",
+      "label": "test_point",
+      "confidence": 0.98,
+      "bbox": [
+        1300,
+        300,
+        12,
+        12
+      ],
+      "marking": "PCIE_CLK",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TP"
+    },
+    {
+      "id": "TP_NEW7",
+      "label": "test_point",
+      "confidence": 0.88,
+      "bbox": [
+        1320,
+        300,
+        12,
+        12
+      ],
+      "marking": "MDIO",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TP"
+    },
+    {
+      "id": "TP_NEW8",
+      "label": "test_point",
+      "confidence": 0.93,
+      "bbox": [
+        1340,
+        300,
+        12,
+        12
+      ],
+      "marking": "SPI_CLK",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TP"
+    },
+    {
+      "id": "TP_NEW9",
+      "label": "test_point",
+      "confidence": 0.98,
+      "bbox": [
+        550,
+        700,
+        12,
+        12
+      ],
+      "marking": "UART_TX",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TP"
+    },
+    {
+      "id": "TP_NEW10",
+      "label": "test_point",
+      "confidence": 0.88,
+      "bbox": [
+        570,
+        700,
+        12,
+        12
+      ],
+      "marking": "UART_RX",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "",
+      "package": "TP"
+    },
+    {
+      "id": "R_NEW1",
+      "label": "resistor",
+      "confidence": 0.93,
+      "bbox": [
+        230,
+        60,
+        26,
+        12
+      ],
+      "marking": "4k7",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "4k7",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW2",
+      "label": "resistor",
+      "confidence": 0.98,
+      "bbox": [
+        230,
+        78,
+        26,
+        12
+      ],
+      "marking": "4k7",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "4k7",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW3",
+      "label": "resistor",
+      "confidence": 0.88,
+      "bbox": [
+        260,
+        190,
+        26,
+        12
+      ],
+      "marking": "49.9",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "49.9",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW4",
+      "label": "resistor",
+      "confidence": 0.93,
+      "bbox": [
+        260,
+        370,
+        26,
+        12
+      ],
+      "marking": "49.9",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "49.9",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW5",
+      "label": "resistor",
+      "confidence": 0.98,
+      "bbox": [
+        260,
+        510,
+        26,
+        12
+      ],
+      "marking": "49.9",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "49.9",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW6",
+      "label": "resistor",
+      "confidence": 0.88,
+      "bbox": [
+        260,
+        650,
+        26,
+        12
+      ],
+      "marking": "49.9",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "49.9",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW7",
+      "label": "resistor",
+      "confidence": 0.93,
+      "bbox": [
+        1020,
+        200,
+        26,
+        12
+      ],
+      "marking": "10k",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10k",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW8",
+      "label": "resistor",
+      "confidence": 0.98,
+      "bbox": [
+        1020,
+        218,
+        26,
+        12
+      ],
+      "marking": "10k",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10k",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW9",
+      "label": "resistor",
+      "confidence": 0.88,
+      "bbox": [
+        1020,
+        236,
+        26,
+        12
+      ],
+      "marking": "10k",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10k",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW10",
+      "label": "resistor",
+      "confidence": 0.93,
+      "bbox": [
+        635,
+        118,
+        26,
+        12
+      ],
+      "marking": "10k",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10k",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW11",
+      "label": "resistor",
+      "confidence": 0.98,
+      "bbox": [
+        738,
+        118,
+        26,
+        12
+      ],
+      "marking": "10k",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "10k",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW12",
+      "label": "resistor",
+      "confidence": 0.88,
+      "bbox": [
+        600,
+        95,
+        26,
+        12
+      ],
+      "marking": "100k",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "100k",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW13",
+      "label": "resistor",
+      "confidence": 0.93,
+      "bbox": [
+        640,
+        95,
+        26,
+        12
+      ],
+      "marking": "47k",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "47k",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW14",
+      "label": "resistor",
+      "confidence": 0.98,
+      "bbox": [
+        1380,
+        940,
+        26,
+        12
+      ],
+      "marking": "330",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "330",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW15",
+      "label": "resistor",
+      "confidence": 0.88,
+      "bbox": [
+        1410,
+        940,
+        26,
+        12
+      ],
+      "marking": "330",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "330",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW16",
+      "label": "resistor",
+      "confidence": 0.93,
+      "bbox": [
+        1440,
+        940,
+        26,
+        12
+      ],
+      "marking": "330",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "330",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW17",
+      "label": "resistor",
+      "confidence": 0.98,
+      "bbox": [
+        1470,
+        940,
+        26,
+        12
+      ],
+      "marking": "330",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "330",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW18",
+      "label": "resistor",
+      "confidence": 0.88,
+      "bbox": [
+        1250,
+        480,
+        26,
+        12
+      ],
+      "marking": "4k7",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "4k7",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW19",
+      "label": "resistor",
+      "confidence": 0.93,
+      "bbox": [
+        1250,
+        498,
+        26,
+        12
+      ],
+      "marking": "4k7",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "4k7",
+      "package": "0402"
+    },
+    {
+      "id": "R_NEW20",
+      "label": "resistor",
+      "confidence": 0.98,
+      "bbox": [
+        530,
+        120,
+        26,
+        12
+      ],
+      "marking": "1k",
+      "part_number": "",
+      "datasheet_url": "",
+      "value": "1k",
+      "package": "0402"
     }
   ],
   "traces": [
@@ -1541,22 +3685,866 @@
       "width_px": 1.0,
       "from_component": "TP4",
       "to_component": "U1"
+    },
+    {
+      "id": "T041",
+      "points": [
+        [
+          325,
+          80
+        ],
+        [
+          372,
+          80
+        ],
+        [
+          420,
+          280
+        ]
+      ],
+      "width_px": 5.0,
+      "from_component": "U_VRM1",
+      "to_component": "U1"
+    },
+    {
+      "id": "T042",
+      "points": [
+        [
+          270,
+          80
+        ],
+        [
+          260,
+          105
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_VRM1",
+      "to_component": "Q1"
+    },
+    {
+      "id": "T043",
+      "points": [
+        [
+          280,
+          80
+        ],
+        [
+          295,
+          105
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_VRM1",
+      "to_component": "Q2"
+    },
+    {
+      "id": "T044",
+      "points": [
+        [
+          290,
+          80
+        ],
+        [
+          330,
+          105
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_VRM1",
+      "to_component": "Q3"
+    },
+    {
+      "id": "T045",
+      "points": [
+        [
+          300,
+          80
+        ],
+        [
+          365,
+          105
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_VRM1",
+      "to_component": "Q4"
+    },
+    {
+      "id": "T046",
+      "points": [
+        [
+          835,
+          80
+        ],
+        [
+          882,
+          80
+        ],
+        [
+          750,
+          160
+        ]
+      ],
+      "width_px": 4.0,
+      "from_component": "U_VRM2",
+      "to_component": "U6"
+    },
+    {
+      "id": "T047",
+      "points": [
+        [
+          780,
+          80
+        ],
+        [
+          770,
+          105
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_VRM2",
+      "to_component": "Q5"
+    },
+    {
+      "id": "T048",
+      "points": [
+        [
+          790,
+          80
+        ],
+        [
+          805,
+          105
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_VRM2",
+      "to_component": "Q6"
+    },
+    {
+      "id": "T049",
+      "points": [
+        [
+          135,
+          403
+        ],
+        [
+          182,
+          403
+        ],
+        [
+          182,
+          350
+        ],
+        [
+          130,
+          250
+        ]
+      ],
+      "width_px": 4.0,
+      "from_component": "U_VRM3",
+      "to_component": "U2"
+    },
+    {
+      "id": "T050",
+      "points": [
+        [
+          80,
+          405
+        ],
+        [
+          60,
+          425
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_VRM3",
+      "to_component": "Q7"
+    },
+    {
+      "id": "T051",
+      "points": [
+        [
+          135,
+          580
+        ],
+        [
+          182,
+          580
+        ],
+        [
+          182,
+          540
+        ],
+        [
+          420,
+          540
+        ]
+      ],
+      "width_px": 4.0,
+      "from_component": "U_VRM4",
+      "to_component": "U1"
+    },
+    {
+      "id": "T052",
+      "points": [
+        [
+          80,
+          580
+        ],
+        [
+          60,
+          600
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_VRM4",
+      "to_component": "Q8"
+    },
+    {
+      "id": "T053",
+      "points": [
+        [
+          110,
+          830
+        ],
+        [
+          110,
+          60
+        ],
+        [
+          160,
+          60
+        ]
+      ],
+      "width_px": 5.0,
+      "from_component": "J14",
+      "to_component": "U_PM1"
+    },
+    {
+      "id": "T054",
+      "points": [
+        [
+          160,
+          80
+        ],
+        [
+          270,
+          80
+        ]
+      ],
+      "width_px": 4.0,
+      "from_component": "U_PM1",
+      "to_component": "U_VRM1"
+    },
+    {
+      "id": "T055",
+      "points": [
+        [
+          160,
+          80
+        ],
+        [
+          780,
+          60
+        ]
+      ],
+      "width_px": 4.0,
+      "from_component": "U_PM1",
+      "to_component": "U_VRM2"
+    },
+    {
+      "id": "T056",
+      "points": [
+        [
+          1050,
+          520
+        ],
+        [
+          1100,
+          520
+        ],
+        [
+          1100,
+          460
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U8",
+      "to_component": "U_NET2"
+    },
+    {
+      "id": "T057",
+      "points": [
+        [
+          1100,
+          460
+        ],
+        [
+          1100,
+          480
+        ]
+      ],
+      "width_px": 3.0,
+      "from_component": "U_NET2",
+      "to_component": "U_NET1"
+    },
+    {
+      "id": "T058",
+      "points": [
+        [
+          1240,
+          540
+        ],
+        [
+          1210,
+          540
+        ],
+        [
+          1210,
+          750
+        ]
+      ],
+      "width_px": 3.0,
+      "from_component": "U_NET1",
+      "to_component": "J5"
+    },
+    {
+      "id": "T059",
+      "points": [
+        [
+          1240,
+          560
+        ],
+        [
+          1290,
+          560
+        ],
+        [
+          1290,
+          750
+        ]
+      ],
+      "width_px": 3.0,
+      "from_component": "U_NET1",
+      "to_component": "J7"
+    },
+    {
+      "id": "T060",
+      "points": [
+        [
+          1240,
+          580
+        ],
+        [
+          1370,
+          580
+        ],
+        [
+          1370,
+          750
+        ]
+      ],
+      "width_px": 3.0,
+      "from_component": "U_NET1",
+      "to_component": "J8"
+    },
+    {
+      "id": "T061",
+      "points": [
+        [
+          1240,
+          600
+        ],
+        [
+          1450,
+          600
+        ],
+        [
+          1450,
+          750
+        ]
+      ],
+      "width_px": 3.0,
+      "from_component": "U_NET1",
+      "to_component": "J9"
+    },
+    {
+      "id": "T062",
+      "points": [
+        [
+          886,
+          764
+        ],
+        [
+          886,
+          800
+        ]
+      ],
+      "width_px": 3.0,
+      "from_component": "FL1",
+      "to_component": "J1"
+    },
+    {
+      "id": "T063",
+      "points": [
+        [
+          966,
+          764
+        ],
+        [
+          966,
+          800
+        ]
+      ],
+      "width_px": 3.0,
+      "from_component": "FL2",
+      "to_component": "J2"
+    },
+    {
+      "id": "T064",
+      "points": [
+        [
+          1046,
+          764
+        ],
+        [
+          1046,
+          800
+        ]
+      ],
+      "width_px": 3.0,
+      "from_component": "FL3",
+      "to_component": "J3"
+    },
+    {
+      "id": "T065",
+      "points": [
+        [
+          1126,
+          764
+        ],
+        [
+          1126,
+          800
+        ]
+      ],
+      "width_px": 3.0,
+      "from_component": "FL4",
+      "to_component": "J4"
+    },
+    {
+      "id": "T066",
+      "points": [
+        [
+          585,
+          160
+        ],
+        [
+          420,
+          160
+        ],
+        [
+          420,
+          280
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_CLK1",
+      "to_component": "U1"
+    },
+    {
+      "id": "T067",
+      "points": [
+        [
+          585,
+          170
+        ],
+        [
+          750,
+          170
+        ],
+        [
+          750,
+          160
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_CLK1",
+      "to_component": "U6"
+    },
+    {
+      "id": "T068",
+      "points": [
+        [
+          1300,
+          497
+        ],
+        [
+          1050,
+          497
+        ],
+        [
+          1050,
+          480
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_CLK2",
+      "to_component": "U8"
+    },
+    {
+      "id": "T069",
+      "points": [
+        [
+          1300,
+          507
+        ],
+        [
+          1240,
+          507
+        ],
+        [
+          1240,
+          480
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_CLK2",
+      "to_component": "U_NET1"
+    },
+    {
+      "id": "T070",
+      "points": [
+        [
+          225,
+          75
+        ],
+        [
+          270,
+          75
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_PM1",
+      "to_component": "U_VRM1"
+    },
+    {
+      "id": "T071",
+      "points": [
+        [
+          225,
+          85
+        ],
+        [
+          780,
+          65
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_PM1",
+      "to_component": "U_VRM2"
+    },
+    {
+      "id": "T072",
+      "points": [
+        [
+          220,
+          130
+        ],
+        [
+          300,
+          130
+        ],
+        [
+          300,
+          140
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_PM2",
+      "to_component": "U_VRM1"
+    },
+    {
+      "id": "T073",
+      "points": [
+        [
+          220,
+          140
+        ],
+        [
+          420,
+          280
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_PM2",
+      "to_component": "U1"
+    },
+    {
+      "id": "T074",
+      "points": [
+        [
+          640,
+          74
+        ],
+        [
+          680,
+          74
+        ],
+        [
+          680,
+          280
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_RST1",
+      "to_component": "U1"
+    },
+    {
+      "id": "T075",
+      "points": [
+        [
+          580,
+          789
+        ],
+        [
+          600,
+          800
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "D1",
+      "to_component": "J12"
+    },
+    {
+      "id": "T076",
+      "points": [
+        [
+          500,
+          789
+        ],
+        [
+          520,
+          800
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "D2",
+      "to_component": "J13"
+    },
+    {
+      "id": "T077",
+      "points": [
+        [
+          680,
+          789
+        ],
+        [
+          700,
+          800
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "D3",
+      "to_component": "J10"
+    },
+    {
+      "id": "T078",
+      "points": [
+        [
+          1490,
+          789
+        ],
+        [
+          1490,
+          800
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "D4",
+      "to_component": "J11"
+    },
+    {
+      "id": "T079",
+      "points": [
+        [
+          830,
+          789
+        ],
+        [
+          850,
+          800
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "D5",
+      "to_component": "J1"
+    },
+    {
+      "id": "T080",
+      "points": [
+        [
+          1090,
+          789
+        ],
+        [
+          1090,
+          800
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "D6",
+      "to_component": "J4"
+    },
+    {
+      "id": "T081",
+      "points": [
+        [
+          1330,
+          789
+        ],
+        [
+          1330,
+          800
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "D7",
+      "to_component": "J8"
+    },
+    {
+      "id": "T082",
+      "points": [
+        [
+          630,
+          136
+        ],
+        [
+          650,
+          136
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "D8",
+      "to_component": "J15"
+    },
+    {
+      "id": "T083",
+      "points": [
+        [
+          450,
+          672
+        ],
+        [
+          420,
+          672
+        ],
+        [
+          420,
+          540
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U_BOOT1",
+      "to_component": "U1"
+    },
+    {
+      "id": "T084",
+      "points": [
+        [
+          680,
+          300
+        ],
+        [
+          1380,
+          300
+        ],
+        [
+          1380,
+          920
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U1",
+      "to_component": "D_LED1"
+    },
+    {
+      "id": "T085",
+      "points": [
+        [
+          680,
+          310
+        ],
+        [
+          1410,
+          310
+        ],
+        [
+          1410,
+          920
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U1",
+      "to_component": "D_LED2"
+    },
+    {
+      "id": "T086",
+      "points": [
+        [
+          680,
+          320
+        ],
+        [
+          1440,
+          320
+        ],
+        [
+          1440,
+          920
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U1",
+      "to_component": "D_LED3"
+    },
+    {
+      "id": "T087",
+      "points": [
+        [
+          680,
+          330
+        ],
+        [
+          1470,
+          330
+        ],
+        [
+          1470,
+          920
+        ]
+      ],
+      "width_px": 2.0,
+      "from_component": "U1",
+      "to_component": "D_LED4"
     }
   ],
   "summary": {
     "image": "docs/examples/cisco_board.png",
-    "components": 43,
+    "components": 177,
     "components_by_type": {
-      "ic": 12,
+      "ic": 40,
       "connector": 15,
-      "capacitor": 6,
-      "resistor": 3,
-      "inductor": 2,
-      "crystal": 1,
-      "test_point": 4
+      "capacitor": 64,
+      "resistor": 27,
+      "inductor": 14,
+      "crystal": 3,
+      "test_point": 14
     },
-    "traces": 41,
-    "identified": 13,
+    "traces": 88,
+    "identified": 43,
     "pattern_matches": 0,
     "duration_seconds": 0.0
   }

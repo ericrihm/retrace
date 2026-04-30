@@ -138,3 +138,14 @@ TP15,test_point,,TP15,,TP,,0.88
 L3,inductor,,0.47uH,0.47uH,1210,,0.93
 L4,inductor,,1uH,1uH,1210,,0.98
 L5,inductor,,2.2uH,2.2uH,1210,,0.88
+C51,capacitor,,10uF,10uF,0805,,0.93
+C52,capacitor,,10uF,10uF,0805,,0.98
+C53,capacitor,,100nF,100nF,0402,,0.88
+C54,capacitor,,100nF,100nF,0402,,0.93
+C55,capacitor,,1uF,1uF,0402,,0.98
+C56,capacitor,,100nF,100nF,0402,,0.88
+R21,resistor,,33,33,0402,,0.93
+R22,resistor,,33,33,0402,,0.98
+R23,resistor,,0,0,0402,,0.88
+R24,resistor,,10k,10k,0402,,0.93
+R25,resistor,,1k,1k,0402,,0.98

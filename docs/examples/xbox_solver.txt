@@ -2,10 +2,10 @@ re:trace Constraint Solver — Inferred Netlist
 ==================================================
 
 Board: Xbox One Model 1540 — Durango (AMD Liverpool APU, 28nm)
-Timestamp: 2026-04-30T21:38:54Z
+Timestamp: 2026-04-30T21:47:36Z
 AC-3 iterations: 84
 
-Net Assignments (574 nodes):
+Net Assignments (596 nodes):
 
   [POWER]
     C15.1
@@ -20,15 +20,15 @@ Net Assignments (574 nodes):
     C45.1
     C46.1
     C47.1
+    C51.1
+    C52.1
+    C53.1
+    C54.1
     D1.VCC
     D2.VCC
     D3.VCC
     D4.VCC
-    D5.VCC
-    D6.VCC
-    J1.5V
-    J10.VCC_12V
-    ... and 40 more
+    ... and 44 more
 
   [GROUND]
     C15.2
@@ -43,15 +43,15 @@ Net Assignments (574 nodes):
     C45.2
     C46.2
     C47.2
+    C51.2
+    C52.2
+    C53.2
+    C54.2
     D1.GND
     D2.GND
     D3.GND
     D4.GND
-    D5.GND
-    D6.GND
-    J1.GND
-    J10.GND
-    ... and 57 more
+    ... and 61 more
 
   [UNKNOWN]
     C1.1
@@ -74,14 +74,14 @@ Net Assignments (574 nodes):
     C18.2
     C19.1
     C19.2
-    ... and 417 more
+    ... and 431 more
 
 Inferred Connections (3):
   U1.VCC_CORE  <-->  J5.TDI
   U6.VCC  <-->  U1.PCIE_TX
   U6.GND  <-->  U1.PCIE_RX
 
-Ambiguous Nodes (426):
+Ambiguous Nodes (440):
   U1.DDR_DQ0
   U1.DDR_DQ1
   U1.DDR_A0
@@ -92,6 +92,6 @@ Ambiguous Nodes (426):
   U2.DQ2
   U2.DQ3
   U2.A0
-  ... and 416 more
+  ... and 430 more
 
 No constraint conflicts detected.
