@@ -2,7 +2,7 @@ re:trace Constraint Solver — Inferred Netlist
 ==================================================
 
 Board: docs/examples/synthetic_board.png
-Timestamp: 2026-04-30T20:24:55Z
+Timestamp: 2026-04-30T20:43:25Z
 AC-3 iterations: 74
 
 Net Assignments (229 nodes):

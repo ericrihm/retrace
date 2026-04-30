@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-89%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->470<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->5595<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->490<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->5869<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -387,7 +387,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->5595<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->5869<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -423,10 +423,10 @@ src/retrace/                             # <!-- STATS:loc -->5595<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->470<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->490<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->20<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->5595<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->5869<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->114<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -438,7 +438,7 @@ src/retrace/                             # <!-- STATS:loc -->5595<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->470<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->490<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```

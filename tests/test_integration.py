@@ -815,12 +815,11 @@ class TestSvgOutputContainsAllComponents:
             f"Expected ≥{len(components)} <text> elements, found {len(all_texts)}"
         )
 
-        # Verify the IC color (#e74c3c) appears somewhere in the SVG
-        # for the ic component's bounding box rect
+        # Verify the IC color appears somewhere in the SVG
         all_rects = root.findall(f".//{{{ns}}}rect") or root.findall(".//rect")
         ic_colored = [r for r in all_rects
-                      if "#e74c3c" in (r.get("stroke", "") + r.get("fill", ""))]
-        assert ic_colored, "IC component rect must use the IC color (#e74c3c)"
+                      if "#ef4444" in (r.get("stroke", "") + r.get("fill", ""))]
+        assert ic_colored, "IC component rect must use the IC color (#ef4444)"
 
         # The SVG must declare correct canvas dimensions
         assert root.get("width") == "800"

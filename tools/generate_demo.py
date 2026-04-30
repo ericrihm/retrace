@@ -1146,7 +1146,7 @@ def _generate_one_board(
 
     svg_path = out / f"{prefix}_annotated.svg"
     click.echo(f"  [4/6] Writing SVG overlay → {svg_path}")
-    svg_str = generate_svg(result, image_href=img_name)
+    svg_str = generate_svg(result, image_href=img_name, title=board_title)
     svg_path.write_text(svg_str, encoding="utf-8")
 
     probe_path = out / f"{prefix}_probe.txt"

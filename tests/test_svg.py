@@ -436,6 +436,152 @@ class TestSvgSecurity:
 
 
 # ---------------------------------------------------------------------------
+# Dark theme & visual features
+# ---------------------------------------------------------------------------
+
+class TestDarkTheme:
+    def test_dark_background_present(self):
+        result = _make_result()
+        svg = generate_svg(result)
+        assert 'fill="#0a0e1a"' in svg
+
+    def test_grid_pattern_defined(self):
+        result = _make_result()
+        svg = generate_svg(result)
+        assert 'id="grid"' in svg
+        assert 'url(#grid)' in svg
+
+    def test_glow_filter_defined(self):
+        result = _make_result()
+        svg = generate_svg(result)
+        assert 'id="glow-red"' in svg
+        assert 'id="glow-purple"' in svg
+
+    def test_arrow_marker_defined(self):
+        result = _make_result()
+        svg = generate_svg(result)
+        assert 'id="arrow"' in svg
+
+    def test_title_bar_present(self):
+        result = _make_result()
+        svg = generate_svg(result)
+        assert 'class="title-bar"' in svg
+
+    def test_title_bar_shows_custom_title(self):
+        result = _make_result()
+        svg = generate_svg(result, title="Xbox One X Motherboard")
+        assert "Xbox One X Motherboard" in svg
+
+    def test_title_bar_default_text(self):
+        result = _make_result()
+        svg = generate_svg(result)
+        assert "re:trace" in svg
+
+    def test_footer_bar_present(self):
+        result = _make_result()
+        svg = generate_svg(result)
+        assert 'class="footer"' in svg
+
+    def test_component_id_inside_box(self):
+        comp = _make_component(cid="U42", label="ic", bbox=(100, 100, 80, 60))
+        result = _make_result(components=[comp])
+        svg = generate_svg(result)
+        assert "U42" in svg
+
+    def test_legend_has_panel_background(self):
+        result = _make_result()
+        svg = generate_svg(result)
+        lines = svg.split('\n')
+        in_legend = False
+        has_panel_rect = False
+        for line in lines:
+            if 'class="legend"' in line:
+                in_legend = True
+            if in_legend and '<rect' in line and 'fill="#111827"' in line:
+                has_panel_rect = True
+                break
+        assert has_panel_rect
+
+
+class TestSecurityPanel:
+    def test_jtag_component_gets_glow(self):
+        jtag = _make_component("J5", "connector", (10, 10, 50, 50), marking="JTAG")
+        result = _make_result(components=[jtag])
+        svg = generate_svg(result)
+        assert 'filter="url(#glow-red)"' in svg
+
+    def test_security_panel_rendered_for_jtag(self):
+        jtag = _make_component("J5", "connector", (10, 10, 50, 50), marking="JTAG")
+        result = _make_result(components=[jtag])
+        svg = generate_svg(result)
+        assert 'class="security-panel"' in svg
+        assert "Security Findings" in svg
+
+    def test_security_panel_shows_cwe(self):
+        jtag = _make_component("J5", "connector", (10, 10, 50, 50), marking="JTAG")
+        result = _make_result(components=[jtag])
+        svg = generate_svg(result)
+        assert "CWE-1191" in svg
+
+    def test_no_security_panel_for_normal_components(self):
+        comp = _make_component("C1", "capacitor", (10, 10, 50, 50), marking="100nF")
+        result = _make_result(components=[comp])
+        svg = generate_svg(result)
+        assert 'class="security-panel"' not in svg
+
+    def test_uart_console_detected(self):
+        uart = _make_component("J10", "connector", (10, 10, 50, 50), marking="CONSOLE")
+        result = _make_result(components=[uart])
+        svg = generate_svg(result)
+        assert 'class="security-panel"' in svg
+        assert "CWE-1299" in svg
+
+    def test_security_badge_on_component(self):
+        jtag = _make_component("J5", "connector", (10, 10, 50, 50), marking="JTAG")
+        result = _make_result(components=[jtag])
+        svg = generate_svg(result)
+        assert 'fill="#ef4444" fill-opacity="0.9"' in svg
+
+
+class TestTraceEnhancements:
+    def test_debug_trace_has_dash(self):
+        jtag = _make_component("J5", "connector", (10, 10, 50, 50), marking="JTAG")
+        cpu = _make_component("U1", "ic", (200, 200, 50, 50))
+        trace = Trace(id="T001", points=[(35, 35), (225, 225)], width_px=2.0,
+                      from_component="J5", to_component="U1")
+        result = _make_result(components=[jtag, cpu], traces=[trace])
+        svg = generate_svg(result)
+        assert 'stroke-dasharray="6,3"' in svg
+
+    def test_connected_trace_has_arrow(self):
+        c1 = _make_component("U1", "ic", (10, 10, 50, 50))
+        c2 = _make_component("U2", "ic", (200, 200, 50, 50))
+        trace = Trace(id="T001", points=[(35, 35), (225, 225)], width_px=2.0,
+                      from_component="U1", to_component="U2")
+        result = _make_result(components=[c1, c2], traces=[trace])
+        svg = generate_svg(result)
+        assert 'marker-end="url(#arrow)"' in svg
+
+    def test_net_label_at_midpoint(self):
+        c1 = _make_component("U1", "ic", (10, 10, 50, 50))
+        c2 = _make_component("U2", "ic", (200, 200, 50, 50))
+        trace = Trace(id="T001", points=[(35, 35), (120, 120), (225, 225)], width_px=2.0,
+                      from_component="U1", to_component="U2")
+        result = _make_result(components=[c1, c2], traces=[trace])
+        svg = generate_svg(result)
+        assert "SIGNAL" in svg
+
+    def test_power_trace_has_glow(self):
+        vrm = _make_component("U10", "ic", (10, 10, 50, 50), marking="TPS51611")
+        cpu = _make_component("U1", "ic", (200, 200, 50, 50))
+        trace = Trace(id="T001", points=[(35, 35), (225, 225)], width_px=5.0,
+                      from_component="U10", to_component="U1")
+        result = _make_result(components=[vrm, cpu], traces=[trace])
+        svg = generate_svg(result)
+        assert 'filter="url(#glow-red)"' in svg
+
+
+# ---------------------------------------------------------------------------
 # save_svg writes to file
 # ---------------------------------------------------------------------------
 

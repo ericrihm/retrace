@@ -1,4 +1,4 @@
-"""SVG annotated overlay export — components, traces, BOM, and net topology."""
+"""SVG annotated overlay export — components, traces, BOM, net topology, security."""
 
 from __future__ import annotations
 
@@ -8,37 +8,60 @@ from typing import Optional
 
 from retrace.core.pipeline import AnalysisResult, Component, Trace
 
+# ── Dark-theme palette ──────────────────────────────────────────────────
+
+_BG = "#0a0e1a"
+_GRID = "#131a2b"
+_PANEL_BG = "#111827"
+_PANEL_BORDER = "#1e293b"
+_TEXT_HI = "#e2e8f0"
+_TEXT_MID = "#94a3b8"
+_TEXT_LO = "#64748b"
+_ACCENT = "#22d3ee"
+_DIVIDER = "#1e293b"
+
 _LABEL_COLORS: dict[str, str] = {
-    "ic": "#e74c3c",
-    "capacitor": "#3498db",
-    "resistor": "#2ecc71",
-    "connector": "#f39c12",
-    "inductor": "#9b59b6",
-    "crystal": "#1abc9c",
-    "header": "#e67e22",
-    "test_point": "#e91e63",
-    "unknown": "#95a5a6",
+    "ic": "#ef4444",
+    "capacitor": "#3b82f6",
+    "resistor": "#22c55e",
+    "connector": "#f59e0b",
+    "inductor": "#a855f7",
+    "crystal": "#14b8a6",
+    "header": "#f97316",
+    "test_point": "#ec4899",
+    "unknown": "#6b7280",
 }
 
 _NET_COLORS: dict[str, str] = {
-    "power": "#ff3333",
-    "ground": "#555555",
-    "data": "#3399ff",
-    "clock": "#ffaa00",
-    "signal": "#66ccff",
-    "debug": "#ff66ff",
-    "unknown": "#888888",
+    "power": "#ef4444",
+    "ground": "#6b7280",
+    "data": "#3b82f6",
+    "clock": "#f59e0b",
+    "signal": "#06b6d4",
+    "debug": "#d946ef",
+    "unknown": "#6b7280",
 }
 
-_DEFAULT_COLOR = "#95a5a6"
-_FONT = "monospace"
+_SECURITY_KEYWORDS = {
+    "JTAG": ("JTAG debug — full CPU access", "HIGH", "CWE-1191"),
+    "SWD": ("SWD debug — ARM CoreSight", "HIGH", "CWE-1191"),
+    "UART": ("UART/serial console", "MED", "CWE-1299"),
+    "CONSOLE": ("Serial console — bootloader/shell", "MED", "CWE-1299"),
+    "SPI": ("SPI bus — firmware extraction", "MED", "CWE-1191"),
+}
+
+_DEFAULT_COLOR = "#6b7280"
+_FONT = "'JetBrains Mono', 'Fira Code', 'SF Mono', monospace"
 _FONT_SIZE = 10
-_BOX_OPACITY = "0.35"
+_BOX_OPACITY = "0.25"
 _STROKE_WIDTH = "1.5"
 
 BOM_PANEL_W = 220
 BOM_PANEL_PAD = 10
 BOM_LINE_H = 14
+
+_TITLE_H = 32
+_FOOTER_H = 24
 
 
 def _color_for(label: str) -> str:
@@ -50,7 +73,6 @@ def _escape(text: str) -> str:
 
 
 def _classify_net(trace: Trace, comp_map: dict[str, Component]) -> str:
-    """Classify a trace's net type from endpoint component context and trace width."""
     from_c = comp_map.get(trace.from_component)
     to_c = comp_map.get(trace.to_component)
 
@@ -83,7 +105,6 @@ def _center_of(comp: Component) -> tuple[int, int]:
 
 
 def _edge_point(comp: Component, target_x: int, target_y: int) -> tuple[int, int]:
-    """Find the nearest edge point on a component's bbox toward a target point."""
     x, y, w, h = comp.bbox
     cx, cy = x + w // 2, y + h // 2
     dx = target_x - cx
@@ -105,51 +126,182 @@ def _edge_point(comp: Component, target_x: int, target_y: int) -> tuple[int, int
     return cx, cy
 
 
+def _is_security_component(comp: Component) -> bool:
+    marking = (comp.marking or "").upper()
+    label = (comp.label or "").lower()
+    return any(kw in marking for kw in _SECURITY_KEYWORDS) or label in ("test_point",)
+
+
+# ── SVG defs: filters, patterns, markers ──────────────────────────────
+
+def _render_defs() -> str:
+    return """  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="10" cy="10" r="0.5" fill="#1a2340"/>
+    </pattern>
+    <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feColorMatrix in="blur" type="matrix"
+        values="1 0 0 0 0  0 0.2 0 0 0  0 0 0.2 0 0  0 0 0 0.6 0" result="red"/>
+      <feMerge><feMergeNode in="red"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feColorMatrix in="blur" type="matrix"
+        values="0.8 0 0 0 0  0 0.2 0 0 0  0 0 1 0 0  0 0 0 0.5 0" result="p"/>
+      <feMerge><feMergeNode in="p"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="panel-shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 6" refX="9" refY="3"
+            markerWidth="8" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 3 L 0 6 z" fill="context-stroke" fill-opacity="0.7"/>
+    </marker>
+  </defs>"""
+
+
+# ── Background ────────────────────────────────────────────────────────
+
+def _render_background(svg_w: int, svg_h: int) -> str:
+    return (
+        f'  <rect width="{svg_w}" height="{svg_h}" fill="{_BG}"/>\n'
+        f'  <rect width="{svg_w}" height="{svg_h}" fill="url(#grid)"/>'
+    )
+
+
+# ── Title bar ─────────────────────────────────────────────────────────
+
+def _render_title_bar(svg_w: int, title: str, result: AnalysisResult) -> str:
+    total = len(result.components)
+    n_traces = len(result.traces)
+    identified = sum(1 for c in result.components if c.part_number)
+
+    left_text = title or "re:trace analysis"
+    right_text = f"{total} components · {identified} ID'd · {n_traces} traces"
+
+    parts: list[str] = []
+    parts.append('  <g class="title-bar">')
+    parts.append(
+        f'    <rect width="{svg_w}" height="{_TITLE_H}" '
+        f'fill="{_PANEL_BG}" fill-opacity="0.92"/>'
+    )
+    parts.append(
+        f'    <line x1="0" y1="{_TITLE_H}" x2="{svg_w}" y2="{_TITLE_H}" '
+        f'stroke="{_ACCENT}" stroke-width="1" stroke-opacity="0.4"/>'
+    )
+    parts.append(
+        f'    <text x="12" y="21" font-family={_q(_FONT)} '
+        f'font-size="13" fill="{_ACCENT}" font-weight="bold">'
+        f're:trace</text>'
+    )
+    parts.append(
+        f'    <text x="80" y="21" font-family={_q(_FONT)} '
+        f'font-size="11" fill="{_TEXT_HI}">{_escape(left_text)}</text>'
+    )
+    parts.append(
+        f'    <text x="{svg_w - 12}" y="21" text-anchor="end" '
+        f'font-family={_q(_FONT)} font-size="9" fill="{_TEXT_LO}">'
+        f'{_escape(right_text)}</text>'
+    )
+    parts.append('  </g>')
+    return "\n".join(parts)
+
+
+# ── Components ────────────────────────────────────────────────────────
+
 def _render_component(comp: Component) -> str:
     x, y, w, h = comp.bbox
     color = _color_for(comp.label)
     label_text = comp.part_number or comp.marking or comp.label
     label_text = label_text[:20]
+    is_sec = _is_security_component(comp)
 
-    text_y = y - 3 if y > 14 else y + h + 12
+    text_y = y - 4 if y > (_TITLE_H + 16) else y + h + 12
+    filt = ' filter="url(#glow-red)"' if is_sec else ""
 
-    return (
-        f'    <g class="component" data-id="{_escape(comp.id)}" data-label="{_escape(comp.label)}">\n'
+    parts: list[str] = []
+    parts.append(
+        f'    <g class="component" data-id="{_escape(comp.id)}" '
+        f'data-label="{_escape(comp.label)}"{filt}>'
+    )
+    parts.append(
         f'      <rect x="{x}" y="{y}" width="{w}" height="{h}" '
         f'fill="{color}" fill-opacity="{_BOX_OPACITY}" '
-        f'stroke="{color}" stroke-width="{_STROKE_WIDTH}" rx="2"/>\n'
-        f'      <text x="{x + 2}" y="{text_y}" '
-        f'font-family="{_FONT}" font-size="{_FONT_SIZE}" '
-        f'fill="{color}" font-weight="bold">{_escape(label_text)}</text>\n'
-        f'    </g>'
+        f'stroke="{color}" stroke-width="{_STROKE_WIDTH}" rx="2"/>'
     )
+    parts.append(
+        f'      <text x="{x + 3}" y="{y + 10}" font-family={_q(_FONT)} '
+        f'font-size="8" fill="{color}" fill-opacity="0.6">'
+        f'{_escape(comp.id)}</text>'
+    )
+    parts.append(
+        f'      <text x="{x + 2}" y="{text_y}" font-family={_q(_FONT)} '
+        f'font-size="{_FONT_SIZE}" fill="{color}" font-weight="bold">'
+        f'{_escape(label_text)}</text>'
+    )
+    if is_sec:
+        parts.append(
+            f'      <rect x="{x + w - 8}" y="{y + 1}" width="7" height="7" '
+            f'rx="1" fill="#ef4444" fill-opacity="0.9"/>'
+        )
+        parts.append(
+            f'      <text x="{x + w - 7}" y="{y + 7}" font-family={_q(_FONT)} '
+            f'font-size="5" fill="#fff" font-weight="bold">!</text>'
+        )
+    parts.append('    </g>')
+    return "\n".join(parts)
 
+
+# ── Traces ────────────────────────────────────────────────────────────
 
 def _render_trace(
     trace: Trace,
     net_type: str,
     comp_map: dict[str, Component],
 ) -> str:
-    """Render a trace as a polyline with pin dots and optional net label."""
     color = _NET_COLORS.get(net_type, _NET_COLORS["unknown"])
     width = max(1.0, trace.width_px * 0.6)
-    opacity = "0.7" if net_type == "ground" else "0.85"
+    opacity = "0.55" if net_type == "ground" else "0.85"
+    is_debug = net_type == "debug"
+    is_power = net_type == "power"
+
+    filt = ""
+    if is_debug:
+        filt = ' filter="url(#glow-purple)"'
+    elif is_power:
+        filt = ' filter="url(#glow-red)"'
+
+    dash = ' stroke-dasharray="6,3"' if is_debug else ""
+    marker = ' marker-end="url(#arrow)"' if trace.from_component and trace.to_component else ""
 
     parts: list[str] = []
-    parts.append(f'    <g class="trace" data-id="{_escape(trace.id)}" data-net="{net_type}">')
+    parts.append(
+        f'    <g class="trace" data-id="{_escape(trace.id)}" data-net="{net_type}"{filt}>'
+    )
 
     if trace.points and len(trace.points) >= 2:
         pts_str = " ".join(f"{px},{py}" for px, py in trace.points)
         parts.append(
             f'      <polyline points="{pts_str}" '
             f'fill="none" stroke="{color}" stroke-width="{width:.1f}" '
-            f'stroke-opacity="{opacity}" stroke-linecap="round" stroke-linejoin="round"/>'
+            f'stroke-opacity="{opacity}" stroke-linecap="round" '
+            f'stroke-linejoin="round"{dash}{marker}/>'
         )
 
         for px, py in (trace.points[0], trace.points[-1]):
             parts.append(
                 f'      <circle cx="{px}" cy="{py}" r="3" '
-                f'fill="{color}" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>'
+                f'fill="{color}" fill-opacity="0.9" stroke="{_BG}" stroke-width="1"/>'
+            )
+
+        if trace.from_component and trace.to_component and len(trace.points) >= 2:
+            mid_idx = len(trace.points) // 2
+            mx, my = trace.points[mid_idx]
+            parts.append(
+                f'      <text x="{mx}" y="{my - 5}" text-anchor="middle" '
+                f'font-family={_q(_FONT)} font-size="7" fill="{color}" '
+                f'fill-opacity="0.6">{net_type.upper()}</text>'
             )
 
     elif trace.from_component and trace.to_component:
@@ -163,24 +315,21 @@ def _render_trace(
             parts.append(
                 f'      <line x1="{p1[0]}" y1="{p1[1]}" x2="{p2[0]}" y2="{p2[1]}" '
                 f'stroke="{color}" stroke-width="{width:.1f}" '
-                f'stroke-opacity="{opacity}" stroke-linecap="round"/>'
+                f'stroke-opacity="{opacity}" stroke-linecap="round"{dash}{marker}/>'
             )
             for px, py in (p1, p2):
                 parts.append(
                     f'      <circle cx="{px}" cy="{py}" r="3" '
-                    f'fill="{color}" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>'
+                    f'fill="{color}" fill-opacity="0.9" stroke="{_BG}" stroke-width="1"/>'
                 )
 
     parts.append('    </g>')
     return "\n".join(parts)
 
 
-def _render_bom_panel(
-    result: AnalysisResult,
-    svg_w: int,
-    svg_h: int,
-) -> str:
-    """Render a semi-transparent BOM summary panel in the top-right corner."""
+# ── BOM panel ─────────────────────────────────────────────────────────
+
+def _render_bom_panel(result: AnalysisResult, svg_w: int, svg_h: int) -> str:
     counts: Counter[str] = Counter()
     id_counts: Counter[str] = Counter()
     for c in result.components:
@@ -189,11 +338,11 @@ def _render_bom_panel(
             id_counts[c.label] += 1
 
     sorted_types = sorted(counts.items(), key=lambda kv: -kv[1])
-    n_rows = len(sorted_types) + 3  # header + divider + total
+    n_rows = len(sorted_types) + 3
 
     panel_h = BOM_PANEL_PAD * 2 + n_rows * BOM_LINE_H + 8
-    panel_x = svg_w - BOM_PANEL_W - 12
-    panel_y = 12
+    panel_x = max(12, svg_w - BOM_PANEL_W - 12)
+    panel_y = _TITLE_H + 10
 
     total = len(result.components)
     identified = sum(1 for c in result.components if c.part_number)
@@ -201,25 +350,27 @@ def _render_bom_panel(
     connected = sum(1 for t in result.traces if t.from_component and t.to_component)
 
     parts: list[str] = []
-    parts.append('    <g class="bom-panel">')
+    parts.append('    <g class="bom-panel" filter="url(#panel-shadow)">')
     parts.append(
         f'      <rect x="{panel_x}" y="{panel_y}" '
         f'width="{BOM_PANEL_W}" height="{panel_h}" '
-        f'rx="4" fill="#1a1a2e" fill-opacity="0.88" stroke="#334" stroke-width="1"/>'
+        f'rx="6" fill="{_PANEL_BG}" fill-opacity="0.92" '
+        f'stroke="{_PANEL_BORDER}" stroke-width="1"/>'
     )
 
     tx = panel_x + BOM_PANEL_PAD
     ty = panel_y + BOM_PANEL_PAD + 12
 
     parts.append(
-        f'      <text x="{tx}" y="{ty}" font-family="{_FONT}" '
-        f'font-size="11" fill="#e0e0e0" font-weight="bold">Bill of Materials</text>'
+        f'      <text x="{tx}" y="{ty}" font-family={_q(_FONT)} '
+        f'font-size="11" fill="{_ACCENT}" font-weight="bold">Bill of Materials</text>'
     )
     ty += BOM_LINE_H + 2
 
     parts.append(
-        f'      <line x1="{tx}" y1="{ty - 8}" x2="{panel_x + BOM_PANEL_W - BOM_PANEL_PAD}" '
-        f'y2="{ty - 8}" stroke="#444" stroke-width="0.5"/>'
+        f'      <line x1="{tx}" y1="{ty - 8}" '
+        f'x2="{panel_x + BOM_PANEL_W - BOM_PANEL_PAD}" '
+        f'y2="{ty - 8}" stroke="{_DIVIDER}" stroke-width="0.5"/>'
     )
 
     for label, count in sorted_types:
@@ -228,22 +379,23 @@ def _render_bom_panel(
         id_str = f"  ({id_n} ID'd)" if id_n else ""
         parts.append(
             f'      <rect x="{tx}" y="{ty - 8}" width="8" height="8" '
-            f'fill="{color}" rx="1"/>'
+            f'fill="{color}" rx="2"/>'
         )
         parts.append(
-            f'      <text x="{tx + 12}" y="{ty}" font-family="{_FONT}" '
-            f'font-size="9" fill="#ccc">{_escape(label)}: {count}{id_str}</text>'
+            f'      <text x="{tx + 12}" y="{ty}" font-family={_q(_FONT)} '
+            f'font-size="9" fill="{_TEXT_MID}">{_escape(label)}: {count}{id_str}</text>'
         )
         ty += BOM_LINE_H
 
     ty += 4
     parts.append(
-        f'      <line x1="{tx}" y1="{ty - 8}" x2="{panel_x + BOM_PANEL_W - BOM_PANEL_PAD}" '
-        f'y2="{ty - 8}" stroke="#444" stroke-width="0.5"/>'
+        f'      <line x1="{tx}" y1="{ty - 8}" '
+        f'x2="{panel_x + BOM_PANEL_W - BOM_PANEL_PAD}" '
+        f'y2="{ty - 8}" stroke="{_DIVIDER}" stroke-width="0.5"/>'
     )
     parts.append(
-        f'      <text x="{tx}" y="{ty + 2}" font-family="{_FONT}" '
-        f'font-size="9" fill="#aaa">{total} parts, {identified} ID\'d, '
+        f'      <text x="{tx}" y="{ty + 2}" font-family={_q(_FONT)} '
+        f'font-size="9" fill="{_TEXT_LO}">{total} parts, {identified} ID\'d, '
         f'{n_traces} traces, {connected} nets</text>'
     )
 
@@ -251,43 +403,167 @@ def _render_bom_panel(
     return "\n".join(parts)
 
 
+# ── Security panel ────────────────────────────────────────────────────
+
+def _detect_security_findings(
+    result: AnalysisResult,
+) -> list[tuple[str, str, str, Component]]:
+    findings: list[tuple[str, str, str, Component]] = []
+    for comp in result.components:
+        marking = (comp.marking or "").upper()
+        for kw, (desc, sev, cwe) in _SECURITY_KEYWORDS.items():
+            if kw in marking:
+                findings.append((desc, sev, cwe, comp))
+                break
+    return findings
+
+
+def _render_security_panel(
+    findings: list[tuple[str, str, str, Component]],
+    svg_w: int,
+    svg_h: int,
+) -> str:
+    if not findings:
+        return ""
+
+    panel_w = 260
+    line_h = 16
+    panel_h = BOM_PANEL_PAD * 2 + (len(findings) + 1) * line_h + 12
+    panel_x = 8
+    panel_y = svg_h - _FOOTER_H - panel_h - 8
+
+    parts: list[str] = []
+    parts.append('  <g class="security-panel" filter="url(#panel-shadow)">')
+    parts.append(
+        f'    <rect x="{panel_x}" y="{panel_y}" width="{panel_w}" '
+        f'height="{panel_h}" rx="6" fill="{_PANEL_BG}" fill-opacity="0.92" '
+        f'stroke="#7f1d1d" stroke-width="1"/>'
+    )
+
+    tx = panel_x + BOM_PANEL_PAD
+    ty = panel_y + BOM_PANEL_PAD + 12
+
+    parts.append(
+        f'    <rect x="{tx}" y="{ty - 10}" width="8" height="8" rx="2" fill="#ef4444"/>'
+    )
+    parts.append(
+        f'    <text x="{tx + 12}" y="{ty - 2}" font-family={_q(_FONT)} '
+        f'font-size="11" fill="#ef4444" font-weight="bold">Security Findings</text>'
+    )
+    ty += line_h + 2
+    parts.append(
+        f'    <line x1="{tx}" y1="{ty - 8}" x2="{panel_x + panel_w - BOM_PANEL_PAD}" '
+        f'y2="{ty - 8}" stroke="#7f1d1d" stroke-width="0.5"/>'
+    )
+
+    for desc, sev, cwe, comp in findings:
+        sev_color = "#ef4444" if sev == "HIGH" else "#f59e0b"
+        parts.append(
+            f'    <text x="{tx}" y="{ty}" font-family={_q(_FONT)} '
+            f'font-size="8" fill="{sev_color}" font-weight="bold">[{sev}]</text>'
+        )
+        parts.append(
+            f'    <text x="{tx + 36}" y="{ty}" font-family={_q(_FONT)} '
+            f'font-size="8" fill="{_TEXT_MID}">'
+            f'{_escape(comp.id)} {_escape(desc)} ({cwe})</text>'
+        )
+        ty += line_h
+
+    parts.append('  </g>')
+    return "\n".join(parts)
+
+
+# ── Legend ─────────────────────────────────────────────────────────────
+
 def _render_legend(svg_w: int) -> str:
-    """Render component type legend and net type legend."""
+    n_labels = len(_LABEL_COLORS)
+    n_nets = len(_NET_COLORS)
+    total_rows = n_labels + n_nets + 2
+    panel_h = total_rows * 14 + 24
+    panel_w = 110
+
     parts: list[str] = []
     parts.append('  <g class="legend">')
+    parts.append(
+        f'    <rect x="6" y="{_TITLE_H + 6}" width="{panel_w}" height="{panel_h}" '
+        f'rx="6" fill="{_PANEL_BG}" fill-opacity="0.85" '
+        f'stroke="{_PANEL_BORDER}" stroke-width="0.5"/>'
+    )
 
-    lx = 8
-    ly = 16
+    lx = 14
+    ly = _TITLE_H + 20
     for i, (lbl, color) in enumerate(_LABEL_COLORS.items()):
         row_y = ly + i * 14
         parts.append(
             f'    <rect x="{lx}" y="{row_y - 9}" width="10" height="10" '
-            f'fill="{color}" fill-opacity="0.7" rx="1"/>'
+            f'fill="{color}" fill-opacity="0.8" rx="2"/>'
         )
         parts.append(
-            f'    <text x="{lx + 13}" y="{row_y}" '
-            f'font-family="{_FONT}" font-size="9" fill="#ffffff">{lbl}</text>'
+            f'    <text x="{lx + 14}" y="{row_y}" '
+            f'font-family={_q(_FONT)} font-size="8" fill="{_TEXT_MID}">{lbl}</text>'
         )
 
-    net_start_y = ly + len(_LABEL_COLORS) * 14 + 10
+    net_start_y = ly + n_labels * 14 + 8
     parts.append(
         f'    <text x="{lx}" y="{net_start_y}" '
-        f'font-family="{_FONT}" font-size="9" fill="#aaa" font-weight="bold">nets:</text>'
+        f'font-family={_q(_FONT)} font-size="8" fill="{_TEXT_LO}" '
+        f'font-weight="bold">nets:</text>'
     )
     for i, (net, color) in enumerate(_NET_COLORS.items()):
         row_y = net_start_y + 14 + i * 14
         parts.append(
             f'    <line x1="{lx}" y1="{row_y - 4}" x2="{lx + 10}" y2="{row_y - 4}" '
-            f'stroke="{color}" stroke-width="2"/>'
+            f'stroke="{color}" stroke-width="2.5" stroke-linecap="round"/>'
         )
         parts.append(
-            f'    <text x="{lx + 13}" y="{row_y}" '
-            f'font-family="{_FONT}" font-size="9" fill="#ffffff">{net}</text>'
+            f'    <text x="{lx + 14}" y="{row_y}" '
+            f'font-family={_q(_FONT)} font-size="8" fill="{_TEXT_MID}">{net}</text>'
         )
 
     parts.append('  </g>')
     return "\n".join(parts)
 
+
+# ── Footer ────────────────────────────────────────────────────────────
+
+def _render_footer(svg_w: int, svg_h: int, result: AnalysisResult) -> str:
+    total = len(result.components)
+    identified = sum(1 for c in result.components if c.part_number)
+    n_traces = len(result.traces)
+    connected = sum(1 for t in result.traces if t.from_component and t.to_component)
+    footer = (
+        f"{total} components, {identified} identified, "
+        f"{n_traces} traces, {connected} connections "
+        f"— re:trace {result.pipeline_version}"
+    )
+
+    fy = svg_h - _FOOTER_H
+    parts: list[str] = []
+    parts.append('  <g class="footer">')
+    parts.append(
+        f'    <rect y="{fy}" width="{svg_w}" height="{_FOOTER_H}" '
+        f'fill="{_PANEL_BG}" fill-opacity="0.92"/>'
+    )
+    parts.append(
+        f'    <line x1="0" y1="{fy}" x2="{svg_w}" y2="{fy}" '
+        f'stroke="{_ACCENT}" stroke-width="1" stroke-opacity="0.3"/>'
+    )
+    parts.append(
+        f'    <text x="{svg_w // 2}" y="{fy + 16}" '
+        f'text-anchor="middle" font-family={_q(_FONT)} font-size="9" '
+        f'fill="{_TEXT_LO}">{_escape(footer)}</text>'
+    )
+    parts.append('  </g>')
+    return "\n".join(parts)
+
+
+# ── Helpers ───────────────────────────────────────────────────────────
+
+def _q(s: str) -> str:
+    return f'"{s}"'
+
+
+# ── Main entry point ──────────────────────────────────────────────────
 
 def generate_svg(
     result: AnalysisResult,
@@ -296,16 +572,18 @@ def generate_svg(
     image_href: Optional[str] = None,
     show_traces: bool = True,
     show_bom: bool = True,
+    title: str = "",
 ) -> str:
-    """Generate an SVG with component boxes, traced connections, and BOM panel.
+    """Generate a dark-themed SVG with components, traces, BOM, and security panel.
 
     Args:
         result: Completed AnalysisResult from Pipeline.run().
         width:  Override SVG canvas width (pixels).
         height: Override SVG canvas height (pixels).
-        image_href: Optional path or data-URI for background image.
+        image_href: Optional path or data-URI for background board photo.
         show_traces: Render traced connections between components.
         show_bom: Render the BOM summary panel.
+        title: Board name shown in the title bar.
 
     Returns:
         UTF-8 SVG string.
@@ -324,12 +602,17 @@ def generate_svg(
     )
     lines.append('  <!-- re:trace SVG overlay — components, traces, BOM -->')
 
+    lines.append(_render_defs())
+    lines.append(_render_background(svg_w, svg_h))
+
     if image_href and not image_href.strip().lower().startswith("javascript:"):
         lines.append(
-            f'  <image href="{_escape(image_href)}" x="0" y="0" '
-            f'width="{svg_w}" height="{svg_h}" preserveAspectRatio="xMidYMid meet"/>'
+            f'  <image href="{_escape(image_href)}" x="0" y="{_TITLE_H}" '
+            f'width="{svg_w}" height="{svg_h - _TITLE_H - _FOOTER_H}" '
+            f'preserveAspectRatio="xMidYMid meet" opacity="0.85"/>'
         )
 
+    lines.append(_render_title_bar(svg_w, title, result))
     lines.append(_render_legend(svg_w))
 
     if show_traces and result.traces:
@@ -347,20 +630,11 @@ def generate_svg(
     if show_bom and result.components:
         lines.append(_render_bom_panel(result, svg_w, svg_h))
 
-    total = len(result.components)
-    identified = sum(1 for c in result.components if c.part_number)
-    n_traces = len(result.traces)
-    connected = sum(1 for t in result.traces if t.from_component and t.to_component)
-    footer = (
-        f"{total} components, {identified} identified, "
-        f"{n_traces} traces, {connected} connections "
-        f"— re:trace {result.pipeline_version}"
-    )
-    lines.append(
-        f'  <text x="{svg_w // 2}" y="{svg_h - 4}" '
-        f'text-anchor="middle" font-family="{_FONT}" font-size="9" '
-        f'fill="#aaaaaa">{_escape(footer)}</text>'
-    )
+    sec_findings = _detect_security_findings(result)
+    if sec_findings:
+        lines.append(_render_security_panel(sec_findings, svg_w, svg_h))
+
+    lines.append(_render_footer(svg_w, svg_h, result))
 
     lines.append('</svg>')
     return "\n".join(lines)
