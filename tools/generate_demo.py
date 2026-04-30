@@ -41,6 +41,7 @@ from retrace.analysis.probe_advisor import (  # noqa: E402
 )
 from retrace.export.bom import bom_to_csv, bom_to_json, bom_to_svg, generate_bom  # noqa: E402
 from retrace.export.html_report import generate_html_report  # noqa: E402
+from retrace.export.kicad import generate_kicad_netlist  # noqa: E402
 from retrace.export.svg import generate_svg, generate_attack_surface_svg, generate_zones_svg  # noqa: E402
 from retrace.plugins.builtin.debug_interfaces import detect_debug_interfaces  # noqa: E402
 
@@ -2151,8 +2152,13 @@ def _generate_one_board(
     )
     report_path.write_text(report_html, encoding="utf-8")
 
+    kicad_path = out / f"{prefix}.net"
+    kicad_path.write_text(
+        generate_kicad_netlist(result, title=board_title), encoding="utf-8",
+    )
+
     for p in [board_img, det_json, svg_path, atk_svg_path, zones_svg_path,
-              bom_svg_path, report_path, probe_path, solver_path, dbg_path,
+              bom_svg_path, report_path, kicad_path, probe_path, solver_path, dbg_path,
               out / f"{prefix}_bom.json", out / f"{prefix}_bom.csv"]:
         if p.exists():
             click.echo(f"    ✓  {p.name}  ({p.stat().st_size:,} bytes)")

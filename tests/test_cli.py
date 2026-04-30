@@ -722,3 +722,39 @@ def test_scan_quiet(runner, tmp_path):
         result = runner.invoke(main, ["--quiet", "scan", str(img), "-o", str(out_dir)])
     assert result.exit_code == 0
     assert "saved" not in result.output.lower()
+
+
+# ---------------------------------------------------------------------------
+# export-kicad
+# ---------------------------------------------------------------------------
+
+def test_export_kicad_help(runner):
+    result = runner.invoke(main, ["export-kicad", "--help"])
+    assert result.exit_code == 0
+    assert "KiCad" in result.output or "netlist" in result.output.lower()
+
+
+def test_export_kicad_command(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+    out_file = tmp_path / "board.net"
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.kicad.save_kicad_netlist") as mock_save:
+        result = runner.invoke(main, ["export-kicad", str(img), "-o", str(out_file)])
+    assert result.exit_code == 0
+    assert "KiCad netlist saved" in result.output
+    mock_save.assert_called_once()
+
+
+def test_export_kicad_default_output(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.kicad.save_kicad_netlist") as mock_save:
+        result = runner.invoke(main, ["export-kicad", str(img)])
+    assert result.exit_code == 0
+    assert "board.net" in result.output

@@ -455,5 +455,29 @@ def report_html(image: str, output: str, title: str) -> None:
     click.echo(f"Report saved to {output}")
 
 
+@main.command("export-kicad")
+@click.argument("image", type=click.Path(exists=True))
+@click.option("--output", "-o", type=click.Path(), help="Output file (default: <image stem>.net)")
+@click.option("--title", default="", help="Board name for netlist metadata")
+def export_kicad(image: str, output: str, title: str) -> None:
+    """Export reverse-engineered netlist as KiCad .net file."""
+    from retrace.core.pipeline import Pipeline
+    from retrace.export.kicad import save_kicad_netlist
+
+    pipeline = Pipeline()
+    result = pipeline.run(image)
+
+    if not output:
+        output = Path(image).stem + ".net"
+
+    save_kicad_netlist(result, output, title=title or Path(image).stem)
+
+    net_count = sum(1 for t in result.traces if t.from_component and t.to_component)
+    click.echo(
+        f"KiCad netlist saved to {output} — "
+        f"{len(result.components)} components, {net_count} nets"
+    )
+
+
 if __name__ == "__main__":
     main()

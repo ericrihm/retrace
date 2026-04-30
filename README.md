@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-89%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->623<!-- /STATS --> tests** · **<!-- STATS:modules -->22<!-- /STATS --> modules** · **<!-- STATS:loc -->7959<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->667<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->8178<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -216,7 +216,7 @@ graph LR
     E --> G["🔍 Analysis Result"]
     E -.->|"cross-board transfer"| E
     F --> G
-    G --> H["Export\n<sub>HTML report / BOM / SVG</sub>"]
+    G --> H["Export\n<sub>HTML report / KiCad / BOM / SVG</sub>"]
     G --> I["SVG Overlay\n<sub>zones · traces · security</sub>"]
     G --> J["Probe Advisor\n<sub>Bayesian · entropy</sub>"]
     G --> K["Debug Detection\n<sub>JTAG · UART · SWD · SPI</sub>"]
@@ -234,7 +234,7 @@ graph LR
 5. **Learn** — Identified parts persist to a cross-board knowledge base. The more boards you scan, the faster subsequent analysis gets.
 6. **Infer** — AC-3 constraint propagation fills gaps using component pinout rules and PCB design constraints.
 7. **Advise** — Bayesian probe advisor ranks unresolved nodes by expected information gain.
-8. **Export** — Self-contained HTML assessment report (datasheet hyperlinks, CWE references, sortable BOM), BOM (JSON/CSV/SVG), annotated SVG overlays, attack surface visualization.
+8. **Export** — Self-contained HTML assessment report (datasheet hyperlinks, CWE references, sortable BOM), KiCad netlist (.net) for schematic reconstruction, BOM (JSON/CSV/SVG), annotated SVG overlays, attack surface visualization.
 
 ## Prior Work
 
@@ -250,6 +250,7 @@ Every existing tool either requires design files, only handles one stage, or nee
 | Optimal probe selection | - | - | - | - | Brute-force | **Bayesian** |
 | Cross-board learning | - | - | - | - | - | **Persistent** |
 | BOM from photo | - | - | Schematic only | - | - | **Yes** |
+| KiCad netlist export | - | - | Native | - | - | **From photo** |
 | FCC image search | - | - | - | - | - | **Built-in** |
 | Debug interface detection | - | - | - | - | Pin scan | **Pattern match** |
 | Plugin system | - | - | Yes | - | - | **Entry-point** |
@@ -290,6 +291,9 @@ retrace debug board_photo.jpg --json
 
 # HTML assessment report — datasheet links, CWE references, sortable BOM
 retrace report-html board_photo.jpg --output assessment.html
+
+# KiCad netlist — import into EDA for schematic reconstruction
+retrace export-kicad board_photo.jpg --output board.net
 
 # Component knowledge report — cross-board stats
 retrace report
@@ -553,9 +557,31 @@ re:trace maps to the standard hardware assessment workflow -- recon through repo
 | **Partial trace recovery** | Board has 60% visible traces | AC-3 constraint propagation infers the rest |
 | **Cross-board analysis** | Transfer knowledge between targets | 15 subcircuit patterns auto-recognized across boards |
 | **Fault injection recon** | Map glitch surfaces before bringing equipment | Power rail tracing, VRM/LDO/clock identification, decoupling cap mapping |
-| **Reporting** | Deliverable for the client | Self-contained HTML report (datasheet links, CWE references, sortable BOM), SVG overlays, attack surface visualization |
+| **Reporting** | Deliverable for the client | Self-contained HTML report (datasheet links, CWE references, sortable BOM), KiCad netlist for schematic reconstruction, SVG overlays, attack surface visualization |
 
 re:trace complements firmware analysis tools (Ghidra, Binary Ninja) and hardware debug tools (OpenOCD, JTAGulator) -- it bridges the gap between having a board in your hands and knowing where to probe.
+
+### Assessment Deliverables
+
+One command generates the full artifact set that a hardware security engagement delivers:
+
+```bash
+retrace scan board.jpg --bom --format svg --output ./analysis
+retrace report-html board.jpg --output ./analysis/report.html
+retrace export-kicad board.jpg --output ./analysis/board.net
+```
+
+| Artifact | Format | What It Contains |
+|---|---|---|
+| **Assessment Report** | `.html` | Executive summary, security findings (CWE-linked), sortable BOM with datasheet hyperlinks, component confidence scores — self-contained, no external dependencies |
+| **KiCad Netlist** | `.net` | Reconstructed schematic netlist importable into KiCad 5/6/7/8 — components mapped to footprint libraries, nets derived from trace extraction |
+| **Attack Surface Map** | `.svg` | Dimmed board overlay highlighting security-critical ICs, attack path arrows with labels (e.g. JTAG→CPU→FPGA←SPI flash) |
+| **Functional Zone Map** | `.svg` | Color-coded functional zone overlay — CPU, memory, power, I/O, debug, storage, network, Trust Anchor |
+| **BOM Table** | `.svg` / `.json` / `.csv` | Grouped components with type badges, confidence bars, part numbers, values, packages |
+| **Annotated Board** | `.svg` | Full component overlay with BOM callouts, trace routing, and security findings |
+| **Debug Report** | `.txt` | JTAG/SWD/UART/SPI detection with severity ratings and CWE references |
+| **Probe Plan** | `.txt` | Bayesian-ranked probe recommendations with expected information gain in bits |
+| **Constraint Solution** | `.txt` | AC-3 inferred connections — power nets, ground nets, signal paths |
 
 ## Design Decisions
 
@@ -604,7 +630,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->7959<!-- /STATS --> lines across <!-- STATS:modules -->22<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->8178<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -634,6 +660,7 @@ src/retrace/                             # <!-- STATS:loc -->7959<!-- /STATS -->
 └── export/
     ├── bom.py                           # BOM generator (JSON, CSV, SVG table)
     ├── html_report.py                   # Self-contained HTML assessment report
+    ├── kicad.py                         # KiCad netlist (.net) exporter
     └── svg.py                           # Dark-theme SVG: zones, traces, net classification, security panel, BOM
 ```
 
@@ -641,10 +668,10 @@ src/retrace/                             # <!-- STATS:loc -->7959<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->623<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->667<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
-| Modules | <!-- STATS:modules -->22<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->7959<!-- /STATS --> |
+| Modules | <!-- STATS:modules -->23<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->8178<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -656,7 +683,7 @@ src/retrace/                             # <!-- STATS:loc -->7959<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->623<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->667<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
