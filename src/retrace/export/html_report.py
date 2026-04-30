@@ -643,6 +643,38 @@ def generate_html_report(
         _a("</table>")
     else:
         _a('<p style="color: var(--text-mid);">No exposed debug interfaces detected.</p>')
+
+    if findings:
+        _a("<h3>Pinout Diagrams</h3>")
+        _a('<p style="color: var(--text-mid); font-size: 0.85em; margin-bottom: 1em;">'
+           "Annotated header close-ups with pin assignments and probe wiring guides. "
+           "Click to expand.</p>")
+        try:
+            from retrace.export.pinout_diagram import generate_pinout_svg
+            for f in findings:
+                iface = f["interface"]
+                comp_id = f.get("component", "")
+                comp = next((c for c in result.components if c.id == comp_id), None)
+                finding_dict = {
+                    "type": "debug_interface",
+                    "interface": iface,
+                    "component_id": comp_id,
+                    "cvss_base": f.get("cvss_base"),
+                }
+                svg_content = generate_pinout_svg(result, finding_dict, width=720)
+                b64_svg = __import__("base64").b64encode(
+                    svg_content.encode("utf-8")).decode("ascii")
+                comp_label = comp.marking if comp else comp_id
+                _a(f'<details style="margin-bottom: 1em;">')
+                _a(f'<summary style="cursor: pointer; color: var(--accent); '
+                   f'font-weight: bold;">{_esc(iface)} — {_esc(comp_label)}</summary>')
+                _a(f'<img src="data:image/svg+xml;base64,{b64_svg}" '
+                   f'alt="{_esc(iface)} pinout" style="width: 100%; max-width: 720px; '
+                   f'margin-top: 0.5em; border-radius: 8px;"/>')
+                _a("</details>")
+        except Exception:
+            pass
+
     _a("</section>")
 
     # ── 4. Component Inventory (BOM) ────────────────────────────────

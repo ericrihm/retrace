@@ -806,3 +806,140 @@ def test_batch_with_report(runner, tmp_path):
         result = runner.invoke(main, ["batch", str(src), "-o", str(out), "--report"])
     assert result.exit_code == 0
     mock_report.assert_called_once()
+
+
+def test_batch_with_kicad(runner, tmp_path):
+    src = tmp_path / "boards"
+    src.mkdir()
+    (src / "board.png").write_bytes(b"\x89PNG\r\n\x1a\n")
+    out = tmp_path / "results"
+
+    mock_result = _make_analysis_result("board.png")
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.kicad.save_kicad_netlist") as mock_kicad:
+        result = runner.invoke(main, ["batch", str(src), "-o", str(out), "--kicad"])
+    assert result.exit_code == 0
+    mock_kicad.assert_called_once()
+
+
+def test_batch_with_pinout(runner, tmp_path):
+    from retrace.core.pipeline import Component
+    src = tmp_path / "boards"
+    src.mkdir()
+    (src / "board.png").write_bytes(b"\x89PNG\r\n\x1a\n")
+    out = tmp_path / "results"
+
+    comps = [
+        Component(id="J5", label="header", confidence=0.95,
+                  bbox=(200, 150, 60, 140), marking="JTAG20"),
+    ]
+    mock_result = _make_analysis_result("board.png", components=comps)
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.pinout_diagram.save_pinout_svg") as mock_pinout:
+        result = runner.invoke(main, ["batch", str(src), "-o", str(out), "--pinout"])
+    assert result.exit_code == 0
+    mock_pinout.assert_called_once()
+
+
+# ---------------------------------------------------------------------------
+# pinout — functional test
+# ---------------------------------------------------------------------------
+
+def test_pinout_help(runner):
+    result = runner.invoke(main, ["pinout", "--help"])
+    assert result.exit_code == 0
+    assert "pinout" in result.output.lower()
+
+
+def test_pinout_command(runner, tmp_path):
+    from retrace.core.pipeline import Component
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    out = tmp_path / "pinouts"
+
+    comps = [
+        Component(id="J5", label="header", confidence=0.95,
+                  bbox=(200, 150, 60, 140), marking="JTAG20"),
+    ]
+    mock_result = _make_analysis_result(str(img), components=comps)
+    findings = [
+        {"type": "debug_interface", "interface": "JTAG", "severity": "high",
+         "description": "JTAG", "component_id": "J5",
+         "component_label": "header", "component_marking": "JTAG20",
+         "cve_reference": "CWE-1191", "cvss_base": 7.6,
+         "cvss_vector": "", "mitre_attack": ["T1200"]},
+    ]
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.debug_interfaces.detect_debug_interfaces",
+               return_value=findings), \
+         patch("retrace.export.pinout_diagram.save_pinout_svg") as mock_save:
+        result = runner.invoke(main, ["pinout", str(img), "-o", str(out)])
+    assert result.exit_code == 0
+    assert "pinout" in result.output.lower()
+    mock_save.assert_called_once()
+
+
+def test_pinout_no_findings(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+
+    mock_result = _make_analysis_result(str(img))
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.debug_interfaces.detect_debug_interfaces",
+               return_value=[]):
+        result = runner.invoke(main, ["pinout", str(img)])
+    assert result.exit_code == 0
+    assert "No debug interfaces" in result.output
+
+
+def test_pinout_json(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+
+    mock_result = _make_analysis_result(str(img))
+    findings = [
+        {"type": "debug_interface", "interface": "UART", "severity": "medium",
+         "description": "UART", "component_id": "U1",
+         "component_label": "connector", "component_marking": "UART",
+         "cve_reference": "CWE-1299", "cvss_base": 6.8,
+         "cvss_vector": "", "mitre_attack": ["T1200"]},
+    ]
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.debug_interfaces.detect_debug_interfaces",
+               return_value=findings):
+        result = runner.invoke(main, ["pinout", str(img), "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data[0]["interface"] == "UART"
+
+
+def test_pinout_filter_interface(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+
+    mock_result = _make_analysis_result(str(img))
+    findings = [
+        {"type": "debug_interface", "interface": "JTAG", "severity": "high",
+         "description": "JTAG", "component_id": "U1",
+         "component_label": "header", "component_marking": "JTAG",
+         "cve_reference": "CWE-1191", "cvss_base": 7.6,
+         "cvss_vector": "", "mitre_attack": ["T1200"]},
+        {"type": "debug_interface", "interface": "UART", "severity": "medium",
+         "description": "UART", "component_id": "U1",
+         "component_label": "connector", "component_marking": "UART",
+         "cve_reference": "CWE-1299", "cvss_base": 6.8,
+         "cvss_vector": "", "mitre_attack": ["T1200"]},
+    ]
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.debug_interfaces.detect_debug_interfaces",
+               return_value=findings), \
+         patch("retrace.export.pinout_diagram.save_pinout_svg") as mock_save:
+        result = runner.invoke(main, ["pinout", str(img), "--interface", "UART"])
+    assert result.exit_code == 0
+    assert mock_save.call_count == 1

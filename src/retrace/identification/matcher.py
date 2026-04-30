@@ -934,7 +934,7 @@ _COMPONENT_DB: list[dict] = [
     {
         "part": "ATECC608A",
         "aliases": ["ATECC608", "ATECC608A"],
-        "category": "rf",
+        "category": "secure_element",
         "manufacturer": "Microchip",
         "package": "UDFN8",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/ATECC608A-TFLXTLSS-CryptoAuthentication-DS40002007B.pdf",

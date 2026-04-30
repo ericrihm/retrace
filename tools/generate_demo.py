@@ -2157,9 +2157,19 @@ def _generate_one_board(
         generate_kicad_netlist(result, title=board_title), encoding="utf-8",
     )
 
+    from retrace.export.pinout_diagram import generate_all_pinout_svgs
+    from retrace.plugins.builtin.debug_interfaces import detect_debug_interfaces
+    debug_findings = detect_debug_interfaces(result)
+    pinout_svgs = generate_all_pinout_svgs(result, debug_findings, width=760)
+    pinout_paths: list[Path] = []
+    for iface_name, pinout_svg in pinout_svgs:
+        pinout_path = out / f"{prefix}_{iface_name.lower()}_pinout.svg"
+        pinout_path.write_text(pinout_svg, encoding="utf-8")
+        pinout_paths.append(pinout_path)
+
     for p in [board_img, det_json, svg_path, atk_svg_path, zones_svg_path,
               bom_svg_path, report_path, kicad_path, probe_path, solver_path, dbg_path,
-              out / f"{prefix}_bom.json", out / f"{prefix}_bom.csv"]:
+              out / f"{prefix}_bom.json", out / f"{prefix}_bom.csv"] + pinout_paths:
         if p.exists():
             click.echo(f"    ✓  {p.name}  ({p.stat().st_size:,} bytes)")
 

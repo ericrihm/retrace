@@ -86,6 +86,11 @@ class AnalysisResult:
                 )
             (output_dir / "components.csv").write_text("\n".join(lines) + "\n")
 
+        elif fmt == "svg":
+            from retrace.export.svg import generate_svg
+            svg = generate_svg(self, title=Path(self.image_path).stem)
+            (output_dir / "annotated.svg").write_text(svg, encoding="utf-8")
+
 
 class Pipeline:
     """Orchestrates the full PCB analysis pipeline."""

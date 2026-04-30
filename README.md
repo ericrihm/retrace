@@ -301,8 +301,11 @@ retrace report-html board_photo.jpg --output assessment.html
 # KiCad netlist — import into EDA for schematic reconstruction
 retrace export-kicad board_photo.jpg --output board.net
 
+# Pinout diagrams — annotated debug header close-ups with probe wiring guides
+retrace pinout board_photo.jpg --output ./pinouts
+
 # Batch mode — scan an entire directory of board photos
-retrace batch ./board_photos --report --kicad --output ./assessment
+retrace batch ./board_photos --report --kicad --pinout --output ./assessment
 
 # Cross-board subcircuit pattern analysis — 15 known patterns
 retrace cross-board board_photo.jpg
@@ -588,6 +591,7 @@ One command generates the full artifact set that a hardware security engagement 
 retrace scan board.jpg --bom --format svg --output ./analysis
 retrace report-html board.jpg --output ./analysis/report.html
 retrace export-kicad board.jpg --output ./analysis/board.net
+retrace pinout board.jpg --output ./analysis/pinouts
 ```
 
 | Artifact | Format | What It Contains |
@@ -598,6 +602,7 @@ retrace export-kicad board.jpg --output ./analysis/board.net
 | **Functional Zone Map** | `.svg` | Color-coded functional zone overlay — CPU, memory, power, I/O, debug, storage, network, Trust Anchor |
 | **BOM Table** | `.svg` / `.json` / `.csv` | Grouped components with type badges, confidence bars, part numbers, values, packages |
 | **Annotated Board** | `.svg` | Full component overlay with BOM callouts, trace routing, and security findings |
+| **Pinout Diagrams** | `.svg` | Cropped debug header close-ups with pin labels, color-coded function groups, probe wiring guides (J-Link, Bus Pirate, FTDI, ST-Link), voltage warnings |
 | **Debug Report** | `.txt` | JTAG/SWD/UART/SPI detection with severity ratings and CWE references |
 | **Probe Plan** | `.txt` | Bayesian-ranked probe recommendations with expected information gain in bits |
 | **Constraint Solution** | `.txt` | AC-3 inferred connections — power nets, ground nets, signal paths |
@@ -650,7 +655,7 @@ my_analyzer = "my_package:MyAnalyzer"
 
 ```
 src/retrace/                             # <!-- STATS:loc -->8304<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
-├── cli.py                               # Click CLI: 15 commands (scan, search, trace, advise, identify, debug, learn, compare, cross-board, export, export-kicad, batch, report, report-html, ui)
+├── cli.py                               # Click CLI: 16 commands (scan, search, trace, advise, identify, debug, learn, compare, cross-board, export, export-kicad, batch, pinout, report, report-html, ui)
 ├── web.py                               # Gradio web interface
 ├── core/
 │   ├── pipeline.py                      # Orchestrator: photo → AnalysisResult
@@ -680,6 +685,7 @@ src/retrace/                             # <!-- STATS:loc -->8304<!-- /STATS -->
     ├── bom.py                           # BOM generator (JSON, CSV, SVG table)
     ├── html_report.py                   # Self-contained HTML assessment report
     ├── kicad.py                         # KiCad netlist (.net) exporter
+    ├── pinout_diagram.py                # Debug header pinout diagrams with probe wiring guides
     └── svg.py                           # Dark-theme SVG: zones, traces, net classification, security panel, BOM
 ```
 
@@ -687,10 +693,10 @@ src/retrace/                             # <!-- STATS:loc -->8304<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->675<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->730<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
-| Modules | <!-- STATS:modules -->23<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->8304<!-- /STATS --> |
+| Modules | <!-- STATS:modules -->24<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->21028<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 

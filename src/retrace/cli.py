@@ -489,8 +489,9 @@ def export_kicad(image: str, output: str, title: str) -> None:
 @click.option("--format", "fmt", type=click.Choice(["json", "csv", "svg"]), default="json", show_default=True)
 @click.option("--report", is_flag=True, help="Generate HTML assessment report per board")
 @click.option("--kicad", is_flag=True, help="Generate KiCad netlist per board")
+@click.option("--pinout", is_flag=True, help="Generate pinout diagrams for detected debug interfaces")
 @click.pass_context
-def batch(ctx: click.Context, directory: str, output: str, fmt: str, report: bool, kicad: bool) -> None:
+def batch(ctx: click.Context, directory: str, output: str, fmt: str, report: bool, kicad: bool, pinout: bool) -> None:
     """Scan all images in a directory — bulk analysis for multi-board assessments."""
     from retrace.core.pipeline import Pipeline
 
@@ -531,6 +532,14 @@ def batch(ctx: click.Context, directory: str, output: str, fmt: str, report: boo
             from retrace.export.kicad import save_kicad_netlist
             save_kicad_netlist(result, str(board_out / f"{stem}.net"), title=stem)
 
+        if pinout:
+            from retrace.export.pinout_diagram import save_pinout_svg
+            from retrace.plugins.builtin.debug_interfaces import detect_debug_interfaces
+            debug_findings = detect_debug_interfaces(result)
+            for df in debug_findings:
+                iface = df["interface"]
+                save_pinout_svg(result, df, str(board_out / f"{iface.lower()}_pinout.svg"))
+
         if not quiet:
             click.echo(f"    {len(result.components)} components, {len(result.traces)} traces → {board_out}/")
 
@@ -538,6 +547,48 @@ def batch(ctx: click.Context, directory: str, output: str, fmt: str, report: boo
         f"\nBatch complete: {len(images)} board{'s' if len(images) != 1 else ''}, "
         f"{total_components} total components, {total_traces} total traces → {out}/"
     )
+
+
+@main.command("pinout")
+@click.argument("image", type=click.Path(exists=True))
+@click.option("--output", "-o", type=click.Path(), help="Output directory (default: <image stem>_pinouts/)")
+@click.option("--interface", type=click.Choice(["JTAG", "SWD", "UART", "SPI", "I2C"]),
+              help="Generate for specific interface only")
+@click.option("--json", "as_json", is_flag=True, help="Output finding data as JSON")
+@click.pass_context
+def pinout(ctx: click.Context, image: str, output: str, interface: str, as_json: bool) -> None:
+    """Generate annotated pinout diagrams for detected debug interfaces."""
+    from retrace.core.pipeline import Pipeline
+    from retrace.export.pinout_diagram import generate_all_pinout_svgs, save_pinout_svg
+    from retrace.plugins.builtin.debug_interfaces import detect_debug_interfaces
+
+    pipeline = Pipeline()
+    result = pipeline.run(image)
+    findings = detect_debug_interfaces(result)
+
+    if interface:
+        findings = [f for f in findings if f["interface"] == interface]
+
+    if not findings:
+        click.echo("No debug interfaces detected.")
+        raise SystemExit(0)
+
+    if as_json:
+        click.echo(json.dumps(findings, indent=2))
+        return
+
+    out_dir = Path(output) if output else Path(f"{Path(image).stem}_pinouts")
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    quiet = ctx.obj.get("quiet", False)
+    for finding in findings:
+        iface = finding["interface"]
+        out_path = out_dir / f"{iface.lower()}_pinout.svg"
+        save_pinout_svg(result, finding, str(out_path))
+        if not quiet:
+            click.echo(f"  {iface} pinout → {out_path}")
+
+    click.echo(f"\n{len(findings)} pinout diagram{'s' if len(findings) != 1 else ''} → {out_dir}/")
 
 
 if __name__ == "__main__":
