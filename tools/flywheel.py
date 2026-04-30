@@ -491,6 +491,191 @@ def flywheel_component_db() -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Design audit flywheel — scores README/showcase against psychology criteria
+# ---------------------------------------------------------------------------
+
+_DESIGN_CRITERIA = {
+    "hero_above_fold": {
+        "weight": 10,
+        "description": "Hero section with value prop in first 5 lines (primacy effect)",
+    },
+    "stats_visible": {
+        "weight": 8,
+        "description": "Quantitative social proof (tests, coverage, LOC) visible early (anchoring)",
+    },
+    "demo_before_install": {
+        "weight": 9,
+        "description": "Visual demo before installation instructions (picture superiority)",
+    },
+    "contrast_table": {
+        "weight": 7,
+        "description": "Competitive comparison table present (contrast principle)",
+    },
+    "progressive_disclosure": {
+        "weight": 8,
+        "description": "Details/summary elements for advanced content (cognitive load reduction)",
+    },
+    "copy_paste_install": {
+        "weight": 9,
+        "description": "Single copy-paste install command (friction reduction)",
+    },
+    "concrete_numbers": {
+        "weight": 7,
+        "description": "Specific numbers > vague claims (concreteness effect)",
+    },
+    "social_proof_badges": {
+        "weight": 6,
+        "description": "CI/coverage/license badges present (authority/trust signals)",
+    },
+    "cta_links": {
+        "weight": 7,
+        "description": "Quick navigation links near the top (scanning support)",
+    },
+    "visual_hierarchy": {
+        "weight": 8,
+        "description": "Clear heading progression H1 > H2 > H3 (gestalt/hierarchy)",
+    },
+    "real_world_examples": {
+        "weight": 9,
+        "description": "Named real devices/CVEs as examples (narrative transportation)",
+    },
+    "output_samples": {
+        "weight": 8,
+        "description": "Actual CLI output shown (expectation setting)",
+    },
+    "api_examples": {
+        "weight": 7,
+        "description": "Code examples with imports (developer confidence)",
+    },
+    "security_context": {
+        "weight": 6,
+        "description": "MITRE ATT&CK / CWE references (domain credibility)",
+    },
+    "image_density": {
+        "weight": 8,
+        "description": "Multiple SVG/image demos (dual coding theory)",
+    },
+}
+
+
+def flywheel_design_audit() -> dict:
+    """Score README.md against evidence-based design psychology criteria.
+
+    Returns a dict of scores, suggestions, and total score.
+
+    Psychology principles applied:
+    - Primacy effect: first impressions dominate recall
+    - Picture superiority: images recalled 6x better than text
+    - Anchoring: first numbers seen set expectation frame
+    - Progressive disclosure: reduce cognitive load
+    - Contrast principle: comparisons make value obvious
+    - Narrative transportation: stories > abstractions
+    - Dual coding: text + images together > either alone
+    """
+    _header("Design audit flywheel — README psychology scoring")
+
+    readme_path = REPO_ROOT / "README.md"
+    if not readme_path.exists():
+        _warn("README.md not found")
+        return {}
+
+    content = readme_path.read_text(encoding="utf-8")
+    lines = content.splitlines()
+    scores: dict[str, int] = {}
+    suggestions: list[str] = []
+
+    first_20 = "\n".join(lines[:20]).lower()
+    scores["hero_above_fold"] = 10 if ("photo in" in first_20 or "attack surface" in first_20) else 0
+    if not scores["hero_above_fold"]:
+        suggestions.append("Move value proposition to first 5 lines (primacy effect)")
+
+    first_30 = "\n".join(lines[:30]).lower()
+    scores["stats_visible"] = 8 if ("tests" in first_30 and "loc" in first_30) else 0
+    if not scores["stats_visible"]:
+        suggestions.append("Add quantitative stats (tests, LOC) in first 30 lines (anchoring)")
+
+    h2_positions = [i for i, l in enumerate(lines) if l.startswith("## ")]
+    img_positions = [i for i, l in enumerate(lines) if "<img" in l.lower() or "![" in l]
+    install_positions = [i for i, l in enumerate(lines) if "pip install" in l.lower()]
+    first_img = min(img_positions) if img_positions else 9999
+    first_install = min(install_positions) if install_positions else 9999
+    scores["demo_before_install"] = 9 if first_img < first_install else 0
+    if not scores["demo_before_install"]:
+        suggestions.append("Show demo images before install command (picture superiority)")
+
+    scores["contrast_table"] = 7 if "|" in content and ("prior work" in content.lower() or "comparison" in content.lower()) else 0
+    if not scores["contrast_table"]:
+        suggestions.append("Add competitive comparison table (contrast principle)")
+
+    detail_count = content.count("<details>")
+    scores["progressive_disclosure"] = min(8, detail_count * 2)
+    if detail_count < 3:
+        suggestions.append(f"Add more <details> sections ({detail_count} found, target 4+)")
+
+    scores["copy_paste_install"] = 9 if "pip install" in content else 0
+
+    number_pattern = re.compile(r'\b\d{2,}\b')
+    number_count = len(number_pattern.findall(content[:3000]))
+    scores["concrete_numbers"] = min(7, number_count)
+    if number_count < 5:
+        suggestions.append("Use more specific numbers in first 3000 chars (concreteness effect)")
+
+    badge_count = content.count("img.shields.io")
+    scores["social_proof_badges"] = min(6, badge_count * 2)
+
+    link_section = "\n".join(lines[:20])
+    nav_links = link_section.count("[") + link_section.count("href=")
+    scores["cta_links"] = min(7, nav_links)
+
+    h1 = sum(1 for l in lines if l.startswith("# ") and not l.startswith("## "))
+    h2 = sum(1 for l in lines if l.startswith("## "))
+    h3 = sum(1 for l in lines if l.startswith("### "))
+    scores["visual_hierarchy"] = 8 if (h1 >= 1 and h2 >= 3 and h3 >= 3) else 4 if h2 >= 2 else 0
+
+    real_devices = ["xbox", "cisco", "thrangrycat", "cve-", "arcanedoor"]
+    found_devices = sum(1 for d in real_devices if d in content.lower())
+    scores["real_world_examples"] = min(9, found_devices * 2)
+
+    code_block_count = content.count("```")
+    output_blocks = content.count("```\n  ") + content.count("```\nTotal") + content.count("```\nTop")
+    scores["output_samples"] = min(8, output_blocks * 2 + code_block_count // 3)
+
+    scores["api_examples"] = min(7, content.count("from retrace"))
+
+    mitre_refs = content.count("ATT&CK") + content.count("CWE-") + content.count("CVSS")
+    scores["security_context"] = min(6, mitre_refs)
+
+    img_count = len(img_positions)
+    scores["image_density"] = min(8, img_count)
+
+    total = sum(scores.values())
+    max_total = sum(c["weight"] for c in _DESIGN_CRITERIA.values())
+    pct = round(100 * total / max_total) if max_total > 0 else 0
+
+    _ok(f"Design score: {total}/{max_total} ({pct}%)")
+    for criterion, score in sorted(scores.items(), key=lambda x: x[1]):
+        max_score = _DESIGN_CRITERIA[criterion]["weight"]
+        status = "OK" if score >= max_score * 0.7 else "LOW" if score > 0 else "MISS"
+        color = "green" if status == "OK" else "yellow" if status == "LOW" else "red"
+        _info(f"  [{click.style(status, fg=color)}] {criterion}: {score}/{max_score}")
+
+    if suggestions:
+        _warn(f"{len(suggestions)} improvement suggestions:")
+        for s in suggestions:
+            _info(f"  - {s}")
+    else:
+        _ok("All design criteria met!")
+
+    return {
+        "design_total": total,
+        "design_max": max_total,
+        "design_pct": pct,
+        "design_scores": scores,
+        "design_suggestions": suggestions,
+    }
+
+
+# ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
 
@@ -557,6 +742,10 @@ def run(quick: bool) -> None:
         # 8. Component DB tracking
         db_metrics = flywheel_component_db()
         metrics.update(db_metrics)
+
+        # 9. Design audit
+        design_metrics = flywheel_design_audit()
+        metrics.update(design_metrics)
     else:
         coverage_pct = state.get("coverage_pct", "N/A")
         metrics["coverage_pct"] = coverage_pct
@@ -581,6 +770,7 @@ def run(quick: bool) -> None:
         _info(f"Lint:     {fixed} fix(es) applied")
         _info(f"TODOs:    {metrics.get('todo_count', '?')} in source")
         _info(f"Untyped:  {metrics.get('untyped_function_count', '?')} public functions")
+        _info(f"Design:   {metrics.get('design_pct', '?')}% ({metrics.get('design_total', '?')}/{metrics.get('design_max', '?')})")
     else:
         _info(f"Lint: {fixed} fix(es) applied  (quick mode — tests skipped)")
 
