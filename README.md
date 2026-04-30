@@ -9,9 +9,9 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://pypi.org/project/retrace-pcb/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Coverage](https://img.shields.io/badge/coverage-83%25-green.svg)](https://github.com/ericrihm/retrace)
+[![Coverage](https://img.shields.io/badge/coverage-84%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->309<!-- /STATS --> tests** · **<!-- STATS:modules -->19<!-- /STATS --> modules** · **<!-- STATS:loc -->4806<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->341<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->5255<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -32,20 +32,22 @@ retrace scan board_photo.jpg
 <tr>
 <td width="50%">
 
-**Input: PCB photo**
+**Input: Real Xbox One PCB** *(iFixit, CC BY-NC-SA 3.0)*
 
-<img src="docs/examples/synthetic_board.png" width="100%" alt="Xbox One motherboard with AMD APU, DDR3 RAM, Southbridge, eMMC, WiFi, JTAG debug header"/>
+<img src="docs/examples/xbox_one_motherboard.jpg" width="100%" alt="Xbox One Model 1540 motherboard — AMD Jaguar APU, DDR3 RAM, Southbridge, HDMI, USB"/>
 
 </td>
 <td width="50%">
 
-**Output: Annotated SVG overlay**
+**Output: Synthetic board + SVG overlay**
 
 <img src="docs/examples/annotated_board.svg" width="100%" alt="Detected components with color-coded bounding boxes and net labels"/>
 
 </td>
 </tr>
 </table>
+
+> **5,563 copper traces** extracted from the real Xbox One photo above using zero-config contour detection. Add `retrace-pcb[detection]` for YOLO-based component identification.
 
 <details>
 <summary><b>Probe Advisor Output</b> — where to measure next for maximum information gain</summary>
@@ -248,12 +250,20 @@ The FCC won't let any device be sold without filing internal board photos — an
 
 ```bash
 retrace search "xbox one"
-#   FCC: C3K1520 — Xbox One Console
-#   iFixit #19718: Xbox One Teardown
-#   Found 12 results
+#
+#   Xbox One (Microsoft)
+#   ──────────────────────────────────────────────────
+#     1. Xbox One (Original)  (2013)      FCC: C3K1520   iFixit #19718  [Durango]
+#     2. Xbox One S  (2016)               FCC: C3K1681   iFixit #65572
+#     3. Xbox One S All-Digital  (2019)   FCC: C3K1832
+#     4. Xbox One X  (2017)               FCC: C3K1698   iFixit #99609  [Scorpio]
+#
+#   Select a model to download FCC internal photos (public domain)
 ```
 
 Also searches [iFixit](https://www.ifixit.com/) teardowns via API v2.0 for high-resolution step-by-step board photos.
+
+**Built-in device registry** covers every hardware revision of Xbox One (7 revisions), Xbox Series (3), PlayStation 5 (9, including PS5 Pro), Nintendo Switch (4), Steam Deck (2), Raspberry Pi (5), Ubiquiti UniFi (4), and Ring Doorbell (3) — with FCC IDs, iFixit guide IDs, SoC specs, and revision notes. Search by product name, codename, model number, or FCC ID.
 
 ### Debug Interface Detection
 
@@ -345,7 +355,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->4806<!-- /STATS --> lines across <!-- STATS:modules -->19<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->5255<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -364,6 +374,7 @@ src/retrace/                             # <!-- STATS:loc -->4806<!-- /STATS -->
 ├── sources/
 │   ├── fcc.py                           # FCC filing scraper (47 CFR § 0.457, public domain)
 │   ├── ifixit.py                        # iFixit API v2.0 client (CC BY-NC-SA)
+│   ├── device_registry.py               # 37+ revisions across 8 product families (Xbox, PS5, Switch, etc.)
 │   └── board_sourcer.py                 # Unified multi-source image acquisition
 ├── learning/
 │   └── engine.py                        # Cross-board knowledge flywheel
@@ -380,10 +391,10 @@ src/retrace/                             # <!-- STATS:loc -->4806<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->309<!-- /STATS --> |
-| Coverage | <!-- STATS:coverage -->83%<!-- /STATS --> |
-| Modules | <!-- STATS:modules -->19<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->4806<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->341<!-- /STATS --> |
+| Coverage | <!-- STATS:coverage -->84%<!-- /STATS --> |
+| Modules | <!-- STATS:modules -->20<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->5255<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->114<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -395,7 +406,7 @@ src/retrace/                             # <!-- STATS:loc -->4806<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->309<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->341<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
@@ -403,7 +414,7 @@ retrace --help                 # CLI reference
 ## Legal
 
 - **FCC internal photos** — public domain under [47 CFR § 0.457](https://www.law.cornell.edu/cfr/text/47/0.457)
-- **iFixit images** — used under [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/)
+- **iFixit images** — used under [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/) (Xbox One teardown photos by [iFixit](https://www.ifixit.com/Teardown/Xbox+One+Teardown/19718))
 - **No firmware files** or exploit code included or referenced
 - **Component datasheets** — linked via URL, never redistributed
 - **Detection models** — trained exclusively on public datasets ([FPIC-Component](https://www.mdpi.com/2079-9292/12/11/2450), CC-licensed images)

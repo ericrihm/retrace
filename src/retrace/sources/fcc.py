@@ -114,17 +114,20 @@ class _PhotoLinkParser(HTMLParser):
 # ---------------------------------------------------------------------------
 
 def search_fcc(query: str) -> list[dict[str, Any]]:
-    """Search fcc.report for FCC IDs matching *query*.
+    """Search for FCC IDs matching *query*.
+
+    Tries fcc.report first, then falls back to the local device registry
+    when the online search is unavailable.
 
     Parameters
     ----------
     query:
-        Product name or keyword (e.g. "Neptune Apex controller").
+        Product name or keyword (e.g. "xbox one").
 
     Returns
     -------
     list of dicts with keys: ``fcc_id``, ``url``, ``description``.
-    An empty list is returned on network errors or when no results are found.
+    An empty list is returned when no results are found.
     """
     params = {"q": query}
     url = f"{_SEARCH_URL}?{urllib.parse.urlencode(params)}"
@@ -134,15 +137,32 @@ def search_fcc(query: str) -> list[dict[str, Any]]:
     try:
         resp = requests.get(url, headers=headers, timeout=15)
         resp.raise_for_status()
+        parser = _SearchResultParser()
+        parser.feed(resp.text)
+        if parser.results:
+            logger.info("FCC search for %r → %d results (online)", query, len(parser.results))
+            return parser.results
     except requests.RequestException as exc:
-        logger.error("FCC search request failed: %s", exc)
-        return []
+        logger.debug("FCC online search unavailable: %s", exc)
 
-    parser = _SearchResultParser()
-    parser.feed(resp.text)
+    from retrace.sources.device_registry import search_registry
 
-    results = parser.results
-    logger.info("FCC search for %r → %d results", query, len(results))
+    registry_hits = search_registry(query)
+    results: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for family, revisions in registry_hits:
+        for rev in revisions:
+            if rev.fcc_id in seen:
+                continue
+            seen.add(rev.fcc_id)
+            results.append({
+                "fcc_id": rev.fcc_id,
+                "url": f"{_BASE}/FCC-ID/{rev.fcc_id}",
+                "description": f"{rev.name} ({rev.year or '?'}) — {family.manufacturer} — Model {rev.model_number}",
+                "model_number": rev.model_number,
+                "year": rev.year,
+            })
+    logger.info("FCC search for %r → %d results (local registry)", query, len(results))
     return results
 
 
