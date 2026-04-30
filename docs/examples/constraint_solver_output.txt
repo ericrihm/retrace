@@ -2,67 +2,96 @@ re:trace Constraint Solver — Inferred Netlist
 ==================================================
 
 Board: docs/examples/synthetic_board.png
-Timestamp: 2026-04-30T19:28:01Z
-AC-3 iterations: 20
+Timestamp: 2026-04-30T19:43:07Z
+AC-3 iterations: 74
 
-Net Assignments (48 nodes):
+Net Assignments (229 nodes):
 
   [POWER]
-    C1.1
-    J1.VCC
-    L1.1
-    U1.VCC
-    U2.VCC
+    J1.5V
+    J5.TDI
+    J5.VCC
+    U1.PCIE_TX
+    U1.VCC_CORE
+    U1.VCC_GFX
+    U1.VCC_IO
+    U10.VIN
+    U11.VIN
+    U12.VCC
+    U2.VDD
+    U2.VDDQ
+    U3.VDD
+    U3.VDDQ
+    U4.VDD
+    U4.VDDQ
+    U5.VDD
+    U5.VDDQ
+    U6.VCC
+    U7.VCC
+    ... and 3 more
 
   [GROUND]
-    C1.2
     J1.GND
-    J1.GND2
-    J1.GND3
+    J2.GND
+    J2.GND2
+    J3.GND
+    J3.GND2
+    J4.GND
+    J5.GND
+    J5.GND2
+    J5.GND3
     U1.GND
-    U2.GND
-    Y1.GND
-    Y1.GND2
+    U1.GND2
+    U1.GND3
+    U1.GND4
+    U1.PCIE_RX
+    U10.GND
+    U11.GND
+    U12.GND
+    U2.VSS
+    U2.VSSQ
+    U3.VSS
+    ... and 11 more
 
   [UNKNOWN]
+    C1.1
+    C1.2
     C2.1
     C2.2
     C3.1
     C3.2
-    J1.NC
-    J1.NC2
-    J1.NC3
-    J1.NC4
-    J1.SWDCLK
-    J1.SWDIO
-    L1.2
-    R1.A
-    R1.B
-    R2.A
-    R2.B
-    TP1.1
-    TP2.1
-    TP3.1
-    TP4.1
-    U1.BOOT0
-    ... and 15 more
+    C4.1
+    C4.2
+    C5.1
+    C5.2
+    C6.1
+    C6.2
+    J1.CEC
+    J1.CK+
+    J1.CK-
+    J1.HPD
+    J1.SCL
+    J1.SDA
+    J1.TMDS0+
+    J1.TMDS0-
+    ... and 155 more
 
 Inferred Connections (3):
-  C1.1  <-->  U1.VCC
-  C1.2  <-->  U1.GND
-  L1.1  <-->  J1.VCC
+  U1.VCC_CORE  <-->  J5.TDI
+  U6.VCC  <-->  U1.PCIE_TX
+  U6.GND  <-->  U1.PCIE_RX
 
-Ambiguous Nodes (35):
-  U1.PA0
-  U1.PA1
-  U1.PB0
-  U1.PB1
-  U1.SWDIO
-  U1.SWDCLK
-  U1.NRST
-  U1.BOOT0
-  U2.MOSI
-  U2.MISO
-  ... and 25 more
+Ambiguous Nodes (175):
+  U1.DDR_DQ0
+  U1.DDR_DQ1
+  U1.DDR_A0
+  U1.HDMI_TX0P
+  U1.HDMI_TX0N
+  U2.DQ0
+  U2.DQ1
+  U2.DQ2
+  U2.DQ3
+  U2.A0
+  ... and 165 more
 
 No constraint conflicts detected.

@@ -138,7 +138,6 @@ def flywheel_lint() -> tuple[bool, int]:
         return True, fixed_count
     else:
         # Remaining violations that couldn't be auto-fixed
-        remaining = [l for l in result.stdout.splitlines() if l.strip() and "error" in l.lower()]
         _warn(f"Ruff found un-fixable violations (exit {result.returncode})")
         for line in result.stdout.splitlines()[:10]:
             if line.strip():

@@ -60,7 +60,7 @@ class AnalysisResult:
             "duration_seconds": round(self.duration_seconds, 2),
         }
 
-    def save(self, output_dir: Path, fmt: str = "json"):
+    def save(self, output_dir: Path, fmt: str = "json") -> None:
         output_dir.mkdir(parents=True, exist_ok=True)
 
         if fmt == "json":

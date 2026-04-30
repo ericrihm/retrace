@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
   <!-- re:trace SVG overlay -->
-  <image href="synthetic_board.png" x="0" y="0" width="1200" height="800" preserveAspectRatio="xMidYMid meet"/>
+  <image href="synthetic_board.png" x="0" y="0" width="1600" height="1000" preserveAspectRatio="xMidYMid meet"/>
   <g class="legend">
     <rect x="8" y="7" width="10" height="10" fill="#e74c3c" fill-opacity="0.7" rx="1"/>
     <text x="21" y="16" font-family="monospace" font-size="9" fill="#ffffff">ic</text>
@@ -22,116 +22,276 @@
     <text x="21" y="128" font-family="monospace" font-size="9" fill="#ffffff">unknown</text>
   </g>
 <g class="component" data-id="U1" data-label="ic">
-  <rect x="80" y="80" width="220" height="200"
+  <rect x="500" y="300" width="300" height="300"
         fill="#e74c3c" fill-opacity="0.35"
         stroke="#e74c3c" stroke-width="1.5" rx="2"/>
-  <text x="82" y="77"
+  <text x="502" y="297"
         font-family="monospace" font-size="10"
-        fill="#e74c3c" font-weight="bold">STM32F407</text>
+        fill="#e74c3c" font-weight="bold">X877730</text>
 </g>
 <g class="component" data-id="U2" data-label="ic">
-  <rect x="450" y="60" width="180" height="160"
+  <rect x="120" y="120" width="140" height="90"
         fill="#e74c3c" fill-opacity="0.35"
         stroke="#e74c3c" stroke-width="1.5" rx="2"/>
-  <text x="452" y="57"
+  <text x="122" y="117"
         font-family="monospace" font-size="10"
-        fill="#e74c3c" font-weight="bold">W25Q128</text>
+        fill="#e74c3c" font-weight="bold">K4B4G0846E</text>
+</g>
+<g class="component" data-id="U3" data-label="ic">
+  <rect x="300" y="120" width="140" height="90"
+        fill="#e74c3c" fill-opacity="0.35"
+        stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+  <text x="302" y="117"
+        font-family="monospace" font-size="10"
+        fill="#e74c3c" font-weight="bold">K4B4G0846E</text>
+</g>
+<g class="component" data-id="U4" data-label="ic">
+  <rect x="120" y="680" width="140" height="90"
+        fill="#e74c3c" fill-opacity="0.35"
+        stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+  <text x="122" y="677"
+        font-family="monospace" font-size="10"
+        fill="#e74c3c" font-weight="bold">K4B4G0846E</text>
+</g>
+<g class="component" data-id="U5" data-label="ic">
+  <rect x="300" y="680" width="140" height="90"
+        fill="#e74c3c" fill-opacity="0.35"
+        stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+  <text x="302" y="677"
+        font-family="monospace" font-size="10"
+        fill="#e74c3c" font-weight="bold">K4B4G0846E</text>
+</g>
+<g class="component" data-id="U6" data-label="ic">
+  <rect x="1000" y="120" width="180" height="160"
+        fill="#e74c3c" fill-opacity="0.35"
+        stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+  <text x="1002" y="117"
+        font-family="monospace" font-size="10"
+        fill="#e74c3c" font-weight="bold">X861949</text>
+</g>
+<g class="component" data-id="U7" data-label="ic">
+  <rect x="1000" y="380" width="160" height="120"
+        fill="#e74c3c" fill-opacity="0.35"
+        stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+  <text x="1002" y="377"
+        font-family="monospace" font-size="10"
+        fill="#e74c3c" font-weight="bold">H27QCG8T2E5R</text>
+</g>
+<g class="component" data-id="U8" data-label="ic">
+  <rect x="1050" y="600" width="120" height="80"
+        fill="#e74c3c" fill-opacity="0.35"
+        stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+  <text x="1052" y="597"
+        font-family="monospace" font-size="10"
+        fill="#e74c3c" font-weight="bold">88W8897</text>
+</g>
+<g class="component" data-id="U9" data-label="ic">
+  <rect x="1050" y="760" width="100" height="70"
+        fill="#e74c3c" fill-opacity="0.35"
+        stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+  <text x="1052" y="757"
+        font-family="monospace" font-size="10"
+        fill="#e74c3c" font-weight="bold">88E1512</text>
+</g>
+<g class="component" data-id="U10" data-label="ic">
+  <rect x="80" y="350" width="70" height="55"
+        fill="#e74c3c" fill-opacity="0.35"
+        stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+  <text x="82" y="347"
+        font-family="monospace" font-size="10"
+        fill="#e74c3c" font-weight="bold">TPS51611</text>
+</g>
+<g class="component" data-id="U11" data-label="ic">
+  <rect x="80" y="440" width="70" height="55"
+        fill="#e74c3c" fill-opacity="0.35"
+        stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+  <text x="82" y="437"
+        font-family="monospace" font-size="10"
+        fill="#e74c3c" font-weight="bold">IR3553</text>
+</g>
+<g class="component" data-id="U12" data-label="ic">
+  <rect x="1300" y="150" width="80" height="60"
+        fill="#e74c3c" fill-opacity="0.35"
+        stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+  <text x="1302" y="147"
+        font-family="monospace" font-size="10"
+        fill="#e74c3c" font-weight="bold">PI3HDMI412</text>
+</g>
+<g class="component" data-id="J1" data-label="connector">
+  <rect x="1420" y="80" width="80" height="130"
+        fill="#f39c12" fill-opacity="0.35"
+        stroke="#f39c12" stroke-width="1.5" rx="2"/>
+  <text x="1422" y="77"
+        font-family="monospace" font-size="10"
+        fill="#f39c12" font-weight="bold">HDMI</text>
+</g>
+<g class="component" data-id="J2" data-label="connector">
+  <rect x="1420" y="280" width="70" height="110"
+        fill="#f39c12" fill-opacity="0.35"
+        stroke="#f39c12" stroke-width="1.5" rx="2"/>
+  <text x="1422" y="277"
+        font-family="monospace" font-size="10"
+        fill="#f39c12" font-weight="bold">USB3.0</text>
+</g>
+<g class="component" data-id="J3" data-label="connector">
+  <rect x="1420" y="460" width="70" height="110"
+        fill="#f39c12" fill-opacity="0.35"
+        stroke="#f39c12" stroke-width="1.5" rx="2"/>
+  <text x="1422" y="457"
+        font-family="monospace" font-size="10"
+        fill="#f39c12" font-weight="bold">USB3.0</text>
+</g>
+<g class="component" data-id="J4" data-label="connector">
+  <rect x="1420" y="650" width="60" height="80"
+        fill="#f39c12" fill-opacity="0.35"
+        stroke="#f39c12" stroke-width="1.5" rx="2"/>
+  <text x="1422" y="647"
+        font-family="monospace" font-size="10"
+        fill="#f39c12" font-weight="bold">RJ45</text>
+</g>
+<g class="component" data-id="J5" data-label="connector">
+  <rect x="60" y="880" width="100" height="40"
+        fill="#f39c12" fill-opacity="0.35"
+        stroke="#f39c12" stroke-width="1.5" rx="2"/>
+  <text x="62" y="877"
+        font-family="monospace" font-size="10"
+        fill="#f39c12" font-weight="bold">JTAG</text>
 </g>
 <g class="component" data-id="C1" data-label="capacitor">
-  <rect x="340" y="100" width="28" height="16"
+  <rect x="450" y="260" width="30" height="18"
         fill="#3498db" fill-opacity="0.35"
         stroke="#3498db" stroke-width="1.5" rx="2"/>
-  <text x="342" y="97"
+  <text x="452" y="257"
         font-family="monospace" font-size="10"
         fill="#3498db" font-weight="bold">100nF</text>
 </g>
 <g class="component" data-id="C2" data-label="capacitor">
-  <rect x="380" y="100" width="28" height="16"
+  <rect x="830" y="300" width="30" height="18"
         fill="#3498db" fill-opacity="0.35"
         stroke="#3498db" stroke-width="1.5" rx="2"/>
-  <text x="382" y="97"
+  <text x="832" y="297"
+        font-family="monospace" font-size="10"
+        fill="#3498db" font-weight="bold">100nF</text>
+</g>
+<g class="component" data-id="C3" data-label="capacitor">
+  <rect x="830" y="340" width="30" height="18"
+        fill="#3498db" fill-opacity="0.35"
+        stroke="#3498db" stroke-width="1.5" rx="2"/>
+  <text x="832" y="337"
         font-family="monospace" font-size="10"
         fill="#3498db" font-weight="bold">10uF</text>
 </g>
-<g class="component" data-id="C3" data-label="capacitor">
-  <rect x="340" y="130" width="28" height="16"
+<g class="component" data-id="C4" data-label="capacitor">
+  <rect x="450" y="630" width="30" height="18"
         fill="#3498db" fill-opacity="0.35"
         stroke="#3498db" stroke-width="1.5" rx="2"/>
-  <text x="342" y="127"
+  <text x="452" y="627"
+        font-family="monospace" font-size="10"
+        fill="#3498db" font-weight="bold">100nF</text>
+</g>
+<g class="component" data-id="C5" data-label="capacitor">
+  <rect x="940" y="160" width="30" height="18"
+        fill="#3498db" fill-opacity="0.35"
+        stroke="#3498db" stroke-width="1.5" rx="2"/>
+  <text x="942" y="157"
+        font-family="monospace" font-size="10"
+        fill="#3498db" font-weight="bold">22uF</text>
+</g>
+<g class="component" data-id="C6" data-label="capacitor">
+  <rect x="940" y="200" width="30" height="18"
+        fill="#3498db" fill-opacity="0.35"
+        stroke="#3498db" stroke-width="1.5" rx="2"/>
+  <text x="942" y="197"
         font-family="monospace" font-size="10"
         fill="#3498db" font-weight="bold">100nF</text>
 </g>
 <g class="component" data-id="R1" data-label="resistor">
-  <rect x="680" y="110" width="32" height="14"
+  <rect x="900" y="620" width="34" height="16"
         fill="#2ecc71" fill-opacity="0.35"
         stroke="#2ecc71" stroke-width="1.5" rx="2"/>
-  <text x="682" y="107"
+  <text x="902" y="617"
         font-family="monospace" font-size="10"
         fill="#2ecc71" font-weight="bold">10k</text>
 </g>
 <g class="component" data-id="R2" data-label="resistor">
-  <rect x="680" y="136" width="32" height="14"
+  <rect x="900" y="650" width="34" height="16"
         fill="#2ecc71" fill-opacity="0.35"
         stroke="#2ecc71" stroke-width="1.5" rx="2"/>
-  <text x="682" y="133"
+  <text x="902" y="647"
         font-family="monospace" font-size="10"
         fill="#2ecc71" font-weight="bold">4k7</text>
 </g>
-<g class="component" data-id="Y1" data-label="crystal">
-  <rect x="780" y="100" width="52" height="28"
-        fill="#1abc9c" fill-opacity="0.35"
-        stroke="#1abc9c" stroke-width="1.5" rx="2"/>
-  <text x="782" y="97"
+<g class="component" data-id="R3" data-label="resistor">
+  <rect x="900" y="680" width="34" height="16"
+        fill="#2ecc71" fill-opacity="0.35"
+        stroke="#2ecc71" stroke-width="1.5" rx="2"/>
+  <text x="902" y="677"
         font-family="monospace" font-size="10"
-        fill="#1abc9c" font-weight="bold">ABLS-8.000MHZ-B4-T</text>
-</g>
-<g class="component" data-id="J1" data-label="connector">
-  <rect x="970" y="60" width="80" height="180"
-        fill="#f39c12" fill-opacity="0.35"
-        stroke="#f39c12" stroke-width="1.5" rx="2"/>
-  <text x="972" y="57"
-        font-family="monospace" font-size="10"
-        fill="#f39c12" font-weight="bold">SWD/JTAG</text>
+        fill="#2ecc71" font-weight="bold">100</text>
 </g>
 <g class="component" data-id="L1" data-label="inductor">
-  <rect x="680" y="200" width="44" height="40"
+  <rect x="170" y="370" width="50" height="44"
         fill="#9b59b6" fill-opacity="0.35"
         stroke="#9b59b6" stroke-width="1.5" rx="2"/>
-  <text x="682" y="197"
+  <text x="172" y="367"
         font-family="monospace" font-size="10"
-        fill="#9b59b6" font-weight="bold">10uH</text>
+        fill="#9b59b6" font-weight="bold">1uH</text>
+</g>
+<g class="component" data-id="L2" data-label="inductor">
+  <rect x="170" y="460" width="50" height="44"
+        fill="#9b59b6" fill-opacity="0.35"
+        stroke="#9b59b6" stroke-width="1.5" rx="2"/>
+  <text x="172" y="457"
+        font-family="monospace" font-size="10"
+        fill="#9b59b6" font-weight="bold">1uH</text>
+</g>
+<g class="component" data-id="Y1" data-label="crystal">
+  <rect x="870" y="450" width="56" height="30"
+        fill="#1abc9c" fill-opacity="0.35"
+        stroke="#1abc9c" stroke-width="1.5" rx="2"/>
+  <text x="872" y="447"
+        font-family="monospace" font-size="10"
+        fill="#1abc9c" font-weight="bold">ABLS-25.000MHZ</text>
 </g>
 <g class="component" data-id="TP1" data-label="test_point">
-  <rect x="340" y="440" width="14" height="14"
+  <rect x="200" y="880" width="14" height="14"
         fill="#e91e63" fill-opacity="0.35"
         stroke="#e91e63" stroke-width="1.5" rx="2"/>
-  <text x="342" y="437"
+  <text x="202" y="877"
         font-family="monospace" font-size="10"
         fill="#e91e63" font-weight="bold">TP1</text>
 </g>
 <g class="component" data-id="TP2" data-label="test_point">
-  <rect x="370" y="440" width="14" height="14"
+  <rect x="230" y="880" width="14" height="14"
         fill="#e91e63" fill-opacity="0.35"
         stroke="#e91e63" stroke-width="1.5" rx="2"/>
-  <text x="372" y="437"
+  <text x="232" y="877"
         font-family="monospace" font-size="10"
         fill="#e91e63" font-weight="bold">TP2</text>
 </g>
 <g class="component" data-id="TP3" data-label="test_point">
-  <rect x="400" y="440" width="14" height="14"
+  <rect x="260" y="880" width="14" height="14"
         fill="#e91e63" fill-opacity="0.35"
         stroke="#e91e63" stroke-width="1.5" rx="2"/>
-  <text x="402" y="437"
+  <text x="262" y="877"
         font-family="monospace" font-size="10"
         fill="#e91e63" font-weight="bold">TP3</text>
 </g>
 <g class="component" data-id="TP4" data-label="test_point">
-  <rect x="430" y="440" width="14" height="14"
+  <rect x="290" y="880" width="14" height="14"
         fill="#e91e63" fill-opacity="0.35"
         stroke="#e91e63" stroke-width="1.5" rx="2"/>
-  <text x="432" y="437"
+  <text x="292" y="877"
         font-family="monospace" font-size="10"
         fill="#e91e63" font-weight="bold">TP4</text>
 </g>
-  <text x="600" y="796" text-anchor="middle" font-family="monospace" font-size="9" fill="#aaaaaa">14 components, 3 identified — re:trace 0.1.0</text>
+<g class="component" data-id="TP5" data-label="test_point">
+  <rect x="320" y="880" width="14" height="14"
+        fill="#e91e63" fill-opacity="0.35"
+        stroke="#e91e63" stroke-width="1.5" rx="2"/>
+  <text x="322" y="877"
+        font-family="monospace" font-size="10"
+        fill="#e91e63" font-weight="bold">TP5</text>
+</g>
+  <text x="800" y="996" text-anchor="middle" font-family="monospace" font-size="9" fill="#aaaaaa">34 components, 13 identified — re:trace 0.1.0</text>
 </svg>

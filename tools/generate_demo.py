@@ -14,13 +14,9 @@ Commands
 from __future__ import annotations
 
 import json
-import math
-import os
 import sys
 import time
-from dataclasses import asdict
 from pathlib import Path
-from typing import Any
 
 import click
 import cv2
@@ -32,121 +28,246 @@ import numpy as np
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT / "src"))
 
-from retrace.core.pipeline import AnalysisResult, Component, Pipeline, Trace
-from retrace.analysis.constraint_solver import (
+from retrace.core.pipeline import AnalysisResult, Component, Pipeline, Trace  # noqa: E402
+from retrace.analysis.constraint_solver import (  # noqa: E402
     ComponentSpec,
     ConstraintSolver,
     Trace as SolverTrace,
     Pin,
 )
-from retrace.analysis.probe_advisor import (
+from retrace.analysis.probe_advisor import (  # noqa: E402
     Component as AdvisorComponent,
     ProbeAdvisor,
 )
-from retrace.export.bom import bom_to_csv, bom_to_json, generate_bom
-from retrace.export.svg import generate_svg
-from retrace.plugins.builtin.debug_interfaces import detect_debug_interfaces
+from retrace.export.bom import bom_to_csv, bom_to_json, generate_bom  # noqa: E402
+from retrace.export.svg import generate_svg  # noqa: E402
+from retrace.plugins.builtin.debug_interfaces import detect_debug_interfaces  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
-# Board geometry constants (all in pixels; image is 1200×800)
+# Board geometry constants (all in pixels; image is 1600×1000)
+# Xbox One motherboard reference layout — based on iFixit teardowns / FCC filings
 # ---------------------------------------------------------------------------
 
-IMG_W, IMG_H = 1200, 800
+IMG_W, IMG_H = 1600, 1000
 
 # fmt: off
 # Each entry: (ref, label, x, y, w, h, marking, part_number, value, package, pins)
 # Coordinates are for the component body rectangle.
 KNOWN_COMPONENTS: list[tuple] = [
-    # ref        label         x    y    w    h    marking        part_number      value      package      pins
-    ("U1", "ic",         80,  80,  220, 200, "STM32F407VGT6",  "STM32F407",     "",        "LQFP-100",  ["VCC","GND","PA0","PA1","PB0","PB1","SWDIO","SWDCLK","NRST","BOOT0"]),
-    ("U2", "ic",        450,  60,  180, 160, "W25Q128JVSIQ",   "W25Q128",       "128Mbit", "SOIC-8",    ["VCC","GND","MOSI","MISO","SCLK","CS","WP","HOLD"]),
-    ("C1", "capacitor", 340, 100,   28,  16, "100nF",           "",              "100nF",   "0402",      ["1","2"]),
-    ("C2", "capacitor", 380, 100,   28,  16, "10uF",            "",              "10uF",    "0603",      ["1","2"]),
-    ("C3", "capacitor", 340, 130,   28,  16, "100nF",           "",              "100nF",   "0402",      ["1","2"]),
-    ("R1", "resistor",  680, 110,   32,  14, "10k",             "",              "10k",     "0402",      ["A","B"]),
-    ("R2", "resistor",  680, 136,   32,  14, "4k7",             "",              "4k7",     "0402",      ["A","B"]),
-    ("Y1", "crystal",   780, 100,   52,  28, "8MHz",            "ABLS-8.000MHZ-B4-T","8MHz","HC-49S",   ["1","2","GND","GND2"]),
-    ("J1", "connector", 970,  60,   80, 180, "SWD/JTAG",        "",              "",        "2x5 2.54mm",["VCC","SWDIO","GND","SWDCLK","GND2","NC","NC2","NC3","NC4","GND3"]),
-    ("L1", "inductor",  680, 200,   44,  40, "10uH",            "",              "10uH",    "1210",      ["1","2"]),
-    ("TP1","test_point",340, 440,   14,  14, "TP1",             "",              "",        "TP",        ["1"]),
-    ("TP2","test_point",370, 440,   14,  14, "TP2",             "",              "",        "TP",        ["1"]),
-    ("TP3","test_point",400, 440,   14,  14, "TP3",             "",              "",        "TP",        ["1"]),
-    ("TP4","test_point",430, 440,   14,  14, "TP4",             "",              "",        "TP",        ["1"]),
+    # ref        label         x    y    w    h    marking           part_number      value    package       pins
+
+    # Main APU — custom AMD Jaguar 8-core + GCN GPU (X877730-001)
+    ("U1", "ic",         500, 300, 300, 300, "X877730-001",    "X877730",       "",       "BGA-1152",
+     ["VCC_CORE","VCC_GFX","VCC_IO","GND","GND2","GND3","GND4","DDR_DQ0","DDR_DQ1","DDR_A0","HDMI_TX0P","HDMI_TX0N","PCIE_TX","PCIE_RX"]),
+
+    # DDR3 RAM — Samsung K4B4G0846E (4x visible on top side)
+    ("U2", "ic",         120, 120, 140,  90, "K4B4G0846E",    "K4B4G0846E",   "4Gb",    "BGA-78",
+     ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
+    ("U3", "ic",         300, 120, 140,  90, "K4B4G0846E",    "K4B4G0846E",   "4Gb",    "BGA-78",
+     ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
+    ("U4", "ic",         120, 680, 140,  90, "K4B4G0846E",    "K4B4G0846E",   "4Gb",    "BGA-78",
+     ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
+    ("U5", "ic",         300, 680, 140,  90, "K4B4G0846E",    "K4B4G0846E",   "4Gb",    "BGA-78",
+     ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","DQ2","DQ3","A0","A1","CK","CKE","CS","RAS","CAS","WE"]),
+
+    # Southbridge — Microsoft custom (X861949-005)
+    ("U6", "ic",        1000, 120, 180, 160, "X861949-005",    "X861949",       "",       "BGA-360",
+     ["VCC","GND","USB0_DP","USB0_DN","USB1_DP","USB1_DN","SATA_TX","SATA_RX","SPI_MOSI","SPI_MISO","SPI_CLK","SPI_CS"]),
+
+    # eMMC NAND — SK Hynix H27QCG8T2E5R (64 GB)
+    ("U7", "ic",        1000, 380, 160, 120, "H27QCG8T2E5R",  "H27QCG8T2E5R", "64GB",   "BGA-153",
+     ["VCC","VCCQ","GND","CMD","CLK","DAT0","DAT1","DAT2","DAT3","DAT4","DAT5","DAT6","DAT7"]),
+
+    # WiFi/BT — Marvell AVASTAR 88W8897
+    ("U8", "ic",        1050, 600, 120,  80, "88W8897",        "88W8897",       "",       "QFN-68",
+     ["VCC","GND","SDIO_CLK","SDIO_CMD","SDIO_D0","SDIO_D1","ANT1","ANT2"]),
+
+    # Ethernet PHY — Marvell 88E1512
+    ("U9", "ic",        1050, 760, 100,  70, "88E1512",        "88E1512",       "",       "QFN-56",
+     ["VCC","GND","MDI0P","MDI0N","MDI1P","MDI1N","TX_CLK","RX_CLK"]),
+
+    # Power: Core VRM — TI TPS51611
+    ("U10","ic",          80, 350,  70,  55, "TPS51611",       "TPS51611",      "",       "QFN-20",
+     ["VIN","VOUT","GND","EN","BOOT","SW","PGOOD","FB"]),
+
+    # Power: Memory VRM — IR3553
+    ("U11","ic",          80, 440,  70,  55, "IR3553",         "IR3553",        "",       "PQFN-25",
+     ["VIN","VOUT","GND","EN","SW","FB","PGOOD"]),
+
+    # HDMI retimer — Pericom PI3HDMI412
+    ("U12","ic",        1300, 150,  80,  60, "PI3HDMI412",     "PI3HDMI412",    "",       "QFN-40",
+     ["VCC","GND","HDMI_IN0","HDMI_IN1","HDMI_IN2","HDMI_OUT0","HDMI_OUT1","HDMI_OUT2","HPD","DDC_SCL","DDC_SDA"]),
+
+    # Connectors
+    ("J1", "connector", 1420,  80,  80, 130, "HDMI",           "",              "",       "HDMI-A",
+     ["TMDS0+","TMDS0-","TMDS1+","TMDS1-","TMDS2+","TMDS2-","CK+","CK-","HPD","SCL","SDA","CEC","GND","5V"]),
+    ("J2", "connector", 1420, 280,  70, 110, "USB3.0",         "",              "",       "USB-A",
+     ["VBUS","D-","D+","GND","SSRX-","SSRX+","SSTX-","SSTX+","GND2"]),
+    ("J3", "connector", 1420, 460,  70, 110, "USB3.0",         "",              "",       "USB-A",
+     ["VBUS","D-","D+","GND","SSRX-","SSRX+","SSTX-","SSTX+","GND2"]),
+    ("J4", "connector", 1420, 650,  60,  80, "RJ45",           "",              "",       "RJ45",
+     ["TX+","TX-","RX+","RX-","GND","LED1","LED2"]),
+
+    # JTAG debug header (the money shot for security researchers!)
+    ("J5", "connector",   60, 880, 100,  40, "JTAG",           "",              "",       "2x7 1.27mm",
+     ["TDI","TDO","TCK","TMS","TRST","VCC","GND","GND2","NRST","NC","NC2","NC3","NC4","GND3"]),
+
+    # Passives
+    ("C1", "capacitor",  450, 260,  30,  18, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C2", "capacitor",  830, 300,  30,  18, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C3", "capacitor",  830, 340,  30,  18, "10uF",           "",              "10uF",   "0805", ["1","2"]),
+    ("C4", "capacitor",  450, 630,  30,  18, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("C5", "capacitor",  940, 160,  30,  18, "22uF",           "",              "22uF",   "0805", ["1","2"]),
+    ("C6", "capacitor",  940, 200,  30,  18, "100nF",          "",              "100nF",  "0402", ["1","2"]),
+    ("R1", "resistor",   900, 620,  34,  16, "10k",            "",              "10k",    "0402", ["A","B"]),
+    ("R2", "resistor",   900, 650,  34,  16, "4k7",            "",              "4k7",    "0402", ["A","B"]),
+    ("R3", "resistor",   900, 680,  34,  16, "100",            "",              "100",    "0402", ["A","B"]),
+
+    # Inductors (VRM output filter)
+    ("L1", "inductor",   170, 370,  50,  44, "1uH",            "",              "1uH",    "1210", ["1","2"]),
+    ("L2", "inductor",   170, 460,  50,  44, "1uH",            "",              "1uH",    "1210", ["1","2"]),
+
+    # Crystal oscillator — 25 MHz reference
+    ("Y1", "crystal",    870, 450,  56,  30, "25MHz",          "ABLS-25.000MHZ","25MHz", "HC-49S", ["1","2","GND","GND2"]),
+
+    # Test points (near JTAG header — useful for debug probing)
+    ("TP1","test_point", 200, 880,  14,  14, "TP1",            "",              "",       "TP", ["1"]),
+    ("TP2","test_point", 230, 880,  14,  14, "TP2",            "",              "",       "TP", ["1"]),
+    ("TP3","test_point", 260, 880,  14,  14, "TP3",            "",              "",       "TP", ["1"]),
+    ("TP4","test_point", 290, 880,  14,  14, "TP4",            "",              "",       "TP", ["1"]),
+    ("TP5","test_point", 320, 880,  14,  14, "TP5",            "",              "",       "TP", ["1"]),
 ]
 # fmt: on
 
 # Copper traces to draw: list of (point_list, width_px)
-# Points are (x, y) tuples along the route.
+# Points are (x, y) tuples along the route — Xbox One topology.
 TRACE_ROUTES: list[tuple[list[tuple[int, int]], int]] = [
-    # U1 VCC to decoupling cap C1
-    ([(190, 130), (340, 130), (340, 108)], 2),
-    # U1 GND to C1 other pad
-    ([(190, 175), (354, 175), (354, 116)], 2),
-    # U1 SPI to W25Q128
-    ([(300,  95), (450,  95)], 3),
-    ([(300, 115), (450, 115)], 3),
-    ([(300, 135), (450, 135)], 3),
-    ([(300, 155), (450, 155)], 3),
-    # U1 SWD to J1
-    ([(300, 178), (970, 178)], 2),
-    ([(300, 194), (970, 194)], 2),
-    # U1 crystal pins to Y1
-    ([(300, 214), (780, 110)], 2),
-    ([(300, 230), (780, 128)], 2),
-    # U1 to R1 (pull-up)
-    ([(300, 250), (680, 117)], 2),
-    # R1/R2 to L1 (power path)
-    ([(712, 117), (724, 220)], 2),
-    ([(712, 143), (724, 230)], 2),
-    # L1 to J1 power pin
-    ([(724, 200), (970, 140)], 3),
-    # Test point cluster (UART)
-    ([(354, 447), (500, 447)], 2),
-    ([(384, 447), (500, 460)], 2),
-    ([(414, 447), (500, 473)], 2),
-    ([(444, 447), (500, 486)], 2),
+    # APU (U1) to DDR3 data bus — four differential pairs (U2/U3 top side)
+    ([(500, 350), (260, 350), (260, 210)], 3),   # DDR_DQ0 → U2
+    ([(500, 370), (260, 370), (440, 210)], 3),   # DDR_DQ1 → U3
+    ([(500, 390), (120, 390), (120, 210)], 3),   # DDR_DQ2 → U2 (second pair)
+    ([(500, 410), (300, 410), (300, 210)], 3),   # DDR_DQ3 → U3 (second pair)
+    # APU (U1) to DDR3 bottom side (U4/U5)
+    ([(500, 580), (120, 580), (120, 770)], 3),   # DDR → U4
+    ([(500, 600), (300, 600), (300, 770)], 3),   # DDR → U5
+    # APU (U1) to Southbridge (U6) — PCIe link
+    ([(800, 380), (1000, 380), (1000, 280)], 4), # PCIE_TX
+    ([(800, 400), (1000, 400), (1000, 300)], 4), # PCIE_RX
+    # APU (U1) to HDMI retimer (U12) — differential pairs
+    ([(800, 310), (1300, 310), (1300, 210)], 3), # HDMI_TX0P
+    ([(800, 330), (1300, 330), (1300, 230)], 3), # HDMI_TX0N
+    # Southbridge (U6) to eMMC (U7) — CMD/CLK/DAT
+    ([(1000, 280), (1000, 380)], 3),             # CMD
+    ([(1020, 280), (1020, 380)], 3),             # CLK
+    ([(1040, 280), (1040, 380)], 2),             # DAT0
+    ([(1060, 280), (1060, 380)], 2),             # DAT1
+    # Southbridge (U6) to USB connectors (J2/J3)
+    ([(1180, 200), (1420, 200), (1420, 280)], 3), # USB0_DP → J2
+    ([(1180, 220), (1420, 220), (1420, 300)], 3), # USB0_DN → J2
+    ([(1180, 240), (1420, 240), (1420, 460)], 3), # USB1_DP → J3
+    ([(1180, 260), (1420, 260), (1420, 480)], 3), # USB1_DN → J3
+    # Core VRM (U10) to APU — power delivery
+    ([(150, 375), (500, 375)], 5),               # VCC_CORE
+    ([(150, 390), (500, 390)], 5),               # GND return
+    # Memory VRM (U11) to APU — DDR power
+    ([(150, 465), (500, 465)], 4),               # VCC_MEM
+    # VRM inductors output
+    ([(220, 392), (500, 392)], 4),               # L1 → APU
+    ([(220, 482), (500, 482)], 4),               # L2 → APU
+    # WiFi (U8) SDIO to Southbridge (U6)
+    ([(1050, 640), (1000, 640), (1000, 280)], 2), # SDIO_CLK
+    ([(1050, 660), (980,  660), (980,  280)], 2), # SDIO_CMD
+    # Ethernet PHY (U9) to RJ45 (J4)
+    ([(1150, 795), (1420, 795), (1420, 690)], 3), # TX+
+    ([(1150, 810), (1420, 810), (1420, 710)], 3), # TX-
+    # JTAG header (J5) to APU debug pins
+    ([(160, 900), (500, 900), (500, 600)], 2),   # TDI
+    ([(160, 912), (480, 912), (480, 600)], 2),   # TDO
+    ([(160, 924), (460, 924), (460, 600)], 2),   # TCK
+    ([(160, 936), (440, 936), (440, 600)], 2),   # TMS
+    # HDMI retimer (U12) to HDMI connector (J1)
+    ([(1380, 180), (1420, 180), (1420, 140)], 3), # TMDS out
+    ([(1380, 200), (1420, 200), (1420, 160)], 3), # TMDS out
+    # Crystal (Y1) to Southbridge (U6) — reference clock
+    ([(870, 465), (1090, 465), (1090, 280)], 2),
 ]
 
 # Via positions (x, y, outer_radius, inner_radius)
+# Dense grid reflecting Xbox One's multilayer power planes and signal routing.
 VIAS: list[tuple[int, int, int, int]] = [
-    (340, 300, 5, 2),
-    (380, 300, 5, 2),
-    (420, 300, 5, 2),
-    (460, 300, 5, 2),
-    (500, 300, 5, 2),
-    (540, 300, 5, 2),
-    (580, 300, 5, 2),
-    (620, 300, 5, 2),
-    (660, 300, 5, 2),
-    (700, 300, 5, 2),
-    (300, 350, 5, 2),
-    (300, 390, 5, 2),
-    (724, 240, 6, 3),
-    (724, 260, 6, 3),
+    # Power plane stitching — APU area
+    (480, 280, 5, 2),
+    (510, 280, 5, 2),
+    (540, 280, 5, 2),
+    (570, 280, 5, 2),
+    (600, 280, 5, 2),
+    (630, 280, 5, 2),
+    (660, 280, 5, 2),
+    (690, 280, 5, 2),
+    (720, 280, 5, 2),
+    (750, 280, 5, 2),
+    # Power plane stitching — APU bottom edge
+    (480, 620, 5, 2),
+    (520, 620, 5, 2),
+    (560, 620, 5, 2),
+    (600, 620, 5, 2),
+    (640, 620, 5, 2),
+    (680, 620, 5, 2),
+    (720, 620, 5, 2),
+    (760, 620, 5, 2),
+    # Signal transition vias — DDR bus
+    (260, 300, 6, 3),
+    (300, 300, 6, 3),
+    (440, 300, 6, 3),
+    # VRM output vias
+    (170, 410, 6, 3),
+    (170, 500, 6, 3),
+    # Southbridge area stitching
+    (1000, 500, 5, 2),
+    (1040, 500, 5, 2),
+    (1080, 500, 5, 2),
+    (1120, 500, 5, 2),
+    # Ground stitching — right side
+    (1200, 600, 5, 2),
+    (1200, 650, 5, 2),
 ]
 
-# Mounting holes (x, y, outer_r, inner_r)
+# Mounting holes (x, y, outer_r, inner_r) — 4 corners + 2 internal posts
 MOUNTING_HOLES: list[tuple[int, int, int, int]] = [
-    (35, 35, 14, 8),
-    (1165, 35, 14, 8),
-    (35, 765, 14, 8),
-    (1165, 765, 14, 8),
+    (35,   35,  14, 8),
+    (1565, 35,  14, 8),
+    (35,   965, 14, 8),
+    (1565, 965, 14, 8),
+    (650,  500, 12, 7),   # internal post near APU
+    (950,  500, 12, 7),   # internal post near Southbridge
 ]
 
 # Silkscreen labels: (text, x, y)
 SILK_LABELS: list[tuple[str, int, int]] = [
-    ("U1",  82,  78),
-    ("U2", 452,  58),
-    ("C1", 342,  98),
-    ("C2", 382,  98),
-    ("C3", 342, 128),
-    ("R1", 682, 108),
-    ("R2", 682, 134),
-    ("Y1", 782,  98),
-    ("J1", 972,  58),
-    ("L1", 682, 198),
-    ("TP1-TP4", 336, 460),
+    ("U1",   502,  298),   # APU
+    ("U2",   122,  118),   # DDR3
+    ("U3",   302,  118),   # DDR3
+    ("U4",   122,  678),   # DDR3
+    ("U5",   302,  678),   # DDR3
+    ("U6",  1002,  118),   # Southbridge
+    ("U7",  1002,  378),   # eMMC
+    ("U8",  1052,  598),   # WiFi
+    ("U9",  1052,  758),   # Ethernet PHY
+    ("U10",   82,  348),   # Core VRM
+    ("U11",   82,  438),   # Memory VRM
+    ("U12", 1302,  148),   # HDMI retimer
+    ("J1",  1422,   78),   # HDMI
+    ("J2",  1422,  278),   # USB3
+    ("J3",  1422,  458),   # USB3
+    ("J4",  1422,  648),   # RJ45
+    ("J5",    62,  878),   # JTAG
+    ("L1",   172,  368),
+    ("L2",   172,  458),
+    ("Y1",   872,  448),
+    ("TP1-TP5", 196, 900),
+    ("FCC: C3K1520", 1300, 970),
+    ("(C) Microsoft Corp. — Synthetic Demo Only", 400, 970),
 ]
 
 
@@ -353,13 +474,13 @@ def _draw_silkscreen(img: np.ndarray) -> None:
     for text, tx, ty in SILK_LABELS:
         cv2.putText(img, text, (tx, ty), font, 0.38, (210, 215, 210), 1, cv2.LINE_AA)
 
-    # Board label
+    # Board title — centred at bottom
     cv2.putText(
         img,
-        "re:trace DEMO BOARD  rev1.0",
-        (IMG_W // 2 - 130, IMG_H - 25),
+        "XBOX ONE REF v1.0",
+        (IMG_W // 2 - 110, IMG_H - 25),
         font,
-        0.45,
+        0.52,
         (200, 210, 200),
         1,
         cv2.LINE_AA,
@@ -389,10 +510,15 @@ def generate_board_image(output_path: Path) -> None:
     _draw_board_outline(img)
     _draw_mounting_holes(img)
 
-    # ---- Copper pour (ground plane section) ----
-    cv2.rectangle(img, (50, 500), (900, 780), (25, 85, 110), -1)
-    cv2.rectangle(img, (50, 500), (900, 780), (35, 95, 120), 1)
-    cv2.putText(img, "GND", (60, 530), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (40, 110, 140), 1)
+    # ---- Copper pour (ground plane — larger area for denser Xbox One board) ----
+    # Left ground pour (between DDR bottom and JTAG area)
+    cv2.rectangle(img, (50, 550), (460, 860), (25, 85, 110), -1)
+    cv2.rectangle(img, (50, 550), (460, 860), (35, 95, 120), 1)
+    cv2.putText(img, "GND", (60, 580), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (40, 110, 140), 1)
+    # Right ground pour (Southbridge / connector side)
+    cv2.rectangle(img, (860, 550), (1380, 860), (25, 85, 110), -1)
+    cv2.rectangle(img, (860, 550), (1380, 860), (35, 95, 120), 1)
+    cv2.putText(img, "GND", (870, 580), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (40, 110, 140), 1)
 
     # ---- Traces ----
     _draw_traces(img)
@@ -471,7 +597,8 @@ def _build_synthetic_result(image_path: str) -> AnalysisResult:
 def _run_probe_advisor(result: AnalysisResult) -> str:
     """Run the Bayesian probe advisor and return a formatted text report."""
     advisor = ProbeAdvisor(
-        net_labels=["VCC", "GND", "SPI_MOSI", "SPI_MISO", "SPI_CLK", "SWD_DATA", "SWD_CLK", "UART_TX", "UART_RX"],
+        net_labels=["VCC_CORE", "VCC_GFX", "VCC_IO", "GND", "DDR_DQ0", "DDR_DQ1", "PCIE_TX", "PCIE_RX",
+                    "HDMI_TX0P", "HDMI_TX0N", "SPI_MOSI", "SPI_CLK", "USB0_DP", "USB0_DN", "TDI", "TDO", "TCK", "TMS"],
         alpha=1.0,
     )
 
@@ -532,18 +659,28 @@ def _run_constraint_solver(result: AnalysisResult) -> str:
         cy = float(y + h / 2)
         comp_specs.append(ComponentSpec(ref=ref, kind=label, pins=pins, location=(cx, cy)))
 
-    # Build solver traces from TRACE_ROUTES — map index positions to pin names heuristically
+    # Build solver traces from TRACE_ROUTES — Xbox One topology
     solver_traces: list[SolverTrace] = [
-        SolverTrace(Pin("U1", "VCC"),   Pin("C1", "1"),    confidence=0.95),
-        SolverTrace(Pin("U1", "GND"),   Pin("C1", "2"),    confidence=0.95),
-        SolverTrace(Pin("U1", "PB0"),   Pin("U2", "MOSI"), confidence=0.90),
-        SolverTrace(Pin("U1", "PB1"),   Pin("U2", "MISO"), confidence=0.90),
-        SolverTrace(Pin("U1", "PA1"),   Pin("U2", "SCLK"), confidence=0.90),
-        SolverTrace(Pin("U1", "PA0"),   Pin("U2", "CS"),   confidence=0.85),
-        SolverTrace(Pin("U1", "SWDIO"), Pin("J1", "SWDIO"),confidence=0.92),
-        SolverTrace(Pin("U1", "SWDCLK"),Pin("J1", "SWDCLK"),confidence=0.92),
-        SolverTrace(Pin("J1", "VCC"),   Pin("L1", "1"),    confidence=0.88),
-        SolverTrace(Pin("L1", "2"),     Pin("R1", "A"),    confidence=0.80),
+        SolverTrace(Pin("U1", "DDR_DQ0"),   Pin("U2", "DQ0"),    confidence=0.95),
+        SolverTrace(Pin("U1", "DDR_DQ1"),   Pin("U3", "DQ0"),    confidence=0.95),
+        SolverTrace(Pin("U1", "PCIE_TX"),   Pin("U6", "VCC"),    confidence=0.88),
+        SolverTrace(Pin("U1", "PCIE_RX"),   Pin("U6", "GND"),    confidence=0.88),
+        SolverTrace(Pin("U1", "HDMI_TX0P"), Pin("U12","HDMI_IN0"),confidence=0.92),
+        SolverTrace(Pin("U1", "HDMI_TX0N"), Pin("U12","HDMI_IN1"),confidence=0.92),
+        SolverTrace(Pin("U6", "SPI_MOSI"),  Pin("U7", "CMD"),    confidence=0.90),
+        SolverTrace(Pin("U6", "SPI_CLK"),   Pin("U7", "CLK"),    confidence=0.90),
+        SolverTrace(Pin("U6", "USB0_DP"),   Pin("J2", "D+"),     confidence=0.93),
+        SolverTrace(Pin("U6", "USB0_DN"),   Pin("J2", "D-"),     confidence=0.93),
+        SolverTrace(Pin("U6", "USB1_DP"),   Pin("J3", "D+"),     confidence=0.93),
+        SolverTrace(Pin("U6", "USB1_DN"),   Pin("J3", "D-"),     confidence=0.93),
+        SolverTrace(Pin("U10","VOUT"),       Pin("L1", "1"),      confidence=0.91),
+        SolverTrace(Pin("U11","VOUT"),       Pin("L2", "1"),      confidence=0.91),
+        SolverTrace(Pin("U9", "MDI0P"),     Pin("J4", "TX+"),    confidence=0.89),
+        SolverTrace(Pin("U9", "MDI0N"),     Pin("J4", "TX-"),    confidence=0.89),
+        SolverTrace(Pin("J5", "TDI"),       Pin("U1", "VCC_CORE"),confidence=0.75),
+        SolverTrace(Pin("U8", "SDIO_CLK"), Pin("U6", "SPI_CLK"),confidence=0.85),
+        SolverTrace(Pin("U12","HDMI_OUT0"), Pin("J1", "TMDS0+"), confidence=0.94),
+        SolverTrace(Pin("U12","HDMI_OUT1"), Pin("J1", "TMDS0-"), confidence=0.94),
     ]
 
     solver = ConstraintSolver(proximity_threshold_px=80.0)

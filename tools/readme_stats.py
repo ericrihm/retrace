@@ -225,6 +225,19 @@ def _apply_stats(content: str, stats: dict[str, str]) -> tuple[str, list[str]]:
         return f"<!-- STATS:{key} -->{new_value}<!-- /STATS -->"
 
     new_content = _MARKER_RE.sub(replacer, content)
+
+    cov_str = stats.get("coverage", "")
+    cov_m = re.match(r"(\d+)%", cov_str)
+    if cov_m:
+        pct = int(cov_m.group(1))
+        color = "brightgreen" if pct >= 90 else "green" if pct >= 80 else "yellowgreen" if pct >= 70 else "yellow" if pct >= 60 else "red"
+        badge_re = re.compile(r"coverage-\d+%25-\w+\.svg")
+        new_badge = f"coverage-{pct}%25-{color}.svg"
+        if badge_re.search(new_content) and badge_re.search(new_content).group() != new_badge:
+            new_content = badge_re.sub(new_badge, new_content)
+            if "coverage_badge" not in changed:
+                changed.append("coverage_badge")
+
     return new_content, changed
 
 
@@ -268,9 +281,6 @@ def update(dry_run: bool, readme: str) -> None:
         sys.exit(0)
 
     for key in found_keys:
-        marker = f"<!-- STATS:{key} -->"
-        old_m = _MARKER_RE.search(content)
-        # Find this specific key's old value
         key_re = re.compile(
             rf"<!-- STATS:{re.escape(key)} -->(?P<v>.*?)<!-- /STATS -->",
             re.DOTALL,

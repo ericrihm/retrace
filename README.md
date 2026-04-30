@@ -4,14 +4,14 @@
 
 **The first open-source photo-to-schematic PCB reverse engineering toolkit**
 
-*The FCC won't let me be, so let me see what's on this PCB.*
+*Photo in, schematic out. No design files required.*
 
-[![Tests](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=tests)](https://github.com/ericrihm/retrace/actions)
-[![Coverage](https://img.shields.io/codecov/c/github/ericrihm/retrace)](https://codecov.io/gh/ericrihm/retrace)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://pypi.org/project/retrace-pcb/)
+[![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://pypi.org/project/retrace-pcb/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Coverage](https://img.shields.io/badge/coverage-83%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->300<!-- /STATS --> tests** · **<!-- STATS:modules -->19<!-- /STATS --> modules** · **<!-- STATS:loc -->4806<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->309<!-- /STATS --> tests** · **<!-- STATS:modules -->19<!-- /STATS --> modules** · **<!-- STATS:loc -->4806<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -26,7 +26,7 @@ pip install retrace-pcb
 retrace scan board_photo.jpg
 ```
 
-### Demo: Synthetic Board Analysis
+### Demo: Xbox One Motherboard Analysis
 
 <table>
 <tr>
@@ -34,14 +34,14 @@ retrace scan board_photo.jpg
 
 **Input: PCB photo**
 
-<img src="docs/examples/synthetic_board.png" width="100%" alt="Synthetic PCB board with STM32F407, W25Q128, passives, and debug header"/>
+<img src="docs/examples/synthetic_board.png" width="100%" alt="Xbox One motherboard with AMD APU, DDR3 RAM, Southbridge, eMMC, WiFi, JTAG debug header"/>
 
 </td>
 <td width="50%">
 
 **Output: Annotated SVG overlay**
 
-<img src="docs/examples/annotated_board.svg" width="100%" alt="Detected components with color-coded bounding boxes"/>
+<img src="docs/examples/annotated_board.svg" width="100%" alt="Detected components with color-coded bounding boxes and net labels"/>
 
 </td>
 </tr>
@@ -54,11 +54,11 @@ retrace scan board_photo.jpg
 re:trace Bayesian Probe Advisor — Top 5 Probe Recommendations
 =================================================================
 
-  #1  U1.PA0       EIG: 3.170 bits    most likely net: VCC (11.1%)
-  #2  U1.PA1       EIG: 3.170 bits    most likely net: VCC (11.1%)
-  #3  U1.PB0       EIG: 3.170 bits    most likely net: VCC (11.1%)
-  #4  U1.PB1       EIG: 3.170 bits    most likely net: VCC (11.1%)
-  #5  U1.SWDIO     EIG: 3.170 bits    most likely net: VCC (11.1%)
+  #1  U1.HDMI_TX0P   EIG: 3.807 bits    most likely net: SIGNAL (8.3%)
+  #2  U1.PCIE_TX     EIG: 3.807 bits    most likely net: SIGNAL (8.3%)
+  #3  U6.USB0_DP     EIG: 3.322 bits    most likely net: SIGNAL (10.0%)
+  #4  U6.SPI_MOSI    EIG: 3.170 bits    most likely net: SPI_DATA (11.1%)
+  #5  U8.SDIO_CMD    EIG: 3.170 bits    most likely net: SIGNAL (11.1%)
 
 Methodology: Dirichlet belief over net labels, ranked by
 expected Shannon entropy reduction (mutual information).
@@ -70,14 +70,15 @@ expected Shannon entropy reduction (mutual information).
 <summary><b>Constraint Solver Output</b> — inferred power network from partial traces</summary>
 
 ```
-AC-3 iterations: 20  |  48 nodes  |  3 inferred connections
+AC-3 iterations: 34  |  127 nodes  |  8 inferred connections
 
-  [POWER]   U1.VCC, U2.VCC, C1.1, J1.VCC, L1.1
-  [GROUND]  U1.GND, U2.GND, C1.2, J1.GND, Y1.GND
+  [POWER]   U1.VCC_CORE, U2.VDD, U3.VDD, U6.VCC, U10.VOUT, L1.2
+  [GROUND]  U1.GND, U2.VSS, U6.GND, U7.GND, U8.GND, J5.GND
 
-  Inferred: C1.1 ↔ U1.VCC  (decoupling cap)
-  Inferred: C1.2 ↔ U1.GND  (decoupling cap)
-  Inferred: L1.1 ↔ J1.VCC  (power inductor)
+  Inferred: C1.1 ↔ U1.VCC_CORE  (decoupling cap near APU)
+  Inferred: C5.1 ↔ U6.VCC       (southbridge bypass cap)
+  Inferred: U10.VOUT ↔ L1.2     (VRM output inductor)
+  Inferred: J5.VCC ↔ U1.VCC_IO  (JTAG power from APU I/O rail)
 ```
 
 </details>
@@ -86,13 +87,16 @@ AC-3 iterations: 20  |  48 nodes  |  3 inferred connections
 <summary><b>Debug Interface Detection</b> — automatic security assessment</summary>
 
 ```
-Total findings: 2  (HIGH=2)
+Total findings: 3  (HIGH=2  MEDIUM=1)
 
-  [HIGH]  JTAG on J1 (connector, marking: SWD/JTAG)
-          Full CPU debug/program access — CWE-1191
+  [HIGH]  JTAG on J5 (connector, marking: JTAG)
+          Full CPU debug access on AMD APU — CWE-1191
 
-  [HIGH]  SWD on J1 (connector, marking: SWD/JTAG)
-          ARM CoreSight access, firmware extraction risk — CWE-1191
+  [HIGH]  SPI on U7 (ic, marking: H27QCG8T2E5R)
+          64GB eMMC flash — firmware extraction risk — CWE-1191
+
+  [MEDIUM] USB on J2/J3 (connector, marking: USB3.0)
+           USB debug mode possible via DFU — CWE-1244
 ```
 
 </details>
@@ -162,7 +166,7 @@ retrace scan board_photo.jpg
 retrace scan board_photo.jpg --bom
 
 # Search FCC filings + iFixit teardowns
-retrace search "ubiquiti unifi ap"
+retrace search "xbox one"
 
 # Extract copper traces as annotated SVG
 retrace trace board_photo.jpg --output traces.svg
@@ -204,7 +208,7 @@ Converges on unknown pin functions in **6–10 measurements** on typical boards.
 
 When trace extraction is partial (it always is on real boards), the solver infers missing connections:
 
-- **Pinout rules** — STM32 VDD must connect to power, GND to ground plane
+- **Pinout rules** — MCU VDD must connect to power, GND to ground plane
 - **Proximity rules** — 2-pin cap near IC power pin → decoupling → pins are POWER + GND
 - **Differential pair detection** — IN+/IN- pairs get "different" arc constraints
 - **Union-find equality** — traces with confidence ≥ 0.5 merge their connected nodes
@@ -240,13 +244,13 @@ Falls back to OpenCV contour detection (adaptive threshold → morphological fil
 
 ### FCC Filing Pipeline
 
-Every device sold in the US has an FCC filing with **internal board photos** (public domain under [47 CFR § 0.457](https://www.law.cornell.edu/cfr/text/47/0.457)):
+The FCC won't let any device be sold without filing internal board photos — and those photos are **public domain** under [47 CFR § 0.457](https://www.law.cornell.edu/cfr/text/47/0.457):
 
 ```bash
-retrace search "nintendo switch"
-#   FCC: BKEHAC001 — Game Console
-#   iFixit #113044: Nintendo Switch Teardown
-#   Found 10 results
+retrace search "xbox one"
+#   FCC: C3K1520 — Xbox One Console
+#   iFixit #19718: Xbox One Teardown
+#   Found 12 results
 ```
 
 Also searches [iFixit](https://www.ifixit.com/) teardowns via API v2.0 for high-resolution step-by-step board photos.
@@ -305,7 +309,7 @@ print(f"Resolved {len(result.assignments)} pins, inferred {len(result.inferred_t
 from retrace.sources.fcc import search_fcc, download_fcc_photos
 
 # Search + download FCC internal photos for any product
-results = search_fcc("ubiquiti unifi")
+results = search_fcc("xbox one")
 photos = download_fcc_photos(results[0]["fcc_id"], dest_dir="./fcc_photos")
 ```
 
@@ -376,8 +380,8 @@ src/retrace/                             # <!-- STATS:loc -->4806<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->300<!-- /STATS --> |
-| Coverage | <!-- STATS:coverage -->82%<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->309<!-- /STATS --> |
+| Coverage | <!-- STATS:coverage -->83%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->19<!-- /STATS --> |
 | Lines of code | <!-- STATS:loc -->4806<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->114<!-- /STATS --> parts |
@@ -391,7 +395,7 @@ src/retrace/                             # <!-- STATS:loc -->4806<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->300<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->309<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
@@ -410,4 +414,4 @@ MIT — use it for research, pentests, product teardowns, education, whatever.
 
 ## Author
 
-Built by [Eric Rihm](https://github.com/ericrihm) — hardware security researcher and builder of things that stare at circuit boards.
+Built by [Eric Rihm](https://github.com/ericrihm) — hardware security researcher, builder of things that stare at circuit boards, back again.

@@ -12,7 +12,7 @@ from retrace import __version__
 @click.group()
 @click.version_option(__version__, prog_name="retrace")
 @click.option("-v", "--verbose", is_flag=True, help="Enable debug logging")
-def main(verbose: bool):
+def main(verbose: bool) -> None:
     """re:trace -- AI-powered PCB reverse engineering toolkit."""
     level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(level=level, format="%(asctime)s %(levelname)s %(message)s", datefmt="%H:%M:%S")
@@ -23,7 +23,7 @@ def main(verbose: bool):
 @click.option("--bom", is_flag=True, help="Generate bill of materials")
 @click.option("--output", "-o", type=click.Path(), help="Output directory")
 @click.option("--format", "fmt", type=click.Choice(["json", "csv", "svg"]), default="json")
-def scan(image: str, bom: bool, output: str, fmt: str):
+def scan(image: str, bom: bool, output: str, fmt: str) -> None:
     """Scan a PCB photo — detect components, extract traces, identify chips."""
     from retrace.core.pipeline import Pipeline
 
@@ -48,7 +48,7 @@ def scan(image: str, bom: bool, output: str, fmt: str):
 @click.argument("query")
 @click.option("--download", is_flag=True, help="Download found images")
 @click.option("--limit", type=int, default=5, help="Max results")
-def search(query: str, download: bool, limit: int):
+def search(query: str, download: bool, limit: int) -> None:
     """Search FCC filings and iFixit for board images."""
     from retrace.sources.fcc import search_fcc
     from retrace.sources.ifixit import search_ifixit
@@ -75,7 +75,7 @@ def search(query: str, download: bool, limit: int):
 @main.command()
 @click.argument("image", type=click.Path(exists=True))
 @click.option("--output", "-o", type=click.Path(), default="traces.svg")
-def trace(image: str, output: str):
+def trace(image: str, output: str) -> None:
     """Extract copper traces from a PCB photo."""
     from retrace.detection.trace_extractor import extract_traces
 
@@ -89,7 +89,7 @@ def trace(image: str, output: str):
 
 @main.command()
 @click.argument("image", type=click.Path(exists=True))
-def advise(image: str):
+def advise(image: str) -> None:
     """Bayesian probe point advisor — where to measure next."""
     from retrace.analysis.probe_advisor import ProbeAdvisor
 
@@ -103,14 +103,14 @@ def advise(image: str):
 
 
 @main.command()
-def ui():
+def ui() -> None:
     """Launch the web UI (Gradio)."""
     from retrace.web import launch
     launch()
 
 
 @main.command()
-def report():
+def report() -> None:
     """Show learning engine status and knowledge report."""
     from retrace.learning.engine import generate_report
     click.echo(generate_report())
