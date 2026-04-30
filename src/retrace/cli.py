@@ -436,5 +436,24 @@ def compare(image_a: str, image_b: str, as_json: bool) -> None:
         click.echo("  No differences found.")
 
 
+@main.command("report-html")
+@click.argument("image", type=click.Path(exists=True))
+@click.option("--output", "-o", type=click.Path(), help="Output file (default: <image stem>_report.html)")
+@click.option("--title", default="", help="Report title / board name")
+def report_html(image: str, output: str, title: str) -> None:
+    """Generate a self-contained HTML assessment report with datasheet links."""
+    from retrace.core.pipeline import Pipeline
+    from retrace.export.html_report import save_html_report
+
+    pipeline = Pipeline()
+    result = pipeline.run(image)
+
+    if not output:
+        output = Path(image).stem + "_report.html"
+
+    save_html_report(result, output, title=title or Path(image).stem)
+    click.echo(f"Report saved to {output}")
+
+
 if __name__ == "__main__":
     main()

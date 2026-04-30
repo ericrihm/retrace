@@ -1,0 +1,2327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>re:trace — CISCO ASA5506-X V05</title>
+<style>:root {
+    --bg: #0a0e1a;
+    --panel-bg: #111827;
+    --panel-border: #1e293b;
+    --text-hi: #e2e8f0;
+    --text-mid: #94a3b8;
+    --text-lo: #64748b;
+    --accent: #22d3ee;
+    --row-even: #0f1629;
+    --row-odd: #111d35;
+    --severity-high: #ef4444;
+    --severity-med: #f59e0b;
+    --severity-low: #3b82f6;
+    --conf-green: #22c55e;
+    --conf-yellow: #f59e0b;
+    --conf-red: #ef4444;
+    --conf-bg: #1e293b;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text-hi);
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+.report-header {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+}
+.report-header h1 {
+    margin: 0 0 4px 0;
+    font-size: 24px;
+    color: var(--accent);
+    font-weight: 700;
+}
+.report-header .subtitle {
+    color: var(--text-mid);
+    font-size: 14px;
+    margin: 0 0 20px 0;
+}
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+.stat-box {
+    background: var(--bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    text-align: center;
+}
+.stat-box .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+.stat-box .stat-label {
+    font-size: 11px;
+    color: var(--text-lo);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ── Sections ────────────────────────────────────────────── */
+.section {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+.section h2 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    color: var(--text-hi);
+    border-bottom: 1px solid var(--panel-border);
+    padding-bottom: 8px;
+}
+
+/* ── Executive Summary ───────────────────────────────────── */
+.exec-summary {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-mid);
+}
+
+/* ── Tables ──────────────────────────────────────────────── */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+th {
+    text-align: left;
+    padding: 8px 12px;
+    background: var(--bg);
+    color: var(--text-lo);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--accent);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+th:hover { color: var(--accent); }
+th .sort-arrow { font-size: 10px; margin-left: 4px; }
+td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--panel-border);
+    color: var(--text-hi);
+    vertical-align: middle;
+}
+tr:nth-child(even) td { background: var(--row-even); }
+tr:nth-child(odd) td { background: var(--row-odd); }
+.table-footer {
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-lo);
+    padding-top: 8px;
+}
+
+/* ── Badges ──────────────────────────────────────────────── */
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.badge-high { background: rgba(239,68,68,0.15); color: var(--severity-high); border: 1px solid rgba(239,68,68,0.3); }
+.badge-medium { background: rgba(245,158,11,0.15); color: var(--severity-med); border: 1px solid rgba(245,158,11,0.3); }
+.badge-low { background: rgba(59,130,246,0.15); color: var(--severity-low); border: 1px solid rgba(59,130,246,0.3); }
+
+.type-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* ── Confidence bar ──────────────────────────────────────── */
+.conf-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 120px;
+}
+.conf-bar-track {
+    width: 80px;
+    height: 8px;
+    background: var(--conf-bg);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.conf-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+}
+.conf-bar-text {
+    font-size: 11px;
+    color: var(--text-lo);
+    min-width: 32px;
+}
+
+/* ── Links ───────────────────────────────────────────────── */
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Zone cards ──────────────────────────────────────────── */
+.zone-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+}
+.zone-card {
+    background: var(--bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 16px;
+}
+.zone-card h3 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    color: var(--text-hi);
+}
+.zone-card .zone-type {
+    font-size: 11px;
+    color: var(--text-lo);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.zone-card .zone-components {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.5;
+}
+details summary {
+    cursor: pointer;
+    color: var(--accent);
+    font-size: 12px;
+}
+
+/* ── Net breakdown ───────────────────────────────────────── */
+.net-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+}
+.net-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: var(--bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    font-size: 12px;
+}
+.net-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.net-count {
+    font-weight: 700;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    color: var(--text-hi);
+}
+.net-label {
+    color: var(--text-mid);
+    text-transform: capitalize;
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+.report-footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-lo);
+    font-size: 12px;
+    border-top: 1px solid var(--panel-border);
+}
+.report-footer a { color: var(--text-lo); }
+.report-footer a:hover { color: var(--accent); }
+
+/* ── Print ───────────────────────────────────────────────── */
+@media print {
+    :root {
+        --bg: #ffffff;
+        --panel-bg: #ffffff;
+        --panel-border: #d1d5db;
+        --text-hi: #111827;
+        --text-mid: #374151;
+        --text-lo: #6b7280;
+        --accent: #0891b2;
+        --row-even: #f9fafb;
+        --row-odd: #ffffff;
+    }
+    body { background: white; color: black; }
+    .section { break-inside: avoid; }
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .container { padding: 12px; }
+    .report-header { padding: 16px; }
+    .section { padding: 16px; }
+    table { font-size: 11px; }
+    th, td { padding: 4px 6px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header class="report-header">
+<h1>re:trace — Hardware Security Assessment</h1>
+<p class="subtitle">CISCO ASA5506-X V05 &middot; 2026-04-30T22:20:55Z &middot; Pipeline v0.1.0</p>
+<div class="stats-grid">
+<div class="stat-box"><div class="stat-value">177</div><div class="stat-label">Components</div></div>
+<div class="stat-box"><div class="stat-value">43</div><div class="stat-label">Identified</div></div>
+<div class="stat-box"><div class="stat-value">88</div><div class="stat-label">Traces</div></div>
+<div class="stat-box"><div class="stat-value">5</div><div class="stat-label">Findings</div></div>
+</div>
+</header>
+<section class="section">
+<h2>Executive Summary</h2>
+<div class="exec-summary">Analysis of <strong>CISCO ASA5506-X V05</strong> identified 177 components (43 with part number matches) and 88 traces. Security scan detected 1 HIGH, 4 MEDIUM severity findings. 1 debug interface detected requiring physical access controls.</div>
+</section>
+<section class="section">
+<h2>Security Findings</h2>
+<table>
+<thead><tr>
+<th>Severity</th>
+<th>Interface</th>
+<th>Component</th>
+<th>CWE</th>
+<th>Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><span class="badge badge-high">HIGH</span></td>
+<td>JTAG</td>
+<td>J15</td>
+<td><a href="https://cwe.mitre.org/data/definitions/1191.html" target="_blank" rel="noopener">CWE-1191</a></td>
+<td>JTAG debug — full CPU access</td>
+</tr>
+<tr>
+<td><span class="badge badge-medium">MEDIUM</span></td>
+<td>CONSOLE</td>
+<td>J10</td>
+<td><a href="https://cwe.mitre.org/data/definitions/1299.html" target="_blank" rel="noopener">CWE-1299</a></td>
+<td>Serial console — bootloader/shell</td>
+</tr>
+<tr>
+<td><span class="badge badge-medium">MEDIUM</span></td>
+<td>SPI</td>
+<td>TP_NEW8</td>
+<td><a href="https://cwe.mitre.org/data/definitions/1191.html" target="_blank" rel="noopener">CWE-1191</a></td>
+<td>SPI bus — firmware extraction</td>
+</tr>
+<tr>
+<td><span class="badge badge-medium">MEDIUM</span></td>
+<td>UART</td>
+<td>TP_NEW9</td>
+<td><a href="https://cwe.mitre.org/data/definitions/1299.html" target="_blank" rel="noopener">CWE-1299</a></td>
+<td>UART/serial console</td>
+</tr>
+<tr>
+<td><span class="badge badge-medium">MEDIUM</span></td>
+<td>UART</td>
+<td>TP_NEW10</td>
+<td><a href="https://cwe.mitre.org/data/definitions/1299.html" target="_blank" rel="noopener">CWE-1299</a></td>
+<td>UART/serial console</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="section">
+<h2>Component Inventory</h2>
+<table>
+<thead><tr>
+<th data-sortable>Ref<span class="sort-arrow"></span></th>
+<th data-sortable>Type<span class="sort-arrow"></span></th>
+<th data-sortable>Part Number<span class="sort-arrow"></span></th>
+<th data-sortable>Marking<span class="sort-arrow"></span></th>
+<th data-sortable>Value<span class="sort-arrow"></span></th>
+<th data-sortable>Package<span class="sort-arrow"></span></th>
+<th>Datasheet</th>
+<th data-sortable>Confidence<span class="sort-arrow"></span></th>
+</tr></thead>
+<tbody>
+<tr>
+<td>C1</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C2</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C3</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C4</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>22uF</td>
+<td>22uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C5</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C6</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU1</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU10</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU11</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU12</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU13</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU14</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU15</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU16</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU17</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU18</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU19</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU2</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU20</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU3</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU4</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU5</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU6</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU7</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU8</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_CPU9</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_DDR1</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_DDR2</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_DDR3</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_DDR4</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_DDR5</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_DDR6</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_DDR7</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_DDR8</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_FPGA1</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_FPGA10</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_FPGA2</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_FPGA3</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_FPGA4</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_FPGA5</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_FPGA6</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_FPGA7</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_FPGA8</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_FPGA9</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_NET1</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_NET10</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_NET11</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_NET12</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_NET13</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_NET14</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_NET15</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_NET16</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_NET2</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_NET3</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_NET4</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_NET5</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_NET6</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_NET7</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_NET8</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_NET9</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_SPI1</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>C_SPI2</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>C_SPI3</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10uF</td>
+<td>10uF</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>C_SPI4</td>
+<td><span class="type-badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3);">Capacitor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100nF</td>
+<td>100nF</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>D1</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>USBLC6-2SC6</td>
+<td>USBLC6</td>
+<td></td>
+<td>SOT-23-6</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>D2</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>USBLC6-2SC6</td>
+<td>USBLC6</td>
+<td></td>
+<td>SOT-23-6</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>D3</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>PRTR5V0U2X</td>
+<td>PRTR5V0</td>
+<td></td>
+<td>SOT-143</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>D4</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>PRTR5V0U2X</td>
+<td>PRTR5V0</td>
+<td></td>
+<td>SOT-143</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>D5</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>SRV05-4HTG</td>
+<td>SRV05</td>
+<td></td>
+<td>SOT-23-6</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>D6</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>SRV05-4HTG</td>
+<td>SRV05</td>
+<td></td>
+<td>SOT-23-6</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>D7</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>SRV05-4HTG</td>
+<td>SRV05</td>
+<td></td>
+<td>SOT-23-6</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>D8</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>PRTR5V0U2X</td>
+<td>PRTR5V0</td>
+<td></td>
+<td>SOT-143</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>D_LED1</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>PWR</td>
+<td>GREEN</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>D_LED2</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>STATUS</td>
+<td>AMBER</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>D_LED3</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>ACT</td>
+<td>GREEN</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>D_LED4</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>ALARM</td>
+<td>RED</td>
+<td>0805</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>FL1</td>
+<td><span class="type-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Inductor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>HX1198</td>
+<td></td>
+<td>SOP-16</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>FL2</td>
+<td><span class="type-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Inductor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>HX1198</td>
+<td></td>
+<td>SOP-16</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>FL3</td>
+<td><span class="type-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Inductor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>HX1198</td>
+<td></td>
+<td>SOP-16</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>FL4</td>
+<td><span class="type-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Inductor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>HX1198</td>
+<td></td>
+<td>SOP-16</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>FL5</td>
+<td><span class="type-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Inductor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>HX1198</td>
+<td></td>
+<td>SOP-16</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>FL6</td>
+<td><span class="type-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Inductor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>HX1198</td>
+<td></td>
+<td>SOP-16</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>FL7</td>
+<td><span class="type-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Inductor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>HX1198</td>
+<td></td>
+<td>SOP-16</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>FL8</td>
+<td><span class="type-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Inductor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>HX1198</td>
+<td></td>
+<td>SOP-16</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>J1</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>GbE-1</td>
+<td></td>
+<td>RJ45-MAG</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>J10</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>CONSOLE</td>
+<td></td>
+<td>RJ45</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>J11</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>MGMT</td>
+<td></td>
+<td>RJ45-MAG</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>J12</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>USB-A</td>
+<td></td>
+<td>USB-A</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>J13</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>USB Mini-B</td>
+<td></td>
+<td>USB-Mini-B</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>J14</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>DC 12V</td>
+<td></td>
+<td>Barrel-5.5mm</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>J15</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>JTAG</td>
+<td></td>
+<td>2x7 2.54mm</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>J2</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>GbE-2</td>
+<td></td>
+<td>RJ45-MAG</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>J3</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>GbE-3</td>
+<td></td>
+<td>RJ45-MAG</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>J4</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>GbE-4</td>
+<td></td>
+<td>RJ45-MAG</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>J5</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>GbE-5</td>
+<td></td>
+<td>RJ45-MAG</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>J6</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>mSATA 50GB</td>
+<td>50GB</td>
+<td>mSATA</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>J7</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>GbE-6</td>
+<td></td>
+<td>RJ45-MAG</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>J8</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>GbE-7</td>
+<td></td>
+<td>RJ45-MAG</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>J9</td>
+<td><span class="type-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Connector</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>GbE-8</td>
+<td></td>
+<td>RJ45-MAG</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>L1</td>
+<td><span class="type-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Inductor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>2.2uH</td>
+<td>2.2uH</td>
+<td>1210</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>L2</td>
+<td><span class="type-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Inductor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>1uH</td>
+<td>1uH</td>
+<td>1210</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>L_VRM1</td>
+<td><span class="type-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Inductor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>0.47uH</td>
+<td>0.47uH</td>
+<td>1210</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>L_VRM2</td>
+<td><span class="type-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Inductor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>0.68uH</td>
+<td>0.68uH</td>
+<td>1210</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>L_VRM3</td>
+<td><span class="type-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Inductor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>1uH</td>
+<td>1uH</td>
+<td>1210</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>L_VRM4</td>
+<td><span class="type-badge" style="background:rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3);">Inductor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>2.2uH</td>
+<td>2.2uH</td>
+<td>1210</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>Q1</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>BSC014N04LS</td>
+<td>BSC014N</td>
+<td></td>
+<td>TDSON-8</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>Q2</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>BSC014N04LS</td>
+<td>BSC014N</td>
+<td></td>
+<td>TDSON-8</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>Q3</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>BSC014N04LS</td>
+<td>BSC014N</td>
+<td></td>
+<td>TDSON-8</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>Q4</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>BSC014N04LS</td>
+<td>BSC014N</td>
+<td></td>
+<td>TDSON-8</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>Q5</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>BSC014N04LS</td>
+<td>BSC014N</td>
+<td></td>
+<td>TDSON-8</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>Q6</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>BSC014N04LS</td>
+<td>BSC014N</td>
+<td></td>
+<td>TDSON-8</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>Q7</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>BSC014N04LS</td>
+<td>BSC014N</td>
+<td></td>
+<td>TDSON-8</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>Q8</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>BSC014N04LS</td>
+<td>BSC014N</td>
+<td></td>
+<td>TDSON-8</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>R1</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10k</td>
+<td>10k</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>R2</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>4k7</td>
+<td>4k7</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>R3</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>182</td>
+<td>182</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW1</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>4k7</td>
+<td>4k7</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW10</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10k</td>
+<td>10k</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW11</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10k</td>
+<td>10k</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW12</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>100k</td>
+<td>100k</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW13</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>47k</td>
+<td>47k</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW14</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>330</td>
+<td>330</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW15</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>330</td>
+<td>330</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW16</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>330</td>
+<td>330</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW17</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>330</td>
+<td>330</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW18</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>4k7</td>
+<td>4k7</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW19</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>4k7</td>
+<td>4k7</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW2</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>4k7</td>
+<td>4k7</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW20</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>1k</td>
+<td>1k</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW3</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>49.9</td>
+<td>49.9</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW4</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>49.9</td>
+<td>49.9</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW5</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>49.9</td>
+<td>49.9</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW6</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>49.9</td>
+<td>49.9</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW7</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10k</td>
+<td>10k</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW8</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10k</td>
+<td>10k</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>R_NEW9</td>
+<td><span class="type-badge" style="background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3);">Resistor</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>10k</td>
+<td>10k</td>
+<td>0402</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>TP1</td>
+<td><span class="type-badge" style="background:rgba(236,72,153,0.15);color:#ec4899;border:1px solid rgba(236,72,153,0.3);">Test Point</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>TP1</td>
+<td></td>
+<td>TP</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>TP2</td>
+<td><span class="type-badge" style="background:rgba(236,72,153,0.15);color:#ec4899;border:1px solid rgba(236,72,153,0.3);">Test Point</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>TP2</td>
+<td></td>
+<td>TP</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>TP3</td>
+<td><span class="type-badge" style="background:rgba(236,72,153,0.15);color:#ec4899;border:1px solid rgba(236,72,153,0.3);">Test Point</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>TP3</td>
+<td></td>
+<td>TP</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>TP4</td>
+<td><span class="type-badge" style="background:rgba(236,72,153,0.15);color:#ec4899;border:1px solid rgba(236,72,153,0.3);">Test Point</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>R182</td>
+<td></td>
+<td>TP</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>TP_NEW1</td>
+<td><span class="type-badge" style="background:rgba(236,72,153,0.15);color:#ec4899;border:1px solid rgba(236,72,153,0.3);">Test Point</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>VCORE</td>
+<td></td>
+<td>TP</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>TP_NEW10</td>
+<td><span class="type-badge" style="background:rgba(236,72,153,0.15);color:#ec4899;border:1px solid rgba(236,72,153,0.3);">Test Point</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>UART_RX</td>
+<td></td>
+<td>TP</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>TP_NEW2</td>
+<td><span class="type-badge" style="background:rgba(236,72,153,0.15);color:#ec4899;border:1px solid rgba(236,72,153,0.3);">Test Point</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>1V0</td>
+<td></td>
+<td>TP</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>TP_NEW3</td>
+<td><span class="type-badge" style="background:rgba(236,72,153,0.15);color:#ec4899;border:1px solid rgba(236,72,153,0.3);">Test Point</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>3V3</td>
+<td></td>
+<td>TP</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>TP_NEW4</td>
+<td><span class="type-badge" style="background:rgba(236,72,153,0.15);color:#ec4899;border:1px solid rgba(236,72,153,0.3);">Test Point</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>VTT</td>
+<td></td>
+<td>TP</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>TP_NEW5</td>
+<td><span class="type-badge" style="background:rgba(236,72,153,0.15);color:#ec4899;border:1px solid rgba(236,72,153,0.3);">Test Point</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>1V8</td>
+<td></td>
+<td>TP</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>TP_NEW6</td>
+<td><span class="type-badge" style="background:rgba(236,72,153,0.15);color:#ec4899;border:1px solid rgba(236,72,153,0.3);">Test Point</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>PCIE_CLK</td>
+<td></td>
+<td>TP</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>TP_NEW7</td>
+<td><span class="type-badge" style="background:rgba(236,72,153,0.15);color:#ec4899;border:1px solid rgba(236,72,153,0.3);">Test Point</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>MDIO</td>
+<td></td>
+<td>TP</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>TP_NEW8</td>
+<td><span class="type-badge" style="background:rgba(236,72,153,0.15);color:#ec4899;border:1px solid rgba(236,72,153,0.3);">Test Point</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>SPI_CLK</td>
+<td></td>
+<td>TP</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>TP_NEW9</td>
+<td><span class="type-badge" style="background:rgba(236,72,153,0.15);color:#ec4899;border:1px solid rgba(236,72,153,0.3);">Test Point</span></td>
+<td style="color:var(--text-lo);">—</td>
+<td>UART_TX</td>
+<td></td>
+<td>TP</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>U1</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>C2508</td>
+<td>ATOM C2508</td>
+<td></td>
+<td>FCBGA-1283</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>U10</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>TPS54331DR</td>
+<td>TPS54331</td>
+<td></td>
+<td>SOIC-8</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>U11</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>NCP5232</td>
+<td>NCP5232</td>
+<td></td>
+<td>QFN-20</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>U12</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>TPS51200DR</td>
+<td>TPS51200</td>
+<td></td>
+<td>SON-10</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>U2</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>MT41K256M16HA</td>
+<td>MT41K256M16</td>
+<td>1GB</td>
+<td>BGA-96</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>U3</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>MT41K256M16HA</td>
+<td>MT41K256M16</td>
+<td>1GB</td>
+<td>BGA-96</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>U4</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>MT41K256M16HA</td>
+<td>MT41K256M16</td>
+<td>1GB</td>
+<td>BGA-96</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>U5</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>MT41K256M16HA</td>
+<td>MT41K256M16</td>
+<td>1GB</td>
+<td>BGA-96</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>U6</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>XC6SLX45T-2FGG484</td>
+<td>XC6SLX45T</td>
+<td></td>
+<td>BGA-484</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>U7</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>W25Q128JVSIQ</td>
+<td>W25Q128JV</td>
+<td>16MB</td>
+<td>SOIC-8</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>U8</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>I354-AM4</td>
+<td>I354-AM4</td>
+<td></td>
+<td>BGA-576</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>U9</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>SATADOM-SL</td>
+<td>eUSB 8GB</td>
+<td>8GB</td>
+<td>eUSB</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>U_BOOT1</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>SATADOM-SH</td>
+<td>eUSB 4GB</td>
+<td>4GB</td>
+<td>eUSB</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>U_CLK1</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>5V49EE504</td>
+<td>5V49EE504</td>
+<td></td>
+<td>QFN-32</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>U_CLK2</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>SI5351A-B-GT</td>
+<td>SI5351A</td>
+<td></td>
+<td>MSOP-10</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>U_NET1</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>I350-AM4</td>
+<td>I350-AM4</td>
+<td></td>
+<td>BGA-576</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>U_NET2</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>88E6176-TFJ2</td>
+<td>88E6176</td>
+<td></td>
+<td>QFP-176</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>U_PM1</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>LTC2977</td>
+<td>LTC2977</td>
+<td></td>
+<td>QFN-64</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>U_PM2</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>UCD9090ARGCT</td>
+<td>UCD9090A</td>
+<td></td>
+<td>QFN-40</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>U_RST1</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>TPS3808G01</td>
+<td>TPS3808</td>
+<td></td>
+<td>SOT-23-6</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>U_VRM1</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>IR3564B</td>
+<td>IR3564B</td>
+<td></td>
+<td>QFN-48</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>U_VRM2</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>TPS54620RGY</td>
+<td>TPS54620</td>
+<td></td>
+<td>QFN-14</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>U_VRM3</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>TPS54231DR</td>
+<td>TPS54231</td>
+<td></td>
+<td>SOIC-8</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>U_VRM4</td>
+<td><span class="type-badge" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);">Ic</span></td>
+<td>TPS54331DR</td>
+<td>TPS54331</td>
+<td></td>
+<td>SOIC-8</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.8800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%;background:#f59e0b;"></div></div><span class="conf-bar-text">88%</span></div></td>
+</tr>
+<tr>
+<td>Y1</td>
+<td><span class="type-badge" style="background:rgba(20,184,166,0.15);color:#14b8a6;border:1px solid rgba(20,184,166,0.3);">Crystal</span></td>
+<td>ABLS-25.000MHZ</td>
+<td>25MHz</td>
+<td>25MHz</td>
+<td>HC-49S</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+<tr>
+<td>Y_CLK1</td>
+<td><span class="type-badge" style="background:rgba(20,184,166,0.15);color:#14b8a6;border:1px solid rgba(20,184,166,0.3);">Crystal</span></td>
+<td>ABLS-25.000MHZ</td>
+<td>25MHz</td>
+<td>25MHz</td>
+<td>HC-49S</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9300"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:93%;background:#22c55e;"></div></div><span class="conf-bar-text">93%</span></div></td>
+</tr>
+<tr>
+<td>Y_CLK2</td>
+<td><span class="type-badge" style="background:rgba(20,184,166,0.15);color:#14b8a6;border:1px solid rgba(20,184,166,0.3);">Crystal</span></td>
+<td>ABLS-50.000MHZ</td>
+<td>50MHz</td>
+<td>50MHz</td>
+<td>HC-49S</td>
+<td style="color:var(--text-lo);">—</td>
+<td data-sort-value="0.9800"><div class="conf-bar"><div class="conf-bar-track"><div class="conf-bar-fill" style="width:98%;background:#22c55e;"></div></div><span class="conf-bar-text">98%</span></div></td>
+</tr>
+</tbody>
+</table>
+<div class="table-footer">177 components</div>
+</section>
+<section class="section">
+<h2>Functional Zones</h2>
+<div class="zone-grid">
+<div class="zone-card">
+<h3>Intel Atom C2508 CPU</h3>
+<div class="zone-type">cpu &middot; 21 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">U1, C_CPU1, C_CPU2, C_CPU3, C_CPU4, C_CPU5, C_CPU6, C_CPU7, C_CPU8, C_CPU9, C_CPU10, C_CPU11, C_CPU12, C_CPU13, C_CPU14, C_CPU15, C_CPU16, C_CPU17, C_CPU18, C_CPU19, C_CPU20</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>DDR3 ECC Memory</h3>
+<div class="zone-type">memory &middot; 16 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">U2, U3, U4, U5, C_DDR1, C_DDR2, C_DDR3, C_DDR4, C_DDR5, C_DDR6, C_DDR7, C_DDR8, R_NEW3, R_NEW4, R_NEW5, R_NEW6</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>Trust Anchor Module</h3>
+<div class="zone-type">debug &middot; 19 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">U6, U7, C_FPGA1, C_FPGA2, C_FPGA3, C_FPGA4, C_FPGA5, C_FPGA6, C_FPGA7, C_FPGA8, C_FPGA9, C_FPGA10, C_SPI1, C_SPI2, C_SPI3, C_SPI4, R_NEW7, R_NEW8, R_NEW9</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>Power Delivery</h3>
+<div class="zone-type">power &middot; 33 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">U10, U11, U12, L1, L2, U_VRM1, U_VRM2, U_VRM3, U_VRM4, Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, L_VRM1, L_VRM2, L_VRM3, L_VRM4, U_PM1, U_PM2, U_RST1, TP_NEW1, TP_NEW2, TP_NEW3, TP_NEW4, TP_NEW5, R_NEW1, R_NEW2, R_NEW12, R_NEW13</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>Intel I354 NIC</h3>
+<div class="zone-type">network &middot; 5 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">U8, C_NET1, C_NET2, C_NET3, C_NET4</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>Intel I350 / Switch Fabric</h3>
+<div class="zone-type">network &middot; 12 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">U_NET1, U_NET2, C_NET5, C_NET6, C_NET7, C_NET8, C_NET9, C_NET10, C_NET11, C_NET12, R_NEW18, R_NEW19</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>Data Plane Ports</h3>
+<div class="zone-type">network &middot; 23 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">J1, J2, J3, J4, J5, J7, J8, J9, FL1, FL2, FL3, FL4, FL5, FL6, FL7, FL8, C_NET13, C_NET14, C_NET15, C_NET16, D5, D6, D7</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>Management / Console</h3>
+<div class="zone-type">io &middot; 8 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">J10, J11, J12, J13, D1, D2, D3, D4</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>Storage</h3>
+<div class="zone-type">storage &middot; 3 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">U9, J6, U_BOOT1</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>JTAG Debug Chain</h3>
+<div class="zone-type">debug &middot; 8 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">J15, TP1, TP2, TP3, TP4, D8, R_NEW10, R_NEW11</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>DC Power Input</h3>
+<div class="zone-type">power &middot; 1 component</div>
+<details><summary>Show components</summary>
+<div class="zone-components">J14</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>Clock / PLL</h3>
+<div class="zone-type">io &middot; 6 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">U_CLK1, U_CLK2, Y_CLK1, Y_CLK2, Y1, R_NEW20</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>CPU Decoupling</h3>
+<div class="zone-type">power &middot; 6 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">C1, C2, C3, C4, C5, C6</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>Status LEDs</h3>
+<div class="zone-type">io &middot; 8 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">D_LED1, D_LED2, D_LED3, D_LED4, R_NEW14, R_NEW15, R_NEW16, R_NEW17</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>Signal Test Points</h3>
+<div class="zone-type">debug &middot; 5 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">TP_NEW6, TP_NEW7, TP_NEW8, TP_NEW9, TP_NEW10</div>
+</details>
+</div>
+<div class="zone-card">
+<h3>Passives</h3>
+<div class="zone-type">power &middot; 3 components</div>
+<details><summary>Show components</summary>
+<div class="zone-components">R1, R2, R3</div>
+</details>
+</div>
+</div>
+</section>
+<section class="section">
+<h2>Trace Analysis</h2>
+<p style="color:var(--text-mid);margin-bottom:16px;">88 traces, 88 with connected endpoints.</p>
+<div class="net-grid">
+<div class="net-chip"><span class="net-dot" style="background:#ef4444;"></span><span class="net-count">24</span><span class="net-label">power</span></div>
+<div class="net-chip"><span class="net-dot" style="background:#d946ef;"></span><span class="net-count">5</span><span class="net-label">debug</span></div>
+<div class="net-chip"><span class="net-dot" style="background:#06b6d4;"></span><span class="net-count">59</span><span class="net-label">signal</span></div>
+</div>
+</section>
+<footer class="report-footer">
+Generated by re:trace v0.1.0 &middot; 2026-04-30T22:20:55Z
+<br>
+<a href="https://github.com/ericrihm/retrace" target="_blank" rel="noopener">github.com/ericrihm/retrace</a>
+</footer>
+</div>
+<script>(function() {
+    document.querySelectorAll('th[data-sortable]').forEach(function(th) {
+        th.addEventListener('click', function() {
+            var table = th.closest('table');
+            var tbody = table.querySelector('tbody');
+            var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+            var colIdx = Array.prototype.indexOf.call(th.parentNode.children, th);
+            var dir = th.getAttribute('data-sort-dir') === 'asc' ? 'desc' : 'asc';
+
+            th.parentNode.querySelectorAll('th').forEach(function(h) {
+                h.removeAttribute('data-sort-dir');
+                var arrow = h.querySelector('.sort-arrow');
+                if (arrow) arrow.textContent = '';
+            });
+            th.setAttribute('data-sort-dir', dir);
+            var arrow = th.querySelector('.sort-arrow');
+            if (arrow) arrow.textContent = dir === 'asc' ? '\u25B2' : '\u25BC';
+
+            rows.sort(function(a, b) {
+                var aText = a.children[colIdx].getAttribute('data-sort-value')
+                         || a.children[colIdx].textContent.trim();
+                var bText = b.children[colIdx].getAttribute('data-sort-value')
+                         || b.children[colIdx].textContent.trim();
+                var aNum = parseFloat(aText);
+                var bNum = parseFloat(bText);
+                var cmp;
+                if (!isNaN(aNum) && !isNaN(bNum)) {
+                    cmp = aNum - bNum;
+                } else {
+                    cmp = aText.localeCompare(bText);
+                }
+                return dir === 'asc' ? cmp : -cmp;
+            });
+
+            rows.forEach(function(row) { tbody.appendChild(row); });
+        });
+    });
+})();
+</script>
+</body>
+</html>

@@ -39,7 +39,8 @@ from retrace.analysis.probe_advisor import (  # noqa: E402
     Component as AdvisorComponent,
     ProbeAdvisor,
 )
-from retrace.export.bom import bom_to_csv, bom_to_json, generate_bom  # noqa: E402
+from retrace.export.bom import bom_to_csv, bom_to_json, bom_to_svg, generate_bom  # noqa: E402
+from retrace.export.html_report import generate_html_report  # noqa: E402
 from retrace.export.svg import generate_svg, generate_attack_surface_svg, generate_zones_svg  # noqa: E402
 from retrace.plugins.builtin.debug_interfaces import detect_debug_interfaces  # noqa: E402
 
@@ -2100,6 +2101,9 @@ def _generate_one_board(
     (out / f"{prefix}_bom.json").write_text(bom_to_json(bom) + "\n")
     (out / f"{prefix}_bom.csv").write_text(bom_to_csv(bom))
 
+    bom_svg_path = out / f"{prefix}_bom_table.svg"
+    bom_svg_path.write_text(bom_to_svg(bom, board_name=board_title), encoding="utf-8")
+
     svg_path = out / f"{prefix}_annotated.svg"
     click.echo(f"  [4/8] Writing SVG overlay → {svg_path}")
     svg_str = generate_svg(result, image_href=img_name, title=board_title, zones=zones)
@@ -2140,8 +2144,15 @@ def _generate_one_board(
     )
     dbg_path.write_text(_run_debug_interface_detection(result, board_label=board_title))
 
+    report_path = out / f"{prefix}_report.html"
+    report_html = generate_html_report(
+        result, title=board_title, zones=zones,
+        attack_paths=attack_paths,
+    )
+    report_path.write_text(report_html, encoding="utf-8")
+
     for p in [board_img, det_json, svg_path, atk_svg_path, zones_svg_path,
-              probe_path, solver_path, dbg_path,
+              bom_svg_path, report_path, probe_path, solver_path, dbg_path,
               out / f"{prefix}_bom.json", out / f"{prefix}_bom.csv"]:
         if p.exists():
             click.echo(f"    ✓  {p.name}  ({p.stat().st_size:,} bytes)")

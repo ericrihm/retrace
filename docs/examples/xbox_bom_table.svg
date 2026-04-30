@@ -1,0 +1,1854 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="3258" viewBox="0 0 900 3258" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace">
+<rect width="900" height="3258" fill="#0a0e1a"/>
+<rect x="0" y="0" width="900" height="32" fill="#111827"/>
+<line x1="0" y1="32" x2="900" y2="32" stroke="#1e293b" stroke-width="1"/>
+<text x="16" y="22" fill="#22d3ee" font-size="14" font-weight="bold">re:trace</text>
+<text x="450" y="22" fill="#e2e8f0" font-size="12" text-anchor="middle">Xbox One Model 1540 — Durango (AMD Liverpool APU, 28nm)</text>
+<text x="884" y="22" fill="#94a3b8" font-size="11" text-anchor="end">Bill of Materials</text>
+<rect x="0" y="32" width="900" height="24" fill="#111827" opacity="0.8"/>
+<line x1="0" y1="56" x2="900" y2="56" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="48" fill="#94a3b8" font-size="10">150 components</text>
+<text x="160" y="48" fill="#94a3b8" font-size="10">35 identified</text>
+<text x="310" y="48" fill="#ef4444" font-size="10" font-weight="bold">23.3% identification rate</text>
+<rect x="0" y="56" width="900" height="24" fill="#111827"/>
+<text x="16" y="72" fill="#e2e8f0" font-size="10" font-weight="bold">Ref</text>
+<text x="100" y="72" fill="#e2e8f0" font-size="10" font-weight="bold">Type</text>
+<text x="200" y="72" fill="#e2e8f0" font-size="10" font-weight="bold">Part Number</text>
+<text x="400" y="72" fill="#e2e8f0" font-size="10" font-weight="bold">Marking</text>
+<text x="540" y="72" fill="#e2e8f0" font-size="10" font-weight="bold">Value</text>
+<text x="640" y="72" fill="#e2e8f0" font-size="10" font-weight="bold">Package</text>
+<text x="740" y="72" fill="#e2e8f0" font-size="10" font-weight="bold">Confidence</text>
+<line x1="0" y1="80" x2="900" y2="80" stroke="#22d3ee" stroke-width="1" opacity="0.5"/>
+<rect x="0" y="80" width="900" height="22" fill="#111827" opacity="0.6"/>
+<circle cx="24" cy="91" r="4" fill="#ef4444"/>
+<text x="36" y="95" fill="#ef4444" font-size="11" font-weight="bold">Ic</text>
+<text x="180" y="95" fill="#64748b" font-size="10">(34)</text>
+<rect x="0" y="102" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="122" x2="900" y2="122" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="116" fill="#e2e8f0" font-size="10">D1</text>
+<circle cx="104" cy="112" r="4" fill="#ef4444"/>
+<text x="114" y="116" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="116" fill="#22d3ee" font-size="10">USBLC6-2SC6</text>
+<text x="400" y="116" fill="#94a3b8" font-size="10">USBLC6</text>
+<text x="540" y="116" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="116" fill="#94a3b8" font-size="10">SOT-23-6</text>
+<rect x="740" y="107" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="107" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="116" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="122" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="142" x2="900" y2="142" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="136" fill="#e2e8f0" font-size="10">D2</text>
+<circle cx="104" cy="132" r="4" fill="#ef4444"/>
+<text x="114" y="136" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="136" fill="#22d3ee" font-size="10">USBLC6-2SC6</text>
+<text x="400" y="136" fill="#94a3b8" font-size="10">USBLC6</text>
+<text x="540" y="136" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="136" fill="#94a3b8" font-size="10">SOT-23-6</text>
+<rect x="740" y="127" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="127" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="136" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="142" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="162" x2="900" y2="162" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="156" fill="#e2e8f0" font-size="10">D3</text>
+<circle cx="104" cy="152" r="4" fill="#ef4444"/>
+<text x="114" y="156" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="156" fill="#22d3ee" font-size="10">IP4283CZ10</text>
+<text x="400" y="156" fill="#94a3b8" font-size="10">IP4283CZ</text>
+<text x="540" y="156" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="156" fill="#94a3b8" font-size="10">SOT-665</text>
+<rect x="740" y="147" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="147" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="156" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="162" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="182" x2="900" y2="182" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="176" fill="#e2e8f0" font-size="10">D4</text>
+<circle cx="104" cy="172" r="4" fill="#ef4444"/>
+<text x="114" y="176" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="176" fill="#22d3ee" font-size="10">PRTR5V0U2X</text>
+<text x="400" y="176" fill="#94a3b8" font-size="10">PRTR5V0</text>
+<text x="540" y="176" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="176" fill="#94a3b8" font-size="10">SOT-143</text>
+<rect x="740" y="167" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="167" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="176" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="182" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="202" x2="900" y2="202" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="196" fill="#e2e8f0" font-size="10">D5</text>
+<circle cx="104" cy="192" r="4" fill="#ef4444"/>
+<text x="114" y="196" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="196" fill="#22d3ee" font-size="10">IP4283CZ10</text>
+<text x="400" y="196" fill="#94a3b8" font-size="10">IP4283CZ</text>
+<text x="540" y="196" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="196" fill="#94a3b8" font-size="10">SOT-665</text>
+<rect x="740" y="187" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="187" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="196" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="202" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="222" x2="900" y2="222" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="216" fill="#e2e8f0" font-size="10">D6</text>
+<circle cx="104" cy="212" r="4" fill="#ef4444"/>
+<text x="114" y="216" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="216" fill="#22d3ee" font-size="10">PRTR5V0U2X</text>
+<text x="400" y="216" fill="#94a3b8" font-size="10">PRTR5V0</text>
+<text x="540" y="216" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="216" fill="#94a3b8" font-size="10">SOT-143</text>
+<rect x="740" y="207" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="207" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="216" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="222" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="242" x2="900" y2="242" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="236" fill="#e2e8f0" font-size="10">Q1</text>
+<circle cx="104" cy="232" r="4" fill="#ef4444"/>
+<text x="114" y="236" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="236" fill="#22d3ee" font-size="10">BSC014N04LS</text>
+<text x="400" y="236" fill="#94a3b8" font-size="10">BSC014N04</text>
+<text x="540" y="236" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="236" fill="#94a3b8" font-size="10">TDSON-8</text>
+<rect x="740" y="227" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="227" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="236" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="242" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="262" x2="900" y2="262" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="256" fill="#e2e8f0" font-size="10">Q2</text>
+<circle cx="104" cy="252" r="4" fill="#ef4444"/>
+<text x="114" y="256" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="256" fill="#22d3ee" font-size="10">BSC014N04LS</text>
+<text x="400" y="256" fill="#94a3b8" font-size="10">BSC014N04</text>
+<text x="540" y="256" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="256" fill="#94a3b8" font-size="10">TDSON-8</text>
+<rect x="740" y="247" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="247" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="256" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="262" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="282" x2="900" y2="282" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="276" fill="#e2e8f0" font-size="10">Q3</text>
+<circle cx="104" cy="272" r="4" fill="#ef4444"/>
+<text x="114" y="276" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="276" fill="#22d3ee" font-size="10">BSC014N04LS</text>
+<text x="400" y="276" fill="#94a3b8" font-size="10">BSC014N04</text>
+<text x="540" y="276" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="276" fill="#94a3b8" font-size="10">TDSON-8</text>
+<rect x="740" y="267" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="267" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="276" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="282" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="302" x2="900" y2="302" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="296" fill="#e2e8f0" font-size="10">Q4</text>
+<circle cx="104" cy="292" r="4" fill="#ef4444"/>
+<text x="114" y="296" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="296" fill="#22d3ee" font-size="10">BSC014N04LS</text>
+<text x="400" y="296" fill="#94a3b8" font-size="10">BSC014N04</text>
+<text x="540" y="296" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="296" fill="#94a3b8" font-size="10">TDSON-8</text>
+<rect x="740" y="287" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="287" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="296" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="302" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="322" x2="900" y2="322" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="316" fill="#e2e8f0" font-size="10">Q5</text>
+<circle cx="104" cy="312" r="4" fill="#ef4444"/>
+<text x="114" y="316" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="316" fill="#22d3ee" font-size="10">BSC014N04LS</text>
+<text x="400" y="316" fill="#94a3b8" font-size="10">BSC014N04</text>
+<text x="540" y="316" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="316" fill="#94a3b8" font-size="10">TDSON-8</text>
+<rect x="740" y="307" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="307" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="316" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="322" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="342" x2="900" y2="342" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="336" fill="#e2e8f0" font-size="10">Q6</text>
+<circle cx="104" cy="332" r="4" fill="#ef4444"/>
+<text x="114" y="336" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="336" fill="#22d3ee" font-size="10">BSC014N04LS</text>
+<text x="400" y="336" fill="#94a3b8" font-size="10">BSC014N04</text>
+<text x="540" y="336" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="336" fill="#94a3b8" font-size="10">TDSON-8</text>
+<rect x="740" y="327" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="327" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="336" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="342" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="362" x2="900" y2="362" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="356" fill="#e2e8f0" font-size="10">U1</text>
+<circle cx="104" cy="352" r="4" fill="#ef4444"/>
+<text x="114" y="356" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="356" fill="#22d3ee" font-size="10">AMD Liverpool</text>
+<text x="400" y="356" fill="#94a3b8" font-size="10">Liverpool</text>
+<text x="540" y="356" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="356" fill="#94a3b8" font-size="10">BGA-1170</text>
+<rect x="740" y="347" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="347" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="356" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="362" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="382" x2="900" y2="382" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="376" fill="#e2e8f0" font-size="10">U10</text>
+<circle cx="104" cy="372" r="4" fill="#ef4444"/>
+<text x="114" y="376" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="376" fill="#22d3ee" font-size="10">NCP4204</text>
+<text x="400" y="376" fill="#94a3b8" font-size="10">NCP4204</text>
+<text x="540" y="376" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="376" fill="#94a3b8" font-size="10">QFN-52</text>
+<rect x="740" y="367" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="367" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="376" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="382" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="402" x2="900" y2="402" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="396" fill="#e2e8f0" font-size="10">U11</text>
+<circle cx="104" cy="392" r="4" fill="#ef4444"/>
+<text x="114" y="396" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="396" fill="#22d3ee" font-size="10">IR3553</text>
+<text x="400" y="396" fill="#94a3b8" font-size="10">IR3553</text>
+<text x="540" y="396" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="396" fill="#94a3b8" font-size="10">PQFN-25</text>
+<rect x="740" y="387" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="387" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="396" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="402" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="422" x2="900" y2="422" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="416" fill="#e2e8f0" font-size="10">U12</text>
+<circle cx="104" cy="412" r="4" fill="#ef4444"/>
+<text x="114" y="416" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="416" fill="#22d3ee" font-size="10">TMDS442</text>
+<text x="400" y="416" fill="#94a3b8" font-size="10">TMDS442</text>
+<text x="540" y="416" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="416" fill="#94a3b8" font-size="10">QFP-48</text>
+<rect x="740" y="407" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="407" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="416" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="422" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="442" x2="900" y2="442" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="436" fill="#e2e8f0" font-size="10">U13</text>
+<circle cx="104" cy="432" r="4" fill="#ef4444"/>
+<text x="114" y="436" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="436" fill="#22d3ee" font-size="10">H5TQ4G63AFR-PBC</text>
+<text x="400" y="436" fill="#94a3b8" font-size="10">H5TQ4G63AFR</text>
+<text x="540" y="436" fill="#94a3b8" font-size="10">4Gb</text>
+<text x="640" y="436" fill="#94a3b8" font-size="10">BGA-78</text>
+<rect x="740" y="427" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="427" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="436" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="442" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="462" x2="900" y2="462" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="456" fill="#e2e8f0" font-size="10">U14</text>
+<circle cx="104" cy="452" r="4" fill="#ef4444"/>
+<text x="114" y="456" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="456" fill="#22d3ee" font-size="10">H5TQ4G63AFR-PBC</text>
+<text x="400" y="456" fill="#94a3b8" font-size="10">H5TQ4G63AFR</text>
+<text x="540" y="456" fill="#94a3b8" font-size="10">4Gb</text>
+<text x="640" y="456" fill="#94a3b8" font-size="10">BGA-78</text>
+<rect x="740" y="447" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="447" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="456" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="462" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="482" x2="900" y2="482" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="476" fill="#e2e8f0" font-size="10">U15</text>
+<circle cx="104" cy="472" r="4" fill="#ef4444"/>
+<text x="114" y="476" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="476" fill="#22d3ee" font-size="10">H5TQ4G63AFR-PBC</text>
+<text x="400" y="476" fill="#94a3b8" font-size="10">H5TQ4G63AFR</text>
+<text x="540" y="476" fill="#94a3b8" font-size="10">4Gb</text>
+<text x="640" y="476" fill="#94a3b8" font-size="10">BGA-78</text>
+<rect x="740" y="467" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="467" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="476" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="482" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="502" x2="900" y2="502" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="496" fill="#e2e8f0" font-size="10">U16</text>
+<circle cx="104" cy="492" r="4" fill="#ef4444"/>
+<text x="114" y="496" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="496" fill="#22d3ee" font-size="10">H5TQ4G63AFR-PBC</text>
+<text x="400" y="496" fill="#94a3b8" font-size="10">H5TQ4G63AFR</text>
+<text x="540" y="496" fill="#94a3b8" font-size="10">4Gb</text>
+<text x="640" y="496" fill="#94a3b8" font-size="10">BGA-78</text>
+<rect x="740" y="487" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="487" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="496" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="502" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="522" x2="900" y2="522" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="516" fill="#e2e8f0" font-size="10">U17</text>
+<circle cx="104" cy="512" r="4" fill="#ef4444"/>
+<text x="114" y="516" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="516" fill="#22d3ee" font-size="10">NCP302155</text>
+<text x="400" y="516" fill="#94a3b8" font-size="10">NCP302155</text>
+<text x="540" y="516" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="516" fill="#94a3b8" font-size="10">PQFN-40</text>
+<rect x="740" y="507" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="507" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="516" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="522" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="542" x2="900" y2="542" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="536" fill="#e2e8f0" font-size="10">U18</text>
+<circle cx="104" cy="532" r="4" fill="#ef4444"/>
+<text x="114" y="536" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="536" fill="#22d3ee" font-size="10">NCP302155</text>
+<text x="400" y="536" fill="#94a3b8" font-size="10">NCP302155</text>
+<text x="540" y="536" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="536" fill="#94a3b8" font-size="10">PQFN-40</text>
+<rect x="740" y="527" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="527" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="536" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="542" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="562" x2="900" y2="562" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="556" fill="#e2e8f0" font-size="10">U19</text>
+<circle cx="104" cy="552" r="4" fill="#ef4444"/>
+<text x="114" y="556" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="556" fill="#22d3ee" font-size="10">NCP81111</text>
+<text x="400" y="556" fill="#94a3b8" font-size="10">NCP81111</text>
+<text x="540" y="556" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="556" fill="#94a3b8" font-size="10">QFN-36</text>
+<rect x="740" y="547" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="547" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="556" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="562" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="582" x2="900" y2="582" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="576" fill="#e2e8f0" font-size="10">U2</text>
+<circle cx="104" cy="572" r="4" fill="#ef4444"/>
+<text x="114" y="576" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="576" fill="#22d3ee" font-size="10">H5TQ4G63AFR-PBC</text>
+<text x="400" y="576" fill="#94a3b8" font-size="10">H5TQ4G63AFR</text>
+<text x="540" y="576" fill="#94a3b8" font-size="10">4Gb</text>
+<text x="640" y="576" fill="#94a3b8" font-size="10">BGA-78</text>
+<rect x="740" y="567" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="567" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="576" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="582" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="602" x2="900" y2="602" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="596" fill="#e2e8f0" font-size="10">U20</text>
+<circle cx="104" cy="592" r="4" fill="#ef4444"/>
+<text x="114" y="596" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="596" fill="#22d3ee" font-size="10">NCP81111</text>
+<text x="400" y="596" fill="#94a3b8" font-size="10">NCP81111</text>
+<text x="540" y="596" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="596" fill="#94a3b8" font-size="10">QFN-36</text>
+<rect x="740" y="587" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="587" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="596" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="602" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="622" x2="900" y2="622" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="616" fill="#e2e8f0" font-size="10">U21</text>
+<circle cx="104" cy="612" r="4" fill="#ef4444"/>
+<text x="114" y="616" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="616" fill="#22d3ee" font-size="10">TPS54331DR</text>
+<text x="400" y="616" fill="#94a3b8" font-size="10">TPS54331</text>
+<text x="540" y="616" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="616" fill="#94a3b8" font-size="10">SOIC-8</text>
+<rect x="740" y="607" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="607" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="616" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="622" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="642" x2="900" y2="642" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="636" fill="#e2e8f0" font-size="10">U22</text>
+<circle cx="104" cy="632" r="4" fill="#ef4444"/>
+<text x="114" y="636" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="636" fill="#22d3ee" font-size="10">TLV1117LV33</text>
+<text x="400" y="636" fill="#94a3b8" font-size="10">TLV1117-33</text>
+<text x="540" y="636" fill="#94a3b8" font-size="10">3.3V</text>
+<text x="640" y="636" fill="#94a3b8" font-size="10">SOT-223</text>
+<rect x="740" y="627" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="627" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="636" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="642" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="662" x2="900" y2="662" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="656" fill="#e2e8f0" font-size="10">U3</text>
+<circle cx="104" cy="652" r="4" fill="#ef4444"/>
+<text x="114" y="656" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="656" fill="#22d3ee" font-size="10">H5TQ4G63AFR-PBC</text>
+<text x="400" y="656" fill="#94a3b8" font-size="10">H5TQ4G63AFR</text>
+<text x="540" y="656" fill="#94a3b8" font-size="10">4Gb</text>
+<text x="640" y="656" fill="#94a3b8" font-size="10">BGA-78</text>
+<rect x="740" y="647" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="647" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="656" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="662" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="682" x2="900" y2="682" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="676" fill="#e2e8f0" font-size="10">U4</text>
+<circle cx="104" cy="672" r="4" fill="#ef4444"/>
+<text x="114" y="676" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="676" fill="#22d3ee" font-size="10">H5TQ4G63AFR-PBC</text>
+<text x="400" y="676" fill="#94a3b8" font-size="10">H5TQ4G63AFR</text>
+<text x="540" y="676" fill="#94a3b8" font-size="10">4Gb</text>
+<text x="640" y="676" fill="#94a3b8" font-size="10">BGA-78</text>
+<rect x="740" y="667" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="667" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="676" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="682" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="702" x2="900" y2="702" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="696" fill="#e2e8f0" font-size="10">U5</text>
+<circle cx="104" cy="692" r="4" fill="#ef4444"/>
+<text x="114" y="696" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="696" fill="#22d3ee" font-size="10">H5TQ4G63AFR-PBC</text>
+<text x="400" y="696" fill="#94a3b8" font-size="10">H5TQ4G63AFR</text>
+<text x="540" y="696" fill="#94a3b8" font-size="10">4Gb</text>
+<text x="640" y="696" fill="#94a3b8" font-size="10">BGA-78</text>
+<rect x="740" y="687" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="687" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="696" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="702" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="722" x2="900" y2="722" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="716" fill="#e2e8f0" font-size="10">U6</text>
+<circle cx="104" cy="712" r="4" fill="#ef4444"/>
+<text x="114" y="716" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="716" fill="#22d3ee" font-size="10">X861949-005</text>
+<text x="400" y="716" fill="#94a3b8" font-size="10">X861949</text>
+<text x="540" y="716" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="716" fill="#94a3b8" font-size="10">BGA-360</text>
+<rect x="740" y="707" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="707" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="716" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="722" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="742" x2="900" y2="742" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="736" fill="#e2e8f0" font-size="10">U7</text>
+<circle cx="104" cy="732" r="4" fill="#ef4444"/>
+<text x="114" y="736" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="736" fill="#22d3ee" font-size="10">H26M42003GMR</text>
+<text x="400" y="736" fill="#94a3b8" font-size="10">H26M42003GMR</text>
+<text x="540" y="736" fill="#94a3b8" font-size="10">8GB</text>
+<text x="640" y="736" fill="#94a3b8" font-size="10">BGA-153</text>
+<rect x="740" y="727" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="727" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="736" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="742" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="762" x2="900" y2="762" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="756" fill="#e2e8f0" font-size="10">U8</text>
+<circle cx="104" cy="752" r="4" fill="#ef4444"/>
+<text x="114" y="756" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="756" fill="#22d3ee" font-size="10">88W8897-NNB2</text>
+<text x="400" y="756" fill="#94a3b8" font-size="10">88W8897</text>
+<text x="540" y="756" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="756" fill="#94a3b8" font-size="10">QFN-68</text>
+<rect x="740" y="747" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="747" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="756" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="762" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="782" x2="900" y2="782" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="776" fill="#e2e8f0" font-size="10">U9</text>
+<circle cx="104" cy="772" r="4" fill="#ef4444"/>
+<text x="114" y="776" fill="#94a3b8" font-size="9">ic</text>
+<text x="200" y="776" fill="#22d3ee" font-size="10">RTL8151GNM</text>
+<text x="400" y="776" fill="#94a3b8" font-size="10">RTL8151GNM</text>
+<text x="540" y="776" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="776" fill="#94a3b8" font-size="10">QFN-40</text>
+<rect x="740" y="767" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="767" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="776" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="782" width="900" height="22" fill="#111827" opacity="0.6"/>
+<circle cx="24" cy="793" r="4" fill="#f59e0b"/>
+<text x="36" y="797" fill="#f59e0b" font-size="11" font-weight="bold">Connector</text>
+<text x="180" y="797" fill="#64748b" font-size="10">(10)</text>
+<rect x="0" y="804" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="824" x2="900" y2="824" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="818" fill="#e2e8f0" font-size="10">J1</text>
+<circle cx="104" cy="814" r="4" fill="#f59e0b"/>
+<text x="114" y="818" fill="#94a3b8" font-size="9">connector</text>
+<text x="200" y="818" fill="#64748b" font-size="10">—</text>
+<text x="400" y="818" fill="#94a3b8" font-size="10">HDMI</text>
+<text x="540" y="818" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="818" fill="#94a3b8" font-size="10">HDMI-A</text>
+<rect x="740" y="809" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="809" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="818" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="824" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="844" x2="900" y2="844" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="838" fill="#e2e8f0" font-size="10">J10</text>
+<circle cx="104" cy="834" r="4" fill="#f59e0b"/>
+<text x="114" y="838" fill="#94a3b8" font-size="9">connector</text>
+<text x="200" y="838" fill="#64748b" font-size="10">—</text>
+<text x="400" y="838" fill="#94a3b8" font-size="10">DC 12V</text>
+<text x="540" y="838" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="838" fill="#94a3b8" font-size="10">Barrel-5.5mm</text>
+<rect x="740" y="829" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="829" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="838" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="844" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="864" x2="900" y2="864" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="858" fill="#e2e8f0" font-size="10">J2</text>
+<circle cx="104" cy="854" r="4" fill="#f59e0b"/>
+<text x="114" y="858" fill="#94a3b8" font-size="9">connector</text>
+<text x="200" y="858" fill="#64748b" font-size="10">—</text>
+<text x="400" y="858" fill="#94a3b8" font-size="10">USB3.0</text>
+<text x="540" y="858" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="858" fill="#94a3b8" font-size="10">USB-A</text>
+<rect x="740" y="849" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="849" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="858" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="864" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="884" x2="900" y2="884" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="878" fill="#e2e8f0" font-size="10">J3</text>
+<circle cx="104" cy="874" r="4" fill="#f59e0b"/>
+<text x="114" y="878" fill="#94a3b8" font-size="9">connector</text>
+<text x="200" y="878" fill="#64748b" font-size="10">—</text>
+<text x="400" y="878" fill="#94a3b8" font-size="10">USB3.0</text>
+<text x="540" y="878" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="878" fill="#94a3b8" font-size="10">USB-A</text>
+<rect x="740" y="869" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="869" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="878" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="884" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="904" x2="900" y2="904" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="898" fill="#e2e8f0" font-size="10">J4</text>
+<circle cx="104" cy="894" r="4" fill="#f59e0b"/>
+<text x="114" y="898" fill="#94a3b8" font-size="9">connector</text>
+<text x="200" y="898" fill="#64748b" font-size="10">—</text>
+<text x="400" y="898" fill="#94a3b8" font-size="10">RJ45</text>
+<text x="540" y="898" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="898" fill="#94a3b8" font-size="10">RJ45</text>
+<rect x="740" y="889" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="889" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="898" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="904" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="924" x2="900" y2="924" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="918" fill="#e2e8f0" font-size="10">J5</text>
+<circle cx="104" cy="914" r="4" fill="#f59e0b"/>
+<text x="114" y="918" fill="#94a3b8" font-size="9">connector</text>
+<text x="200" y="918" fill="#64748b" font-size="10">—</text>
+<text x="400" y="918" fill="#94a3b8" font-size="10">JTAG</text>
+<text x="540" y="918" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="918" fill="#94a3b8" font-size="10">2x7 1.27mm</text>
+<rect x="740" y="909" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="909" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="918" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="924" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="944" x2="900" y2="944" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="938" fill="#e2e8f0" font-size="10">J6</text>
+<circle cx="104" cy="934" r="4" fill="#f59e0b"/>
+<text x="114" y="938" fill="#94a3b8" font-size="9">connector</text>
+<text x="200" y="938" fill="#64748b" font-size="10">—</text>
+<text x="400" y="938" fill="#94a3b8" font-size="10">SATA</text>
+<text x="540" y="938" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="938" fill="#94a3b8" font-size="10">SATA-7P</text>
+<rect x="740" y="929" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="929" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="938" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="944" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="964" x2="900" y2="964" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="958" fill="#e2e8f0" font-size="10">J7</text>
+<circle cx="104" cy="954" r="4" fill="#f59e0b"/>
+<text x="114" y="958" fill="#94a3b8" font-size="9">connector</text>
+<text x="200" y="958" fill="#64748b" font-size="10">—</text>
+<text x="400" y="958" fill="#94a3b8" font-size="10">ANT</text>
+<text x="540" y="958" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="958" fill="#94a3b8" font-size="10">U.FL</text>
+<rect x="740" y="949" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="949" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="958" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="964" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="984" x2="900" y2="984" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="978" fill="#e2e8f0" font-size="10">J8</text>
+<circle cx="104" cy="974" r="4" fill="#f59e0b"/>
+<text x="114" y="978" fill="#94a3b8" font-size="9">connector</text>
+<text x="200" y="978" fill="#64748b" font-size="10">—</text>
+<text x="400" y="978" fill="#94a3b8" font-size="10">IR</text>
+<text x="540" y="978" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="978" fill="#94a3b8" font-size="10">3-pin</text>
+<rect x="740" y="969" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="969" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="978" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="984" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1004" x2="900" y2="1004" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="998" fill="#e2e8f0" font-size="10">J9</text>
+<circle cx="104" cy="994" r="4" fill="#f59e0b"/>
+<text x="114" y="998" fill="#94a3b8" font-size="9">connector</text>
+<text x="200" y="998" fill="#64748b" font-size="10">—</text>
+<text x="400" y="998" fill="#94a3b8" font-size="10">TOSLINK</text>
+<text x="540" y="998" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="998" fill="#94a3b8" font-size="10">TOSLINK</text>
+<rect x="740" y="989" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="989" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="998" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1004" width="900" height="22" fill="#111827" opacity="0.6"/>
+<circle cx="24" cy="1015" r="4" fill="#3b82f6"/>
+<text x="36" y="1019" fill="#3b82f6" font-size="11" font-weight="bold">Capacitor</text>
+<text x="180" y="1019" fill="#64748b" font-size="10">(56)</text>
+<rect x="0" y="1026" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1046" x2="900" y2="1046" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1040" fill="#e2e8f0" font-size="10">C1</text>
+<circle cx="104" cy="1036" r="4" fill="#3b82f6"/>
+<text x="114" y="1040" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1040" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1040" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1040" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1040" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1031" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1031" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1040" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1046" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1066" x2="900" y2="1066" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1060" fill="#e2e8f0" font-size="10">C10</text>
+<circle cx="104" cy="1056" r="4" fill="#3b82f6"/>
+<text x="114" y="1060" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1060" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1060" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1060" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1060" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1051" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1051" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1060" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1066" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1086" x2="900" y2="1086" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1080" fill="#e2e8f0" font-size="10">C11</text>
+<circle cx="104" cy="1076" r="4" fill="#3b82f6"/>
+<text x="114" y="1080" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1080" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1080" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1080" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1080" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1071" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1071" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1080" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1086" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1106" x2="900" y2="1106" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1100" fill="#e2e8f0" font-size="10">C12</text>
+<circle cx="104" cy="1096" r="4" fill="#3b82f6"/>
+<text x="114" y="1100" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1100" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1100" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1100" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1100" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1091" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1091" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1100" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1106" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1126" x2="900" y2="1126" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1120" fill="#e2e8f0" font-size="10">C13</text>
+<circle cx="104" cy="1116" r="4" fill="#3b82f6"/>
+<text x="114" y="1120" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1120" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1120" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1120" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1120" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1111" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1111" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1120" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1126" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1146" x2="900" y2="1146" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1140" fill="#e2e8f0" font-size="10">C14</text>
+<circle cx="104" cy="1136" r="4" fill="#3b82f6"/>
+<text x="114" y="1140" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1140" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1140" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1140" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1140" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1131" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1131" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1140" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1146" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1166" x2="900" y2="1166" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1160" fill="#e2e8f0" font-size="10">C15</text>
+<circle cx="104" cy="1156" r="4" fill="#3b82f6"/>
+<text x="114" y="1160" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1160" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1160" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1160" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1160" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1151" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1151" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1160" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1166" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1186" x2="900" y2="1186" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1180" fill="#e2e8f0" font-size="10">C16</text>
+<circle cx="104" cy="1176" r="4" fill="#3b82f6"/>
+<text x="114" y="1180" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1180" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1180" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1180" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1180" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1171" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1171" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1180" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1186" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1206" x2="900" y2="1206" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1200" fill="#e2e8f0" font-size="10">C17</text>
+<circle cx="104" cy="1196" r="4" fill="#3b82f6"/>
+<text x="114" y="1200" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1200" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1200" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1200" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1200" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1191" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1191" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1200" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1206" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1226" x2="900" y2="1226" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1220" fill="#e2e8f0" font-size="10">C18</text>
+<circle cx="104" cy="1216" r="4" fill="#3b82f6"/>
+<text x="114" y="1220" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1220" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1220" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1220" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1220" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1211" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1211" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1220" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1226" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1246" x2="900" y2="1246" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1240" fill="#e2e8f0" font-size="10">C19</text>
+<circle cx="104" cy="1236" r="4" fill="#3b82f6"/>
+<text x="114" y="1240" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1240" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1240" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1240" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1240" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1231" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1231" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1240" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1246" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1266" x2="900" y2="1266" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1260" fill="#e2e8f0" font-size="10">C2</text>
+<circle cx="104" cy="1256" r="4" fill="#3b82f6"/>
+<text x="114" y="1260" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1260" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1260" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1260" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1260" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1251" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1251" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1260" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1266" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1286" x2="900" y2="1286" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1280" fill="#e2e8f0" font-size="10">C20</text>
+<circle cx="104" cy="1276" r="4" fill="#3b82f6"/>
+<text x="114" y="1280" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1280" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1280" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1280" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1280" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1271" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1271" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1280" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1286" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1306" x2="900" y2="1306" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1300" fill="#e2e8f0" font-size="10">C21</text>
+<circle cx="104" cy="1296" r="4" fill="#3b82f6"/>
+<text x="114" y="1300" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1300" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1300" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1300" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1300" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1291" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1291" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1300" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1306" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1326" x2="900" y2="1326" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1320" fill="#e2e8f0" font-size="10">C22</text>
+<circle cx="104" cy="1316" r="4" fill="#3b82f6"/>
+<text x="114" y="1320" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1320" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1320" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1320" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1320" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1311" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1311" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1320" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1326" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1346" x2="900" y2="1346" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1340" fill="#e2e8f0" font-size="10">C23</text>
+<circle cx="104" cy="1336" r="4" fill="#3b82f6"/>
+<text x="114" y="1340" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1340" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1340" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1340" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1340" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1331" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1331" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1340" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1346" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1366" x2="900" y2="1366" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1360" fill="#e2e8f0" font-size="10">C24</text>
+<circle cx="104" cy="1356" r="4" fill="#3b82f6"/>
+<text x="114" y="1360" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1360" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1360" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1360" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1360" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1351" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1351" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1360" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1366" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1386" x2="900" y2="1386" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1380" fill="#e2e8f0" font-size="10">C25</text>
+<circle cx="104" cy="1376" r="4" fill="#3b82f6"/>
+<text x="114" y="1380" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1380" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1380" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1380" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1380" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1371" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1371" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1380" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1386" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1406" x2="900" y2="1406" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1400" fill="#e2e8f0" font-size="10">C26</text>
+<circle cx="104" cy="1396" r="4" fill="#3b82f6"/>
+<text x="114" y="1400" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1400" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1400" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1400" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1400" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1391" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1391" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1400" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1406" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1426" x2="900" y2="1426" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1420" fill="#e2e8f0" font-size="10">C27</text>
+<circle cx="104" cy="1416" r="4" fill="#3b82f6"/>
+<text x="114" y="1420" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1420" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1420" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1420" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1420" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1411" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1411" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1420" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1426" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1446" x2="900" y2="1446" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1440" fill="#e2e8f0" font-size="10">C28</text>
+<circle cx="104" cy="1436" r="4" fill="#3b82f6"/>
+<text x="114" y="1440" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1440" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1440" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1440" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1440" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1431" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1431" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1440" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1446" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1466" x2="900" y2="1466" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1460" fill="#e2e8f0" font-size="10">C29</text>
+<circle cx="104" cy="1456" r="4" fill="#3b82f6"/>
+<text x="114" y="1460" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1460" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1460" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1460" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1460" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1451" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1451" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1460" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1466" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1486" x2="900" y2="1486" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1480" fill="#e2e8f0" font-size="10">C3</text>
+<circle cx="104" cy="1476" r="4" fill="#3b82f6"/>
+<text x="114" y="1480" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1480" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1480" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1480" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1480" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1471" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1471" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1480" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1486" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1506" x2="900" y2="1506" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1500" fill="#e2e8f0" font-size="10">C30</text>
+<circle cx="104" cy="1496" r="4" fill="#3b82f6"/>
+<text x="114" y="1500" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1500" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1500" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1500" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1500" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1491" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1491" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1500" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1506" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1526" x2="900" y2="1526" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1520" fill="#e2e8f0" font-size="10">C31</text>
+<circle cx="104" cy="1516" r="4" fill="#3b82f6"/>
+<text x="114" y="1520" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1520" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1520" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1520" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1520" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1511" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1511" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1520" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1526" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1546" x2="900" y2="1546" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1540" fill="#e2e8f0" font-size="10">C32</text>
+<circle cx="104" cy="1536" r="4" fill="#3b82f6"/>
+<text x="114" y="1540" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1540" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1540" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1540" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1540" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1531" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1531" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1540" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1546" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1566" x2="900" y2="1566" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1560" fill="#e2e8f0" font-size="10">C33</text>
+<circle cx="104" cy="1556" r="4" fill="#3b82f6"/>
+<text x="114" y="1560" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1560" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1560" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1560" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1560" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1551" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1551" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1560" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1566" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1586" x2="900" y2="1586" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1580" fill="#e2e8f0" font-size="10">C34</text>
+<circle cx="104" cy="1576" r="4" fill="#3b82f6"/>
+<text x="114" y="1580" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1580" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1580" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1580" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1580" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1571" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1571" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1580" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1586" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1606" x2="900" y2="1606" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1600" fill="#e2e8f0" font-size="10">C35</text>
+<circle cx="104" cy="1596" r="4" fill="#3b82f6"/>
+<text x="114" y="1600" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1600" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1600" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1600" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1600" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1591" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1591" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1600" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1606" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1626" x2="900" y2="1626" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1620" fill="#e2e8f0" font-size="10">C36</text>
+<circle cx="104" cy="1616" r="4" fill="#3b82f6"/>
+<text x="114" y="1620" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1620" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1620" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1620" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1620" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1611" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1611" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1620" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1626" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1646" x2="900" y2="1646" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1640" fill="#e2e8f0" font-size="10">C37</text>
+<circle cx="104" cy="1636" r="4" fill="#3b82f6"/>
+<text x="114" y="1640" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1640" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1640" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1640" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1640" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1631" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1631" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1640" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1646" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1666" x2="900" y2="1666" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1660" fill="#e2e8f0" font-size="10">C38</text>
+<circle cx="104" cy="1656" r="4" fill="#3b82f6"/>
+<text x="114" y="1660" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1660" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1660" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1660" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1660" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1651" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1651" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1660" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1666" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1686" x2="900" y2="1686" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1680" fill="#e2e8f0" font-size="10">C39</text>
+<circle cx="104" cy="1676" r="4" fill="#3b82f6"/>
+<text x="114" y="1680" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1680" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1680" fill="#94a3b8" font-size="10">470uF</text>
+<text x="540" y="1680" fill="#94a3b8" font-size="10">470uF</text>
+<text x="640" y="1680" fill="#94a3b8" font-size="10">1210</text>
+<rect x="740" y="1671" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1671" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1680" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1686" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1706" x2="900" y2="1706" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1700" fill="#e2e8f0" font-size="10">C4</text>
+<circle cx="104" cy="1696" r="4" fill="#3b82f6"/>
+<text x="114" y="1700" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1700" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1700" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1700" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1700" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1691" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1691" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1700" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1706" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1726" x2="900" y2="1726" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1720" fill="#e2e8f0" font-size="10">C40</text>
+<circle cx="104" cy="1716" r="4" fill="#3b82f6"/>
+<text x="114" y="1720" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1720" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1720" fill="#94a3b8" font-size="10">470uF</text>
+<text x="540" y="1720" fill="#94a3b8" font-size="10">470uF</text>
+<text x="640" y="1720" fill="#94a3b8" font-size="10">1210</text>
+<rect x="740" y="1711" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1711" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1720" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1726" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1746" x2="900" y2="1746" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1740" fill="#e2e8f0" font-size="10">C41</text>
+<circle cx="104" cy="1736" r="4" fill="#3b82f6"/>
+<text x="114" y="1740" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1740" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1740" fill="#94a3b8" font-size="10">22uF</text>
+<text x="540" y="1740" fill="#94a3b8" font-size="10">22uF</text>
+<text x="640" y="1740" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1731" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1731" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1740" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1746" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1766" x2="900" y2="1766" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1760" fill="#e2e8f0" font-size="10">C42</text>
+<circle cx="104" cy="1756" r="4" fill="#3b82f6"/>
+<text x="114" y="1760" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1760" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1760" fill="#94a3b8" font-size="10">22uF</text>
+<text x="540" y="1760" fill="#94a3b8" font-size="10">22uF</text>
+<text x="640" y="1760" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1751" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1751" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1760" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1766" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1786" x2="900" y2="1786" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1780" fill="#e2e8f0" font-size="10">C43</text>
+<circle cx="104" cy="1776" r="4" fill="#3b82f6"/>
+<text x="114" y="1780" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1780" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1780" fill="#94a3b8" font-size="10">22uF</text>
+<text x="540" y="1780" fill="#94a3b8" font-size="10">22uF</text>
+<text x="640" y="1780" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1771" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1771" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1780" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1786" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1806" x2="900" y2="1806" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1800" fill="#e2e8f0" font-size="10">C44</text>
+<circle cx="104" cy="1796" r="4" fill="#3b82f6"/>
+<text x="114" y="1800" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1800" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1800" fill="#94a3b8" font-size="10">22uF</text>
+<text x="540" y="1800" fill="#94a3b8" font-size="10">22uF</text>
+<text x="640" y="1800" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1791" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1791" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1800" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1806" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1826" x2="900" y2="1826" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1820" fill="#e2e8f0" font-size="10">C45</text>
+<circle cx="104" cy="1816" r="4" fill="#3b82f6"/>
+<text x="114" y="1820" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1820" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1820" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="1820" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="1820" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1811" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1811" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1820" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1826" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1846" x2="900" y2="1846" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1840" fill="#e2e8f0" font-size="10">C46</text>
+<circle cx="104" cy="1836" r="4" fill="#3b82f6"/>
+<text x="114" y="1840" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1840" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1840" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1840" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1840" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1831" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1831" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1840" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1846" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1866" x2="900" y2="1866" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1860" fill="#e2e8f0" font-size="10">C47</text>
+<circle cx="104" cy="1856" r="4" fill="#3b82f6"/>
+<text x="114" y="1860" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1860" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1860" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1860" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1860" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1851" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1851" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1860" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1866" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1886" x2="900" y2="1886" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1880" fill="#e2e8f0" font-size="10">C48</text>
+<circle cx="104" cy="1876" r="4" fill="#3b82f6"/>
+<text x="114" y="1880" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1880" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1880" fill="#94a3b8" font-size="10">22pF</text>
+<text x="540" y="1880" fill="#94a3b8" font-size="10">22pF</text>
+<text x="640" y="1880" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1871" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1871" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1880" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1886" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1906" x2="900" y2="1906" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1900" fill="#e2e8f0" font-size="10">C49</text>
+<circle cx="104" cy="1896" r="4" fill="#3b82f6"/>
+<text x="114" y="1900" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1900" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1900" fill="#94a3b8" font-size="10">22pF</text>
+<text x="540" y="1900" fill="#94a3b8" font-size="10">22pF</text>
+<text x="640" y="1900" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1891" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1891" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1900" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1906" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1926" x2="900" y2="1926" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1920" fill="#e2e8f0" font-size="10">C5</text>
+<circle cx="104" cy="1916" r="4" fill="#3b82f6"/>
+<text x="114" y="1920" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1920" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1920" fill="#94a3b8" font-size="10">22uF</text>
+<text x="540" y="1920" fill="#94a3b8" font-size="10">22uF</text>
+<text x="640" y="1920" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1911" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1911" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1920" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1926" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1946" x2="900" y2="1946" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1940" fill="#e2e8f0" font-size="10">C50</text>
+<circle cx="104" cy="1936" r="4" fill="#3b82f6"/>
+<text x="114" y="1940" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1940" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1940" fill="#94a3b8" font-size="10">100uF</text>
+<text x="540" y="1940" fill="#94a3b8" font-size="10">100uF</text>
+<text x="640" y="1940" fill="#94a3b8" font-size="10">1206</text>
+<rect x="740" y="1931" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1931" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="1940" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="1946" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="1966" x2="900" y2="1966" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1960" fill="#e2e8f0" font-size="10">C51</text>
+<circle cx="104" cy="1956" r="4" fill="#3b82f6"/>
+<text x="114" y="1960" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1960" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1960" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1960" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1960" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1951" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1951" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1960" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="1966" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="1986" x2="900" y2="1986" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="1980" fill="#e2e8f0" font-size="10">C52</text>
+<circle cx="104" cy="1976" r="4" fill="#3b82f6"/>
+<text x="114" y="1980" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="1980" fill="#64748b" font-size="10">—</text>
+<text x="400" y="1980" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="1980" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="1980" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="1971" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1971" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="1980" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="1986" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2006" x2="900" y2="2006" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2000" fill="#e2e8f0" font-size="10">C53</text>
+<circle cx="104" cy="1996" r="4" fill="#3b82f6"/>
+<text x="114" y="2000" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="2000" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2000" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="2000" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="2000" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="1991" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="1991" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="2000" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="2006" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2026" x2="900" y2="2026" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2020" fill="#e2e8f0" font-size="10">C54</text>
+<circle cx="104" cy="2016" r="4" fill="#3b82f6"/>
+<text x="114" y="2020" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="2020" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2020" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="2020" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="2020" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2011" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2011" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2020" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2026" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2046" x2="900" y2="2046" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2040" fill="#e2e8f0" font-size="10">C55</text>
+<circle cx="104" cy="2036" r="4" fill="#3b82f6"/>
+<text x="114" y="2040" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="2040" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2040" fill="#94a3b8" font-size="10">1uF</text>
+<text x="540" y="2040" fill="#94a3b8" font-size="10">1uF</text>
+<text x="640" y="2040" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2031" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2031" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2040" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2046" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2066" x2="900" y2="2066" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2060" fill="#e2e8f0" font-size="10">C56</text>
+<circle cx="104" cy="2056" r="4" fill="#3b82f6"/>
+<text x="114" y="2060" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="2060" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2060" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="2060" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="2060" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2051" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2051" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="2060" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="2066" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2086" x2="900" y2="2086" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2080" fill="#e2e8f0" font-size="10">C6</text>
+<circle cx="104" cy="2076" r="4" fill="#3b82f6"/>
+<text x="114" y="2080" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="2080" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2080" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="2080" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="2080" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2071" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2071" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2080" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2086" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2106" x2="900" y2="2106" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2100" fill="#e2e8f0" font-size="10">C7</text>
+<circle cx="104" cy="2096" r="4" fill="#3b82f6"/>
+<text x="114" y="2100" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="2100" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2100" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="2100" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="2100" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2091" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2091" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2100" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2106" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2126" x2="900" y2="2126" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2120" fill="#e2e8f0" font-size="10">C8</text>
+<circle cx="104" cy="2116" r="4" fill="#3b82f6"/>
+<text x="114" y="2120" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="2120" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2120" fill="#94a3b8" font-size="10">100nF</text>
+<text x="540" y="2120" fill="#94a3b8" font-size="10">100nF</text>
+<text x="640" y="2120" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2111" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2111" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="2120" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="2126" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2146" x2="900" y2="2146" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2140" fill="#e2e8f0" font-size="10">C9</text>
+<circle cx="104" cy="2136" r="4" fill="#3b82f6"/>
+<text x="114" y="2140" fill="#94a3b8" font-size="9">capacitor</text>
+<text x="200" y="2140" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2140" fill="#94a3b8" font-size="10">10uF</text>
+<text x="540" y="2140" fill="#94a3b8" font-size="10">10uF</text>
+<text x="640" y="2140" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="2131" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2131" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2140" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2146" width="900" height="22" fill="#111827" opacity="0.6"/>
+<circle cx="24" cy="2157" r="4" fill="#22c55e"/>
+<text x="36" y="2161" fill="#22c55e" font-size="11" font-weight="bold">Resistor</text>
+<text x="180" y="2161" fill="#64748b" font-size="10">(29)</text>
+<rect x="0" y="2168" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2188" x2="900" y2="2188" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2182" fill="#e2e8f0" font-size="10">D10</text>
+<circle cx="104" cy="2178" r="4" fill="#22c55e"/>
+<text x="114" y="2182" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2182" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2182" fill="#94a3b8" font-size="10">KINECT</text>
+<text x="540" y="2182" fill="#94a3b8" font-size="10">WHITE</text>
+<text x="640" y="2182" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="2173" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2173" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2182" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2188" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2208" x2="900" y2="2208" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2202" fill="#e2e8f0" font-size="10">D7</text>
+<circle cx="104" cy="2198" r="4" fill="#22c55e"/>
+<text x="114" y="2202" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2202" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2202" fill="#94a3b8" font-size="10">PWR</text>
+<text x="540" y="2202" fill="#94a3b8" font-size="10">GREEN</text>
+<text x="640" y="2202" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="2193" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2193" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2202" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2208" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2228" x2="900" y2="2228" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2222" fill="#e2e8f0" font-size="10">D8</text>
+<circle cx="104" cy="2218" r="4" fill="#22c55e"/>
+<text x="114" y="2222" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2222" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2222" fill="#94a3b8" font-size="10">DISK</text>
+<text x="540" y="2222" fill="#94a3b8" font-size="10">AMBER</text>
+<text x="640" y="2222" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="2213" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2213" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="2222" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="2228" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2248" x2="900" y2="2248" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2242" fill="#e2e8f0" font-size="10">D9</text>
+<circle cx="104" cy="2238" r="4" fill="#22c55e"/>
+<text x="114" y="2242" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2242" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2242" fill="#94a3b8" font-size="10">WIFI</text>
+<text x="540" y="2242" fill="#94a3b8" font-size="10">BLUE</text>
+<text x="640" y="2242" fill="#94a3b8" font-size="10">0805</text>
+<rect x="740" y="2233" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2233" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2242" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2248" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2268" x2="900" y2="2268" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2262" fill="#e2e8f0" font-size="10">R1</text>
+<circle cx="104" cy="2258" r="4" fill="#22c55e"/>
+<text x="114" y="2262" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2262" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2262" fill="#94a3b8" font-size="10">10k</text>
+<text x="540" y="2262" fill="#94a3b8" font-size="10">10k</text>
+<text x="640" y="2262" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2253" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2253" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2262" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2268" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2288" x2="900" y2="2288" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2282" fill="#e2e8f0" font-size="10">R10</text>
+<circle cx="104" cy="2278" r="4" fill="#22c55e"/>
+<text x="114" y="2282" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2282" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2282" fill="#94a3b8" font-size="10">90</text>
+<text x="540" y="2282" fill="#94a3b8" font-size="10">90</text>
+<text x="640" y="2282" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2273" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2273" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2282" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2288" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2308" x2="900" y2="2308" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2302" fill="#e2e8f0" font-size="10">R11</text>
+<circle cx="104" cy="2298" r="4" fill="#22c55e"/>
+<text x="114" y="2302" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2302" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2302" fill="#94a3b8" font-size="10">90</text>
+<text x="540" y="2302" fill="#94a3b8" font-size="10">90</text>
+<text x="640" y="2302" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2293" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2293" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2302" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2308" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2328" x2="900" y2="2328" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2322" fill="#e2e8f0" font-size="10">R12</text>
+<circle cx="104" cy="2318" r="4" fill="#22c55e"/>
+<text x="114" y="2322" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2322" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2322" fill="#94a3b8" font-size="10">10k</text>
+<text x="540" y="2322" fill="#94a3b8" font-size="10">10k</text>
+<text x="640" y="2322" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2313" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2313" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="2322" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="2328" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2348" x2="900" y2="2348" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2342" fill="#e2e8f0" font-size="10">R13</text>
+<circle cx="104" cy="2338" r="4" fill="#22c55e"/>
+<text x="114" y="2342" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2342" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2342" fill="#94a3b8" font-size="10">49.9</text>
+<text x="540" y="2342" fill="#94a3b8" font-size="10">49.9</text>
+<text x="640" y="2342" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2333" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2333" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2342" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2348" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2368" x2="900" y2="2368" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2362" fill="#e2e8f0" font-size="10">R14</text>
+<circle cx="104" cy="2358" r="4" fill="#22c55e"/>
+<text x="114" y="2362" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2362" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2362" fill="#94a3b8" font-size="10">49.9</text>
+<text x="540" y="2362" fill="#94a3b8" font-size="10">49.9</text>
+<text x="640" y="2362" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2353" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2353" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2362" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2368" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2388" x2="900" y2="2388" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2382" fill="#e2e8f0" font-size="10">R15</text>
+<circle cx="104" cy="2378" r="4" fill="#22c55e"/>
+<text x="114" y="2382" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2382" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2382" fill="#94a3b8" font-size="10">49.9</text>
+<text x="540" y="2382" fill="#94a3b8" font-size="10">49.9</text>
+<text x="640" y="2382" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2373" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2373" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="2382" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="2388" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2408" x2="900" y2="2408" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2402" fill="#e2e8f0" font-size="10">R16</text>
+<circle cx="104" cy="2398" r="4" fill="#22c55e"/>
+<text x="114" y="2402" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2402" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2402" fill="#94a3b8" font-size="10">49.9</text>
+<text x="540" y="2402" fill="#94a3b8" font-size="10">49.9</text>
+<text x="640" y="2402" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2393" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2393" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2402" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2408" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2428" x2="900" y2="2428" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2422" fill="#e2e8f0" font-size="10">R17</text>
+<circle cx="104" cy="2418" r="4" fill="#22c55e"/>
+<text x="114" y="2422" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2422" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2422" fill="#94a3b8" font-size="10">330</text>
+<text x="540" y="2422" fill="#94a3b8" font-size="10">330</text>
+<text x="640" y="2422" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2413" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2413" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2422" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2428" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2448" x2="900" y2="2448" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2442" fill="#e2e8f0" font-size="10">R18</text>
+<circle cx="104" cy="2438" r="4" fill="#22c55e"/>
+<text x="114" y="2442" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2442" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2442" fill="#94a3b8" font-size="10">330</text>
+<text x="540" y="2442" fill="#94a3b8" font-size="10">330</text>
+<text x="640" y="2442" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2433" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2433" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="2442" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="2448" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2468" x2="900" y2="2468" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2462" fill="#e2e8f0" font-size="10">R19</text>
+<circle cx="104" cy="2458" r="4" fill="#22c55e"/>
+<text x="114" y="2462" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2462" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2462" fill="#94a3b8" font-size="10">330</text>
+<text x="540" y="2462" fill="#94a3b8" font-size="10">330</text>
+<text x="640" y="2462" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2453" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2453" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2462" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2468" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2488" x2="900" y2="2488" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2482" fill="#e2e8f0" font-size="10">R2</text>
+<circle cx="104" cy="2478" r="4" fill="#22c55e"/>
+<text x="114" y="2482" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2482" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2482" fill="#94a3b8" font-size="10">4k7</text>
+<text x="540" y="2482" fill="#94a3b8" font-size="10">4k7</text>
+<text x="640" y="2482" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2473" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2473" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="2482" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="2488" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2508" x2="900" y2="2508" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2502" fill="#e2e8f0" font-size="10">R20</text>
+<circle cx="104" cy="2498" r="4" fill="#22c55e"/>
+<text x="114" y="2502" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2502" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2502" fill="#94a3b8" font-size="10">330</text>
+<text x="540" y="2502" fill="#94a3b8" font-size="10">330</text>
+<text x="640" y="2502" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2493" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2493" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2502" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2508" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2528" x2="900" y2="2528" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2522" fill="#e2e8f0" font-size="10">R21</text>
+<circle cx="104" cy="2518" r="4" fill="#22c55e"/>
+<text x="114" y="2522" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2522" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2522" fill="#94a3b8" font-size="10">33</text>
+<text x="540" y="2522" fill="#94a3b8" font-size="10">33</text>
+<text x="640" y="2522" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2513" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2513" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2522" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2528" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2548" x2="900" y2="2548" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2542" fill="#e2e8f0" font-size="10">R22</text>
+<circle cx="104" cy="2538" r="4" fill="#22c55e"/>
+<text x="114" y="2542" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2542" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2542" fill="#94a3b8" font-size="10">33</text>
+<text x="540" y="2542" fill="#94a3b8" font-size="10">33</text>
+<text x="640" y="2542" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2533" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2533" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2542" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2548" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2568" x2="900" y2="2568" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2562" fill="#e2e8f0" font-size="10">R23</text>
+<circle cx="104" cy="2558" r="4" fill="#22c55e"/>
+<text x="114" y="2562" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2562" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2562" fill="#94a3b8" font-size="10">0</text>
+<text x="540" y="2562" fill="#94a3b8" font-size="10">0</text>
+<text x="640" y="2562" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2553" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2553" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="2562" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="2568" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2588" x2="900" y2="2588" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2582" fill="#e2e8f0" font-size="10">R24</text>
+<circle cx="104" cy="2578" r="4" fill="#22c55e"/>
+<text x="114" y="2582" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2582" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2582" fill="#94a3b8" font-size="10">10k</text>
+<text x="540" y="2582" fill="#94a3b8" font-size="10">10k</text>
+<text x="640" y="2582" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2573" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2573" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2582" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2588" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2608" x2="900" y2="2608" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2602" fill="#e2e8f0" font-size="10">R25</text>
+<circle cx="104" cy="2598" r="4" fill="#22c55e"/>
+<text x="114" y="2602" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2602" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2602" fill="#94a3b8" font-size="10">1k</text>
+<text x="540" y="2602" fill="#94a3b8" font-size="10">1k</text>
+<text x="640" y="2602" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2593" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2593" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2602" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2608" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2628" x2="900" y2="2628" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2622" fill="#e2e8f0" font-size="10">R3</text>
+<circle cx="104" cy="2618" r="4" fill="#22c55e"/>
+<text x="114" y="2622" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2622" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2622" fill="#94a3b8" font-size="10">100</text>
+<text x="540" y="2622" fill="#94a3b8" font-size="10">100</text>
+<text x="640" y="2622" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2613" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2613" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2622" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2628" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2648" x2="900" y2="2648" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2642" fill="#e2e8f0" font-size="10">R4</text>
+<circle cx="104" cy="2638" r="4" fill="#22c55e"/>
+<text x="114" y="2642" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2642" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2642" fill="#94a3b8" font-size="10">4k7</text>
+<text x="540" y="2642" fill="#94a3b8" font-size="10">4k7</text>
+<text x="640" y="2642" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2633" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2633" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2642" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2648" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2668" x2="900" y2="2668" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2662" fill="#e2e8f0" font-size="10">R5</text>
+<circle cx="104" cy="2658" r="4" fill="#22c55e"/>
+<text x="114" y="2662" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2662" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2662" fill="#94a3b8" font-size="10">4k7</text>
+<text x="540" y="2662" fill="#94a3b8" font-size="10">4k7</text>
+<text x="640" y="2662" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2653" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2653" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2662" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2668" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2688" x2="900" y2="2688" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2682" fill="#e2e8f0" font-size="10">R6</text>
+<circle cx="104" cy="2678" r="4" fill="#22c55e"/>
+<text x="114" y="2682" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2682" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2682" fill="#94a3b8" font-size="10">4k7</text>
+<text x="540" y="2682" fill="#94a3b8" font-size="10">4k7</text>
+<text x="640" y="2682" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2673" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2673" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="2682" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="2688" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2708" x2="900" y2="2708" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2702" fill="#e2e8f0" font-size="10">R7</text>
+<circle cx="104" cy="2698" r="4" fill="#22c55e"/>
+<text x="114" y="2702" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2702" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2702" fill="#94a3b8" font-size="10">4k7</text>
+<text x="540" y="2702" fill="#94a3b8" font-size="10">4k7</text>
+<text x="640" y="2702" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2693" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2693" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2702" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2708" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2728" x2="900" y2="2728" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2722" fill="#e2e8f0" font-size="10">R8</text>
+<circle cx="104" cy="2718" r="4" fill="#22c55e"/>
+<text x="114" y="2722" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2722" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2722" fill="#94a3b8" font-size="10">90</text>
+<text x="540" y="2722" fill="#94a3b8" font-size="10">90</text>
+<text x="640" y="2722" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2713" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2713" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2722" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2728" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2748" x2="900" y2="2748" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2742" fill="#e2e8f0" font-size="10">R9</text>
+<circle cx="104" cy="2738" r="4" fill="#22c55e"/>
+<text x="114" y="2742" fill="#94a3b8" font-size="9">resistor</text>
+<text x="200" y="2742" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2742" fill="#94a3b8" font-size="10">90</text>
+<text x="540" y="2742" fill="#94a3b8" font-size="10">90</text>
+<text x="640" y="2742" fill="#94a3b8" font-size="10">0402</text>
+<rect x="740" y="2733" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2733" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="2742" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="2748" width="900" height="22" fill="#111827" opacity="0.6"/>
+<circle cx="24" cy="2759" r="4" fill="#a855f7"/>
+<text x="36" y="2763" fill="#a855f7" font-size="11" font-weight="bold">Inductor</text>
+<text x="180" y="2763" fill="#64748b" font-size="10">(5)</text>
+<rect x="0" y="2770" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2790" x2="900" y2="2790" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2784" fill="#e2e8f0" font-size="10">L1</text>
+<circle cx="104" cy="2780" r="4" fill="#a855f7"/>
+<text x="114" y="2784" fill="#94a3b8" font-size="9">inductor</text>
+<text x="200" y="2784" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2784" fill="#94a3b8" font-size="10">1uH</text>
+<text x="540" y="2784" fill="#94a3b8" font-size="10">1uH</text>
+<text x="640" y="2784" fill="#94a3b8" font-size="10">1210</text>
+<rect x="740" y="2775" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2775" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2784" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2790" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2810" x2="900" y2="2810" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2804" fill="#e2e8f0" font-size="10">L2</text>
+<circle cx="104" cy="2800" r="4" fill="#a855f7"/>
+<text x="114" y="2804" fill="#94a3b8" font-size="9">inductor</text>
+<text x="200" y="2804" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2804" fill="#94a3b8" font-size="10">1uH</text>
+<text x="540" y="2804" fill="#94a3b8" font-size="10">1uH</text>
+<text x="640" y="2804" fill="#94a3b8" font-size="10">1210</text>
+<rect x="740" y="2795" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2795" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="2804" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="2810" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2830" x2="900" y2="2830" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2824" fill="#e2e8f0" font-size="10">L3</text>
+<circle cx="104" cy="2820" r="4" fill="#a855f7"/>
+<text x="114" y="2824" fill="#94a3b8" font-size="9">inductor</text>
+<text x="200" y="2824" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2824" fill="#94a3b8" font-size="10">0.47uH</text>
+<text x="540" y="2824" fill="#94a3b8" font-size="10">0.47uH</text>
+<text x="640" y="2824" fill="#94a3b8" font-size="10">1210</text>
+<rect x="740" y="2815" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2815" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2824" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2830" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2850" x2="900" y2="2850" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2844" fill="#e2e8f0" font-size="10">L4</text>
+<circle cx="104" cy="2840" r="4" fill="#a855f7"/>
+<text x="114" y="2844" fill="#94a3b8" font-size="9">inductor</text>
+<text x="200" y="2844" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2844" fill="#94a3b8" font-size="10">1uH</text>
+<text x="540" y="2844" fill="#94a3b8" font-size="10">1uH</text>
+<text x="640" y="2844" fill="#94a3b8" font-size="10">1210</text>
+<rect x="740" y="2835" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2835" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2844" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2850" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2870" x2="900" y2="2870" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2864" fill="#e2e8f0" font-size="10">L5</text>
+<circle cx="104" cy="2860" r="4" fill="#a855f7"/>
+<text x="114" y="2864" fill="#94a3b8" font-size="9">inductor</text>
+<text x="200" y="2864" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2864" fill="#94a3b8" font-size="10">2.2uH</text>
+<text x="540" y="2864" fill="#94a3b8" font-size="10">2.2uH</text>
+<text x="640" y="2864" fill="#94a3b8" font-size="10">1210</text>
+<rect x="740" y="2855" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2855" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="2864" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="2870" width="900" height="22" fill="#111827" opacity="0.6"/>
+<circle cx="24" cy="2881" r="4" fill="#14b8a6"/>
+<text x="36" y="2885" fill="#14b8a6" font-size="11" font-weight="bold">Crystal</text>
+<text x="180" y="2885" fill="#64748b" font-size="10">(1)</text>
+<rect x="0" y="2892" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2912" x2="900" y2="2912" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2906" fill="#e2e8f0" font-size="10">Y1</text>
+<circle cx="104" cy="2902" r="4" fill="#14b8a6"/>
+<text x="114" y="2906" fill="#94a3b8" font-size="9">crystal</text>
+<text x="200" y="2906" fill="#22d3ee" font-size="10">ABLS-25.000MHZ</text>
+<text x="400" y="2906" fill="#94a3b8" font-size="10">25MHz</text>
+<text x="540" y="2906" fill="#94a3b8" font-size="10">25MHz</text>
+<text x="640" y="2906" fill="#94a3b8" font-size="10">HC-49S</text>
+<rect x="740" y="2897" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2897" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2906" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2912" width="900" height="22" fill="#111827" opacity="0.6"/>
+<circle cx="24" cy="2923" r="4" fill="#ec4899"/>
+<text x="36" y="2927" fill="#ec4899" font-size="11" font-weight="bold">Test Point</text>
+<text x="180" y="2927" fill="#64748b" font-size="10">(15)</text>
+<rect x="0" y="2934" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2954" x2="900" y2="2954" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2948" fill="#e2e8f0" font-size="10">TP1</text>
+<circle cx="104" cy="2944" r="4" fill="#ec4899"/>
+<text x="114" y="2948" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="2948" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2948" fill="#94a3b8" font-size="10">TP1</text>
+<text x="540" y="2948" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="2948" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="2939" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2939" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2948" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2954" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="2974" x2="900" y2="2974" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2968" fill="#e2e8f0" font-size="10">TP10</text>
+<circle cx="104" cy="2964" r="4" fill="#ec4899"/>
+<text x="114" y="2968" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="2968" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2968" fill="#94a3b8" font-size="10">TP10</text>
+<text x="540" y="2968" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="2968" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="2959" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2959" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2968" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="2974" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="2994" x2="900" y2="2994" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="2988" fill="#e2e8f0" font-size="10">TP11</text>
+<circle cx="104" cy="2984" r="4" fill="#ec4899"/>
+<text x="114" y="2988" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="2988" fill="#64748b" font-size="10">—</text>
+<text x="400" y="2988" fill="#94a3b8" font-size="10">TP11</text>
+<text x="540" y="2988" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="2988" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="2979" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2979" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="2988" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="2994" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="3014" x2="900" y2="3014" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="3008" fill="#e2e8f0" font-size="10">TP12</text>
+<circle cx="104" cy="3004" r="4" fill="#ec4899"/>
+<text x="114" y="3008" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="3008" fill="#64748b" font-size="10">—</text>
+<text x="400" y="3008" fill="#94a3b8" font-size="10">TP12</text>
+<text x="540" y="3008" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="3008" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="2999" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="2999" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="3008" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="3014" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="3034" x2="900" y2="3034" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="3028" fill="#e2e8f0" font-size="10">TP13</text>
+<circle cx="104" cy="3024" r="4" fill="#ec4899"/>
+<text x="114" y="3028" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="3028" fill="#64748b" font-size="10">—</text>
+<text x="400" y="3028" fill="#94a3b8" font-size="10">TP13</text>
+<text x="540" y="3028" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="3028" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="3019" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="3019" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="3028" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="3034" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="3054" x2="900" y2="3054" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="3048" fill="#e2e8f0" font-size="10">TP14</text>
+<circle cx="104" cy="3044" r="4" fill="#ec4899"/>
+<text x="114" y="3048" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="3048" fill="#64748b" font-size="10">—</text>
+<text x="400" y="3048" fill="#94a3b8" font-size="10">TP14</text>
+<text x="540" y="3048" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="3048" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="3039" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="3039" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="3048" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="3054" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="3074" x2="900" y2="3074" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="3068" fill="#e2e8f0" font-size="10">TP15</text>
+<circle cx="104" cy="3064" r="4" fill="#ec4899"/>
+<text x="114" y="3068" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="3068" fill="#64748b" font-size="10">—</text>
+<text x="400" y="3068" fill="#94a3b8" font-size="10">TP15</text>
+<text x="540" y="3068" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="3068" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="3059" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="3059" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="3068" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="3074" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="3094" x2="900" y2="3094" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="3088" fill="#e2e8f0" font-size="10">TP2</text>
+<circle cx="104" cy="3084" r="4" fill="#ec4899"/>
+<text x="114" y="3088" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="3088" fill="#64748b" font-size="10">—</text>
+<text x="400" y="3088" fill="#94a3b8" font-size="10">TP2</text>
+<text x="540" y="3088" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="3088" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="3079" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="3079" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="3088" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="3094" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="3114" x2="900" y2="3114" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="3108" fill="#e2e8f0" font-size="10">TP3</text>
+<circle cx="104" cy="3104" r="4" fill="#ec4899"/>
+<text x="114" y="3108" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="3108" fill="#64748b" font-size="10">—</text>
+<text x="400" y="3108" fill="#94a3b8" font-size="10">TP3</text>
+<text x="540" y="3108" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="3108" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="3099" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="3099" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="3108" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="3114" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="3134" x2="900" y2="3134" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="3128" fill="#e2e8f0" font-size="10">TP4</text>
+<circle cx="104" cy="3124" r="4" fill="#ec4899"/>
+<text x="114" y="3128" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="3128" fill="#64748b" font-size="10">—</text>
+<text x="400" y="3128" fill="#94a3b8" font-size="10">TP4</text>
+<text x="540" y="3128" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="3128" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="3119" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="3119" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="3128" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="3134" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="3154" x2="900" y2="3154" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="3148" fill="#e2e8f0" font-size="10">TP5</text>
+<circle cx="104" cy="3144" r="4" fill="#ec4899"/>
+<text x="114" y="3148" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="3148" fill="#64748b" font-size="10">—</text>
+<text x="400" y="3148" fill="#94a3b8" font-size="10">TP5</text>
+<text x="540" y="3148" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="3148" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="3139" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="3139" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="3148" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="3154" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="3174" x2="900" y2="3174" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="3168" fill="#e2e8f0" font-size="10">TP6</text>
+<circle cx="104" cy="3164" r="4" fill="#ec4899"/>
+<text x="114" y="3168" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="3168" fill="#64748b" font-size="10">—</text>
+<text x="400" y="3168" fill="#94a3b8" font-size="10">TP6</text>
+<text x="540" y="3168" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="3168" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="3159" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="3159" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="3168" fill="#64748b" font-size="9">88%</text>
+<rect x="0" y="3174" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="3194" x2="900" y2="3194" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="3188" fill="#e2e8f0" font-size="10">TP7</text>
+<circle cx="104" cy="3184" r="4" fill="#ec4899"/>
+<text x="114" y="3188" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="3188" fill="#64748b" font-size="10">—</text>
+<text x="400" y="3188" fill="#94a3b8" font-size="10">TP7</text>
+<text x="540" y="3188" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="3188" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="3179" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="3179" width="111" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="3188" fill="#64748b" font-size="9">93%</text>
+<rect x="0" y="3194" width="900" height="20" fill="#0f1629"/>
+<line x1="0" y1="3214" x2="900" y2="3214" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="3208" fill="#e2e8f0" font-size="10">TP8</text>
+<circle cx="104" cy="3204" r="4" fill="#ec4899"/>
+<text x="114" y="3208" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="3208" fill="#64748b" font-size="10">—</text>
+<text x="400" y="3208" fill="#94a3b8" font-size="10">TP8</text>
+<text x="540" y="3208" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="3208" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="3199" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="3199" width="117" height="10" rx="2" fill="#22c55e" opacity="0.85"/>
+<text x="866" y="3208" fill="#64748b" font-size="9">98%</text>
+<rect x="0" y="3214" width="900" height="20" fill="#111d35"/>
+<line x1="0" y1="3234" x2="900" y2="3234" stroke="#1e293b" stroke-width="0.5"/>
+<text x="16" y="3228" fill="#e2e8f0" font-size="10">TP9</text>
+<circle cx="104" cy="3224" r="4" fill="#ec4899"/>
+<text x="114" y="3228" fill="#94a3b8" font-size="9">test_point</text>
+<text x="200" y="3228" fill="#64748b" font-size="10">—</text>
+<text x="400" y="3228" fill="#94a3b8" font-size="10">TP9</text>
+<text x="540" y="3228" fill="#94a3b8" font-size="10"></text>
+<text x="640" y="3228" fill="#94a3b8" font-size="10">TP</text>
+<rect x="740" y="3219" width="120" height="10" rx="2" fill="#1e293b"/>
+<rect x="740" y="3219" width="105" height="10" rx="2" fill="#f59e0b" opacity="0.85"/>
+<text x="866" y="3228" fill="#64748b" font-size="9">88%</text>
+<line x1="0" y1="3234" x2="900" y2="3234" stroke="#1e293b" stroke-width="1"/>
+<rect x="0" y="3234" width="900" height="24" fill="#111827"/>
+<text x="16" y="3250" fill="#94a3b8" font-size="10">150 components · 35 identified</text>
+<text x="884" y="3250" fill="#64748b" font-size="10" text-anchor="end">re:trace v0.1.0</text>
+</svg>

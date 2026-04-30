@@ -9,9 +9,9 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://github.com/ericrihm/retrace)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Coverage](https://img.shields.io/badge/coverage-85%25-green.svg)](https://github.com/ericrihm/retrace)
+[![Coverage](https://img.shields.io/badge/coverage-83%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->546<!-- /STATS --> tests** · **<!-- STATS:modules -->21<!-- /STATS --> modules** · **<!-- STATS:loc -->6890<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->597<!-- /STATS --> tests** · **<!-- STATS:modules -->22<!-- /STATS --> modules** · **<!-- STATS:loc -->7959<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -197,7 +197,7 @@ graph LR
     E --> G["🔍 Analysis Result"]
     E -.->|"cross-board transfer"| E
     F --> G
-    G --> H["BOM\n<sub>JSON / CSV</sub>"]
+    G --> H["Export\n<sub>HTML report / BOM / SVG</sub>"]
     G --> I["SVG Overlay\n<sub>zones · traces · security</sub>"]
     G --> J["Probe Advisor\n<sub>Bayesian · entropy</sub>"]
     G --> K["Debug Detection\n<sub>JTAG · UART · SWD · SPI</sub>"]
@@ -215,7 +215,7 @@ graph LR
 5. **Learn** — Identified parts persist to a cross-board knowledge base. The more boards you scan, the faster subsequent analysis gets.
 6. **Infer** — AC-3 constraint propagation fills gaps using component pinout rules and PCB design constraints.
 7. **Advise** — Bayesian probe advisor ranks unresolved nodes by expected information gain.
-8. **Export** — BOM (JSON/CSV), annotated SVG overlay, debug interface report.
+8. **Export** — Self-contained HTML assessment report (datasheet hyperlinks, CWE references, sortable BOM), BOM (JSON/CSV/SVG), annotated SVG overlays, attack surface visualization.
 
 ## Prior Work
 
@@ -268,6 +268,9 @@ retrace compare board_v04.jpg board_v05.jpg
 # Machine-readable output for pipeline integration
 retrace identify STM32F030 --json
 retrace debug board_photo.jpg --json
+
+# HTML assessment report — datasheet links, CWE references, sortable BOM
+retrace report-html board_photo.jpg --output assessment.html
 
 # Component knowledge report — cross-board stats
 retrace report
@@ -531,7 +534,7 @@ re:trace maps to the standard hardware assessment workflow -- recon through repo
 | **Partial trace recovery** | Board has 60% visible traces | AC-3 constraint propagation infers the rest |
 | **Cross-board analysis** | Transfer knowledge between targets | 15 subcircuit patterns auto-recognized across boards |
 | **Fault injection recon** | Map glitch surfaces before bringing equipment | Power rail tracing, VRM/LDO/clock identification, decoupling cap mapping |
-| **Reporting** | Deliverable for the client | SVG overlay, BOM (JSON/CSV), attack surface visualization, debug interface report |
+| **Reporting** | Deliverable for the client | Self-contained HTML report (datasheet links, CWE references, sortable BOM), SVG overlays, attack surface visualization |
 
 re:trace complements firmware analysis tools (Ghidra, Binary Ninja) and hardware debug tools (OpenOCD, JTAGulator) -- it bridges the gap between having a board in your hands and knowing where to probe.
 
@@ -582,7 +585,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->6890<!-- /STATS --> lines across <!-- STATS:modules -->21<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->7959<!-- /STATS --> lines across <!-- STATS:modules -->22<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -610,7 +613,8 @@ src/retrace/                             # <!-- STATS:loc -->6890<!-- /STATS -->
 │   └── builtin/
 │       └── debug_interfaces.py          # JTAG/UART/SWD/SPI/I2C detection
 └── export/
-    ├── bom.py                           # BOM generator (JSON, CSV)
+    ├── bom.py                           # BOM generator (JSON, CSV, SVG table)
+    ├── html_report.py                   # Self-contained HTML assessment report
     └── svg.py                           # Dark-theme SVG: zones, traces, net classification, security panel, BOM
 ```
 
@@ -618,10 +622,10 @@ src/retrace/                             # <!-- STATS:loc -->6890<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->546<!-- /STATS --> |
-| Coverage | <!-- STATS:coverage -->85%<!-- /STATS --> |
-| Modules | <!-- STATS:modules -->21<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->6890<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->597<!-- /STATS --> |
+| Coverage | <!-- STATS:coverage -->83%<!-- /STATS --> |
+| Modules | <!-- STATS:modules -->22<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->7959<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -633,7 +637,7 @@ src/retrace/                             # <!-- STATS:loc -->6890<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->546<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->597<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```

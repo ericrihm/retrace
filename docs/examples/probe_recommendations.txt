@@ -2,7 +2,7 @@ re:trace Bayesian Probe Advisor — Top 5 Probe Recommendations
 =================================================================
 
 Board: Xbox One Model 1540 — Durango (AMD Liverpool APU, 28nm)
-Timestamp: 2026-04-30T21:59:02Z
+Timestamp: 2026-04-30T22:20:55Z
 
 Ranked by Expected Information Gain (EIG, bits):
 
