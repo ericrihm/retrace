@@ -9,9 +9,9 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://github.com/ericrihm/retrace)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Coverage](https://img.shields.io/badge/coverage-90%25-green.svg)](https://github.com/ericrihm/retrace)
+[![Coverage](https://img.shields.io/badge/coverage-94%25-brightgreen.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->801<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->22872<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->967<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->24245<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/)
 
@@ -741,10 +741,10 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->801<!-- /STATS --> |
-| Coverage | <!-- STATS:coverage -->90%<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->967<!-- /STATS --> |
+| Coverage | <!-- STATS:coverage -->94%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->23<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->22872<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->24245<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -756,7 +756,7 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->801<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->967<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
