@@ -160,6 +160,44 @@ def test_pipeline_with_config():
     assert p.config["model"] == "yolov8n"
 
 
+def test_record_learnings_records_identified_parts():
+    """_record_learnings calls record_detection for identified parts and queues unmatched."""
+    from unittest.mock import patch
+
+    result = AnalysisResult(
+        image_path="test_board.jpg",
+        components=[
+            Component(id="U1", label="ic", confidence=0.9, bbox=(0, 0, 10, 10),
+                      part_number="STM32F103C8T6", marking="STM32F103"),
+            Component(id="U2", label="ic", confidence=0.9, bbox=(20, 20, 10, 10),
+                      marking="UNKNOWN_CHIP"),
+            Component(id="C1", label="capacitor", confidence=0.8, bbox=(30, 30, 5, 5)),
+        ],
+    )
+
+    with patch("retrace.learning.engine.record_detection") as mock_rec, \
+         patch("retrace.learning.engine.queue_for_sourcing") as mock_queue:
+        p = Pipeline(config={"enable_learning": True})
+        p._record_learnings(result)
+
+        mock_rec.assert_called_once_with("STM32F103C8T6", "test_board.jpg")
+        mock_queue.assert_called_once_with("UNKNOWN_CHIP", reason="OCR read, no DB match")
+
+
+def test_record_learnings_disabled():
+    """When enable_learning is False, no learning calls are made."""
+    result = AnalysisResult(
+        image_path="test.jpg",
+        components=[
+            Component(id="U1", label="ic", confidence=0.9, bbox=(0, 0, 10, 10),
+                      part_number="LM7805"),
+        ],
+    )
+    p = Pipeline(config={"enable_learning": False})
+    # Should not raise even without a valid knowledge path
+    p._record_learnings(result)
+
+
 def test_pipeline_detect_contours_synthetic():
     """_detect_contours must not crash on a synthetic numpy image."""
     try:

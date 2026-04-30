@@ -128,6 +128,10 @@ class Pipeline:
         identified = sum(1 for c in result.components if c.part_number)
         logger.info(f"  Identified {identified} components")
 
+        # Phase 5: Learning — record detections and queue unmatched parts
+        if self.config.get("enable_learning", True):
+            self._record_learnings(result)
+
         result.duration_seconds = time.time() - start
         logger.info(f"Analysis complete in {result.duration_seconds:.1f}s")
         return result
@@ -214,3 +218,22 @@ class Pipeline:
             return identify_components(components)
         except ImportError:
             return components
+
+    def _record_learnings(self, result: AnalysisResult) -> None:
+        try:
+            from retrace.learning.engine import record_detection, queue_for_sourcing
+        except ImportError:
+            return
+
+        recorded = 0
+        queued = 0
+        for c in result.components:
+            if c.part_number:
+                record_detection(c.part_number, result.image_path)
+                recorded += 1
+            elif c.marking:
+                queue_for_sourcing(c.marking, reason="OCR read, no DB match")
+                queued += 1
+
+        if recorded or queued:
+            logger.info(f"  Learning: recorded {recorded} parts, queued {queued} for sourcing")

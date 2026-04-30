@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-89%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->500<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->5916<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->502<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->5939<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -130,17 +130,20 @@ graph LR
     A["📷 PCB Photo"] --> B["Component Detection\n<sub>YOLO v8 / OpenCV fallback</sub>"]
     B --> C["Chip OCR\n<sub>EasyOCR + fuzzy match</sub>"]
     B --> D["Trace Extraction\n<sub>HSV/LAB · skeleton · BFS</sub>"]
-    C --> E["Part Identification\n<sub>local DB · datasheet links</sub>"]
+    C --> E["Part Identification\n<sub>local DB · 114 parts</sub>"]
+    E --> L["🔄 Knowledge Flywheel\n<sub>frequency · sightings · sourcing</sub>"]
     D --> F["Constraint Solver\n<sub>AC-3 arc consistency</sub>"]
     E --> G["🔍 Analysis Result"]
     F --> G
     G --> H["BOM\n<sub>JSON / CSV</sub>"]
-    G --> I["SVG Overlay"]
+    G --> I["SVG Overlay\n<sub>zones · traces · security</sub>"]
     G --> J["Probe Advisor\n<sub>Bayesian · entropy</sub>"]
     G --> K["Debug Detection\n<sub>JTAG · UART · SWD · SPI</sub>"]
+    L -.->|"cross-board transfer"| E
 
     style A fill:#1a1a2e,stroke:#e94560,color:#fff
     style G fill:#1a1a2e,stroke:#0f3460,color:#fff
+    style L fill:#1a1a2e,stroke:#22c55e,color:#fff
     style J fill:#16213e,stroke:#e94560,color:#fff
 ```
 
@@ -148,9 +151,11 @@ graph LR
 1. **Detect** — YOLO v8 finds components (ICs, caps, resistors, connectors, headers, test points). Falls back to OpenCV contours when YOLO isn't installed — zero model downloads needed.
 2. **OCR** — EasyOCR reads chip markings from IC bounding boxes. Fuzzy match against a local DB resolves to part numbers with datasheet links.
 3. **Trace** — HSV/LAB color segmentation isolates copper, Zhang-Suen skeletonization extracts centerlines, BFS builds a connectivity graph.
-4. **Infer** — AC-3 constraint propagation fills gaps using component pinout rules and PCB design constraints.
-5. **Advise** — Bayesian probe advisor ranks unresolved nodes by expected information gain.
-6. **Export** — BOM (JSON/CSV), annotated SVG overlay, debug interface report.
+4. **Identify** — Fuzzy match against 114-part component DB with datasheet links.
+5. **Learn** — Identified parts feed the persistent knowledge flywheel; unmatched markings are queued for sourcing.
+6. **Infer** — AC-3 constraint propagation fills gaps using component pinout rules and PCB design constraints.
+7. **Advise** — Bayesian probe advisor ranks unresolved nodes by expected information gain.
+8. **Export** — BOM (JSON/CSV), annotated SVG overlay, debug interface report.
 
 ## Prior Work
 
@@ -248,6 +253,58 @@ Given partial board knowledge, the advisor recommends where to place your multim
 
 Converges on unknown pin functions in **6–10 measurements** on typical boards.
 
+### Probing Guide — Budget Equipment for PCB RE
+
+re:trace tells you *where* to probe. Here's *what* to probe with — optimized for maximum RE capability per dollar.
+
+<details>
+<summary><b>Equipment tiers: $63 starter → $500 full lab</b></summary>
+
+**Starter Kit (~$63) — covers UART/SPI/JTAG on most targets:**
+
+| Item | Price | What It Does |
+|---|---|---|
+| Spring pogo pins (P75-B1, 0.68mm tip) | ~$5/50pc | Probe test points and breakout vias without soldering |
+| Saleae Logic clone (24MHz/8ch) | ~$10 | Capture UART, I2C, SPI, JTAG with PulseView/Sigrok |
+| MG Chemicals flux pen (no-clean) | ~$8 | Essential for bodge wire attachment |
+| Bus Pirate v4 clone | ~$15 | Interactive UART/SPI/I2C/JTAG — slow but universal |
+| PCB holder/clamp (Panavise style) | ~$15 | Hands-free board access |
+| Black Magic Probe clone | ~$25 | ARM JTAG/SWD with built-in GDB server, no drivers |
+
+**Mid-tier additions (~$200 total):**
+
+| Item | Price | What It Does |
+|---|---|---|
+| DSLogic Plus (400MHz/16ch) | ~$149 | High-speed logic capture — SPI at 50MHz+, protocol decode |
+| Andonstar USB microscope (AD407) | ~$70 | Read 0402 markings, guide pogo placement, inspect solder joints |
+| 0.3mm solder + 30AWG magnet wire | ~$12 | Solder to 0402 pads and BGA breakout vias under scope |
+
+**Full lab (~$500 total):**
+
+| Item | Price | What It Does |
+|---|---|---|
+| Rigol DS1054Z oscilloscope | ~$350 | Signal integrity, analog capture, 4ch decode. Hackable to 100MHz |
+| Yihua 858D hot air station | ~$65 | Remove QFP/SOIC for flash dump, BGA inspection |
+
+**Trace width → probe tip guide:**
+
+| Pad / Trace | Minimum Probe |
+|---|---|
+| > 0.5mm (0603+) | IC hook clip or 0.5mm pogo |
+| 0.3–0.5mm (0402) | P50-Q sharp pogo (0.5mm tip) |
+| < 0.3mm (0201, BGA breakout) | 30AWG magnet wire soldered under microscope |
+
+**Workflow: re:trace → probe → capture:**
+
+1. `retrace scan board.jpg` — identify components and debug interfaces
+2. `retrace advise board.jpg` — get probe priority list ranked by information gain
+3. Solder 30AWG wire to highest-EIG test point under microscope, strain-relief with kapton tape
+4. Connect logic analyzer, auto-detect baud in PulseView
+5. `retrace advise board.jpg --update` — feed measurement back, get next probe point
+6. Repeat until convergence (typically 6–10 measurements)
+
+</details>
+
 ### Constraint Solver (AC-3)
 
 When trace extraction is partial (it always is on real boards), the solver infers missing connections:
@@ -258,9 +315,27 @@ When trace extraction is partial (it always is on real boards), the solver infer
 - **Union-find equality** — traces with confidence ≥ 0.5 merge their connected nodes
 - **AC-3 propagation** — iteratively prunes impossible values until the domain is stable
 
+### Knowledge Flywheel
+
+Every `retrace scan` automatically feeds a persistent learning engine at `~/.local/share/retrace/knowledge.json`:
+
+```
+  retrace scan board.jpg
+       │
+       ├── identified parts ──▶ record_detection() ──▶ component frequency DB
+       │                                                  └──▶ cross-board sightings
+       └── unmatched markings ──▶ queue_for_sourcing() ──▶ sourcing suggestions
+                                                              └──▶ retrace report
+```
+
+- **Component frequency** — tracks which parts appear most across boards. After 10+ scans, `retrace report` shows your most-seen ICs, connectors, and passives
+- **Board sightings** — maps which parts appear on which boards, enabling cross-board pattern transfer
+- **Sourcing queue** — OCR'd markings that didn't match the 114-part DB are queued for manual identification. Run `retrace report` to see what needs adding
+- **Zero config** — enabled by default. Disable with `Pipeline(config={"enable_learning": False})`
+
 ### Cross-Board Pattern Recognition
 
-The knowledge flywheel — each board analyzed teaches subcircuit patterns that transfer to future boards:
+15 subcircuit patterns that transfer between boards — the more you scan, the faster identification gets:
 
 | Pattern | Components | Identifies |
 |---|---|---|
@@ -420,7 +495,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->5916<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->5939<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -456,10 +531,10 @@ src/retrace/                             # <!-- STATS:loc -->5916<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->500<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->502<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->20<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->5916<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->5939<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->114<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -471,7 +546,7 @@ src/retrace/                             # <!-- STATS:loc -->5916<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->500<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->502<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
