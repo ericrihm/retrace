@@ -1,0 +1,97 @@
+re:trace Constraint Solver — Inferred Netlist
+==================================================
+
+Board: docs/examples/synthetic_board.png
+Timestamp: 2026-04-30T20:24:55Z
+AC-3 iterations: 88
+
+Net Assignments (269 nodes):
+
+  [POWER]
+    C4.1
+    J10.VCC
+    J14.VCC_12V
+    J15.VCC
+    J6.3V3
+    U1.VCC
+    U10.VIN
+    U11.SW
+    U11.VIN
+    U12.VIN
+    U2.VDD
+    U2.VDDQ
+    U3.VDD
+    U3.VDDQ
+    U4.VDD
+    U4.VDDQ
+    U5.VDD
+    U5.VDDQ
+    U6.TRUST_VERIFY
+    U6.VCC
+    ... and 3 more
+
+  [GROUND]
+    C4.2
+    J1.GND
+    J10.GND
+    J11.GND
+    J12.GND
+    J13.GND
+    J14.GND
+    J15.GND
+    J15.GND2
+    J2.GND
+    J3.GND
+    J4.GND
+    J5.GND
+    J6.GND
+    J7.GND
+    J8.GND
+    J9.GND
+    U1.GND
+    U10.GND
+    U11.GND
+    ... and 16 more
+
+  [UNKNOWN]
+    C1.1
+    C1.2
+    C2.1
+    C2.2
+    C3.1
+    C3.2
+    C5.1
+    C5.2
+    C6.1
+    C6.2
+    J1.LED_A
+    J1.LED_G
+    J1.RX+
+    J1.RX-
+    J1.TX+
+    J1.TX-
+    J10.RX
+    J10.TX
+    J11.RX+
+    J11.RX-
+    ... and 190 more
+
+Inferred Connections (3):
+  U1.VCC  <-->  U11.SW
+  U1.GND  <-->  U6.PROC_RST
+  U6.TRUST_VERIFY  <-->  U11.SW
+
+Ambiguous Nodes (210):
+  U1.DDR3_DQ0
+  U1.DDR3_A0
+  U1.PCIE_TX0
+  U1.PCIE_RX0
+  U1.SATA_TX
+  U1.SATA_RX
+  U1.USB_DP
+  U1.USB_DN
+  U1.SPI_MOSI
+  U1.SPI_MISO
+  ... and 200 more
+
+No constraint conflicts detected.

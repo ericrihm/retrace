@@ -344,6 +344,107 @@ _RING = DeviceFamily(
 )
 
 
+# ── Cisco ASA ───────────────────────────────────────────────────────
+
+_CISCO_ASA = DeviceFamily(
+    name="Cisco ASA",
+    manufacturer="Cisco",
+    category="firewall",
+    revisions=[
+        HardwareRevision(
+            "ASA 5505 (Base)", "ASA5505-BUN-K9", "LDK102057",
+            year=2006,
+            soc="AMD Geode LX800 500MHz", ram="256MB DDR",
+            storage="64MB CompactFlash",
+            notes="8-port FE, 10K users, EXTRABACON target (CVE-2016-6366, Shadow Brokers/NSA)",
+        ),
+        HardwareRevision(
+            "ASA 5505 (Security Plus)", "ASA5505-SEC-BUN-K9", "LDK102057",
+            year=2006,
+            soc="AMD Geode LX800 500MHz", ram="256MB DDR",
+            storage="64MB CompactFlash",
+            notes="Trunking, failover, DMZ, 25K users, same hardware as Base license",
+        ),
+        HardwareRevision(
+            "ASA 5506-X", "ASA5506-K9", "N/A-wired",
+            year=2015, codename="Firepower",
+            soc="Intel Atom C2508 (Rangeley, 4-core 1.25GHz, FCBGA-1283)", ram="4GB DDR3 ECC",
+            storage="8GB eUSB + 50GB mSATA SSD",
+            notes="8-port GbE, FirePOWER IPS, Thrangrycat (CVE-2019-1649), ArcaneDoor APT, "
+                  "CISA ED 25-03, Intel AVR54 clock bug, Xilinx Spartan-6 Trust Anchor FPGA, "
+                  "wired-only (no FCC ID), EOL Aug 2026, board revs V02-V06",
+        ),
+        HardwareRevision(
+            "ASA 5506W-X", "ASA5506W-A-K9", "LDKASA-AP702",
+            year=2015, codename="Firepower",
+            soc="Intel Atom C2508 (Rangeley, 4-core 1.25GHz, FCBGA-1283)", ram="4GB DDR3 ECC",
+            storage="8GB eUSB + 50GB mSATA SSD",
+            notes="Same as 5506-X + 802.11ac WAP (ASA-AP702), FCC ID is for WiFi module only",
+        ),
+        HardwareRevision(
+            "ASA 5508-X", "ASA5508-K9", "N/A-wired",
+            year=2015, codename="Firepower",
+            soc="Intel Atom C2518 (Rangeley, 4-core 1.7GHz, FCBGA-1283)", ram="8GB DDR3 ECC",
+            storage="8GB eUSB + 50GB mSATA SSD",
+            notes="8-port GbE, higher throughput, FirePOWER IPS, same CVEs + Trust Anchor as 5506-X",
+        ),
+        HardwareRevision(
+            "ASA 5510", "ASA5510-BUN-K9", "LDK102060",
+            year=2006,
+            soc="Intel Celeron M 1.6GHz", ram="256MB DDR",
+            storage="64MB CompactFlash",
+            notes="5-port FE + 1 GbE, 130K connections, DMZ, CVE-2016-1287 IKE overflow (CVSS 10.0)",
+        ),
+        HardwareRevision(
+            "ASA 5515-X", "ASA5515-K9", "LDK102068",
+            year=2012,
+            soc="Intel Core i5 (Sandy Bridge)", ram="8GB DDR3",
+            storage="8GB SSD",
+            notes="6-port GbE, 250K connections, IPS module slot, predecessor to 5506-X",
+        ),
+        HardwareRevision(
+            "ASA 5516-X", "ASA5516-FPWR-K9", "LDK102074",
+            year=2016, codename="Firepower",
+            soc="Intel Atom C2518 (Rangeley, 4-core 1.7GHz)", ram="8GB DDR3",
+            storage="8GB mSATA SSD",
+            notes="8-port GbE, FirePOWER bundled, HA failover, successor to 5515-X",
+        ),
+    ],
+)
+
+
+# ── Cisco Catalyst ──────────────────────────────────────────────────
+
+_CISCO_CATALYST = DeviceFamily(
+    name="Cisco Catalyst",
+    manufacturer="Cisco",
+    category="switch",
+    revisions=[
+        HardwareRevision(
+            "Catalyst 2960-X (24 port)", "WS-C2960X-24TS-L", "LDK102071",
+            year=2013,
+            soc="Marvell Prestera 98DX3236 (ARM)", ram="512MB DDR3",
+            storage="64MB flash",
+            notes="Most-deployed enterprise switch ever, 24-port GbE + 4 SFP, LAN Base",
+        ),
+        HardwareRevision(
+            "Catalyst 2960-X (48 port)", "WS-C2960X-48TS-L", "LDK102071",
+            year=2013,
+            soc="Marvell Prestera 98DX3236 (ARM)", ram="512MB DDR3",
+            storage="64MB flash",
+            notes="48-port GbE + 4 SFP, FlexStack-Plus stacking, LAN Base",
+        ),
+        HardwareRevision(
+            "Catalyst 3560-X (24 port)", "WS-C3560X-24T-S", "LDK102065",
+            year=2011,
+            soc="Memory controller ASIC + Memory forwarding ASIC", ram="256MB DDR2",
+            storage="64MB flash",
+            notes="24-port GbE, IP Base/Services, Layer 3, network module slot",
+        ),
+    ],
+)
+
+
 # ── Master registry ──────────────────────────────────────────────────
 
 DEVICE_FAMILIES: list[DeviceFamily] = [
@@ -355,6 +456,8 @@ DEVICE_FAMILIES: list[DeviceFamily] = [
     _RASPBERRY_PI,
     _UBIQUITI,
     _RING,
+    _CISCO_ASA,
+    _CISCO_CATALYST,
 ]
 
 

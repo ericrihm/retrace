@@ -1,0 +1,442 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <!-- re:trace SVG overlay — components, traces, BOM -->
+  <image href="cisco_board.png" x="0" y="0" width="1600" height="1000" preserveAspectRatio="xMidYMid meet"/>
+  <g class="legend">
+    <rect x="8" y="7" width="10" height="10" fill="#e74c3c" fill-opacity="0.7" rx="1"/>
+    <text x="21" y="16" font-family="monospace" font-size="9" fill="#ffffff">ic</text>
+    <rect x="8" y="21" width="10" height="10" fill="#3498db" fill-opacity="0.7" rx="1"/>
+    <text x="21" y="30" font-family="monospace" font-size="9" fill="#ffffff">capacitor</text>
+    <rect x="8" y="35" width="10" height="10" fill="#2ecc71" fill-opacity="0.7" rx="1"/>
+    <text x="21" y="44" font-family="monospace" font-size="9" fill="#ffffff">resistor</text>
+    <rect x="8" y="49" width="10" height="10" fill="#f39c12" fill-opacity="0.7" rx="1"/>
+    <text x="21" y="58" font-family="monospace" font-size="9" fill="#ffffff">connector</text>
+    <rect x="8" y="63" width="10" height="10" fill="#9b59b6" fill-opacity="0.7" rx="1"/>
+    <text x="21" y="72" font-family="monospace" font-size="9" fill="#ffffff">inductor</text>
+    <rect x="8" y="77" width="10" height="10" fill="#1abc9c" fill-opacity="0.7" rx="1"/>
+    <text x="21" y="86" font-family="monospace" font-size="9" fill="#ffffff">crystal</text>
+    <rect x="8" y="91" width="10" height="10" fill="#e67e22" fill-opacity="0.7" rx="1"/>
+    <text x="21" y="100" font-family="monospace" font-size="9" fill="#ffffff">header</text>
+    <rect x="8" y="105" width="10" height="10" fill="#e91e63" fill-opacity="0.7" rx="1"/>
+    <text x="21" y="114" font-family="monospace" font-size="9" fill="#ffffff">test_point</text>
+    <rect x="8" y="119" width="10" height="10" fill="#95a5a6" fill-opacity="0.7" rx="1"/>
+    <text x="21" y="128" font-family="monospace" font-size="9" fill="#ffffff">unknown</text>
+    <text x="8" y="152" font-family="monospace" font-size="9" fill="#aaa" font-weight="bold">nets:</text>
+    <line x1="8" y1="162" x2="18" y2="162" stroke="#ff3333" stroke-width="2"/>
+    <text x="21" y="166" font-family="monospace" font-size="9" fill="#ffffff">power</text>
+    <line x1="8" y1="176" x2="18" y2="176" stroke="#555555" stroke-width="2"/>
+    <text x="21" y="180" font-family="monospace" font-size="9" fill="#ffffff">ground</text>
+    <line x1="8" y1="190" x2="18" y2="190" stroke="#3399ff" stroke-width="2"/>
+    <text x="21" y="194" font-family="monospace" font-size="9" fill="#ffffff">data</text>
+    <line x1="8" y1="204" x2="18" y2="204" stroke="#ffaa00" stroke-width="2"/>
+    <text x="21" y="208" font-family="monospace" font-size="9" fill="#ffffff">clock</text>
+    <line x1="8" y1="218" x2="18" y2="218" stroke="#66ccff" stroke-width="2"/>
+    <text x="21" y="222" font-family="monospace" font-size="9" fill="#ffffff">signal</text>
+    <line x1="8" y1="232" x2="18" y2="232" stroke="#ff66ff" stroke-width="2"/>
+    <text x="21" y="236" font-family="monospace" font-size="9" fill="#ffffff">debug</text>
+    <line x1="8" y1="246" x2="18" y2="246" stroke="#888888" stroke-width="2"/>
+    <text x="21" y="250" font-family="monospace" font-size="9" fill="#ffffff">unknown</text>
+  </g>
+  <g class="traces">
+    <g class="trace" data-id="T000" data-net="signal">
+      <polyline points="420,350 250,350 250,250" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="420" cy="350" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="250" cy="250" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T001" data-net="signal">
+      <polyline points="420,380 250,380 250,430" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="420" cy="380" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="250" cy="430" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T002" data-net="signal">
+      <polyline points="420,450 250,450 250,570" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="420" cy="450" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="250" cy="570" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T003" data-net="signal">
+      <polyline points="420,500 250,500 250,710" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="420" cy="500" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="250" cy="710" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T004" data-net="signal">
+      <polyline points="680,350 750,350 750,300" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="680" cy="350" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="750" cy="300" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T005" data-net="signal">
+      <polyline points="680,370 770,370 770,300" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="680" cy="370" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="770" cy="300" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T006" data-net="signal">
+      <polyline points="680,390 790,390 790,300" fill="none" stroke="#66ccff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="680" cy="390" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="790" cy="300" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T007" data-net="signal">
+      <polyline points="680,410 810,410 810,300" fill="none" stroke="#66ccff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="680" cy="410" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="810" cy="300" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T008" data-net="signal">
+      <polyline points="910,230 950,230 950,218" fill="none" stroke="#66ccff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="910" cy="230" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="950" cy="218" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T009" data-net="signal">
+      <polyline points="910,250 960,250 960,230" fill="none" stroke="#66ccff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="910" cy="250" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="960" cy="230" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T010" data-net="signal">
+      <polyline points="910,270 970,270 970,218" fill="none" stroke="#66ccff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="910" cy="270" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="970" cy="218" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T011" data-net="signal">
+      <polyline points="910,210 950,210 950,200" fill="none" stroke="#66ccff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="910" cy="210" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="950" cy="200" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T012" data-net="signal">
+      <polyline points="680,430 900,430 900,480" fill="none" stroke="#66ccff" stroke-width="2.4" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="680" cy="430" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="900" cy="480" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T013" data-net="signal">
+      <polyline points="680,450 920,450 920,480" fill="none" stroke="#66ccff" stroke-width="2.4" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="680" cy="450" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="920" cy="480" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T014" data-net="signal">
+      <polyline points="1050,540 1050,800" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="1050" cy="540" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="1050" cy="800" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T015" data-net="signal">
+      <polyline points="1050,560 970,560 970,800" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="1050" cy="560" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="970" cy="800" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T016" data-net="signal">
+      <polyline points="1050,580 890,580 890,800" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="1050" cy="580" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="890" cy="800" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T017" data-net="signal">
+      <polyline points="1050,600 810,600 810,800" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="1050" cy="600" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="810" cy="800" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T018" data-net="signal">
+      <polyline points="680,470 1210,470 1210,800" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="680" cy="470" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="1210" cy="800" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T019" data-net="signal">
+      <polyline points="680,490 1290,490 1290,800" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="680" cy="490" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="1290" cy="800" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T020" data-net="signal">
+      <polyline points="680,510 1370,510 1370,800" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="680" cy="510" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="1370" cy="800" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T021" data-net="signal">
+      <polyline points="680,530 1450,530 1450,800" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="680" cy="530" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="1450" cy="800" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T022" data-net="signal">
+      <polyline points="680,340 1490,340 1490,800" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="680" cy="340" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="1490" cy="800" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T023" data-net="signal">
+      <polyline points="420,530 350,530 350,650" fill="none" stroke="#66ccff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="420" cy="530" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="350" cy="650" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T024" data-net="signal">
+      <polyline points="420,540 370,540 370,675" fill="none" stroke="#66ccff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="420" cy="540" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="370" cy="675" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T025" data-net="signal">
+      <polyline points="420,510 300,510 300,790" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="420" cy="510" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="300" cy="790" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T026" data-net="signal">
+      <polyline points="420,520 280,520 280,810" fill="none" stroke="#66ccff" stroke-width="1.8" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="420" cy="520" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="280" cy="810" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T027" data-net="signal">
+      <polyline points="420,420 400,420 400,700 700,700 700,800" fill="none" stroke="#66ccff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="420" cy="420" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="700" cy="800" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T028" data-net="signal">
+      <polyline points="420,430 380,430 380,720 720,720 720,800" fill="none" stroke="#66ccff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="420" cy="430" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="720" cy="800" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T029" data-net="signal">
+      <polyline points="420,440 360,440 360,740 600,740 600,800" fill="none" stroke="#66ccff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="420" cy="440" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="600" cy="800" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T030" data-net="signal">
+      <polyline points="420,460 340,460 340,760 520,760 520,800" fill="none" stroke="#66ccff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="420" cy="460" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="520" cy="800" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T031" data-net="debug">
+      <polyline points="650,160 500,160 500,280" fill="none" stroke="#ff66ff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="650" cy="160" r="3" fill="#ff66ff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="500" cy="280" r="3" fill="#ff66ff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T032" data-net="debug">
+      <polyline points="660,160 490,160 490,280" fill="none" stroke="#ff66ff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="660" cy="160" r="3" fill="#ff66ff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="490" cy="280" r="3" fill="#ff66ff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T033" data-net="debug">
+      <polyline points="670,160 480,160 480,280" fill="none" stroke="#ff66ff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="670" cy="160" r="3" fill="#ff66ff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="480" cy="280" r="3" fill="#ff66ff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T034" data-net="debug">
+      <polyline points="680,160 470,160 470,280" fill="none" stroke="#ff66ff" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="680" cy="160" r="3" fill="#ff66ff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="470" cy="280" r="3" fill="#ff66ff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T035" data-net="power">
+      <polyline points="140,121 420,121 420,280" fill="none" stroke="#ff3333" stroke-width="3.0" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="140" cy="121" r="3" fill="#ff3333" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="420" cy="280" r="3" fill="#ff3333" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T036" data-net="power">
+      <polyline points="370,161 420,161 420,280" fill="none" stroke="#ff3333" stroke-width="3.0" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="370" cy="161" r="3" fill="#ff3333" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="420" cy="280" r="3" fill="#ff3333" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T037" data-net="power">
+      <polyline points="130,476 130,430" fill="none" stroke="#ff3333" stroke-width="2.4" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="130" cy="476" r="3" fill="#ff3333" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="130" cy="430" r="3" fill="#ff3333" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T038" data-net="power">
+      <polyline points="110,830 110,142 80,142" fill="none" stroke="#ff3333" stroke-width="3.0" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="110" cy="830" r="3" fill="#ff3333" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="80" cy="142" r="3" fill="#ff3333" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T039" data-net="clock">
+      <polyline points="398,582 420,582 420,540" fill="none" stroke="#ffaa00" stroke-width="1.2" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="398" cy="582" r="3" fill="#ffaa00" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="420" cy="540" r="3" fill="#ffaa00" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+    <g class="trace" data-id="T040" data-net="signal">
+      <polyline points="830,136 680,136 680,280" fill="none" stroke="#66ccff" stroke-width="1.0" stroke-opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="830" cy="136" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+      <circle cx="680" cy="280" r="3" fill="#66ccff" fill-opacity="0.9" stroke="#fff" stroke-width="0.5"/>
+    </g>
+  </g>
+  <g class="components">
+    <g class="component" data-id="U1" data-label="ic">
+      <rect x="420" y="280" width="260" height="260" fill="#e74c3c" fill-opacity="0.35" stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+      <text x="422" y="277" font-family="monospace" font-size="10" fill="#e74c3c" font-weight="bold">C2508</text>
+    </g>
+    <g class="component" data-id="U2" data-label="ic">
+      <rect x="130" y="180" width="120" height="70" fill="#e74c3c" fill-opacity="0.35" stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+      <text x="132" y="177" font-family="monospace" font-size="10" fill="#e74c3c" font-weight="bold">MT41K256M16HA</text>
+    </g>
+    <g class="component" data-id="U3" data-label="ic">
+      <rect x="130" y="360" width="120" height="70" fill="#e74c3c" fill-opacity="0.35" stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+      <text x="132" y="357" font-family="monospace" font-size="10" fill="#e74c3c" font-weight="bold">MT41K256M16HA</text>
+    </g>
+    <g class="component" data-id="U4" data-label="ic">
+      <rect x="130" y="500" width="120" height="70" fill="#e74c3c" fill-opacity="0.35" stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+      <text x="132" y="497" font-family="monospace" font-size="10" fill="#e74c3c" font-weight="bold">MT41K256M16HA</text>
+    </g>
+    <g class="component" data-id="U5" data-label="ic">
+      <rect x="130" y="640" width="120" height="70" fill="#e74c3c" fill-opacity="0.35" stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+      <text x="132" y="637" font-family="monospace" font-size="10" fill="#e74c3c" font-weight="bold">MT41K256M16HA</text>
+    </g>
+    <g class="component" data-id="U6" data-label="ic">
+      <rect x="750" y="160" width="160" height="140" fill="#e74c3c" fill-opacity="0.35" stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+      <text x="752" y="157" font-family="monospace" font-size="10" fill="#e74c3c" font-weight="bold">XC6SLX45T-2FGG484</text>
+    </g>
+    <g class="component" data-id="U7" data-label="ic">
+      <rect x="950" y="200" width="60" height="36" fill="#e74c3c" fill-opacity="0.35" stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+      <text x="952" y="197" font-family="monospace" font-size="10" fill="#e74c3c" font-weight="bold">W25Q128JVSIQ</text>
+    </g>
+    <g class="component" data-id="U8" data-label="ic">
+      <rect x="900" y="480" width="150" height="130" fill="#e74c3c" fill-opacity="0.35" stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+      <text x="902" y="477" font-family="monospace" font-size="10" fill="#e74c3c" font-weight="bold">I354-AM4</text>
+    </g>
+    <g class="component" data-id="U9" data-label="ic">
+      <rect x="350" y="650" width="80" height="50" fill="#e74c3c" fill-opacity="0.35" stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+      <text x="352" y="647" font-family="monospace" font-size="10" fill="#e74c3c" font-weight="bold">SATADOM-SL</text>
+    </g>
+    <g class="component" data-id="J6" data-label="connector">
+      <rect x="100" y="790" width="150" height="60" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="102" y="787" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">mSATA 50GB</text>
+    </g>
+    <g class="component" data-id="U10" data-label="ic">
+      <rect x="80" y="100" width="60" height="42" fill="#e74c3c" fill-opacity="0.35" stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+      <text x="82" y="97" font-family="monospace" font-size="10" fill="#e74c3c" font-weight="bold">TPS54331DR</text>
+    </g>
+    <g class="component" data-id="U11" data-label="ic">
+      <rect x="300" y="140" width="70" height="42" fill="#e74c3c" fill-opacity="0.35" stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+      <text x="302" y="137" font-family="monospace" font-size="10" fill="#e74c3c" font-weight="bold">NCP5232</text>
+    </g>
+    <g class="component" data-id="U12" data-label="ic">
+      <rect x="80" y="460" width="50" height="32" fill="#e74c3c" fill-opacity="0.35" stroke="#e74c3c" stroke-width="1.5" rx="2"/>
+      <text x="82" y="457" font-family="monospace" font-size="10" fill="#e74c3c" font-weight="bold">TPS51200DR</text>
+    </g>
+    <g class="component" data-id="J1" data-label="connector">
+      <rect x="850" y="800" width="70" height="80" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="852" y="797" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">GbE-1</text>
+    </g>
+    <g class="component" data-id="J2" data-label="connector">
+      <rect x="930" y="800" width="70" height="80" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="932" y="797" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">GbE-2</text>
+    </g>
+    <g class="component" data-id="J3" data-label="connector">
+      <rect x="1010" y="800" width="70" height="80" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="1012" y="797" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">GbE-3</text>
+    </g>
+    <g class="component" data-id="J4" data-label="connector">
+      <rect x="1090" y="800" width="70" height="80" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="1092" y="797" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">GbE-4</text>
+    </g>
+    <g class="component" data-id="J5" data-label="connector">
+      <rect x="1170" y="800" width="70" height="80" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="1172" y="797" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">GbE-5</text>
+    </g>
+    <g class="component" data-id="J7" data-label="connector">
+      <rect x="1250" y="800" width="70" height="80" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="1252" y="797" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">GbE-6</text>
+    </g>
+    <g class="component" data-id="J8" data-label="connector">
+      <rect x="1330" y="800" width="70" height="80" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="1332" y="797" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">GbE-7</text>
+    </g>
+    <g class="component" data-id="J9" data-label="connector">
+      <rect x="1410" y="800" width="70" height="80" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="1412" y="797" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">GbE-8</text>
+    </g>
+    <g class="component" data-id="J10" data-label="connector">
+      <rect x="700" y="800" width="70" height="80" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="702" y="797" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">CONSOLE</text>
+    </g>
+    <g class="component" data-id="J11" data-label="connector">
+      <rect x="1490" y="800" width="70" height="80" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="1492" y="797" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">MGMT</text>
+    </g>
+    <g class="component" data-id="J12" data-label="connector">
+      <rect x="600" y="800" width="60" height="60" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="602" y="797" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">USB-A</text>
+    </g>
+    <g class="component" data-id="J13" data-label="connector">
+      <rect x="520" y="800" width="50" height="50" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="522" y="797" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">USB Mini-B</text>
+    </g>
+    <g class="component" data-id="J14" data-label="connector">
+      <rect x="50" y="800" width="60" height="60" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="52" y="797" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">DC 12V</text>
+    </g>
+    <g class="component" data-id="J15" data-label="connector">
+      <rect x="650" y="130" width="90" height="30" fill="#f39c12" fill-opacity="0.35" stroke="#f39c12" stroke-width="1.5" rx="2"/>
+      <text x="652" y="127" font-family="monospace" font-size="10" fill="#f39c12" font-weight="bold">JTAG</text>
+    </g>
+    <g class="component" data-id="C1" data-label="capacitor">
+      <rect x="380" y="260" width="26" height="14" fill="#3498db" fill-opacity="0.35" stroke="#3498db" stroke-width="1.5" rx="2"/>
+      <text x="382" y="257" font-family="monospace" font-size="10" fill="#3498db" font-weight="bold">100nF</text>
+    </g>
+    <g class="component" data-id="C2" data-label="capacitor">
+      <rect x="380" y="560" width="26" height="14" fill="#3498db" fill-opacity="0.35" stroke="#3498db" stroke-width="1.5" rx="2"/>
+      <text x="382" y="557" font-family="monospace" font-size="10" fill="#3498db" font-weight="bold">100nF</text>
+    </g>
+    <g class="component" data-id="C3" data-label="capacitor">
+      <rect x="700" y="300" width="26" height="14" fill="#3498db" fill-opacity="0.35" stroke="#3498db" stroke-width="1.5" rx="2"/>
+      <text x="702" y="297" font-family="monospace" font-size="10" fill="#3498db" font-weight="bold">10uF</text>
+    </g>
+    <g class="component" data-id="C4" data-label="capacitor">
+      <rect x="730" y="140" width="26" height="14" fill="#3498db" fill-opacity="0.35" stroke="#3498db" stroke-width="1.5" rx="2"/>
+      <text x="732" y="137" font-family="monospace" font-size="10" fill="#3498db" font-weight="bold">22uF</text>
+    </g>
+    <g class="component" data-id="C5" data-label="capacitor">
+      <rect x="860" y="440" width="26" height="14" fill="#3498db" fill-opacity="0.35" stroke="#3498db" stroke-width="1.5" rx="2"/>
+      <text x="862" y="437" font-family="monospace" font-size="10" fill="#3498db" font-weight="bold">100nF</text>
+    </g>
+    <g class="component" data-id="C6" data-label="capacitor">
+      <rect x="1060" y="460" width="26" height="14" fill="#3498db" fill-opacity="0.35" stroke="#3498db" stroke-width="1.5" rx="2"/>
+      <text x="1062" y="457" font-family="monospace" font-size="10" fill="#3498db" font-weight="bold">100nF</text>
+    </g>
+    <g class="component" data-id="R1" data-label="resistor">
+      <rect x="750" y="120" width="28" height="12" fill="#2ecc71" fill-opacity="0.35" stroke="#2ecc71" stroke-width="1.5" rx="2"/>
+      <text x="752" y="117" font-family="monospace" font-size="10" fill="#2ecc71" font-weight="bold">10k</text>
+    </g>
+    <g class="component" data-id="R2" data-label="resistor">
+      <rect x="780" y="120" width="28" height="12" fill="#2ecc71" fill-opacity="0.35" stroke="#2ecc71" stroke-width="1.5" rx="2"/>
+      <text x="782" y="117" font-family="monospace" font-size="10" fill="#2ecc71" font-weight="bold">4k7</text>
+    </g>
+    <g class="component" data-id="R3" data-label="resistor">
+      <rect x="300" y="580" width="28" height="12" fill="#2ecc71" fill-opacity="0.35" stroke="#2ecc71" stroke-width="1.5" rx="2"/>
+      <text x="302" y="577" font-family="monospace" font-size="10" fill="#2ecc71" font-weight="bold">182</text>
+    </g>
+    <g class="component" data-id="L1" data-label="inductor">
+      <rect x="200" y="110" width="42" height="36" fill="#9b59b6" fill-opacity="0.35" stroke="#9b59b6" stroke-width="1.5" rx="2"/>
+      <text x="202" y="107" font-family="monospace" font-size="10" fill="#9b59b6" font-weight="bold">2.2uH</text>
+    </g>
+    <g class="component" data-id="L2" data-label="inductor">
+      <rect x="60" y="460" width="42" height="36" fill="#9b59b6" fill-opacity="0.35" stroke="#9b59b6" stroke-width="1.5" rx="2"/>
+      <text x="62" y="457" font-family="monospace" font-size="10" fill="#9b59b6" font-weight="bold">1uH</text>
+    </g>
+    <g class="component" data-id="Y1" data-label="crystal">
+      <rect x="350" y="570" width="48" height="24" fill="#1abc9c" fill-opacity="0.35" stroke="#1abc9c" stroke-width="1.5" rx="2"/>
+      <text x="352" y="567" font-family="monospace" font-size="10" fill="#1abc9c" font-weight="bold">ABLS-25.000MHZ</text>
+    </g>
+    <g class="component" data-id="TP1" data-label="test_point">
+      <rect x="770" y="130" width="12" height="12" fill="#e91e63" fill-opacity="0.35" stroke="#e91e63" stroke-width="1.5" rx="2"/>
+      <text x="772" y="127" font-family="monospace" font-size="10" fill="#e91e63" font-weight="bold">TP1</text>
+    </g>
+    <g class="component" data-id="TP2" data-label="test_point">
+      <rect x="790" y="130" width="12" height="12" fill="#e91e63" fill-opacity="0.35" stroke="#e91e63" stroke-width="1.5" rx="2"/>
+      <text x="792" y="127" font-family="monospace" font-size="10" fill="#e91e63" font-weight="bold">TP2</text>
+    </g>
+    <g class="component" data-id="TP3" data-label="test_point">
+      <rect x="810" y="130" width="12" height="12" fill="#e91e63" fill-opacity="0.35" stroke="#e91e63" stroke-width="1.5" rx="2"/>
+      <text x="812" y="127" font-family="monospace" font-size="10" fill="#e91e63" font-weight="bold">TP3</text>
+    </g>
+    <g class="component" data-id="TP4" data-label="test_point">
+      <rect x="830" y="130" width="12" height="12" fill="#e91e63" fill-opacity="0.35" stroke="#e91e63" stroke-width="1.5" rx="2"/>
+      <text x="832" y="127" font-family="monospace" font-size="10" fill="#e91e63" font-weight="bold">R182</text>
+    </g>
+  </g>
+    <g class="bom-panel">
+      <rect x="1368" y="12" width="220" height="168" rx="4" fill="#1a1a2e" fill-opacity="0.88" stroke="#334" stroke-width="1"/>
+      <text x="1378" y="34" font-family="monospace" font-size="11" fill="#e0e0e0" font-weight="bold">Bill of Materials</text>
+      <line x1="1378" y1="42" x2="1578" y2="42" stroke="#444" stroke-width="0.5"/>
+      <rect x="1378" y="42" width="8" height="8" fill="#f39c12" rx="1"/>
+      <text x="1390" y="50" font-family="monospace" font-size="9" fill="#ccc">connector: 15</text>
+      <rect x="1378" y="56" width="8" height="8" fill="#e74c3c" rx="1"/>
+      <text x="1390" y="64" font-family="monospace" font-size="9" fill="#ccc">ic: 12  (12 ID'd)</text>
+      <rect x="1378" y="70" width="8" height="8" fill="#3498db" rx="1"/>
+      <text x="1390" y="78" font-family="monospace" font-size="9" fill="#ccc">capacitor: 6</text>
+      <rect x="1378" y="84" width="8" height="8" fill="#e91e63" rx="1"/>
+      <text x="1390" y="92" font-family="monospace" font-size="9" fill="#ccc">test_point: 4</text>
+      <rect x="1378" y="98" width="8" height="8" fill="#2ecc71" rx="1"/>
+      <text x="1390" y="106" font-family="monospace" font-size="9" fill="#ccc">resistor: 3</text>
+      <rect x="1378" y="112" width="8" height="8" fill="#9b59b6" rx="1"/>
+      <text x="1390" y="120" font-family="monospace" font-size="9" fill="#ccc">inductor: 2</text>
+      <rect x="1378" y="126" width="8" height="8" fill="#1abc9c" rx="1"/>
+      <text x="1390" y="134" font-family="monospace" font-size="9" fill="#ccc">crystal: 1  (1 ID'd)</text>
+      <line x1="1378" y1="144" x2="1578" y2="144" stroke="#444" stroke-width="0.5"/>
+      <text x="1378" y="154" font-family="monospace" font-size="9" fill="#aaa">43 parts, 13 ID'd, 41 traces, 41 nets</text>
+    </g>
+  <text x="800" y="996" text-anchor="middle" font-family="monospace" font-size="9" fill="#aaaaaa">43 components, 13 identified, 41 traces, 41 connections — re:trace 0.1.0</text>
+</svg>

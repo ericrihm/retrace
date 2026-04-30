@@ -195,12 +195,10 @@ class TestComponentAnnotations:
 
 class TestTracePaths:
     def test_footer_shows_trace_count(self):
-        """The summary footer includes the word 'components' (trace count is implicit)."""
         trace = _make_trace(points=[(0, 0), (50, 50), (100, 100)])
         result = _make_result(traces=[trace])
         svg = generate_svg(result)
-        # Footer always present
-        assert "components" in svg
+        assert "1 traces" in svg
 
     def test_no_crash_with_traces_in_result(self):
         traces = [_make_trace(f"T{i:08d}") for i in range(5)]
@@ -212,9 +210,149 @@ class TestTracePaths:
         comps = [_make_component("C1"), _make_component("C2", part_number="LM7805")]
         result = _make_result(components=comps)
         svg = generate_svg(result)
-        # "2 components, 1 identified"
         assert "2 components" in svg
         assert "1 identified" in svg
+
+    def test_trace_polyline_rendered(self):
+        trace = _make_trace(points=[(10, 20), (50, 60), (100, 80)])
+        result = _make_result(traces=[trace])
+        svg = generate_svg(result)
+        assert "<polyline" in svg
+        assert "10,20" in svg
+
+    def test_trace_group_element(self):
+        trace = _make_trace()
+        result = _make_result(traces=[trace])
+        svg = generate_svg(result)
+        assert 'class="traces"' in svg
+        assert 'class="trace"' in svg
+
+    def test_pin_dots_rendered(self):
+        trace = _make_trace(points=[(10, 20), (100, 100)])
+        result = _make_result(traces=[trace])
+        svg = generate_svg(result)
+        assert svg.count("<circle") >= 2
+
+    def test_trace_with_component_endpoints(self):
+        c1 = _make_component("U1", "ic", (10, 10, 60, 60), marking="VRM")
+        c2 = _make_component("U2", "ic", (200, 200, 60, 60))
+        trace = Trace(id="T001", points=[(40, 40), (230, 230)], width_px=3.0,
+                      from_component="U1", to_component="U2")
+        result = _make_result(components=[c1, c2], traces=[trace])
+        svg = generate_svg(result)
+        assert 'data-net="' in svg
+
+    def test_show_traces_false_hides_traces(self):
+        trace = _make_trace()
+        result = _make_result(traces=[trace])
+        svg = generate_svg(result, show_traces=False)
+        assert "<polyline" not in svg
+        assert 'class="traces"' not in svg
+
+    def test_net_type_power_classified(self):
+        vrm = _make_component("U10", "ic", (10, 10, 50, 50), marking="TPS51611")
+        cpu = _make_component("U1", "ic", (200, 200, 50, 50))
+        trace = Trace(id="T001", points=[(35, 35), (225, 225)], width_px=5.0,
+                      from_component="U10", to_component="U1")
+        result = _make_result(components=[vrm, cpu], traces=[trace])
+        svg = generate_svg(result)
+        assert 'data-net="power"' in svg
+
+    def test_net_type_debug_classified(self):
+        jtag = _make_component("J5", "connector", (10, 10, 50, 50), marking="JTAG")
+        cpu = _make_component("U1", "ic", (200, 200, 50, 50))
+        trace = Trace(id="T001", points=[(35, 35), (225, 225)], width_px=2.0,
+                      from_component="J5", to_component="U1")
+        result = _make_result(components=[jtag, cpu], traces=[trace])
+        svg = generate_svg(result)
+        assert 'data-net="debug"' in svg
+
+    def test_footer_shows_connection_count(self):
+        c1 = _make_component("U1", "ic", (10, 10, 50, 50))
+        c2 = _make_component("U2", "ic", (200, 200, 50, 50))
+        trace = Trace(id="T001", points=[(35, 35), (225, 225)], width_px=2.0,
+                      from_component="U1", to_component="U2")
+        result = _make_result(components=[c1, c2], traces=[trace])
+        svg = generate_svg(result)
+        assert "1 connections" in svg
+
+    def test_trace_without_points_uses_component_edges(self):
+        c1 = _make_component("U1", "ic", (10, 10, 50, 50))
+        c2 = _make_component("U2", "ic", (200, 200, 50, 50))
+        trace = Trace(id="T001", points=[], width_px=2.0,
+                      from_component="U1", to_component="U2")
+        result = _make_result(components=[c1, c2], traces=[trace])
+        svg = generate_svg(result)
+        assert "<line" in svg
+
+
+# ---------------------------------------------------------------------------
+# BOM panel
+# ---------------------------------------------------------------------------
+
+class TestBomPanel:
+    def test_bom_panel_rendered(self):
+        comps = [_make_component("U1", "ic"), _make_component("C1", "capacitor")]
+        result = _make_result(components=comps)
+        svg = generate_svg(result)
+        assert 'class="bom-panel"' in svg
+        assert "Bill of Materials" in svg
+
+    def test_bom_shows_component_types(self):
+        comps = [
+            _make_component("U1", "ic"),
+            _make_component("U2", "ic"),
+            _make_component("C1", "capacitor"),
+        ]
+        result = _make_result(components=comps)
+        svg = generate_svg(result)
+        assert "ic: 2" in svg
+        assert "capacitor: 1" in svg
+
+    def test_bom_shows_identified_count(self):
+        comps = [
+            _make_component("U1", "ic", part_number="LM7805"),
+            _make_component("U2", "ic"),
+        ]
+        result = _make_result(components=comps)
+        svg = generate_svg(result)
+        assert "1 ID'd" in svg
+
+    def test_bom_shows_totals(self):
+        comps = [_make_component("U1"), _make_component("U2"), _make_component("C1", "capacitor")]
+        result = _make_result(components=comps)
+        svg = generate_svg(result)
+        assert "3 parts" in svg
+
+    def test_show_bom_false_hides_panel(self):
+        comps = [_make_component("U1")]
+        result = _make_result(components=comps)
+        svg = generate_svg(result, show_bom=False)
+        assert 'class="bom-panel"' not in svg
+
+    def test_bom_not_shown_for_empty_result(self):
+        result = _make_result()
+        svg = generate_svg(result)
+        assert 'class="bom-panel"' not in svg
+
+
+# ---------------------------------------------------------------------------
+# Net legend
+# ---------------------------------------------------------------------------
+
+class TestNetLegend:
+    def test_net_legend_shows_net_types(self):
+        result = _make_result()
+        svg = generate_svg(result)
+        assert "power" in svg
+        assert "ground" in svg
+        assert "signal" in svg
+        assert "debug" in svg
+
+    def test_net_legend_has_line_elements(self):
+        result = _make_result()
+        svg = generate_svg(result)
+        assert "nets:" in svg
 
 
 # ---------------------------------------------------------------------------

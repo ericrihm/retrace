@@ -9,9 +9,9 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://pypi.org/project/retrace-pcb/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Coverage](https://img.shields.io/badge/coverage-84%25-green.svg)](https://github.com/ericrihm/retrace)
+[![Coverage](https://img.shields.io/badge/coverage-89%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->341<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->5255<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->461<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->5589<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -26,67 +26,88 @@ pip install retrace-pcb
 retrace scan board_photo.jpg
 ```
 
-### Demo: Xbox One Motherboard Analysis
+### Demo: Dual-Board Analysis
+
+Two boards. Two worlds. Both analyzed from photos alone.
 
 <table>
 <tr>
 <td width="50%">
 
-**Input: Real Xbox One PCB** *(iFixit, CC BY-NC-SA 3.0)*
+**Xbox One — Gaming Hardware RE**
 
-<img src="docs/examples/xbox_one_motherboard.jpg" width="100%" alt="Xbox One Model 1540 motherboard — AMD Jaguar APU, DDR3 RAM, Southbridge, HDMI, USB"/>
+<img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One — 28 components, 20 traced connections, color-coded net types"/>
+
+AMD Jaguar APU, 8GB DDR3, Southbridge — 28 components detected, 20 traces classified (power, signal, debug, clock)
 
 </td>
 <td width="50%">
 
-**Output: Synthetic board + SVG overlay**
+**Cisco ASA 5506-X — Enterprise Firewall RE**
 
-<img src="docs/examples/annotated_board.svg" width="100%" alt="Detected components with color-coded bounding boxes and net labels"/>
+<img src="docs/examples/cisco_annotated.svg" width="100%" alt="Cisco ASA 5506-X — 42 components, 41 traced connections, Thrangrycat attack surface"/>
+
+Intel Atom C2508, Xilinx Spartan-6 Trust Anchor FPGA, 4x DDR3 ECC — 42 components, 41 traces, full attack surface mapped
 
 </td>
 </tr>
 </table>
 
-> **5,563 copper traces** extracted from the real Xbox One photo above using zero-config contour detection. Add `retrace-pcb[detection]` for YOLO-based component identification.
+> The Cisco ASA 5506-X is the target of **Thrangrycat (CVE-2019-1649)** — a FPGA bitstream manipulation attack that undermines Cisco's hardware root of trust — and the **ArcaneDoor** state-sponsored APT campaign (2024). CISA Emergency Directive ED 25-03 mandated immediate patching. re:trace maps the complete attack path: JTAG header → Intel Atom C2508 → Xilinx Spartan-6 FPGA ← unencrypted SPI flash (W25Q128JV).
 
 <details>
-<summary><b>Probe Advisor Output</b> — where to measure next for maximum information gain</summary>
+<summary><b>Cisco ASA 5506-X — Debug Interface Detection</b></summary>
 
 ```
-re:trace Bayesian Probe Advisor — Top 5 Probe Recommendations
-=================================================================
+Total findings: 2  (HIGH=1  MEDIUM=1)
 
-  #1  U1.HDMI_TX0P   EIG: 3.807 bits    most likely net: SIGNAL (8.3%)
-  #2  U1.PCIE_TX     EIG: 3.807 bits    most likely net: SIGNAL (8.3%)
-  #3  U6.USB0_DP     EIG: 3.322 bits    most likely net: SIGNAL (10.0%)
-  #4  U6.SPI_MOSI    EIG: 3.170 bits    most likely net: SPI_DATA (11.1%)
-  #5  U8.SDIO_CMD    EIG: 3.170 bits    most likely net: SIGNAL (11.1%)
+  [HIGH]  JTAG
+         Component : J15  (connector)
+         Marking   : JTAG
+         Detail    : JTAG debug interface — full CPU debug/program access
+         Reference : CWE-1191
 
-Methodology: Dirichlet belief over net labels, ranked by
-expected Shannon entropy reduction (mutual information).
+  [MEDIUM]  UART
+         Component : J10  (connector)
+         Marking   : CONSOLE
+         Detail    : UART/serial console — may expose bootloader or root shell
+         Reference : CWE-1299
 ```
 
 </details>
 
 <details>
-<summary><b>Constraint Solver Output</b> — inferred power network from partial traces</summary>
+<summary><b>Cisco ASA 5506-X — Constraint Solver</b> — 269 nodes, 88 AC-3 iterations</summary>
 
 ```
-AC-3 iterations: 34  |  127 nodes  |  8 inferred connections
+AC-3 iterations: 88  |  269 nodes  |  3 inferred connections
 
-  [POWER]   U1.VCC_CORE, U2.VDD, U3.VDD, U6.VCC, U10.VOUT, L1.2
-  [GROUND]  U1.GND, U2.VSS, U6.GND, U7.GND, U8.GND, J5.GND
+  [POWER]   U1.VCC, U2-U5.VDD/VDDQ, U6.VCC, U10-U12.VIN, J14.VCC_12V
+  [GROUND]  U1.GND, J1-J9.GND, J10-J15.GND, U10-U12.GND (36 nodes)
 
-  Inferred: C1.1 ↔ U1.VCC_CORE  (decoupling cap near APU)
-  Inferred: C5.1 ↔ U6.VCC       (southbridge bypass cap)
-  Inferred: U10.VOUT ↔ L1.2     (VRM output inductor)
-  Inferred: J5.VCC ↔ U1.VCC_IO  (JTAG power from APU I/O rail)
+  Inferred: U1.VCC  ↔  U11.SW         (VRM output to CPU core rail)
+  Inferred: U6.TRUST_VERIFY ↔ U11.SW  (FPGA Trust Anchor verification via power rail)
 ```
 
 </details>
 
 <details>
-<summary><b>Debug Interface Detection</b> — automatic security assessment</summary>
+<summary><b>Cisco ASA 5506-X — Probe Advisor</b> — Bayesian information-gain ranking</summary>
+
+```
+Top 5 Probe Recommendations (269 nodes, Dirichlet belief):
+
+  #1  U1.DDR3_DQ0   EIG: 4.807 bits    most likely net: VCC_CORE (3.6%)
+  #2  U1.DDR3_A0    EIG: 4.807 bits    most likely net: VCC_CORE (3.6%)
+  #3  U1.PCIE_TX0   EIG: 4.807 bits    most likely net: VCC_CORE (3.6%)
+  #4  U1.PCIE_RX0   EIG: 4.807 bits    most likely net: VCC_CORE (3.6%)
+  #5  U1.SATA_TX    EIG: 4.807 bits    most likely net: VCC_CORE (3.6%)
+```
+
+</details>
+
+<details>
+<summary><b>Xbox One — Debug Interface Detection</b></summary>
 
 ```
 Total findings: 3  (HIGH=2  MEDIUM=1)
@@ -103,7 +124,7 @@ Total findings: 3  (HIGH=2  MEDIUM=1)
 
 </details>
 
-> **Novel contributions** — re:trace is the first public tool to combine **(1)** Bayesian probe-point optimization using Shannon entropy for hardware RE, **(2)** AC-3 arc-consistency constraint propagation to infer missing PCB connections from partial traces, and **(3)** cross-board pattern recognition that transfers subcircuit knowledge between boards. No other open-source or academic PCB RE tool implements any of these three capabilities. See [Prior Work](#prior-work) for the full competitive landscape.
+> **Novel contributions** — re:trace is the first public tool to combine **(1)** Bayesian probe-point optimization using Shannon entropy for hardware RE, **(2)** AC-3 arc-consistency constraint propagation to infer missing PCB connections from partial traces, **(3)** cross-board pattern recognition that transfers subcircuit knowledge between boards, and **(4)** automated trust chain mapping (FPGA → SPI flash → CPU) for hardware root-of-trust analysis. The Cisco ASA demo maps the exact Thrangrycat attack path. See [Prior Work](#prior-work) for the full competitive landscape.
 
 ## How It Works
 
@@ -249,6 +270,17 @@ Falls back to OpenCV contour detection (adaptive threshold → morphological fil
 The FCC won't let any device be sold without filing internal board photos — and those photos are **public domain** under [47 CFR § 0.457](https://www.law.cornell.edu/cfr/text/47/0.457):
 
 ```bash
+retrace search "cisco asa"
+#
+#   Cisco ASA (Cisco)
+#   ──────────────────────────────────────────────────
+#     1. ASA 5505 Base  (2006)               FCC: N/A-wired
+#     2. ASA 5506-X  (2015)                  FCC: N/A-wired   [Thrangrycat, ArcaneDoor]
+#     3. ASA 5506W-X  (2015)                 FCC: LDKASA-AP702
+#     4. ASA 5508-X  (2015)                  FCC: N/A-wired
+#     5. ASA 5515-X  (2012)                  FCC: N/A-wired
+#     ...
+#
 retrace search "xbox one"
 #
 #   Xbox One (Microsoft)
@@ -257,13 +289,11 @@ retrace search "xbox one"
 #     2. Xbox One S  (2016)               FCC: C3K1681   iFixit #65572
 #     3. Xbox One S All-Digital  (2019)   FCC: C3K1832
 #     4. Xbox One X  (2017)               FCC: C3K1698   iFixit #99609  [Scorpio]
-#
-#   Select a model to download FCC internal photos (public domain)
 ```
 
 Also searches [iFixit](https://www.ifixit.com/) teardowns via API v2.0 for high-resolution step-by-step board photos.
 
-**Built-in device registry** covers every hardware revision of Xbox One (7 revisions), Xbox Series (3), PlayStation 5 (9, including PS5 Pro), Nintendo Switch (4), Steam Deck (2), Raspberry Pi (5), Ubiquiti UniFi (4), and Ring Doorbell (3) — with FCC IDs, iFixit guide IDs, SoC specs, and revision notes. Search by product name, codename, model number, or FCC ID.
+**Built-in device registry** covers 10 product families and 50+ hardware revisions — Xbox One (7), Xbox Series (3), PlayStation 5 (9), Nintendo Switch (4), Steam Deck (2), Raspberry Pi (5), Ubiquiti UniFi (4), Ring Doorbell (3), **Cisco ASA** (8: 5505, 5506-X, 5506W-X, 5508-X, 5510, 5515-X, 5516-X), and **Cisco Catalyst** (3: 2960-X, 3560-X) — with FCC IDs, SoC specs, RAM, storage, security notes (Thrangrycat, AVR54, ArcaneDoor), and iFixit guide IDs. Search by product name, codename, model number, or FCC ID.
 
 ### Debug Interface Detection
 
@@ -328,10 +358,12 @@ photos = download_fcc_photos(results[0]["fcc_id"], dest_dir="./fcc_photos")
 re:trace is built for hardware security assessments:
 
 - **Pre-engagement recon** — Search any product's FCC filing for internal board photos before you open the case
-- **Attack surface mapping** — Identify MCUs, flash/EEPROM, crypto chips, and communication buses automatically
+- **Attack surface mapping** — Identify MCUs, flash/EEPROM, FPGAs, crypto chips, and communication buses automatically
+- **Trust anchor analysis** — Map FPGA ↔ SPI flash ↔ CPU trust chains (see Cisco ASA 5506-X Thrangrycat demo)
 - **Debug interface detection** — Flag JTAG, SWD, UART, SPI headers with severity ratings and CWE references
 - **Optimal probing** — Bayesian advisor tells you exactly where to measure to identify unknown pins fastest (6–10 probes to convergence)
 - **Constraint inference** — When you can only trace 60% of connections, AC-3 propagation fills in the rest
+- **Enterprise device registry** — Cisco ASA/Catalyst families with CVE notes, SoC details, security advisories
 - **Knowledge transfer** — Patterns learned from previous boards accelerate analysis of new ones
 
 ## Plugin System
@@ -355,7 +387,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->5255<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->5589<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -374,7 +406,7 @@ src/retrace/                             # <!-- STATS:loc -->5255<!-- /STATS -->
 ├── sources/
 │   ├── fcc.py                           # FCC filing scraper (47 CFR § 0.457, public domain)
 │   ├── ifixit.py                        # iFixit API v2.0 client (CC BY-NC-SA)
-│   ├── device_registry.py               # 37+ revisions across 8 product families (Xbox, PS5, Switch, etc.)
+│   ├── device_registry.py               # 50+ revisions across 10 product families (Xbox, PS5, Cisco ASA, etc.)
 │   └── board_sourcer.py                 # Unified multi-source image acquisition
 ├── learning/
 │   └── engine.py                        # Cross-board knowledge flywheel
@@ -384,17 +416,17 @@ src/retrace/                             # <!-- STATS:loc -->5255<!-- /STATS -->
 │       └── debug_interfaces.py          # JTAG/UART/SWD/SPI/I2C detection
 └── export/
     ├── bom.py                           # BOM generator (JSON, CSV)
-    └── svg.py                           # SVG annotated overlay
+    └── svg.py                           # SVG overlay: components, traces, net classification, BOM panel
 ```
 
 ## Stats
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->341<!-- /STATS --> |
-| Coverage | <!-- STATS:coverage -->84%<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->461<!-- /STATS --> |
+| Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->20<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->5255<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->5589<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->114<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -406,7 +438,7 @@ src/retrace/                             # <!-- STATS:loc -->5255<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->341<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->461<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```

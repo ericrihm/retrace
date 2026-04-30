@@ -23,7 +23,7 @@ class RetraceConfig:
     enable_learning: bool = True
     octopart_api_key: str = ""
 
-    def ensure_dirs(self):
+    def ensure_dirs(self) -> None:
         self.config_dir.mkdir(parents=True, exist_ok=True)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.data_dir.mkdir(parents=True, exist_ok=True)

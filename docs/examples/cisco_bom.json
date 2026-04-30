@@ -1,0 +1,718 @@
+{
+  "metadata": {
+    "image_path": "docs/examples/cisco_board.png",
+    "board_dimensions": [
+      1600,
+      1000
+    ],
+    "pipeline_version": "0.1.0",
+    "timestamp": "2026-04-30T20:24:55Z",
+    "duration_seconds": 0.0
+  },
+  "summary": {
+    "total_components": 43,
+    "identified": 13,
+    "unidentified": 30,
+    "identification_rate": 0.3023,
+    "by_label": {
+      "ic": 12,
+      "connector": 15,
+      "capacitor": 6,
+      "resistor": 3,
+      "inductor": 2,
+      "crystal": 1,
+      "test_point": 4
+    },
+    "total_traces": 41
+  },
+  "components": [
+    {
+      "id": "U1",
+      "label": "ic",
+      "part_number": "C2508",
+      "marking": "ATOM C2508",
+      "value": "",
+      "package": "FCBGA-1283",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        420,
+        280,
+        260,
+        260
+      ]
+    },
+    {
+      "id": "U2",
+      "label": "ic",
+      "part_number": "MT41K256M16HA",
+      "marking": "MT41K256M16",
+      "value": "1GB",
+      "package": "BGA-96",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        130,
+        180,
+        120,
+        70
+      ]
+    },
+    {
+      "id": "U3",
+      "label": "ic",
+      "part_number": "MT41K256M16HA",
+      "marking": "MT41K256M16",
+      "value": "1GB",
+      "package": "BGA-96",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        130,
+        360,
+        120,
+        70
+      ]
+    },
+    {
+      "id": "U4",
+      "label": "ic",
+      "part_number": "MT41K256M16HA",
+      "marking": "MT41K256M16",
+      "value": "1GB",
+      "package": "BGA-96",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        130,
+        500,
+        120,
+        70
+      ]
+    },
+    {
+      "id": "U5",
+      "label": "ic",
+      "part_number": "MT41K256M16HA",
+      "marking": "MT41K256M16",
+      "value": "1GB",
+      "package": "BGA-96",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        130,
+        640,
+        120,
+        70
+      ]
+    },
+    {
+      "id": "U6",
+      "label": "ic",
+      "part_number": "XC6SLX45T-2FGG484",
+      "marking": "XC6SLX45T",
+      "value": "",
+      "package": "BGA-484",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        750,
+        160,
+        160,
+        140
+      ]
+    },
+    {
+      "id": "U7",
+      "label": "ic",
+      "part_number": "W25Q128JVSIQ",
+      "marking": "W25Q128JV",
+      "value": "16MB",
+      "package": "SOIC-8",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        950,
+        200,
+        60,
+        36
+      ]
+    },
+    {
+      "id": "U8",
+      "label": "ic",
+      "part_number": "I354-AM4",
+      "marking": "I354-AM4",
+      "value": "",
+      "package": "BGA-576",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        900,
+        480,
+        150,
+        130
+      ]
+    },
+    {
+      "id": "U9",
+      "label": "ic",
+      "part_number": "SATADOM-SL",
+      "marking": "eUSB 8GB",
+      "value": "8GB",
+      "package": "eUSB",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        350,
+        650,
+        80,
+        50
+      ]
+    },
+    {
+      "id": "J6",
+      "label": "connector",
+      "part_number": "",
+      "marking": "mSATA 50GB",
+      "value": "50GB",
+      "package": "mSATA",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        100,
+        790,
+        150,
+        60
+      ]
+    },
+    {
+      "id": "U10",
+      "label": "ic",
+      "part_number": "TPS54331DR",
+      "marking": "TPS54331",
+      "value": "",
+      "package": "SOIC-8",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        80,
+        100,
+        60,
+        42
+      ]
+    },
+    {
+      "id": "U11",
+      "label": "ic",
+      "part_number": "NCP5232",
+      "marking": "NCP5232",
+      "value": "",
+      "package": "QFN-20",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        300,
+        140,
+        70,
+        42
+      ]
+    },
+    {
+      "id": "U12",
+      "label": "ic",
+      "part_number": "TPS51200DR",
+      "marking": "TPS51200",
+      "value": "",
+      "package": "SON-10",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        80,
+        460,
+        50,
+        32
+      ]
+    },
+    {
+      "id": "J1",
+      "label": "connector",
+      "part_number": "",
+      "marking": "GbE-1",
+      "value": "",
+      "package": "RJ45-MAG",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        850,
+        800,
+        70,
+        80
+      ]
+    },
+    {
+      "id": "J2",
+      "label": "connector",
+      "part_number": "",
+      "marking": "GbE-2",
+      "value": "",
+      "package": "RJ45-MAG",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        930,
+        800,
+        70,
+        80
+      ]
+    },
+    {
+      "id": "J3",
+      "label": "connector",
+      "part_number": "",
+      "marking": "GbE-3",
+      "value": "",
+      "package": "RJ45-MAG",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        1010,
+        800,
+        70,
+        80
+      ]
+    },
+    {
+      "id": "J4",
+      "label": "connector",
+      "part_number": "",
+      "marking": "GbE-4",
+      "value": "",
+      "package": "RJ45-MAG",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        1090,
+        800,
+        70,
+        80
+      ]
+    },
+    {
+      "id": "J5",
+      "label": "connector",
+      "part_number": "",
+      "marking": "GbE-5",
+      "value": "",
+      "package": "RJ45-MAG",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        1170,
+        800,
+        70,
+        80
+      ]
+    },
+    {
+      "id": "J7",
+      "label": "connector",
+      "part_number": "",
+      "marking": "GbE-6",
+      "value": "",
+      "package": "RJ45-MAG",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        1250,
+        800,
+        70,
+        80
+      ]
+    },
+    {
+      "id": "J8",
+      "label": "connector",
+      "part_number": "",
+      "marking": "GbE-7",
+      "value": "",
+      "package": "RJ45-MAG",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        1330,
+        800,
+        70,
+        80
+      ]
+    },
+    {
+      "id": "J9",
+      "label": "connector",
+      "part_number": "",
+      "marking": "GbE-8",
+      "value": "",
+      "package": "RJ45-MAG",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        1410,
+        800,
+        70,
+        80
+      ]
+    },
+    {
+      "id": "J10",
+      "label": "connector",
+      "part_number": "",
+      "marking": "CONSOLE",
+      "value": "",
+      "package": "RJ45",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        700,
+        800,
+        70,
+        80
+      ]
+    },
+    {
+      "id": "J11",
+      "label": "connector",
+      "part_number": "",
+      "marking": "MGMT",
+      "value": "",
+      "package": "RJ45-MAG",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        1490,
+        800,
+        70,
+        80
+      ]
+    },
+    {
+      "id": "J12",
+      "label": "connector",
+      "part_number": "",
+      "marking": "USB-A",
+      "value": "",
+      "package": "USB-A",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        600,
+        800,
+        60,
+        60
+      ]
+    },
+    {
+      "id": "J13",
+      "label": "connector",
+      "part_number": "",
+      "marking": "USB Mini-B",
+      "value": "",
+      "package": "USB-Mini-B",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        520,
+        800,
+        50,
+        50
+      ]
+    },
+    {
+      "id": "J14",
+      "label": "connector",
+      "part_number": "",
+      "marking": "DC 12V",
+      "value": "",
+      "package": "Barrel-5.5mm",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        50,
+        800,
+        60,
+        60
+      ]
+    },
+    {
+      "id": "J15",
+      "label": "connector",
+      "part_number": "",
+      "marking": "JTAG",
+      "value": "",
+      "package": "2x7 2.54mm",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        650,
+        130,
+        90,
+        30
+      ]
+    },
+    {
+      "id": "C1",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "100nF",
+      "value": "100nF",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        380,
+        260,
+        26,
+        14
+      ]
+    },
+    {
+      "id": "C2",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "100nF",
+      "value": "100nF",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        380,
+        560,
+        26,
+        14
+      ]
+    },
+    {
+      "id": "C3",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "10uF",
+      "value": "10uF",
+      "package": "0805",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        700,
+        300,
+        26,
+        14
+      ]
+    },
+    {
+      "id": "C4",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "22uF",
+      "value": "22uF",
+      "package": "0805",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        730,
+        140,
+        26,
+        14
+      ]
+    },
+    {
+      "id": "C5",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "100nF",
+      "value": "100nF",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        860,
+        440,
+        26,
+        14
+      ]
+    },
+    {
+      "id": "C6",
+      "label": "capacitor",
+      "part_number": "",
+      "marking": "100nF",
+      "value": "100nF",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        1060,
+        460,
+        26,
+        14
+      ]
+    },
+    {
+      "id": "R1",
+      "label": "resistor",
+      "part_number": "",
+      "marking": "10k",
+      "value": "10k",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        750,
+        120,
+        28,
+        12
+      ]
+    },
+    {
+      "id": "R2",
+      "label": "resistor",
+      "part_number": "",
+      "marking": "4k7",
+      "value": "4k7",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        780,
+        120,
+        28,
+        12
+      ]
+    },
+    {
+      "id": "R3",
+      "label": "resistor",
+      "part_number": "",
+      "marking": "182",
+      "value": "182",
+      "package": "0402",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        300,
+        580,
+        28,
+        12
+      ]
+    },
+    {
+      "id": "L1",
+      "label": "inductor",
+      "part_number": "",
+      "marking": "2.2uH",
+      "value": "2.2uH",
+      "package": "1210",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        200,
+        110,
+        42,
+        36
+      ]
+    },
+    {
+      "id": "L2",
+      "label": "inductor",
+      "part_number": "",
+      "marking": "1uH",
+      "value": "1uH",
+      "package": "1210",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        60,
+        460,
+        42,
+        36
+      ]
+    },
+    {
+      "id": "Y1",
+      "label": "crystal",
+      "part_number": "ABLS-25.000MHZ",
+      "marking": "25MHz",
+      "value": "25MHz",
+      "package": "HC-49S",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        350,
+        570,
+        48,
+        24
+      ]
+    },
+    {
+      "id": "TP1",
+      "label": "test_point",
+      "part_number": "",
+      "marking": "TP1",
+      "value": "",
+      "package": "TP",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        770,
+        130,
+        12,
+        12
+      ]
+    },
+    {
+      "id": "TP2",
+      "label": "test_point",
+      "part_number": "",
+      "marking": "TP2",
+      "value": "",
+      "package": "TP",
+      "datasheet_url": "",
+      "confidence": 0.93,
+      "bbox": [
+        790,
+        130,
+        12,
+        12
+      ]
+    },
+    {
+      "id": "TP3",
+      "label": "test_point",
+      "part_number": "",
+      "marking": "TP3",
+      "value": "",
+      "package": "TP",
+      "datasheet_url": "",
+      "confidence": 0.98,
+      "bbox": [
+        810,
+        130,
+        12,
+        12
+      ]
+    },
+    {
+      "id": "TP4",
+      "label": "test_point",
+      "part_number": "",
+      "marking": "R182",
+      "value": "",
+      "package": "TP",
+      "datasheet_url": "",
+      "confidence": 0.88,
+      "bbox": [
+        830,
+        130,
+        12,
+        12
+      ]
+    }
+  ]
+}

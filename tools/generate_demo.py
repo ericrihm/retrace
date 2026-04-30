@@ -28,7 +28,7 @@ import numpy as np
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT / "src"))
 
-from retrace.core.pipeline import AnalysisResult, Component, Pipeline, Trace  # noqa: E402
+from retrace.core.pipeline import AnalysisResult, Component, Trace  # noqa: E402
 from retrace.analysis.constraint_solver import (  # noqa: E402
     ComponentSpec,
     ConstraintSolver,
@@ -271,6 +271,257 @@ SILK_LABELS: list[tuple[str, int, int]] = [
 ]
 
 
+# ===========================================================================
+# CISCO ASA 5506-X BOARD — enterprise firewall / NGIPS
+# Intel Atom C2508 (Rangeley) + Xilinx Spartan-6 Trust Anchor FPGA
+# ArcaneDoor APT target, Thrangrycat (CVE-2019-1649), CISA ED 25-03
+# ===========================================================================
+
+CISCO_IMG_W, CISCO_IMG_H = 1600, 1000
+
+# fmt: off
+CISCO_COMPONENTS: list[tuple] = [
+    # Intel Atom C2508 (Rangeley) — main CPU, FCBGA-1283
+    ("U1", "ic", 420, 280, 260, 260, "ATOM C2508", "C2508", "", "FCBGA-1283",
+     ["VCC","GND","DDR3_DQ0","DDR3_A0","PCIE_TX0","PCIE_RX0","SATA_TX","SATA_RX",
+      "USB_DP","USB_DN","SPI_MOSI","SPI_MISO","SPI_CLK","SPI_CS","JTAG_TDI",
+      "JTAG_TDO","JTAG_TCK","JTAG_TMS","UART_TX","UART_RX","GbE0_TX","GbE0_RX",
+      "GbE1_TX","GbE1_RX","GbE2_TX","GbE2_RX","GbE3_TX","GbE3_RX","QAT_IN","QAT_OUT"]),
+
+    # DDR3 ECC RAM — 4x Micron MT41K256M16HA (1GB each = 4GB total)
+    ("U2", "ic", 130, 180, 120, 70, "MT41K256M16", "MT41K256M16HA", "1GB", "BGA-96",
+     ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","A0","CK","CKE","CS","RAS","CAS","WE"]),
+    ("U3", "ic", 130, 360, 120, 70, "MT41K256M16", "MT41K256M16HA", "1GB", "BGA-96",
+     ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","A0","CK","CKE","CS","RAS","CAS","WE"]),
+    ("U4", "ic", 130, 500, 120, 70, "MT41K256M16", "MT41K256M16HA", "1GB", "BGA-96",
+     ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","A0","CK","CKE","CS","RAS","CAS","WE"]),
+    ("U5", "ic", 130, 640, 120, 70, "MT41K256M16", "MT41K256M16HA", "1GB", "BGA-96",
+     ["VDD","VDDQ","VSS","VSSQ","DQ0","DQ1","A0","CK","CKE","CS","RAS","CAS","WE"]),
+
+    # Xilinx Spartan-6 LX45T FPGA — Trust Anchor module (Thrangrycat CVE-2019-1649)
+    ("U6", "ic", 750, 160, 160, 140, "XC6SLX45T", "XC6SLX45T-2FGG484", "", "BGA-484",
+     ["VCC","GND","INIT_B","DONE","PROG_B","CCLK","SPI_DI","SPI_DO","SPI_CLK","SPI_CS",
+      "PROC_RST","PROC_CLK","TRUST_VERIFY","TRUST_STATUS","JTAG_TDI","JTAG_TDO"]),
+
+    # SPI NOR flash — FPGA bitstream (unencrypted — Thrangrycat attack surface)
+    ("U7", "ic", 950, 200, 60, 36, "W25Q128JV", "W25Q128JVSIQ", "16MB", "SOIC-8",
+     ["CS","DO","WP","GND","DI","CLK","HOLD","VCC"]),
+
+    # Intel I354 — 4-port GbE PCIe NIC (additional ports beyond SoC integrated MACs)
+    ("U8", "ic", 900, 480, 150, 130, "I354-AM4", "I354-AM4", "", "BGA-576",
+     ["VCC","GND","P0_TX","P0_RX","P1_TX","P1_RX","P2_TX","P2_RX","P3_TX","P3_RX",
+      "PCIE_TX","PCIE_RX","MDIO","MDC","LED0","LED1"]),
+
+    # eUSB flash module — 8GB ASA firmware storage
+    ("U9", "ic", 350, 650, 80, 50, "eUSB 8GB", "SATADOM-SL", "8GB", "eUSB",
+     ["VCC","GND","USB_DP","USB_DN"]),
+
+    # mSATA SSD connector — 50GB FirePOWER storage
+    ("J6", "connector", 100, 790, 150, 60, "mSATA 50GB", "", "50GB", "mSATA",
+     ["SATA_TX+","SATA_TX-","SATA_RX+","SATA_RX-","GND","3V3"]),
+
+    # VRM: TPS54331 — 12V→3.3V step-down
+    ("U10", "ic", 80, 100, 60, 42, "TPS54331", "TPS54331DR", "", "SOIC-8",
+     ["VIN","BOOT","GND","VSNS","COMP","EN","SS","PH"]),
+
+    # VRM: NCP5232 — CPU core VRM
+    ("U11", "ic", 300, 140, 70, 42, "NCP5232", "NCP5232", "", "QFN-20",
+     ["VIN","VOUT","GND","EN","FB","SS","PGOOD","SW"]),
+
+    # VRM: TPS51200 — DDR3 VTT termination
+    ("U12", "ic", 80, 460, 50, 32, "TPS51200", "TPS51200DR", "", "SON-10",
+     ["VIN","VOUT","VREF","GND","EN","VTTR"]),
+
+    # 8x GbE RJ45 ports (front panel — the firewall interfaces)
+    ("J1", "connector", 850, 800, 70, 80, "GbE-1", "", "", "RJ45-MAG",
+     ["TX+","TX-","RX+","RX-","GND","LED_G","LED_A"]),
+    ("J2", "connector", 930, 800, 70, 80, "GbE-2", "", "", "RJ45-MAG",
+     ["TX+","TX-","RX+","RX-","GND","LED_G","LED_A"]),
+    ("J3", "connector", 1010, 800, 70, 80, "GbE-3", "", "", "RJ45-MAG",
+     ["TX+","TX-","RX+","RX-","GND","LED_G","LED_A"]),
+    ("J4", "connector", 1090, 800, 70, 80, "GbE-4", "", "", "RJ45-MAG",
+     ["TX+","TX-","RX+","RX-","GND","LED_G","LED_A"]),
+    ("J5", "connector", 1170, 800, 70, 80, "GbE-5", "", "", "RJ45-MAG",
+     ["TX+","TX-","RX+","RX-","GND","LED_G","LED_A"]),
+    ("J7", "connector", 1250, 800, 70, 80, "GbE-6", "", "", "RJ45-MAG",
+     ["TX+","TX-","RX+","RX-","GND","LED_G","LED_A"]),
+    ("J8", "connector", 1330, 800, 70, 80, "GbE-7", "", "", "RJ45-MAG",
+     ["TX+","TX-","RX+","RX-","GND","LED_G","LED_A"]),
+    ("J9", "connector", 1410, 800, 70, 80, "GbE-8", "", "", "RJ45-MAG",
+     ["TX+","TX-","RX+","RX-","GND","LED_G","LED_A"]),
+
+    # Console RJ45 (serial management — RS-232)
+    ("J10", "connector", 700, 800, 70, 80, "CONSOLE", "", "", "RJ45",
+     ["TX","RX","GND","VCC"]),
+
+    # Management GbE port (separate from data plane)
+    ("J11", "connector", 1490, 800, 70, 80, "MGMT", "", "", "RJ45-MAG",
+     ["TX+","TX-","RX+","RX-","GND"]),
+
+    # USB Type A — external storage
+    ("J12", "connector", 600, 800, 60, 60, "USB-A", "", "", "USB-A",
+     ["VBUS","D-","D+","GND"]),
+
+    # USB Mini-B — alternate serial console
+    ("J13", "connector", 520, 800, 50, 50, "USB Mini-B", "", "", "USB-Mini-B",
+     ["VBUS","D-","D+","GND","ID"]),
+
+    # DC power jack — 12V 60W barrel connector
+    ("J14", "connector", 50, 800, 60, 60, "DC 12V", "", "", "Barrel-5.5mm",
+     ["VCC_12V","GND"]),
+
+    # JTAG header — 14-pin, near CPU (x86 debug chain)
+    ("J15", "connector", 650, 130, 90, 30, "JTAG", "", "", "2x7 2.54mm",
+     ["TDI","TDO","TCK","TMS","TRST","VCC","GND","GND2","NRST"]),
+
+    # Passives — decoupling, pull-ups, bypass caps
+    ("C1", "capacitor", 380, 260, 26, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C2", "capacitor", 380, 560, 26, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C3", "capacitor", 700, 300, 26, 14, "10uF", "", "10uF", "0805", ["1","2"]),
+    ("C4", "capacitor", 730, 140, 26, 14, "22uF", "", "22uF", "0805", ["1","2"]),
+    ("C5", "capacitor", 860, 440, 26, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("C6", "capacitor", 1060, 460, 26, 14, "100nF", "", "100nF", "0402", ["1","2"]),
+    ("R1", "resistor", 750, 120, 28, 12, "10k", "", "10k", "0402", ["A","B"]),
+    ("R2", "resistor", 780, 120, 28, 12, "4k7", "", "4k7", "0402", ["A","B"]),
+    ("R3", "resistor", 300, 580, 28, 12, "182", "", "182", "0402", ["A","B"]),
+
+    # Inductors (VRM output filters)
+    ("L1", "inductor", 200, 110, 42, 36, "2.2uH", "", "2.2uH", "1210", ["1","2"]),
+    ("L2", "inductor", 60, 460, 42, 36, "1uH", "", "1uH", "1210", ["1","2"]),
+
+    # Crystal — 25MHz reference for Atom CPU
+    ("Y1", "crystal", 350, 570, 48, 24, "25MHz", "ABLS-25.000MHZ", "25MHz", "HC-49S",
+     ["1","2","GND","GND2"]),
+
+    # Test points near JTAG / AVR54 rework area
+    ("TP1", "test_point", 770, 130, 12, 12, "TP1", "", "", "TP", ["1"]),
+    ("TP2", "test_point", 790, 130, 12, 12, "TP2", "", "", "TP", ["1"]),
+    ("TP3", "test_point", 810, 130, 12, 12, "TP3", "", "", "TP", ["1"]),
+    ("TP4", "test_point", 830, 130, 12, 12, "R182", "", "", "TP", ["1"]),
+]
+# fmt: on
+
+CISCO_TRACE_ROUTES: list[tuple[list[tuple[int, int]], int]] = [
+    # CPU (U1) ↔ DDR3 data bus (4 channels)
+    ([(420, 350), (250, 350), (250, 250)], 3),   # DDR Ch0 → U2
+    ([(420, 380), (250, 380), (250, 430)], 3),   # DDR Ch1 → U3
+    ([(420, 450), (250, 450), (250, 570)], 3),   # DDR Ch2 → U4
+    ([(420, 500), (250, 500), (250, 710)], 3),   # DDR Ch3 → U5
+    # CPU (U1) → Trust Anchor FPGA (U6) — processor reset + verify
+    ([(680, 350), (750, 350), (750, 300)], 3),   # PROC_RST
+    ([(680, 370), (770, 370), (770, 300)], 3),   # PROC_CLK
+    ([(680, 390), (790, 390), (790, 300)], 2),   # TRUST_VERIFY
+    ([(680, 410), (810, 410), (810, 300)], 2),   # TRUST_STATUS
+    # FPGA (U6) → SPI flash (U7) — bitstream load (UNENCRYPTED — Thrangrycat)
+    ([(910, 230), (950, 230), (950, 218)], 2),   # SPI_CLK
+    ([(910, 250), (960, 250), (960, 230)], 2),   # SPI_MOSI (DI)
+    ([(910, 270), (970, 270), (970, 218)], 2),   # SPI_MISO (DO)
+    ([(910, 210), (950, 210), (950, 200)], 2),   # SPI_CS
+    # CPU (U1) → Intel I354 (U8) — PCIe x4 link
+    ([(680, 430), (900, 430), (900, 480)], 4),   # PCIE_TX
+    ([(680, 450), (920, 450), (920, 480)], 4),   # PCIE_RX
+    # I354 (U8) → GbE ports (J1-J4) — first 4 ports
+    ([(1050, 540), (1050, 800)], 3),             # Port 1
+    ([(1050, 560), (970,  560), (970,  800)], 3),# Port 2
+    ([(1050, 580), (890,  580), (890,  800)], 3),# Port 3
+    ([(1050, 600), (810,  600), (810,  800)], 3),# Port 4 (approximate)
+    # CPU (U1) integrated GbE → ports J5-J8 (SoC's built-in 4x GbE)
+    ([(680, 470), (1210, 470), (1210, 800)], 3), # GbE0 → J5
+    ([(680, 490), (1290, 490), (1290, 800)], 3), # GbE1 → J6
+    ([(680, 510), (1370, 510), (1370, 800)], 3), # GbE2 → J7
+    ([(680, 530), (1450, 530), (1450, 800)], 3), # GbE3 → J8
+    # CPU (U1) → MGMT port (J11) via separate MAC
+    ([(680, 340), (1490, 340), (1490, 800)], 3),
+    # CPU (U1) → eUSB flash (U9) — firmware storage
+    ([(420, 530), (350, 530), (350, 650)], 2),   # USB_DP
+    ([(420, 540), (370, 540), (370, 675)], 2),   # USB_DN
+    # CPU (U1) → mSATA SSD (J6) — SATA for FirePOWER storage
+    ([(420, 510), (300, 510), (300, 790)], 3),   # SATA_TX
+    ([(420, 520), (280, 520), (280, 810)], 3),   # SATA_RX
+    # CPU (U1) → Console (J10) via UART
+    ([(420, 420), (400, 420), (400, 700), (700, 700), (700, 800)], 2),  # UART_TX
+    ([(420, 430), (380, 430), (380, 720), (720, 720), (720, 800)], 2),  # UART_RX
+    # CPU (U1) → USB ports (J12, J13)
+    ([(420, 440), (360, 440), (360, 740), (600, 740), (600, 800)], 2),  # USB_A
+    ([(420, 460), (340, 460), (340, 760), (520, 760), (520, 800)], 2),  # USB_Mini
+    # JTAG header (J15) → CPU debug pins
+    ([(650, 160), (500, 160), (500, 280)], 2),   # TDI
+    ([(660, 160), (490, 160), (490, 280)], 2),   # TDO
+    ([(670, 160), (480, 160), (480, 280)], 2),   # TCK
+    ([(680, 160), (470, 160), (470, 280)], 2),   # TMS
+    # VRM: TPS54331 (U10) → power rails
+    ([(140, 121), (420, 121), (420, 280)], 5),   # 3.3V rail → CPU area
+    # VRM: NCP5232 (U11) → CPU core
+    ([(370, 161), (420, 161), (420, 280)], 5),   # Vcore → CPU
+    # VRM: TPS51200 (U12) → DDR3
+    ([(130, 476), (130, 430)], 4),               # VTT → RAM
+    # DC power (J14) → VRMs
+    ([(110, 830), (110, 142), (80, 142)], 5),    # 12V → TPS54331
+    # Crystal (Y1) → CPU ref clock
+    ([(398, 582), (420, 582), (420, 540)], 2),
+    # R182 (AVR54 rework location) — LPC clock fix resistor
+    ([(830, 136), (680, 136), (680, 280)], 1),   # LPC_CLK fix path
+]
+
+CISCO_TRACE_ENDPOINTS: list[tuple[str, str]] = [
+    ("U1","U2"), ("U1","U3"), ("U1","U4"), ("U1","U5"),  # DDR3
+    ("U1","U6"), ("U1","U6"), ("U1","U6"), ("U1","U6"),  # CPU↔FPGA
+    ("U6","U7"), ("U6","U7"), ("U6","U7"), ("U6","U7"),  # FPGA↔SPI flash
+    ("U1","U8"), ("U1","U8"),                             # CPU↔I354 PCIe
+    ("U8","J1"), ("U8","J2"), ("U8","J3"), ("U8","J4"),  # I354→ports 1-4
+    ("U1","J5"), ("U1","J7"), ("U1","J8"), ("U1","J9"),  # SoC→ports 5-8
+    ("U1","J11"),                                         # MGMT port
+    ("U1","U9"), ("U1","U9"),                             # CPU→eUSB
+    ("U1","J6"), ("U1","J6"),                             # CPU→mSATA
+    ("U1","J10"), ("U1","J10"),                           # CPU→Console UART
+    ("U1","J12"), ("U1","J13"),                           # CPU→USB ports
+    ("J15","U1"), ("J15","U1"), ("J15","U1"), ("J15","U1"),  # JTAG→CPU
+    ("U10","U1"), ("U11","U1"), ("U12","U2"),             # VRMs→targets
+    ("J14","U10"),                                        # DC power→VRM
+    ("Y1","U1"),                                          # Crystal→CPU
+    ("TP4","U1"),                                         # AVR54 rework
+]
+
+CISCO_VIAS: list[tuple[int, int, int, int]] = [
+    # CPU power plane stitching
+    (400,260,5,2),(430,260,5,2),(460,260,5,2),(490,260,5,2),
+    (520,260,5,2),(550,260,5,2),(580,260,5,2),(610,260,5,2),
+    (640,260,5,2),(670,260,5,2),
+    # CPU bottom edge
+    (400,560,5,2),(440,560,5,2),(480,560,5,2),(520,560,5,2),
+    (560,560,5,2),(600,560,5,2),(640,560,5,2),(680,560,5,2),
+    # DDR bus transition vias
+    (260,300,6,3),(260,420,6,3),(260,560,6,3),(260,700,6,3),
+    # FPGA area
+    (740,150,5,2),(780,150,5,2),(820,150,5,2),(860,150,5,2),(900,150,5,2),
+    # I354 area
+    (880,470,5,2),(920,470,5,2),(960,470,5,2),(1000,470,5,2),(1040,470,5,2),
+    # VRM area
+    (160,140,6,3),(160,480,6,3),
+    # Ground stitching near RJ45s
+    (900,780,5,2),(960,780,5,2),(1020,780,5,2),(1080,780,5,2),
+    (1140,780,5,2),(1200,780,5,2),(1260,780,5,2),(1320,780,5,2),
+]
+
+CISCO_MOUNTING_HOLES: list[tuple[int, int, int, int]] = [
+    (30,30,14,8), (1570,30,14,8), (30,970,14,8), (1570,970,14,8),
+    (550,500,12,7), (1100,500,12,7),
+]
+
+CISCO_SILK_LABELS: list[tuple[str, int, int]] = [
+    ("U1",422,278),("U2",132,178),("U3",132,358),("U4",132,498),("U5",132,638),
+    ("U6",752,158),("U7",952,198),("U8",902,478),("U9",352,648),
+    ("U10",82,98),("U11",302,138),("U12",82,458),
+    ("J1-J8",900,798),("CONSOLE",702,798),("MGMT",1492,798),
+    ("J14 DC",52,798),("J15 JTAG",652,128),
+    ("L1",202,108),("L2",62,458),("Y1",352,568),
+    ("R182/AVR54",830,118),
+    ("800-XXXXX-XX  V05",1300,970),
+    ("Cisco ASA 5506-X — Synthetic Demo Only",350,970),
+    ("TRUST ANCHOR",770,308),
+]
+
+
 # ---------------------------------------------------------------------------
 # PCB image generation
 # ---------------------------------------------------------------------------
@@ -283,16 +534,13 @@ def _add_soldermask_texture(img: np.ndarray) -> np.ndarray:
     return np.clip(img_i, 0, 255).astype(np.uint8)
 
 
-def _draw_board_outline(img: np.ndarray) -> None:
-    """Draw the PCB edge + a thin gold/copper ring inside."""
-    # Outer edge
-    cv2.rectangle(img, (10, 10), (IMG_W - 10, IMG_H - 10), (0, 60, 0), 3)
-    # Inner keepout ring (slightly lighter)
-    cv2.rectangle(img, (14, 14), (IMG_W - 14, IMG_H - 14), (0, 80, 20), 1)
+def _draw_board_outline(img: np.ndarray, w: int = IMG_W, h: int = IMG_H) -> None:
+    cv2.rectangle(img, (10, 10), (w - 10, h - 10), (0, 60, 0), 3)
+    cv2.rectangle(img, (14, 14), (w - 14, h - 14), (0, 80, 20), 1)
 
 
-def _draw_mounting_holes(img: np.ndarray) -> None:
-    for x, y, ro, ri in MOUNTING_HOLES:
+def _draw_mounting_holes(img: np.ndarray, holes: list[tuple] | None = None) -> None:
+    for x, y, ro, ri in (holes or MOUNTING_HOLES):
         # Annular ring (copper)
         cv2.circle(img, (x, y), ro, (30, 140, 180), -1)
         # Hole (dark)
@@ -309,8 +557,8 @@ def _copper_color(base_variance: int = 0) -> tuple[int, int, int]:
     return (int(b), int(g), int(r))
 
 
-def _draw_traces(img: np.ndarray) -> None:
-    for pts, width in TRACE_ROUTES:
+def _draw_traces(img: np.ndarray, routes: list[tuple] | None = None) -> None:
+    for pts, width in (routes or TRACE_ROUTES):
         color = _copper_color()
         for i in range(len(pts) - 1):
             p1 = pts[i]
@@ -325,8 +573,8 @@ def _draw_traces(img: np.ndarray) -> None:
             cv2.line(img, p1, p2, highlight, max(1, width - 1), lineType=cv2.LINE_AA)
 
 
-def _draw_vias(img: np.ndarray) -> None:
-    for x, y, ro, ri in VIAS:
+def _draw_vias(img: np.ndarray, via_list: list[tuple] | None = None) -> None:
+    for x, y, ro, ri in (via_list or VIAS):
         # Annular copper ring
         cv2.circle(img, (x, y), ro, _copper_color(10), -1)
         # Drill (dark center)
@@ -468,74 +716,72 @@ def _draw_component_footprint(
         cv2.rectangle(img, (x + w - cap_w, y), (x + w, y + h), cap_color, -1)
 
 
-def _draw_silkscreen(img: np.ndarray) -> None:
-    """Draw white silkscreen reference designators."""
+def _draw_silkscreen(
+    img: np.ndarray,
+    labels: list[tuple] | None = None,
+    title: str = "XBOX ONE REF v1.0",
+    img_w: int = IMG_W,
+    img_h: int = IMG_H,
+) -> None:
     font = cv2.FONT_HERSHEY_SIMPLEX
-    for text, tx, ty in SILK_LABELS:
+    for text, tx, ty in (labels or SILK_LABELS):
         cv2.putText(img, text, (tx, ty), font, 0.38, (210, 215, 210), 1, cv2.LINE_AA)
-
-    # Board title — centred at bottom
-    cv2.putText(
-        img,
-        "XBOX ONE REF v1.0",
-        (IMG_W // 2 - 110, IMG_H - 25),
-        font,
-        0.52,
-        (200, 210, 200),
-        1,
-        cv2.LINE_AA,
-    )
+    text_w = cv2.getTextSize(title, font, 0.52, 1)[0][0]
+    cv2.putText(img, title, (img_w // 2 - text_w // 2, img_h - 25), font, 0.52, (200, 210, 200), 1, cv2.LINE_AA)
 
 
-def generate_board_image(output_path: Path) -> None:
-    """Render the synthetic PCB and save to output_path."""
-    rng = np.random.default_rng(42)
+def generate_board_image(
+    output_path: Path,
+    img_w: int = IMG_W,
+    img_h: int = IMG_H,
+    components: list[tuple] | None = None,
+    trace_routes: list[tuple] | None = None,
+    vias: list[tuple] | None = None,
+    mounting_holes: list[tuple] | None = None,
+    silk_labels: list[tuple] | None = None,
+    board_title: str = "XBOX ONE REF v1.0",
+    seed: int = 42,
+) -> None:
+    """Render a synthetic PCB and save to output_path."""
+    components = components or KNOWN_COMPONENTS
+    trace_routes = trace_routes or TRACE_ROUTES
+    vias = vias or VIAS
+    mounting_holes = mounting_holes or MOUNTING_HOLES
+    silk_labels = silk_labels or SILK_LABELS
+    rng = np.random.default_rng(seed)
 
-    # ---- Base soldermask ----
-    # FR4 green soldermask: BGR ≈ (40, 110, 40) with slight HSV variance
-    base_green = np.full((IMG_H, IMG_W, 3), (38, 108, 38), dtype=np.uint8)
+    base_green = np.full((img_h, img_w, 3), (38, 108, 38), dtype=np.uint8)
 
-    # Add low-frequency grain (simulate FR4 weave)
-    grain = rng.integers(-12, 13, (IMG_H, IMG_W, 3), dtype=np.int16)
+    grain = rng.integers(-12, 13, (img_h, img_w, 3), dtype=np.int16)
     img = np.clip(base_green.astype(np.int16) + grain, 0, 255).astype(np.uint8)
 
-    # ---- Substrate lines (PCB weave pattern) ----
     weave_color = (35, 100, 35)
-    for gy in range(0, IMG_H, 16):
-        cv2.line(img, (0, gy), (IMG_W, gy), weave_color, 1)
-    for gx in range(0, IMG_W, 16):
-        cv2.line(img, (gx, 0), (gx, IMG_H), weave_color, 1)
+    for gy in range(0, img_h, 16):
+        cv2.line(img, (0, gy), (img_w, gy), weave_color, 1)
+    for gx in range(0, img_w, 16):
+        cv2.line(img, (gx, 0), (gx, img_h), weave_color, 1)
 
-    # ---- Board outline + mounting holes ----
-    _draw_board_outline(img)
-    _draw_mounting_holes(img)
+    _draw_board_outline(img, img_w, img_h)
+    _draw_mounting_holes(img, mounting_holes)
 
-    # ---- Copper pour (ground plane — larger area for denser Xbox One board) ----
-    # Left ground pour (between DDR bottom and JTAG area)
+    # Ground pours
     cv2.rectangle(img, (50, 550), (460, 860), (25, 85, 110), -1)
     cv2.rectangle(img, (50, 550), (460, 860), (35, 95, 120), 1)
     cv2.putText(img, "GND", (60, 580), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (40, 110, 140), 1)
-    # Right ground pour (Southbridge / connector side)
     cv2.rectangle(img, (860, 550), (1380, 860), (25, 85, 110), -1)
     cv2.rectangle(img, (860, 550), (1380, 860), (35, 95, 120), 1)
     cv2.putText(img, "GND", (870, 580), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (40, 110, 140), 1)
 
-    # ---- Traces ----
-    _draw_traces(img)
+    _draw_traces(img, trace_routes)
+    _draw_vias(img, vias)
 
-    # ---- Vias ----
-    _draw_vias(img)
-
-    # ---- Component footprints ----
-    for entry in KNOWN_COMPONENTS:
+    for entry in components:
         ref, label, x, y, w, h, marking, *_rest = entry
         _draw_component_footprint(img, ref, label, x, y, w, h, marking)
 
-    # ---- Silkscreen ----
-    _draw_silkscreen(img)
+    _draw_silkscreen(img, silk_labels, board_title, img_w, img_h)
 
-    # ---- Final texture pass (micro-noise for photographic realism) ----
-    fine_noise = rng.integers(-4, 5, (IMG_H, IMG_W, 3), dtype=np.int16)
+    fine_noise = rng.integers(-4, 5, (img_h, img_w, 3), dtype=np.int16)
     img = np.clip(img.astype(np.int16) + fine_noise, 0, 255).astype(np.uint8)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -546,35 +792,53 @@ def generate_board_image(output_path: Path) -> None:
 # Build a synthetic AnalysisResult from the known component list
 # ---------------------------------------------------------------------------
 
-def _build_synthetic_result(image_path: str) -> AnalysisResult:
-    """Construct an AnalysisResult with realistic data from KNOWN_COMPONENTS."""
+XBOX_TRACE_ENDPOINTS: list[tuple[str, str]] = [
+    ("U1","U2"),("U1","U3"),("U1","U2"),("U1","U3"),("U1","U4"),("U1","U5"),
+    ("U1","U6"),("U1","U6"),("U1","U12"),("U1","U12"),
+    ("U6","U7"),("U6","U7"),("U6","U7"),("U6","U7"),
+    ("U6","J2"),("U6","J2"),("U6","J3"),("U6","J3"),
+    ("U10","U1"),("U10","U1"),("U11","U1"),("L1","U1"),("L2","U1"),
+    ("U8","U6"),("U8","U6"),("U9","J4"),("U9","J4"),
+    ("J5","U1"),("J5","U1"),("J5","U1"),("J5","U1"),
+    ("U12","J1"),("U12","J1"),("Y1","U6"),
+]
+
+
+def _build_synthetic_result(
+    image_path: str,
+    comp_list: list[tuple] | None = None,
+    trace_list: list[tuple] | None = None,
+    endpoint_list: list[tuple[str, str]] | None = None,
+    img_w: int = IMG_W,
+    img_h: int = IMG_H,
+    layers: int = 8,
+) -> AnalysisResult:
+    comp_list = comp_list or KNOWN_COMPONENTS
+    trace_list = trace_list or TRACE_ROUTES
+    endpoint_list = endpoint_list or XBOX_TRACE_ENDPOINTS
     components: list[Component] = []
     traces: list[Trace] = []
 
-    for i, entry in enumerate(KNOWN_COMPONENTS):
+    for i, entry in enumerate(comp_list):
         ref, label, x, y, w, h, marking, part_number, value, package, _pins = entry
         components.append(
             Component(
-                id=ref,
-                label=label,
+                id=ref, label=label,
                 confidence=round(0.88 + 0.1 * (i % 3) / 2, 3),
-                bbox=(x, y, w, h),
-                marking=marking,
-                part_number=part_number,
-                value=value,
-                package=package,
+                bbox=(x, y, w, h), marking=marking,
+                part_number=part_number, value=value, package=package,
             )
         )
 
-    # Create a few representative traces from TRACE_ROUTES
-    for idx, (pts, _width) in enumerate(TRACE_ROUTES[:8]):
+    for idx, (pts, _width) in enumerate(trace_list):
+        from_ref, to_ref = endpoint_list[idx] if idx < len(endpoint_list) else ("", "")
         traces.append(
             Trace(
                 id=f"T{idx:03d}",
                 points=list(pts),
                 width_px=float(_width),
-                from_component=KNOWN_COMPONENTS[0][0],  # U1
-                to_component=KNOWN_COMPONENTS[idx % len(KNOWN_COMPONENTS)][0],
+                from_component=from_ref,
+                to_component=to_ref,
             )
         )
 
@@ -582,8 +846,8 @@ def _build_synthetic_result(image_path: str) -> AnalysisResult:
         image_path=image_path,
         components=components,
         traces=traces,
-        board_dimensions=(IMG_W, IMG_H),
-        layer_count_estimate=4,
+        board_dimensions=(img_w, img_h),
+        layer_count_estimate=layers,
         duration_seconds=0.0,
         pipeline_version="0.1.0",
         timestamp=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -594,16 +858,20 @@ def _build_synthetic_result(image_path: str) -> AnalysisResult:
 # Probe advisor output
 # ---------------------------------------------------------------------------
 
-def _run_probe_advisor(result: AnalysisResult) -> str:
-    """Run the Bayesian probe advisor and return a formatted text report."""
-    advisor = ProbeAdvisor(
-        net_labels=["VCC_CORE", "VCC_GFX", "VCC_IO", "GND", "DDR_DQ0", "DDR_DQ1", "PCIE_TX", "PCIE_RX",
-                    "HDMI_TX0P", "HDMI_TX0N", "SPI_MOSI", "SPI_CLK", "USB0_DP", "USB0_DN", "TDI", "TDO", "TCK", "TMS"],
-        alpha=1.0,
-    )
+def _run_probe_advisor(
+    result: AnalysisResult,
+    comp_list: list[tuple] | None = None,
+    net_labels: list[str] | None = None,
+) -> str:
+    _default_nets = [
+        "VCC_CORE","VCC_GFX","VCC_IO","GND","DDR_DQ0","DDR_DQ1","PCIE_TX","PCIE_RX",
+        "HDMI_TX0P","HDMI_TX0N","SPI_MOSI","SPI_CLK","USB0_DP","USB0_DN","TDI","TDO","TCK","TMS",
+    ]
+    advisor = ProbeAdvisor(net_labels=net_labels or _default_nets, alpha=1.0)
+    comp_list = comp_list or KNOWN_COMPONENTS
 
     advisor_comps: list[AdvisorComponent] = []
-    for entry in KNOWN_COMPONENTS:
+    for entry in comp_list:
         ref, label, x, y, w, h, _marking, _pn, _val, _pkg, pins = entry
         cx = float(x + w / 2)
         cy = float(y + h / 2)
@@ -650,38 +918,42 @@ def _run_probe_advisor(result: AnalysisResult) -> str:
 # Constraint solver output
 # ---------------------------------------------------------------------------
 
-def _run_constraint_solver(result: AnalysisResult) -> str:
-    """Run the AC-3 constraint solver and return a formatted text report."""
+def _run_constraint_solver(
+    result: AnalysisResult,
+    comp_list: list[tuple] | None = None,
+    solver_traces: list[SolverTrace] | None = None,
+) -> str:
+    comp_list = comp_list or KNOWN_COMPONENTS
     comp_specs: list[ComponentSpec] = []
-    for entry in KNOWN_COMPONENTS:
+    for entry in comp_list:
         ref, label, x, y, w, h, _marking, _pn, _val, _pkg, pins = entry
         cx = float(x + w / 2)
         cy = float(y + h / 2)
         comp_specs.append(ComponentSpec(ref=ref, kind=label, pins=pins, location=(cx, cy)))
 
-    # Build solver traces from TRACE_ROUTES — Xbox One topology
-    solver_traces: list[SolverTrace] = [
-        SolverTrace(Pin("U1", "DDR_DQ0"),   Pin("U2", "DQ0"),    confidence=0.95),
-        SolverTrace(Pin("U1", "DDR_DQ1"),   Pin("U3", "DQ0"),    confidence=0.95),
-        SolverTrace(Pin("U1", "PCIE_TX"),   Pin("U6", "VCC"),    confidence=0.88),
-        SolverTrace(Pin("U1", "PCIE_RX"),   Pin("U6", "GND"),    confidence=0.88),
-        SolverTrace(Pin("U1", "HDMI_TX0P"), Pin("U12","HDMI_IN0"),confidence=0.92),
-        SolverTrace(Pin("U1", "HDMI_TX0N"), Pin("U12","HDMI_IN1"),confidence=0.92),
-        SolverTrace(Pin("U6", "SPI_MOSI"),  Pin("U7", "CMD"),    confidence=0.90),
-        SolverTrace(Pin("U6", "SPI_CLK"),   Pin("U7", "CLK"),    confidence=0.90),
-        SolverTrace(Pin("U6", "USB0_DP"),   Pin("J2", "D+"),     confidence=0.93),
-        SolverTrace(Pin("U6", "USB0_DN"),   Pin("J2", "D-"),     confidence=0.93),
-        SolverTrace(Pin("U6", "USB1_DP"),   Pin("J3", "D+"),     confidence=0.93),
-        SolverTrace(Pin("U6", "USB1_DN"),   Pin("J3", "D-"),     confidence=0.93),
-        SolverTrace(Pin("U10","VOUT"),       Pin("L1", "1"),      confidence=0.91),
-        SolverTrace(Pin("U11","VOUT"),       Pin("L2", "1"),      confidence=0.91),
-        SolverTrace(Pin("U9", "MDI0P"),     Pin("J4", "TX+"),    confidence=0.89),
-        SolverTrace(Pin("U9", "MDI0N"),     Pin("J4", "TX-"),    confidence=0.89),
-        SolverTrace(Pin("J5", "TDI"),       Pin("U1", "VCC_CORE"),confidence=0.75),
-        SolverTrace(Pin("U8", "SDIO_CLK"), Pin("U6", "SPI_CLK"),confidence=0.85),
-        SolverTrace(Pin("U12","HDMI_OUT0"), Pin("J1", "TMDS0+"), confidence=0.94),
-        SolverTrace(Pin("U12","HDMI_OUT1"), Pin("J1", "TMDS0-"), confidence=0.94),
-    ]
+    if solver_traces is None:
+        solver_traces = [
+            SolverTrace(Pin("U1","DDR_DQ0"), Pin("U2","DQ0"), confidence=0.95),
+            SolverTrace(Pin("U1","DDR_DQ1"), Pin("U3","DQ0"), confidence=0.95),
+            SolverTrace(Pin("U1","PCIE_TX"), Pin("U6","VCC"), confidence=0.88),
+            SolverTrace(Pin("U1","PCIE_RX"), Pin("U6","GND"), confidence=0.88),
+            SolverTrace(Pin("U1","HDMI_TX0P"),Pin("U12","HDMI_IN0"),confidence=0.92),
+            SolverTrace(Pin("U1","HDMI_TX0N"),Pin("U12","HDMI_IN1"),confidence=0.92),
+            SolverTrace(Pin("U6","SPI_MOSI"),Pin("U7","CMD"), confidence=0.90),
+            SolverTrace(Pin("U6","SPI_CLK"), Pin("U7","CLK"), confidence=0.90),
+            SolverTrace(Pin("U6","USB0_DP"), Pin("J2","D+"),  confidence=0.93),
+            SolverTrace(Pin("U6","USB0_DN"), Pin("J2","D-"),  confidence=0.93),
+            SolverTrace(Pin("U6","USB1_DP"), Pin("J3","D+"),  confidence=0.93),
+            SolverTrace(Pin("U6","USB1_DN"), Pin("J3","D-"),  confidence=0.93),
+            SolverTrace(Pin("U10","VOUT"),   Pin("L1","1"),   confidence=0.91),
+            SolverTrace(Pin("U11","VOUT"),   Pin("L2","1"),   confidence=0.91),
+            SolverTrace(Pin("U9","MDI0P"),   Pin("J4","TX+"), confidence=0.89),
+            SolverTrace(Pin("U9","MDI0N"),   Pin("J4","TX-"), confidence=0.89),
+            SolverTrace(Pin("J5","TDI"),     Pin("U1","VCC_CORE"),confidence=0.75),
+            SolverTrace(Pin("U8","SDIO_CLK"),Pin("U6","SPI_CLK"),confidence=0.85),
+            SolverTrace(Pin("U12","HDMI_OUT0"),Pin("J1","TMDS0+"),confidence=0.94),
+            SolverTrace(Pin("U12","HDMI_OUT1"),Pin("J1","TMDS0-"),confidence=0.94),
+        ]
 
     solver = ConstraintSolver(proximity_threshold_px=80.0)
     res = solver.solve(comp_specs, solver_traces)
@@ -793,16 +1065,104 @@ def _run_debug_interface_detection(result: AnalysisResult) -> str:
 # Click CLI
 # ---------------------------------------------------------------------------
 
-OUTPUT_FILES = [
-    "synthetic_board.png",
-    "detection_result.json",
-    "bom_output.json",
-    "bom_output.csv",
-    "annotated_board.svg",
-    "probe_recommendations.txt",
-    "constraint_solver_output.txt",
-    "debug_interfaces.txt",
+CISCO_SOLVER_TRACES = [
+    SolverTrace(Pin("U1","DDR3_DQ0"),  Pin("U2","DQ0"),   confidence=0.95),
+    SolverTrace(Pin("U1","DDR3_A0"),   Pin("U3","A0"),    confidence=0.95),
+    SolverTrace(Pin("U1","PCIE_TX0"),  Pin("U8","PCIE_TX"),confidence=0.92),
+    SolverTrace(Pin("U1","PCIE_RX0"),  Pin("U8","PCIE_RX"),confidence=0.92),
+    SolverTrace(Pin("U6","SPI_DI"),    Pin("U7","DI"),    confidence=0.94),
+    SolverTrace(Pin("U6","SPI_DO"),    Pin("U7","DO"),    confidence=0.94),
+    SolverTrace(Pin("U6","SPI_CLK"),   Pin("U7","CLK"),   confidence=0.94),
+    SolverTrace(Pin("U6","SPI_CS"),    Pin("U7","CS"),    confidence=0.94),
+    SolverTrace(Pin("U6","PROC_RST"),  Pin("U1","GND"),   confidence=0.88),
+    SolverTrace(Pin("U6","TRUST_VERIFY"),Pin("U1","VCC"), confidence=0.85),
+    SolverTrace(Pin("U1","SATA_TX"),   Pin("J6","SATA_TX+"),confidence=0.91),
+    SolverTrace(Pin("U1","SATA_RX"),   Pin("J6","SATA_RX+"),confidence=0.91),
+    SolverTrace(Pin("U1","UART_TX"),   Pin("J10","TX"),   confidence=0.93),
+    SolverTrace(Pin("U1","UART_RX"),   Pin("J10","RX"),   confidence=0.93),
+    SolverTrace(Pin("U1","USB_DP"),    Pin("J12","D+"),   confidence=0.90),
+    SolverTrace(Pin("U1","USB_DN"),    Pin("J12","D-"),   confidence=0.90),
+    SolverTrace(Pin("J15","TDI"),      Pin("U1","JTAG_TDI"),confidence=0.80),
+    SolverTrace(Pin("J15","TDO"),      Pin("U1","JTAG_TDO"),confidence=0.80),
+    SolverTrace(Pin("U10","PH"),       Pin("L1","1"),     confidence=0.91),
+    SolverTrace(Pin("U11","SW"),       Pin("U1","VCC"),   confidence=0.91),
 ]
+
+CISCO_NET_LABELS = [
+    "VCC_CORE","VCC_3V3","VCC_1V0","GND","DDR3_DQ0","DDR3_A0","PCIE_TX","PCIE_RX",
+    "SPI_CLK","SPI_MOSI","SPI_MISO","SPI_CS","SATA_TX","SATA_RX","UART_TX","UART_RX",
+    "USB_DP","USB_DN","JTAG_TDI","JTAG_TDO","JTAG_TCK","JTAG_TMS","PROC_RST",
+    "TRUST_VERIFY","TRUST_STATUS","GbE0_TX","GbE0_RX",
+]
+
+
+def _generate_one_board(
+    out: Path,
+    prefix: str,
+    board_title: str,
+    img_w: int,
+    img_h: int,
+    comp_list: list[tuple],
+    trace_routes: list[tuple],
+    endpoints: list[tuple[str, str]],
+    vias: list[tuple],
+    mounting_holes: list[tuple],
+    silk_labels: list[tuple],
+    layers: int,
+    net_labels: list[str] | None = None,
+    solver_traces_override: list[SolverTrace] | None = None,
+    seed: int = 42,
+) -> None:
+    from dataclasses import asdict as _asdict
+
+    img_name = f"{prefix}_board.png"
+    board_img = out / img_name
+    click.echo(f"  [1/6] Generating {prefix} PCB image → {board_img}")
+    generate_board_image(
+        board_img, img_w, img_h, comp_list, trace_routes, vias,
+        mounting_holes, silk_labels, board_title, seed,
+    )
+    click.echo(f"        Saved ({board_img.stat().st_size // 1024} KB)")
+
+    click.echo(f"  [2/6] Building {prefix} analysis result...")
+    result = _build_synthetic_result(
+        str(board_img), comp_list, trace_routes, endpoints, img_w, img_h, layers,
+    )
+
+    det_json = out / f"{prefix}_detection.json"
+    click.echo(f"  [3/6] Writing → {det_json}")
+    det_json.write_text(json.dumps({
+        "version": result.pipeline_version, "timestamp": result.timestamp,
+        "image": result.image_path, "board_dimensions": list(result.board_dimensions),
+        "layer_count_estimate": result.layer_count_estimate,
+        "components": [_asdict(c) for c in result.components],
+        "traces": [_asdict(t) for t in result.traces],
+        "summary": result.summary(),
+    }, indent=2) + "\n")
+
+    bom = generate_bom(result)
+    (out / f"{prefix}_bom.json").write_text(bom_to_json(bom) + "\n")
+    (out / f"{prefix}_bom.csv").write_text(bom_to_csv(bom))
+
+    svg_path = out / f"{prefix}_annotated.svg"
+    click.echo(f"  [4/6] Writing SVG overlay → {svg_path}")
+    svg_str = generate_svg(result, image_href=img_name)
+    svg_path.write_text(svg_str, encoding="utf-8")
+
+    probe_path = out / f"{prefix}_probe.txt"
+    click.echo(f"  [5/6] Running probe advisor → {probe_path}")
+    probe_path.write_text(_run_probe_advisor(result, comp_list, net_labels))
+
+    solver_path = out / f"{prefix}_solver.txt"
+    dbg_path = out / f"{prefix}_debug.txt"
+    click.echo(f"  [6/6] Running solver + debug detector → {solver_path}")
+    solver_path.write_text(_run_constraint_solver(result, comp_list, solver_traces_override))
+    dbg_path.write_text(_run_debug_interface_detection(result))
+
+    for p in [board_img, det_json, svg_path, probe_path, solver_path, dbg_path,
+              out / f"{prefix}_bom.json", out / f"{prefix}_bom.csv"]:
+        if p.exists():
+            click.echo(f"    ✓  {p.name}  ({p.stat().st_size:,} bytes)")
 
 
 @click.group()
@@ -811,96 +1171,60 @@ def cli():
 
 
 @cli.command()
-@click.option(
-    "--output-dir",
-    default="docs/examples",
-    show_default=True,
-    help="Directory to write output files into.",
-)
+@click.option("--output-dir", default="docs/examples", show_default=True)
 def generate(output_dir: str):
-    """Generate the synthetic PCB image and all demo output files."""
+    """Generate both Xbox One and Cisco ASA 5506-X demo boards."""
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
 
-    # ---- 1. Generate PCB image ----
-    board_img = out / "synthetic_board.png"
-    click.echo(f"[1/7] Generating PCB image → {board_img}")
-    generate_board_image(board_img)
-    click.echo(f"      Saved {board_img} ({board_img.stat().st_size // 1024} KB)")
+    click.echo(click.style("\n═══ Xbox One — Gaming Console ═══", fg="cyan", bold=True))
+    _generate_one_board(
+        out, prefix="xbox",
+        board_title="XBOX ONE REF v1.0",
+        img_w=IMG_W, img_h=IMG_H,
+        comp_list=KNOWN_COMPONENTS,
+        trace_routes=TRACE_ROUTES,
+        endpoints=XBOX_TRACE_ENDPOINTS,
+        vias=VIAS, mounting_holes=MOUNTING_HOLES, silk_labels=SILK_LABELS,
+        layers=8, seed=42,
+    )
 
-    # ---- 2. Run pipeline (or use synthetic result) ----
-    click.echo("[2/7] Running retrace pipeline...")
-    t0 = time.time()
-    try:
-        pipeline = Pipeline()
-        result = pipeline.run(str(board_img))
-        if len(result.components) == 0:
-            raise RuntimeError("Pipeline returned 0 components — falling back to synthetic result")
-        click.echo(f"      Pipeline detected {len(result.components)} components, "
-                   f"{len(result.traces)} traces")
-    except Exception as exc:
-        click.echo(f"      Pipeline note: {exc}")
-        click.echo("      Using synthetic ground-truth result instead.")
-        result = _build_synthetic_result(str(board_img))
-        result.duration_seconds = time.time() - t0
+    click.echo(click.style("\n═══ Cisco ASA 5506-X — Enterprise Firewall ═══", fg="red", bold=True))
+    _generate_one_board(
+        out, prefix="cisco",
+        board_title="CISCO ASA5506-X V05",
+        img_w=CISCO_IMG_W, img_h=CISCO_IMG_H,
+        comp_list=CISCO_COMPONENTS,
+        trace_routes=CISCO_TRACE_ROUTES,
+        endpoints=CISCO_TRACE_ENDPOINTS,
+        vias=CISCO_VIAS, mounting_holes=CISCO_MOUNTING_HOLES,
+        silk_labels=CISCO_SILK_LABELS,
+        layers=10,
+        net_labels=CISCO_NET_LABELS,
+        solver_traces_override=CISCO_SOLVER_TRACES,
+        seed=99,
+    )
 
-    # ---- 3. detection_result.json ----
-    det_json = out / "detection_result.json"
-    click.echo(f"[3/7] Writing detection result → {det_json}")
-    from dataclasses import asdict as _asdict
-    det_data = {
-        "version": result.pipeline_version,
-        "timestamp": result.timestamp,
-        "image": result.image_path,
-        "board_dimensions": list(result.board_dimensions),
-        "layer_count_estimate": result.layer_count_estimate,
-        "duration_seconds": round(result.duration_seconds, 3),
-        "components": [_asdict(c) for c in result.components],
-        "traces": [_asdict(t) for t in result.traces],
-        "summary": result.summary(),
-    }
-    det_json.write_text(json.dumps(det_data, indent=2) + "\n")
+    # Legacy filenames (symlinks for backward compat with README)
+    for old, new in [
+        ("synthetic_board.png", "xbox_board.png"),
+        ("annotated_board.svg", "xbox_annotated.svg"),
+        ("bom_output.json", "xbox_bom.json"),
+        ("bom_output.csv", "xbox_bom.csv"),
+        ("detection_result.json", "xbox_detection.json"),
+        ("probe_recommendations.txt", "xbox_probe.txt"),
+        ("constraint_solver_output.txt", "xbox_solver.txt"),
+        ("debug_interfaces.txt", "xbox_debug.txt"),
+    ]:
+        old_path = out / old
+        new_path = out / new
+        if new_path.exists() and old_path.exists():
+            old_path.unlink()
+        if new_path.exists() and not old_path.exists():
+            import shutil
+            shutil.copy2(new_path, old_path)
 
-    # ---- 4. BOM (json + csv) ----
-    bom_json_path = out / "bom_output.json"
-    bom_csv_path = out / "bom_output.csv"
-    click.echo(f"[4/7] Writing BOM → {bom_json_path} + {bom_csv_path}")
-    bom = generate_bom(result)
-    bom_json_path.write_text(bom_to_json(bom) + "\n")
-    bom_csv_path.write_text(bom_to_csv(bom))
-
-    # ---- 5. SVG overlay ----
-    svg_path = out / "annotated_board.svg"
-    click.echo(f"[5/7] Writing SVG overlay → {svg_path}")
-    svg_str = generate_svg(result, image_href="synthetic_board.png")
-    svg_path.write_text(svg_str, encoding="utf-8")
-
-    # ---- 6. Probe recommendations ----
-    probe_path = out / "probe_recommendations.txt"
-    click.echo(f"[6/7] Running probe advisor → {probe_path}")
-    probe_text = _run_probe_advisor(result)
-    probe_path.write_text(probe_text)
-
-    # ---- 7. Constraint solver + debug interfaces ----
-    solver_path = out / "constraint_solver_output.txt"
-    dbg_path = out / "debug_interfaces.txt"
-    click.echo(f"[7/7] Running constraint solver → {solver_path}")
-    solver_text = _run_constraint_solver(result)
-    solver_path.write_text(solver_text)
-
-    click.echo(f"      Running debug interface detector → {dbg_path}")
-    dbg_text = _run_debug_interface_detection(result)
-    dbg_path.write_text(dbg_text)
-
-    # ---- Summary ----
-    click.echo("")
-    click.echo("Done! Output files:")
-    for fname in OUTPUT_FILES:
-        fpath = out / fname
-        if fpath.exists():
-            click.echo(f"  ✓  {fpath}  ({fpath.stat().st_size:,} bytes)")
-        else:
-            click.echo(f"  ✗  {fpath}  (MISSING)")
+    click.echo(click.style("\nDone! Both boards generated.", fg="green", bold=True))
 
 
 @cli.command()
@@ -914,8 +1238,18 @@ def clean(output_dir: str):
     """Remove all generated demo files."""
     out = Path(output_dir)
     removed = 0
-    for fname in OUTPUT_FILES:
-        fpath = out / fname
+    for prefix in ("xbox", "cisco"):
+        for suffix in ("_board.png", "_annotated.svg", "_detection.json",
+                       "_bom.json", "_bom.csv", "_probe.txt", "_solver.txt", "_debug.txt"):
+            fpath = out / f"{prefix}{suffix}"
+            if fpath.exists():
+                fpath.unlink()
+                click.echo(f"  Removed {fpath}")
+                removed += 1
+    for legacy in ("synthetic_board.png", "annotated_board.svg", "bom_output.json",
+                   "bom_output.csv", "detection_result.json", "probe_recommendations.txt",
+                   "constraint_solver_output.txt", "debug_interfaces.txt"):
+        fpath = out / legacy
         if fpath.exists():
             fpath.unlink()
             click.echo(f"  Removed {fpath}")

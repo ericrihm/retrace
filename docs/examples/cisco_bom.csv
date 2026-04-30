@@ -1,0 +1,44 @@
+id,label,part_number,marking,value,package,datasheet_url,confidence
+U1,ic,C2508,ATOM C2508,,FCBGA-1283,,0.88
+U2,ic,MT41K256M16HA,MT41K256M16,1GB,BGA-96,,0.93
+U3,ic,MT41K256M16HA,MT41K256M16,1GB,BGA-96,,0.98
+U4,ic,MT41K256M16HA,MT41K256M16,1GB,BGA-96,,0.88
+U5,ic,MT41K256M16HA,MT41K256M16,1GB,BGA-96,,0.93
+U6,ic,XC6SLX45T-2FGG484,XC6SLX45T,,BGA-484,,0.98
+U7,ic,W25Q128JVSIQ,W25Q128JV,16MB,SOIC-8,,0.88
+U8,ic,I354-AM4,I354-AM4,,BGA-576,,0.93
+U9,ic,SATADOM-SL,eUSB 8GB,8GB,eUSB,,0.98
+J6,connector,,mSATA 50GB,50GB,mSATA,,0.88
+U10,ic,TPS54331DR,TPS54331,,SOIC-8,,0.93
+U11,ic,NCP5232,NCP5232,,QFN-20,,0.98
+U12,ic,TPS51200DR,TPS51200,,SON-10,,0.88
+J1,connector,,GbE-1,,RJ45-MAG,,0.93
+J2,connector,,GbE-2,,RJ45-MAG,,0.98
+J3,connector,,GbE-3,,RJ45-MAG,,0.88
+J4,connector,,GbE-4,,RJ45-MAG,,0.93
+J5,connector,,GbE-5,,RJ45-MAG,,0.98
+J7,connector,,GbE-6,,RJ45-MAG,,0.88
+J8,connector,,GbE-7,,RJ45-MAG,,0.93
+J9,connector,,GbE-8,,RJ45-MAG,,0.98
+J10,connector,,CONSOLE,,RJ45,,0.88
+J11,connector,,MGMT,,RJ45-MAG,,0.93
+J12,connector,,USB-A,,USB-A,,0.98
+J13,connector,,USB Mini-B,,USB-Mini-B,,0.88
+J14,connector,,DC 12V,,Barrel-5.5mm,,0.93
+J15,connector,,JTAG,,2x7 2.54mm,,0.98
+C1,capacitor,,100nF,100nF,0402,,0.88
+C2,capacitor,,100nF,100nF,0402,,0.93
+C3,capacitor,,10uF,10uF,0805,,0.98
+C4,capacitor,,22uF,22uF,0805,,0.88
+C5,capacitor,,100nF,100nF,0402,,0.93
+C6,capacitor,,100nF,100nF,0402,,0.98
+R1,resistor,,10k,10k,0402,,0.88
+R2,resistor,,4k7,4k7,0402,,0.93
+R3,resistor,,182,182,0402,,0.98
+L1,inductor,,2.2uH,2.2uH,1210,,0.88
+L2,inductor,,1uH,1uH,1210,,0.93
+Y1,crystal,ABLS-25.000MHZ,25MHz,25MHz,HC-49S,,0.98
+TP1,test_point,,TP1,,TP,,0.88
+TP2,test_point,,TP2,,TP,,0.93
+TP3,test_point,,TP3,,TP,,0.98
+TP4,test_point,,R182,,TP,,0.88

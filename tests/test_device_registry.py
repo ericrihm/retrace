@@ -30,7 +30,7 @@ class TestRegistryIntegrity:
                 assert rev.name.strip(), f"Empty revision name in {family.name}"
 
     def test_minimum_families(self):
-        assert len(DEVICE_FAMILIES) >= 6
+        assert len(DEVICE_FAMILIES) >= 10
 
     def test_all_families_have_manufacturer(self):
         for family in DEVICE_FAMILIES:
@@ -170,6 +170,63 @@ class TestPS5Revisions:
         _, rev = result
         assert "2TB" in rev.storage
         assert rev.year == 2024
+
+
+class TestCiscoASARevisions:
+    """Verify Cisco ASA family covers all expected models."""
+
+    def test_has_5505(self):
+        f = get_family("Cisco ASA")
+        assert any("5505" in r.name for r in f.revisions)
+
+    def test_has_5506x(self):
+        f = get_family("Cisco ASA")
+        assert any("5506-X" in r.name and "W" not in r.name for r in f.revisions)
+
+    def test_has_5506w(self):
+        f = get_family("Cisco ASA")
+        assert any("5506W" in r.name for r in f.revisions)
+
+    def test_has_5508x(self):
+        f = get_family("Cisco ASA")
+        assert any("5508" in r.name for r in f.revisions)
+
+    def test_5506x_specs(self):
+        f = get_family("Cisco ASA")
+        rev = next(r for r in f.revisions if r.name == "ASA 5506-X")
+        assert "C2508" in rev.soc
+        assert "4GB" in rev.ram
+        assert "Thrangrycat" in rev.notes
+
+    def test_cisco_manufacturer(self):
+        f = get_family("Cisco ASA")
+        assert f.manufacturer == "Cisco"
+
+    def test_search_cisco(self):
+        results = search_registry("cisco")
+        assert len(results) >= 2
+        names = [f.name for f, _ in results]
+        assert "Cisco ASA" in names
+
+    def test_search_firewall(self):
+        results = search_registry("5506")
+        assert len(results) >= 1
+
+    def test_search_thrangrycat_via_notes(self):
+        f = get_family("Cisco ASA")
+        assert any("Thrangrycat" in r.notes for r in f.revisions)
+
+
+class TestCiscoCatalystRevisions:
+    def test_has_2960x(self):
+        f = get_family("Cisco Catalyst")
+        assert f is not None
+        assert any("2960" in r.name for r in f.revisions)
+
+    def test_2960x_specs(self):
+        f = get_family("Cisco Catalyst")
+        rev = next(r for r in f.revisions if "2960-X" in r.name and "24" in r.name)
+        assert "Prestera" in rev.soc
 
 
 class TestFormatResults:
