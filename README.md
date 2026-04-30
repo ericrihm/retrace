@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-89%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->500<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->5869<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->500<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->5916<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -38,7 +38,7 @@ Two boards. Two worlds. Both analyzed from photos alone.
 
 <img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One — 34 components, 34 traced connections, color-coded net types"/>
 
-AMD Jaguar APU, 8GB DDR3, Southbridge — 34 components detected, 34 traces classified (power, signal, debug, clock)
+AMD Liverpool APU (BGA-1170), 8GB DDR3, HDMI encoder, eMMC — 34 components, 34 traces, 9 functional zones (CPU, memory, power, I/O, debug)
 
 </td>
 <td width="50%">
@@ -47,7 +47,7 @@ AMD Jaguar APU, 8GB DDR3, Southbridge — 34 components detected, 34 traces clas
 
 <img src="docs/examples/cisco_annotated.svg" width="100%" alt="Cisco ASA 5506-X — 43 components, 41 traced connections, Thrangrycat attack surface"/>
 
-Intel Atom C2508, Xilinx Spartan-6 Trust Anchor FPGA, 4x DDR3 ECC — 43 components, 41 traces, full attack surface mapped
+Intel Atom C2508 (Rangeley), Xilinx Spartan-6 Trust Anchor FPGA, 4x DDR3 ECC — 43 components, 41 traces, 10 functional zones, full Thrangrycat attack path mapped
 
 </td>
 </tr>
@@ -110,16 +110,13 @@ Top 5 Probe Recommendations (269 nodes, Dirichlet belief):
 <summary><b>Xbox One — Debug Interface Detection</b></summary>
 
 ```
-Total findings: 3  (HIGH=2  MEDIUM=1)
+Total findings: 1  (HIGH=1)
 
-  [HIGH]  JTAG on J5 (connector, marking: JTAG)
-          Full CPU debug access on AMD APU — CWE-1191
-
-  [HIGH]  SPI on U7 (ic, marking: H27QCG8T2E5R)
-          64GB eMMC flash — firmware extraction risk — CWE-1191
-
-  [MEDIUM] USB on J2/J3 (connector, marking: USB3.0)
-           USB debug mode possible via DFU — CWE-1244
+  [HIGH]  JTAG
+         Component : J5  (connector)
+         Marking   : JTAG
+         Detail    : JTAG debug interface — full CPU debug/program access
+         Reference : CWE-1191
 ```
 
 </details>
@@ -191,11 +188,17 @@ retrace scan board_photo.jpg --bom
 # Search FCC filings + iFixit teardowns
 retrace search "xbox one"
 
+# Full analysis with SVG overlay output
+retrace scan board_photo.jpg --format svg --output analysis.svg
+
 # Extract copper traces as annotated SVG
 retrace trace board_photo.jpg --output traces.svg
 
 # Bayesian probe advisor — where to measure next
 retrace advise board_photo.jpg
+
+# Learning engine report — knowledge base status
+retrace report
 
 # Web UI (install gradio first)
 pip install retrace-pcb[web]
@@ -212,6 +215,24 @@ pip install retrace-pcb[all]         # Everything
 ```
 
 ## Deep Dive
+
+### Functional Zone Segmentation
+
+*No other PCB RE tool — open-source or commercial — automatically groups components into functional zones from a photo.*
+
+The SVG overlay renders semi-transparent color-coded regions that segment the board into logical subsystems:
+
+| Zone | Color | What It Groups |
+|---|---|---|
+| **CPU** | Cyan | Main processor / SoC / APU |
+| **Memory** | Purple | DDR/SRAM banks, memory controllers |
+| **Power** | Amber | VRMs, inductors, bulk caps, DC input |
+| **I/O** | Green | USB, HDMI, connectors, level shifters |
+| **Debug** | Red | JTAG headers, test points, SWD |
+| **Network** | Blue | Ethernet PHYs, NICs, RJ45 ports |
+| **Storage** | Teal | eMMC, SPI flash, mSATA, eUSB |
+
+Zones use dashed borders at 6% fill opacity — visible enough to orient a researcher, subtle enough not to obscure trace routing. Each zone is an SVG `<g>` element with `data-zone` attributes for programmatic access.
 
 ### Bayesian Probe Advisor
 
@@ -244,10 +265,20 @@ The knowledge flywheel — each board analyzed teaches subcircuit patterns that 
 | Pattern | Components | Identifies |
 |---|---|---|
 | `ldo_supply` | IC + 2 capacitors | Linear voltage regulator |
+| `buck_converter` | IC + inductor + cap | Switching regulator |
 | `rc_lowpass` | Resistor + capacitor | RC low-pass filter |
 | `decoupling_pair` | 2 capacitors near IC | Bulk + bypass decoupling |
 | `pull_up_resistor` | Resistor near IC | I2C/SPI pull-up |
+| `i2c_pullup_pair` | 2 resistors near IC | I2C bus pull-ups |
 | `crystal_oscillator` | Crystal + 2 capacitors | Clock oscillator circuit |
+| `spi_flash_circuit` | Flash IC + resistors + cap | SPI flash with pull-ups |
+| `uart_level_shifter` | IC + connectors | UART voltage translator |
+| `usb_esd_protection` | Diode + USB connector | USB ESD clamping |
+| `usb_connector_circuit` | USB-A/B/C + passives | USB port subsystem |
+| `h_bridge` | 4 FETs + driver IC | Motor driver |
+| `reset_circuit` | Resistor + cap + IC | Power-on reset |
+| `differential_pair_termination` | 2 resistors matched | LVDS/USB/Ethernet termination |
+| `power_indicator_led` | LED + resistor | Power status indicator |
 
 <!-- STATS:patterns -->15<!-- /STATS --> built-in patterns. Extensible via plugins.
 
@@ -293,7 +324,7 @@ retrace search "xbox one"
 
 Also searches [iFixit](https://www.ifixit.com/) teardowns via API v2.0 for high-resolution step-by-step board photos.
 
-**Built-in device registry** covers 10 product families and 50+ hardware revisions — Xbox One (7), Xbox Series (3), PlayStation 5 (9), Nintendo Switch (4), Steam Deck (2), Raspberry Pi (5), Ubiquiti UniFi (4), Ring Doorbell (3), **Cisco ASA** (8: 5505, 5506-X, 5506W-X, 5508-X, 5510, 5515-X, 5516-X), and **Cisco Catalyst** (3: 2960-X, 3560-X) — with FCC IDs, SoC specs, RAM, storage, security notes (Thrangrycat, AVR54, ArcaneDoor), and iFixit guide IDs. Search by product name, codename, model number, or FCC ID.
+**Built-in device registry** covers 10 product families and 48 hardware revisions — Xbox One (7), Xbox Series (3), PlayStation 5 (9), Nintendo Switch (4), Steam Deck (2), Raspberry Pi (5), Ubiquiti UniFi (4), Ring Doorbell (3), **Cisco ASA** (8: 5505, 5506-X, 5506W-X, 5508-X, 5510, 5515-X, 5516-X), and **Cisco Catalyst** (3: 2960-X, 3560-X) — with FCC IDs, SoC specs, RAM, storage, security notes (Thrangrycat, AVR54, ArcaneDoor), and iFixit guide IDs. Search by product name, codename, model number, or FCC ID.
 
 ### Debug Interface Detection
 
@@ -357,14 +388,16 @@ photos = download_fcc_photos(results[0]["fcc_id"], dest_dir="./fcc_photos")
 
 re:trace is built for hardware security assessments:
 
-- **Pre-engagement recon** — Search any product's FCC filing for internal board photos before you open the case
-- **Attack surface mapping** — Identify MCUs, flash/EEPROM, FPGAs, crypto chips, and communication buses automatically
-- **Trust anchor analysis** — Map FPGA ↔ SPI flash ↔ CPU trust chains (see Cisco ASA 5506-X Thrangrycat demo)
-- **Debug interface detection** — Flag JTAG, SWD, UART, SPI headers with severity ratings and CWE references
-- **Optimal probing** — Bayesian advisor tells you exactly where to measure to identify unknown pins fastest (6–10 probes to convergence)
-- **Constraint inference** — When you can only trace 60% of connections, AC-3 propagation fills in the rest
-- **Enterprise device registry** — Cisco ASA/Catalyst families with CVE notes, SoC details, security advisories
-- **Knowledge transfer** — Patterns learned from previous boards accelerate analysis of new ones
+| Assessment Phase | What You Need | re:trace Feature |
+|---|---|---|
+| **Recon** | Board photos without opening the case | FCC filing search (public domain photos) + iFixit teardown API |
+| **Attack surface mapping** | Identify MCUs, flash, FPGAs, crypto ICs | YOLO v8 detection + OCR + 114-part fuzzy matcher |
+| **Trust chain analysis** | Map FPGA ↔ SPI flash ↔ CPU paths | Automated trace extraction + constraint solver (see Thrangrycat demo) |
+| **Debug interface discovery** | Find JTAG, SWD, UART, SPI headers | Pattern-match detection with CWE severity ratings |
+| **Optimal probing** | Where to put the multimeter next | Bayesian advisor: 6–10 measurements to convergence |
+| **Partial trace recovery** | Board has 60% visible traces | AC-3 constraint propagation infers the rest |
+| **Cross-board analysis** | Transfer knowledge between boards | 15 subcircuit patterns auto-recognized across boards |
+| **Reporting** | Deliverable for the client | SVG overlay, BOM (JSON/CSV), debug interface report |
 
 ## Plugin System
 
@@ -380,14 +413,14 @@ class MyAnalyzer(AnalyzerPlugin):
 
 ```toml
 # pyproject.toml — register via entry points
-[project.entry-points."retrace.analyzers"]
+[project.entry-points."retrace.plugins"]
 my_analyzer = "my_package:MyAnalyzer"
 ```
 
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->5869<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->5916<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -416,7 +449,7 @@ src/retrace/                             # <!-- STATS:loc -->5869<!-- /STATS -->
 │       └── debug_interfaces.py          # JTAG/UART/SWD/SPI/I2C detection
 └── export/
     ├── bom.py                           # BOM generator (JSON, CSV)
-    └── svg.py                           # SVG overlay: components, traces, net classification, BOM panel
+    └── svg.py                           # Dark-theme SVG: zones, traces, net classification, security panel, BOM
 ```
 
 ## Stats
@@ -426,7 +459,7 @@ src/retrace/                             # <!-- STATS:loc -->5869<!-- /STATS -->
 | Tests | <!-- STATS:tests -->500<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->20<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->5869<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->5916<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->114<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -443,6 +476,31 @@ ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
 
+CI runs on Python 3.10, 3.11, and 3.12 with coverage uploaded to Codecov.
+
+## Responsible Use
+
+re:trace is a **read-only analysis tool**. It does not write to target hardware, inject firmware, or exploit vulnerabilities. It is designed for:
+
+- Authorized penetration testing and hardware security assessments
+- Academic research and education
+- Product teardowns and competitive analysis
+- Manufacturing QA and incoming inspection
+- CTF challenges and security training
+
+If you discover a vulnerability using re:trace, please follow [coordinated disclosure](https://www.cisa.gov/coordinated-vulnerability-disclosure-process) practices.
+
+## Tested Hardware
+
+The demo boards use synthetic PCB images with verified real-world component data. The pipeline has been tested against:
+
+| Board | Components | Traces | Zones | Security Findings |
+|---|---|---|---|---|
+| **Xbox One (Model 1540)** | 34 (12 ICs, 5 connectors, 5 test points) | 34 | 9 | JTAG header (HIGH) |
+| **Cisco ASA 5506-X** | 43 (12 ICs, 11 connectors, 4 test points) | 41 | 10 | JTAG + UART console (HIGH/MED) |
+
+The device registry covers **10 product families** with 48 hardware revisions: Xbox One/Series, PlayStation 5, Nintendo Switch, Steam Deck, Raspberry Pi, Ubiquiti UniFi, Ring Doorbell, Cisco ASA, and Cisco Catalyst — including SoC specs, FCC IDs, iFixit guide IDs, and security advisories (Thrangrycat, AVR54, ArcaneDoor).
+
 ## Legal
 
 - **FCC internal photos** — public domain under [47 CFR § 0.457](https://www.law.cornell.edu/cfr/text/47/0.457)
@@ -457,4 +515,4 @@ MIT — use it for research, pentests, product teardowns, education, whatever.
 
 ## Author
 
-Built by [Eric Rihm](https://github.com/ericrihm) — hardware security researcher, builder of things that stare at circuit boards, back again.
+Built by [Eric Rihm](https://github.com/ericrihm) — hardware security researcher focused on embedded systems, PCB reverse engineering, and trust anchor analysis. Interested in hardware security roles — [hello@cobaltsystems.io](mailto:hello@cobaltsystems.io).
