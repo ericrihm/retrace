@@ -34,18 +34,18 @@ Two boards. Two worlds. Both analyzed from photos alone.
 <tr>
 <td width="50%">
 
-**Xbox One — Gaming Hardware RE**
+**Xbox One Model 1540 (Durango) — Gaming Console RE**
 
-<img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One — 34 components, 34 traced connections, color-coded net types"/>
+<img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One Model 1540 Durango — AMD Liverpool APU, 34 components, 34 traces, 9 functional zones"/>
 
 AMD Liverpool APU (BGA-1170), 8GB DDR3, HDMI encoder, eMMC — 34 components, 34 traces, 9 functional zones (CPU, memory, power, I/O, debug)
 
 </td>
 <td width="50%">
 
-**Cisco ASA 5506-X — Enterprise Firewall RE**
+**Cisco ASA 5506-X V05 (Rangeley) — Enterprise Firewall RE**
 
-<img src="docs/examples/cisco_annotated.svg" width="100%" alt="Cisco ASA 5506-X — 43 components, 41 traced connections, Thrangrycat attack surface"/>
+<img src="docs/examples/cisco_annotated.svg" width="100%" alt="Cisco ASA 5506-X V05 — Intel Atom C2508, Xilinx Spartan-6 Trust Anchor, 43 components, 41 traces, 10 functional zones"/>
 
 Intel Atom C2508 (Rangeley), Xilinx Spartan-6 Trust Anchor FPGA, 4x DDR3 ECC — 43 components, 41 traces, 10 functional zones, full Thrangrycat attack path mapped
 
@@ -107,7 +107,7 @@ Top 5 Probe Recommendations (269 nodes, Dirichlet belief):
 </details>
 
 <details>
-<summary><b>Xbox One — Debug Interface Detection</b></summary>
+<summary><b>Xbox One Model 1540 — Debug Interface Detection</b></summary>
 
 ```
 Total findings: 1  (HIGH=1)
@@ -439,7 +439,7 @@ src/retrace/                             # <!-- STATS:loc -->5916<!-- /STATS -->
 ├── sources/
 │   ├── fcc.py                           # FCC filing scraper (47 CFR § 0.457, public domain)
 │   ├── ifixit.py                        # iFixit API v2.0 client (CC BY-NC-SA)
-│   ├── device_registry.py               # 50+ revisions across 10 product families (Xbox, PS5, Cisco ASA, etc.)
+│   ├── device_registry.py               # 48 revisions across 10 product families (Xbox, PS5, Cisco ASA, etc.)
 │   └── board_sourcer.py                 # Unified multi-source image acquisition
 ├── learning/
 │   └── engine.py                        # Cross-board knowledge flywheel

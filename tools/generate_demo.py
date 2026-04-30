@@ -889,6 +889,7 @@ def _run_probe_advisor(
     result: AnalysisResult,
     comp_list: list[tuple] | None = None,
     net_labels: list[str] | None = None,
+    board_label: str = "",
 ) -> str:
     _default_nets = [
         "VCC_CORE","VCC_GFX","VCC_IO","GND","DDR_DQ0","DDR_DQ1","PCIE_TX","PCIE_RX",
@@ -911,7 +912,7 @@ def _run_probe_advisor(
         "re:trace Bayesian Probe Advisor — Top 5 Probe Recommendations",
         "=" * 65,
         "",
-        "Board: docs/examples/synthetic_board.png",
+        f"Board: {board_label or result.image_path}",
         f"Timestamp: {time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}",
         "",
         "Ranked by Expected Information Gain (EIG, bits):",
@@ -949,6 +950,7 @@ def _run_constraint_solver(
     result: AnalysisResult,
     comp_list: list[tuple] | None = None,
     solver_traces: list[SolverTrace] | None = None,
+    board_label: str = "",
 ) -> str:
     comp_list = comp_list or KNOWN_COMPONENTS
     comp_specs: list[ComponentSpec] = []
@@ -989,7 +991,7 @@ def _run_constraint_solver(
         "re:trace Constraint Solver — Inferred Netlist",
         "=" * 50,
         "",
-        "Board: docs/examples/synthetic_board.png",
+        f"Board: {board_label or result.image_path}",
         f"Timestamp: {time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}",
         f"AC-3 iterations: {res.iterations}",
         "",
@@ -1040,7 +1042,7 @@ def _run_constraint_solver(
 # Debug interface detection output
 # ---------------------------------------------------------------------------
 
-def _run_debug_interface_detection(result: AnalysisResult) -> str:
+def _run_debug_interface_detection(result: AnalysisResult, board_label: str = "") -> str:
     findings = detect_debug_interfaces(result)
     high = [f for f in findings if f["severity"] == "high"]
     medium = [f for f in findings if f["severity"] == "medium"]
@@ -1050,7 +1052,7 @@ def _run_debug_interface_detection(result: AnalysisResult) -> str:
         "re:trace Debug Interface Detector",
         "=" * 40,
         "",
-        "Board: docs/examples/synthetic_board.png",
+        f"Board: {board_label or result.image_path}",
         f"Timestamp: {time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}",
         f"Total findings: {len(findings)}  (HIGH={len(high)}  MEDIUM={len(medium)}  LOW={len(low)})",
         "",
@@ -1179,13 +1181,17 @@ def _generate_one_board(
 
     probe_path = out / f"{prefix}_probe.txt"
     click.echo(f"  [5/6] Running probe advisor → {probe_path}")
-    probe_path.write_text(_run_probe_advisor(result, comp_list, net_labels))
+    probe_path.write_text(
+        _run_probe_advisor(result, comp_list, net_labels, board_label=board_title)
+    )
 
     solver_path = out / f"{prefix}_solver.txt"
     dbg_path = out / f"{prefix}_debug.txt"
     click.echo(f"  [6/6] Running solver + debug detector → {solver_path}")
-    solver_path.write_text(_run_constraint_solver(result, comp_list, solver_traces_override))
-    dbg_path.write_text(_run_debug_interface_detection(result))
+    solver_path.write_text(
+        _run_constraint_solver(result, comp_list, solver_traces_override, board_label=board_title)
+    )
+    dbg_path.write_text(_run_debug_interface_detection(result, board_label=board_title))
 
     for p in [board_img, det_json, svg_path, probe_path, solver_path, dbg_path,
               out / f"{prefix}_bom.json", out / f"{prefix}_bom.csv"]:
