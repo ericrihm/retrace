@@ -17,6 +17,9 @@ _INTERFACE_PATTERNS: dict[str, dict[str, Any]] = {
         "severity": "high",
         "description": "JTAG debug interface — full CPU debug/program access",
         "cve_reference": "CWE-1191",
+        "cvss_base": 7.6,
+        "cvss_vector": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "mitre_attack": ["T1200", "T0839"],
     },
     "SWD": {
         "keywords": {"swd", "swdio", "swdclk", "swclk", "swd20", "cortex-debug"},
@@ -24,6 +27,9 @@ _INTERFACE_PATTERNS: dict[str, dict[str, Any]] = {
         "severity": "high",
         "description": "ARM Serial Wire Debug — CoreSight access, firmware extraction risk",
         "cve_reference": "CWE-1191",
+        "cvss_base": 7.6,
+        "cvss_vector": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "mitre_attack": ["T1200", "T0839"],
     },
     "UART": {
         "keywords": {"uart", "tx", "rx", "console", "serial", "debug", "ttyUSB", "tx1", "rx1"},
@@ -31,6 +37,9 @@ _INTERFACE_PATTERNS: dict[str, dict[str, Any]] = {
         "severity": "medium",
         "description": "UART/serial console — may expose bootloader or root shell",
         "cve_reference": "CWE-1299",
+        "cvss_base": 6.8,
+        "cvss_vector": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "mitre_attack": ["T1200"],
     },
     "SPI": {
         "keywords": {"spi", "mosi", "miso", "sclk", "cs", "ss", "nss", "flash", "isp"},
@@ -38,6 +47,9 @@ _INTERFACE_PATTERNS: dict[str, dict[str, Any]] = {
         "severity": "medium",
         "description": "SPI interface — potential flash memory read/write access",
         "cve_reference": None,
+        "cvss_base": 5.3,
+        "cvss_vector": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N",
+        "mitre_attack": ["T1200", "T0845"],
     },
     "I2C": {
         "keywords": {"i2c", "scl", "sda", "iic", "twi"},
@@ -45,6 +57,9 @@ _INTERFACE_PATTERNS: dict[str, dict[str, Any]] = {
         "severity": "low",
         "description": "I2C bus — peripheral enumeration possible",
         "cve_reference": None,
+        "cvss_base": 3.5,
+        "cvss_vector": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+        "mitre_attack": ["T1200"],
     },
 }
 
@@ -88,6 +103,9 @@ def detect_debug_interfaces(board: AnalysisResult) -> list[dict[str, Any]]:
                         "component_label": comp.label,
                         "component_marking": comp.marking,
                         "cve_reference": sig.get("cve_reference"),
+                        "cvss_base": sig.get("cvss_base"),
+                        "cvss_vector": sig.get("cvss_vector"),
+                        "mitre_attack": sig.get("mitre_attack", []),
                     }
                 )
 

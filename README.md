@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-89%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->667<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->8178<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->671<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->8226<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -142,17 +142,21 @@ Grouped by type, color-coded badges, per-component confidence bars
 ```
 Total findings: 2  (HIGH=1  MEDIUM=1)
 
-  [HIGH]  JTAG
+  [HIGH] CVSS 7.6  JTAG
          Component : J15  (connector)
          Marking   : JTAG
          Detail    : JTAG debug interface — full CPU debug/program access
-         Reference : CWE-1191
+         CWE       : CWE-1191
+         ATT&CK    : T1200, T0839
+         CVSS      : CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
 
-  [MEDIUM]  UART
+  [MEDIUM] CVSS 6.8  UART
          Component : J10  (connector)
          Marking   : CONSOLE
          Detail    : UART/serial console — may expose bootloader or root shell
-         Reference : CWE-1299
+         CWE       : CWE-1299
+         ATT&CK    : T1200
+         CVSS      : CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
 ```
 
 </details>
@@ -193,11 +197,13 @@ Top 5 Probe Recommendations (269 nodes, Dirichlet belief):
 ```
 Total findings: 1  (HIGH=1)
 
-  [HIGH]  JTAG
+  [HIGH] CVSS 7.6  JTAG
          Component : J5  (connector)
          Marking   : JTAG
          Detail    : JTAG debug interface — full CPU debug/program access
-         Reference : CWE-1191
+         CWE       : CWE-1191
+         ATT&CK    : T1200, T0839
+         CVSS      : CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
 ```
 
 </details>
@@ -630,7 +636,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->8178<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->8226<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -668,10 +674,10 @@ src/retrace/                             # <!-- STATS:loc -->8178<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->667<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->671<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->23<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->8178<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->8226<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -683,7 +689,7 @@ src/retrace/                             # <!-- STATS:loc -->8178<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->667<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->671<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```

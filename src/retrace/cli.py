@@ -201,10 +201,14 @@ def debug(image: str, as_json: bool) -> None:
     severity_order = {"high": 0, "medium": 1, "low": 2}
     for f in sorted(findings, key=lambda x: severity_order.get(x["severity"], 9)):
         sev = f["severity"].upper()
-        click.echo(f"  [{sev}] {f['interface']} — {f['description']}")
+        cvss = f.get("cvss_base")
+        cvss_str = f"  CVSS {cvss}" if cvss else ""
+        click.echo(f"  [{sev}]{cvss_str} {f['interface']} — {f['description']}")
         click.echo(f"         Component: {f['component_label']} (marking: {f['component_marking']})")
         if f.get("cve_reference"):
-            click.echo(f"         Reference: {f['cve_reference']}")
+            click.echo(f"         CWE: {f['cve_reference']}")
+        if f.get("mitre_attack"):
+            click.echo(f"         ATT&CK: {', '.join(f['mitre_attack'])}")
 
 
 @main.command("learn")

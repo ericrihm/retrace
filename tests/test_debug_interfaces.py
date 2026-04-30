@@ -89,3 +89,35 @@ def test_each_interface_detected_once():
     findings = detect_debug_interfaces(board)
     jtag_findings = [f for f in findings if f["interface"] == "JTAG"]
     assert len(jtag_findings) == 1
+
+
+def test_cvss_score_present():
+    board = _board_with_markings("JTAG")
+    findings = detect_debug_interfaces(board)
+    jtag = next(f for f in findings if f["interface"] == "JTAG")
+    assert jtag["cvss_base"] == 7.6
+    assert jtag["cvss_vector"].startswith("CVSS:3.1/")
+
+
+def test_mitre_attack_present():
+    board = _board_with_markings("JTAG")
+    findings = detect_debug_interfaces(board)
+    jtag = next(f for f in findings if f["interface"] == "JTAG")
+    assert "T1200" in jtag["mitre_attack"]
+    assert "T0839" in jtag["mitre_attack"]
+
+
+def test_uart_cvss_medium():
+    board = _board_with_markings("CONSOLE")
+    findings = detect_debug_interfaces(board)
+    uart = next(f for f in findings if f["interface"] == "UART")
+    assert uart["cvss_base"] == 6.8
+
+
+def test_i2c_low_severity_with_cvss():
+    board = _board_with_markings("I2C_BUS")
+    findings = detect_debug_interfaces(board)
+    i2c = next(f for f in findings if f["interface"] == "I2C")
+    assert i2c["severity"] == "low"
+    assert i2c["cvss_base"] == 3.5
+    assert i2c["mitre_attack"] == ["T1200"]

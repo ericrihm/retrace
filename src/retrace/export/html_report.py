@@ -12,12 +12,18 @@ from retrace import __version__
 from retrace.core.pipeline import AnalysisResult, Component, Trace
 
 # ── Security keyword mapping (shared with svg.py) ──────────────────────
-_SECURITY_KEYWORDS: dict[str, tuple[str, str, str]] = {
-    "JTAG": ("JTAG debug — full CPU access", "HIGH", "CWE-1191"),
-    "SWD": ("SWD debug — ARM CoreSight", "HIGH", "CWE-1191"),
-    "UART": ("UART/serial console", "MEDIUM", "CWE-1299"),
-    "CONSOLE": ("Serial console — bootloader/shell", "MEDIUM", "CWE-1299"),
-    "SPI": ("SPI bus — firmware extraction", "MEDIUM", "CWE-1191"),
+# (description, severity, CWE, CVSS base score, CVSS vector, MITRE ATT&CK)
+_SECURITY_KEYWORDS: dict[str, tuple[str, str, str, float, str, list[str]]] = {
+    "JTAG": ("JTAG debug — full CPU access", "HIGH", "CWE-1191", 7.6,
+             "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H", ["T1200", "T0839"]),
+    "SWD": ("SWD debug — ARM CoreSight", "HIGH", "CWE-1191", 7.6,
+            "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H", ["T1200", "T0839"]),
+    "UART": ("UART/serial console", "MEDIUM", "CWE-1299", 6.8,
+             "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", ["T1200"]),
+    "CONSOLE": ("Serial console — bootloader/shell", "MEDIUM", "CWE-1299", 6.8,
+                "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H", ["T1200"]),
+    "SPI": ("SPI bus — firmware extraction", "MEDIUM", "CWE-1191", 5.3,
+            "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N", ["T1200", "T0845"]),
 }
 
 _LABEL_COLORS: dict[str, str] = {
@@ -109,7 +115,11 @@ def _detect_security_findings(
 
     for comp in result.components:
         text = f"{comp.marking} {comp.label} {comp.part_number}".upper()
-        for keyword, (desc, severity, cwe) in _SECURITY_KEYWORDS.items():
+        for keyword, entry in _SECURITY_KEYWORDS.items():
+            desc, severity, cwe = entry[0], entry[1], entry[2]
+            cvss_base = entry[3] if len(entry) > 3 else None
+            cvss_vector = entry[4] if len(entry) > 4 else None
+            mitre = entry[5] if len(entry) > 5 else []
             if keyword in text:
                 key = f"{keyword}:{comp.id}"
                 if key not in seen:
@@ -120,6 +130,9 @@ def _detect_security_findings(
                         "component": comp.id,
                         "cwe": cwe,
                         "description": desc,
+                        "cvss_base": cvss_base,
+                        "cvss_vector": cvss_vector,
+                        "mitre_attack": mitre,
                     })
 
     findings.sort(key=lambda f: (_SEVERITY_ORDER.get(f["severity"], 99), f["interface"]))
@@ -575,7 +588,7 @@ def generate_html_report(
     if findings:
         _a("<table>")
         _a("<thead><tr>")
-        for col in ("Severity", "Interface", "Component", "CWE", "Description"):
+        for col in ("Severity", "CVSS", "Interface", "Component", "CWE", "ATT&amp;CK", "Description"):
             _a(f"<th>{col}</th>")
         _a("</tr></thead>")
         _a("<tbody>")
@@ -585,11 +598,24 @@ def generate_html_report(
             cwe = f["cwe"]
             cwe_num = cwe.replace("CWE-", "")
             cwe_url = f"https://cwe.mitre.org/data/definitions/{_esc(cwe_num)}.html"
+            cvss = f.get("cvss_base", "")
+            cvss_str = f"{cvss}" if cvss else "—"
+            attack_ids = f.get("mitre_attack", [])
+            attack_links = []
+            for tid in attack_ids:
+                if tid.startswith("T0"):
+                    url = f"https://attack.mitre.org/techniques/{_esc(tid)}/"
+                else:
+                    url = f"https://attack.mitre.org/techniques/{_esc(tid)}/"
+                attack_links.append(f'<a href="{url}" target="_blank" rel="noopener">{_esc(tid)}</a>')
+            attack_str = ", ".join(attack_links) if attack_links else "—"
             _a("<tr>")
             _a(f'<td><span class="badge {badge_cls}">{_esc(sev)}</span></td>')
+            _a(f"<td>{_esc(cvss_str)}</td>")
             _a(f"<td>{_esc(f['interface'])}</td>")
             _a(f"<td>{_esc(f['component'])}</td>")
             _a(f'<td><a href="{cwe_url}" target="_blank" rel="noopener">{_esc(cwe)}</a></td>')
+            _a(f"<td>{attack_str}</td>")
             _a(f"<td>{_esc(f['description'])}</td>")
             _a("</tr>")
         _a("</tbody>")
