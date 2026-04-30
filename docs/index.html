@@ -358,8 +358,8 @@ footer a { color: var(--text-mid); }
   <p class="tagline">Photo in, attack surface out. The first open-source toolkit that identifies PCB components, extracts traces, maps trust chains, and tells you where to probe.</p>
 
   <div class="stats">
-    <div class="stat"><div class="stat-val">767</div><div class="stat-label">Tests</div></div>
-    <div class="stat"><div class="stat-val">89%</div><div class="stat-label">Coverage</div></div>
+    <div class="stat"><div class="stat-val">768</div><div class="stat-label">Tests</div></div>
+    <div class="stat"><div class="stat-val">90%</div><div class="stat-label">Coverage</div></div>
     <div class="stat"><div class="stat-val">24</div><div class="stat-label">Modules</div></div>
     <div class="stat"><div class="stat-val">128</div><div class="stat-label">Components DB</div></div>
     <div class="stat"><div class="stat-val">16</div><div class="stat-label">CLI Commands</div></div>
@@ -379,7 +379,7 @@ footer a { color: var(--text-mid); }
 <section>
   <div class="container">
     <h2>Pipeline</h2>
-    <p class="section-sub">Eight stages. One command. No design files required.</p>
+    <p class="section-sub">Nine stages. One command. No design files required.</p>
     <div class="pipeline">
       <div class="pipe-stage"><div class="stage-name">Detect</div><div class="stage-tech">YOLO v8 / OpenCV</div></div>
       <div class="pipe-arrow">&rarr;</div>
@@ -466,6 +466,9 @@ footer a { color: var(--text-mid); }
           <button class="view-tab" data-view="attack">Attack Surface</button>
           <button class="view-tab" data-view="zones">Zones</button>
           <button class="view-tab" data-view="bom">BOM</button>
+          <button class="view-tab" data-view="interactive">Interactive</button>
+          <button class="view-tab" data-view="pinout-jtag">Pinout: JTAG</button>
+          <button class="view-tab" data-view="pinout-uart">Pinout: UART</button>
         </div>
         <div class="view-content">
           <div class="view-panel active" data-view="annotated">
@@ -484,6 +487,18 @@ footer a { color: var(--text-mid); }
             <img src="examples/cisco_bom_table.svg" alt="Cisco ASA 5506-X — BOM table" loading="lazy">
             <div class="artifact-link">Grouped by type &middot; confidence bars &middot; part numbers</div>
           </div>
+          <div class="view-panel" data-view="interactive">
+            <img src="examples/cisco_interactive.svg" alt="Cisco ASA 5506-X — interactive layered SVG with 8 toggleable layers" loading="lazy">
+            <div class="artifact-link">8 toggleable layers &middot; 6 view presets &middot; JavaScript controls &middot; <a href="examples/cisco_interactive.svg" target="_blank">Open full SVG &rarr;</a></div>
+          </div>
+          <div class="view-panel" data-view="pinout-jtag">
+            <img src="examples/cisco_JTAG_pinout.svg" alt="Cisco ASA 5506-X — JTAG pinout diagram with probe wiring guide" loading="lazy">
+            <div class="artifact-link">JTAG (J15) &middot; 20-pin ARM standard &middot; J-Link / Bus Pirate / FTDI wiring</div>
+          </div>
+          <div class="view-panel" data-view="pinout-uart">
+            <img src="examples/cisco_UART_pinout.svg" alt="Cisco ASA 5506-X — UART console pinout diagram" loading="lazy">
+            <div class="artifact-link">UART (J10) &middot; TX/RX/GND &middot; Bus Pirate / FTDI FT232 wiring &middot; Common baud rates</div>
+          </div>
         </div>
       </div>
 
@@ -495,31 +510,41 @@ footer a { color: var(--text-mid); }
         </div>
         <div class="card-chips">
           <span class="chip chip-red">JTAG CVSS 7.6</span>
-          <span class="chip chip-cyan">155 components</span>
-          <span class="chip chip-green">72 traces</span>
+          <span class="chip chip-cyan">150 components</span>
+          <span class="chip chip-green">68 traces</span>
         </div>
         <div class="view-tabs" data-board="xbox">
           <button class="view-tab active" data-view="annotated">Annotated</button>
           <button class="view-tab" data-view="attack">Attack Surface</button>
           <button class="view-tab" data-view="zones">Zones</button>
           <button class="view-tab" data-view="bom">BOM</button>
+          <button class="view-tab" data-view="interactive">Interactive</button>
+          <button class="view-tab" data-view="pinout-jtag">Pinout: JTAG</button>
         </div>
         <div class="view-content">
           <div class="view-panel active" data-view="annotated">
-            <img src="examples/xbox_annotated.svg" alt="Xbox One Model 1540 — annotated board with 155 components" loading="lazy">
-            <div class="artifact-link">AMD Liverpool APU (BGA-1170) &middot; 16&times; SK Hynix DDR3 &middot; Southbridge X861949</div>
+            <img src="examples/xbox_annotated.svg" alt="Xbox One Model 1540 — annotated board with 150 components" loading="lazy">
+            <div class="artifact-link">AMD Liverpool APU (BGA-1170) &middot; 8&times; SK Hynix DDR3 &middot; Southbridge X861949</div>
           </div>
           <div class="view-panel" data-view="attack">
             <img src="examples/xbox_attack_surface.svg" alt="Xbox One Model 1540 — attack surface map" loading="lazy">
             <div class="artifact-link">JTAG (J5) &rarr; APU (U1) &rarr; eMMC (U8) &middot; Southbridge (U9)</div>
           </div>
           <div class="view-panel" data-view="zones">
-            <img src="examples/xbox_zones.svg" alt="Xbox One Model 1540 — 9 functional zones" loading="lazy">
-            <div class="artifact-link">9 zones &mdash; CPU, memory, power, I/O, debug, storage</div>
+            <img src="examples/xbox_zones.svg" alt="Xbox One Model 1540 — 12 functional zones" loading="lazy">
+            <div class="artifact-link">12 zones &mdash; CPU, memory, power, I/O, debug, storage, network</div>
           </div>
           <div class="view-panel" data-view="bom">
             <img src="examples/xbox_bom_table.svg" alt="Xbox One Model 1540 — BOM table" loading="lazy">
-            <div class="artifact-link">155 components &middot; OCR confidence &middot; part identification</div>
+            <div class="artifact-link">150 components &middot; OCR confidence &middot; part identification</div>
+          </div>
+          <div class="view-panel" data-view="interactive">
+            <img src="examples/xbox_interactive.svg" alt="Xbox One Model 1540 — interactive layered SVG with 8 toggleable layers" loading="lazy">
+            <div class="artifact-link">8 toggleable layers &middot; 6 view presets &middot; JavaScript controls &middot; <a href="examples/xbox_interactive.svg" target="_blank">Open full SVG &rarr;</a></div>
+          </div>
+          <div class="view-panel" data-view="pinout-jtag">
+            <img src="examples/xbox_JTAG_pinout.svg" alt="Xbox One Model 1540 — JTAG pinout diagram with probe wiring guide" loading="lazy">
+            <div class="artifact-link">JTAG (J5) &middot; 20-pin ARM standard &middot; J-Link / Bus Pirate / FTDI / OpenOCD wiring</div>
           </div>
         </div>
       </div>
@@ -584,12 +609,12 @@ footer a { color: var(--text-mid); }
     <div class="report-cards">
       <a href="examples/cisco_report.html" class="report-card">
         <h3>Cisco ASA 5506-X V05</h3>
-        <p>Enterprise firewall assessment. Intel Atom C2508, Xilinx Spartan-6 Trust Anchor, Thrangrycat attack path mapped. 2 findings, 177 components, 88 traces.</p>
+        <p>Enterprise firewall assessment. Intel Atom C2508, Xilinx Spartan-6 Trust Anchor, Thrangrycat attack path mapped. 5 findings, 177 components, 88 traces.</p>
         <div class="report-meta">CVSS 7.6 (HIGH) &middot; CWE-1191, CWE-1299 &middot; T1200, T0839</div>
       </a>
       <a href="examples/xbox_report.html" class="report-card">
         <h3>Xbox One Model 1540 (Durango)</h3>
-        <p>Gaming console assessment. AMD Liverpool APU, 16x DDR3 banks, Southbridge X861949, SK Hynix eMMC. 1 finding, 155 components, 72 traces.</p>
+        <p>Gaming console assessment. AMD Liverpool APU, 8x DDR3 banks, Southbridge X861949, SK Hynix eMMC. 1 finding, 150 components, 68 traces.</p>
         <div class="report-meta">CVSS 7.6 (HIGH) &middot; CWE-1191 &middot; T1200, T0839</div>
       </a>
     </div>
@@ -630,7 +655,19 @@ footer a { color: var(--text-mid); }
         <h3>Pinout Diagrams</h3>
         <p>Annotated debug header close-ups. Crops the board image around each detected interface, labels every pin, and includes probe wiring guides for J-Link, Bus Pirate, FTDI, and ST-Link.</p>
         <div class="report-meta">
-          SVG &middot; JTAG / SWD / UART / SPI / I2C &middot; Color-coded by function
+          <a href="examples/cisco_JTAG_pinout.svg">cisco JTAG</a> &middot;
+          <a href="examples/cisco_UART_pinout.svg">cisco UART</a> &middot;
+          <a href="examples/xbox_JTAG_pinout.svg">xbox JTAG</a> &middot;
+          Color-coded by function
+        </div>
+      </div>
+      <div class="report-card">
+        <h3>Interactive Layered SVG</h3>
+        <p>Self-contained SVG with 8 toggleable layers and 6 view presets. JavaScript-powered floating control panel. Open in any browser, no server needed.</p>
+        <div class="report-meta">
+          <a href="examples/cisco_interactive.svg">cisco interactive</a> &middot;
+          <a href="examples/xbox_interactive.svg">xbox interactive</a> &middot;
+          Google Maps&ndash;style layer toggles
         </div>
       </div>
     </div>

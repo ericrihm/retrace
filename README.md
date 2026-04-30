@@ -9,9 +9,9 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://github.com/ericrihm/retrace)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Coverage](https://img.shields.io/badge/coverage-89%25-green.svg)](https://github.com/ericrihm/retrace)
+[![Coverage](https://img.shields.io/badge/coverage-90%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->675<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->8304<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->768<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->21990<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/)
 
@@ -45,7 +45,7 @@ Two boards. Two worlds. Both analyzed from photos alone.
 
 <img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One Model 1540 Durango — AMD Liverpool APU, 155 components, functional zones"/>
 
-AMD Liverpool APU (BGA-1170), 16× SK Hynix DDR3, Southbridge X861949, SK Hynix eMMC — 155 components, 9 functional zones (CPU, memory, power, I/O, debug, storage, network)
+AMD Liverpool APU (BGA-1170), 8× SK Hynix DDR3, Southbridge X861949, SK Hynix eMMC — 150 components, 12 functional zones (CPU, memory, power, I/O, debug, storage, network)
 
 </td>
 <td width="50%">
@@ -62,7 +62,7 @@ Intel Atom C2508 (Rangeley), Xilinx Spartan-6 Trust Anchor FPGA, 4x DDR3 ECC —
 
 ### Visualization Modes
 
-Five output modes per board — static overlays plus an interactive layered SVG with Google Maps-style layer toggles:
+Seven output modes per board — static overlays, pinout close-ups, and an interactive layered SVG with Google Maps-style layer toggles:
 
 <table>
 <tr><th colspan="3">Cisco ASA 5506-X (Thrangrycat target)</th></tr>
@@ -94,8 +94,8 @@ Thrangrycat path: JTAG (J15) -> CPU (U1) -> FPGA (U6) <- unencrypted SPI flash (
 <td width="33%">
 
 **Annotated Board**
-<img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One Model 1540 annotated board -- AMD Liverpool APU, 155 components"/>
-155 components -- APU, DDR3 banks, Southbridge, eMMC, debug headers
+<img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One Model 1540 annotated board -- AMD Liverpool APU, 150 components"/>
+150 components -- APU, DDR3 banks, Southbridge, eMMC, debug headers
 
 </td>
 <td width="33%">
@@ -108,8 +108,8 @@ JTAG (J5) -> AMD Liverpool APU (U1) -> eMMC (U8), Southbridge (U9)
 <td width="33%">
 
 **Zone Map**
-<img src="docs/examples/xbox_zones.svg" width="100%" alt="Xbox One Model 1540 functional zone map -- 9 zones including CPU, memory, power, I/O, debug"/>
-9 functional zones -- CPU, memory, power, I/O, debug, storage, network
+<img src="docs/examples/xbox_zones.svg" width="100%" alt="Xbox One Model 1540 functional zone map -- 12 zones including CPU, memory, power, I/O, debug"/>
+12 functional zones -- CPU, memory, power, I/O, debug, storage, network
 
 </td>
 </tr>
@@ -125,14 +125,57 @@ Grouped by type, color-coded badges, per-component confidence bars
 <td width="50%">
 
 **Xbox One Model 1540 BOM**
-<img src="docs/examples/xbox_bom_table.svg" width="100%" alt="Xbox One Model 1540 BOM — 155 components with identification confidence"/>
-155 components with OCR confidence and part identification
+<img src="docs/examples/xbox_bom_table.svg" width="100%" alt="Xbox One Model 1540 BOM — 150 components with identification confidence"/>
+150 components with OCR confidence and part identification
+
+</td>
+</tr>
+<tr><th colspan="3">Pinout Diagrams — Annotated Debug Header Close-Ups</th></tr>
+<tr>
+<td width="33%">
+
+**Cisco JTAG (J15)**
+<img src="docs/examples/cisco_JTAG_pinout.svg" width="100%" alt="Cisco ASA 5506-X JTAG pinout -- 20-pin ARM standard with J-Link, Bus Pirate, FTDI wiring"/>
+20-pin ARM standard JTAG. TDI/TDO/TCK/TMS/TRST labeled, probe wiring for J-Link, Bus Pirate, FTDI
+
+</td>
+<td width="33%">
+
+**Cisco UART (J10)**
+<img src="docs/examples/cisco_UART_pinout.svg" width="100%" alt="Cisco ASA 5506-X UART console pinout -- TX/RX/GND with baud rate guide"/>
+Serial console. TX/RX/GND labeled, Bus Pirate and FTDI FT232 wiring, common baud rates
+
+</td>
+<td width="33%">
+
+**Xbox JTAG (J5)**
+<img src="docs/examples/xbox_JTAG_pinout.svg" width="100%" alt="Xbox One Model 1540 JTAG pinout -- debug header with probe wiring guide"/>
+JTAG debug header. Pin labels, J-Link / Bus Pirate / FTDI / OpenOCD wiring tables
+
+</td>
+</tr>
+<tr><th colspan="3">Interactive Layered SVG — Google Maps-Style Layer Toggles</th></tr>
+<tr>
+<td width="50%" colspan="2">
+
+**Cisco ASA 5506-X**
+<img src="docs/examples/cisco_interactive.svg" width="100%" alt="Cisco ASA 5506-X interactive SVG -- 8 toggleable layers, 6 view presets"/>
+8 layers: Board Image, Components, Traces, Zones, Security, BOM, Net Labels, Grid Ref. 6 presets: Analysis, Attack Surface, Zones, Debug, Clean, All. [Open in browser →](https://ericrihm.github.io/retrace/examples/cisco_interactive.svg)
+
+</td>
+<td width="50%">
+
+**Xbox One Model 1540**
+<img src="docs/examples/xbox_interactive.svg" width="100%" alt="Xbox One Model 1540 interactive SVG -- 8 toggleable layers"/>
+Self-contained SVG with JavaScript-powered floating control panel. No server needed. [Open in browser →](https://ericrihm.github.io/retrace/examples/xbox_interactive.svg)
 
 </td>
 </tr>
 </table>
 
 > **Interactive layered SVG**: `retrace scan board.jpg --format svg` generates a single self-contained SVG with **8 toggleable layers** and **6 view presets** — like switching between satellite and terrain on Google Maps. Layers: Board Image, Components, Traces, Zones, Security, BOM Panel, Net Labels, Grid Reference. Presets: Analysis (default), Attack Surface, Zones, Debug, Clean Board, All Layers. JavaScript-powered floating control panel — open in any browser, no server needed.
+
+> **Pinout diagrams**: `retrace pinout board.jpg` crops the board image around each detected debug interface, labels every pin by function (data, clock, power, ground, control, debug), and includes probe wiring guides for J-Link, Bus Pirate, FTDI FT232H, ST-Link V2, flashrom, and OpenOCD. Supports JTAG (20/14/10-pin), SWD (10/4/2-pin), UART (4/3/6-pin), SPI (8/6/4-pin), and I2C (4/2-pin) layouts. Voltage warnings and common baud rate references included.
 
 > **Assessment reports**: `retrace report-html board.jpg` generates a self-contained HTML deliverable with executive summary, security findings (CWE hyperlinks, CVSS 3.1 scores, MITRE ATT&CK technique IDs), sortable component inventory (datasheet links), and print-friendly styling. Live previews: [Cisco ASA 5506-X report](https://ericrihm.github.io/retrace/examples/cisco_report.html) · [Xbox One report](https://ericrihm.github.io/retrace/examples/xbox_report.html)
 
@@ -281,8 +324,8 @@ retrace scan board_photo.jpg --bom
 # Search FCC filings + iFixit teardowns
 retrace search "xbox one"
 
-# Full analysis with SVG overlay output
-retrace scan board_photo.jpg --format svg --output analysis.svg
+# Full analysis with interactive layered SVG output
+retrace scan board_photo.jpg --format svg --output ./analysis
 
 # Extract copper traces as annotated SVG
 retrace trace board_photo.jpg --output traces.svg
@@ -656,7 +699,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->8304<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->9684<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: 16 commands (scan, search, trace, advise, identify, debug, learn, compare, cross-board, export, export-kicad, batch, pinout, report, report-html, ui)
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -695,10 +738,10 @@ src/retrace/                             # <!-- STATS:loc -->8304<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->767<!-- /STATS --> |
-| Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
-| Modules | <!-- STATS:modules -->24<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->21850<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->768<!-- /STATS --> |
+| Coverage | <!-- STATS:coverage -->90%<!-- /STATS --> |
+| Modules | <!-- STATS:modules -->23<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->21990<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -710,7 +753,7 @@ src/retrace/                             # <!-- STATS:loc -->8304<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->675<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->768<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
@@ -727,7 +770,7 @@ The demo boards use synthetic PCB images with verified real-world component data
 
 | Board | Components | Traces | Zones | Security Findings |
 |---|---|---|---|---|
-| **Xbox One (Model 1540)** | 155 (22 ICs, 10 connectors, 44 caps, 20 resistors, 10 test points) | 55+ | 9 | JTAG header (HIGH) |
+| **Xbox One (Model 1540)** | 150 (34 ICs, 10 connectors, 56 caps, 29 resistors, 15 test points, 5 inductors, 1 crystal) | 68 | 12 | JTAG header (HIGH) |
 | **Cisco ASA 5506-X** | 177 (20 ICs, 8 RJ45, 20 CPU caps, 10 FPGA caps, 8 DDR3 caps, 16 VRMs, 16 network magnetics, 10 test points) | 88 | 16 | JTAG + UART console + Thrangrycat SPI path (HIGH/MED) |
 
 The device registry covers **10 product families** with 48 hardware revisions: Xbox One/Series, PlayStation 5, Nintendo Switch, Steam Deck, Raspberry Pi, Ubiquiti UniFi, Ring Doorbell, Cisco ASA, and Cisco Catalyst — including SoC specs, FCC IDs, iFixit guide IDs, and security advisories (Thrangrycat, AVR54, ArcaneDoor).
