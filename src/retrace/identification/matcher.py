@@ -3,13 +3,17 @@
 from __future__ import annotations
 
 import difflib
+import json
+from pathlib import Path
 from typing import Optional
 
 from retrace.core.pipeline import Component
 
 # ---------------------------------------------------------------------------
-# Hardcoded component database — extends at runtime via learn()
+# Hardcoded component database — extends at runtime via learn_component()
 # ---------------------------------------------------------------------------
+
+LEARNED_DB_PATH: Path = Path.home() / ".local" / "share" / "retrace" / "learned_components.json"
 
 _COMPONENT_DB: list[dict] = [
     # -----------------------------------------------------------------------
@@ -1091,6 +1095,76 @@ def _build_lookup() -> dict[str, dict]:
 
 
 _LOOKUP = _build_lookup()
+
+
+def _load_learned_components(path: Path = LEARNED_DB_PATH) -> None:
+    """Load persisted learned components and extend _COMPONENT_DB and _LOOKUP.
+
+    Called once at module import time. Safe to call repeatedly — duplicate
+    entries are skipped if the part key already exists in _LOOKUP.
+    """
+    if not path.exists():
+        return
+    try:
+        entries: list[dict] = json.loads(path.read_text())
+    except (json.JSONDecodeError, OSError):
+        return
+    if not isinstance(entries, list):
+        return
+    for entry in entries:
+        if not isinstance(entry, dict) or "part" not in entry:
+            continue
+        part_upper = entry["part"].upper()
+        if part_upper in _LOOKUP:
+            continue
+        _COMPONENT_DB.append(entry)
+        _LOOKUP[part_upper] = entry
+        for alias in entry.get("aliases", []):
+            alias_upper = alias.upper()
+            if alias_upper not in _LOOKUP:
+                _LOOKUP[alias_upper] = entry
+
+
+def learn_component(entry: dict, path: Path = LEARNED_DB_PATH) -> None:
+    """Add a new component to the runtime DB and persist it to disk.
+
+    Args:
+        entry: Dict describing the component. Must contain at least a ``part``
+            key. Optional keys: ``aliases``, ``category``, ``manufacturer``,
+            ``package``, ``datasheet``, ``description``.
+        path: Override the persist path (useful in tests).
+
+    Raises:
+        ValueError: If *entry* is missing the required ``part`` key.
+    """
+    if "part" not in entry:
+        raise ValueError("learn_component: entry must contain a 'part' key")
+
+    # Update in-memory structures
+    _COMPONENT_DB.append(entry)
+    _LOOKUP[entry["part"].upper()] = entry
+    for alias in entry.get("aliases", []):
+        _LOOKUP[alias.upper()] = entry
+
+    # Load existing persisted entries, append, save atomically
+    existing: list[dict] = []
+    if path.exists():
+        try:
+            existing = json.loads(path.read_text())
+            if not isinstance(existing, list):
+                existing = []
+        except (json.JSONDecodeError, OSError):
+            existing = []
+
+    existing.append(entry)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(json.dumps(existing, indent=2))
+    tmp.replace(path)
+
+
+# Extend DB with any previously learned components at import time.
+_load_learned_components()
 
 
 def _best_fuzzy_match(marking: str, threshold: float = 0.55) -> Optional[dict]:

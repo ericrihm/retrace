@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import json
 
 from retrace.core.pipeline import Component
 from retrace.identification.matcher import identify_components, lookup_part
+import retrace.identification.matcher as matcher_mod
 
 
 # ---------------------------------------------------------------------------
@@ -90,3 +92,103 @@ def test_identify_components_returns_same_list():
     ]
     returned = identify_components(components)
     assert returned is components
+
+
+# ---------------------------------------------------------------------------
+# Tests: learn_component()
+# ---------------------------------------------------------------------------
+
+class TestLearnComponent:
+    """Tests for the learn_component() function and _load_learned_components()."""
+
+    _NEW_PART = {
+        "part": "TESTPART9999",
+        "aliases": ["TESTPART", "TP9999"],
+        "category": "test",
+        "manufacturer": "Acme",
+        "package": "DIP8",
+        "datasheet": "https://example.com/testpart.pdf",
+        "description": "Fictional test component",
+    }
+
+    def _patch_path(self, monkeypatch, tmp_path):
+        """Redirect LEARNED_DB_PATH to a temp dir for isolation."""
+        fake_path = tmp_path / "learned_components.json"
+        monkeypatch.setattr(matcher_mod, "LEARNED_DB_PATH", fake_path)
+        return fake_path
+
+    def test_learn_component_adds_to_db(self, monkeypatch, tmp_path):
+        """learn_component() must extend _COMPONENT_DB and _LOOKUP at runtime."""
+        fake_path = self._patch_path(monkeypatch, tmp_path)
+
+        initial_db_len = len(matcher_mod._COMPONENT_DB)
+        matcher_mod.learn_component(self._NEW_PART, path=fake_path)
+
+        assert len(matcher_mod._COMPONENT_DB) == initial_db_len + 1
+        assert "TESTPART9999" in matcher_mod._LOOKUP
+        assert "TESTPART" in matcher_mod._LOOKUP
+        assert "TP9999" in matcher_mod._LOOKUP
+        assert matcher_mod._LOOKUP["TESTPART9999"]["manufacturer"] == "Acme"
+
+        # Clean up in-memory state so other tests are unaffected
+        matcher_mod._COMPONENT_DB.pop()
+        del matcher_mod._LOOKUP["TESTPART9999"]
+        del matcher_mod._LOOKUP["TESTPART"]
+        del matcher_mod._LOOKUP["TP9999"]
+
+    def test_learn_component_persists_to_disk(self, monkeypatch, tmp_path):
+        """learn_component() must write the entry to LEARNED_DB_PATH."""
+        fake_path = self._patch_path(monkeypatch, tmp_path)
+
+        entry = {**self._NEW_PART, "part": "DISKPART0001"}
+        matcher_mod.learn_component(entry, path=fake_path)
+
+        assert fake_path.exists(), "JSON file should be created on disk"
+        saved = json.loads(fake_path.read_text())
+        assert isinstance(saved, list)
+        parts = [e["part"] for e in saved]
+        assert "DISKPART0001" in parts
+
+        # Subsequent call appends rather than overwrites
+        entry2 = {**self._NEW_PART, "part": "DISKPART0002"}
+        matcher_mod.learn_component(entry2, path=fake_path)
+        saved2 = json.loads(fake_path.read_text())
+        assert len(saved2) == 2
+
+        # Clean up in-memory state
+        for p in ("DISKPART0001", "DISKPART0002", "TESTPART", "TP9999"):
+            matcher_mod._LOOKUP.pop(p, None)
+        matcher_mod._COMPONENT_DB[:] = [
+            e for e in matcher_mod._COMPONENT_DB
+            if e.get("part") not in ("DISKPART0001", "DISKPART0002")
+        ]
+
+    def test_learn_component_validates_part_key(self, monkeypatch, tmp_path):
+        """learn_component() must raise ValueError if 'part' is missing."""
+        fake_path = self._patch_path(monkeypatch, tmp_path)
+
+        import pytest
+        with pytest.raises(ValueError, match="part"):
+            matcher_mod.learn_component({"aliases": ["NOPE"]}, path=fake_path)
+
+    def test_learned_components_loaded_on_import(self, monkeypatch, tmp_path):
+        """_load_learned_components() must extend _COMPONENT_DB from disk."""
+        fake_path = self._patch_path(monkeypatch, tmp_path)
+
+        # Pre-populate the file as if a previous session had saved it
+        pre_entry = {**self._NEW_PART, "part": "PRELOADED_PART"}
+        fake_path.write_text(json.dumps([pre_entry]))
+
+        initial_db_len = len(matcher_mod._COMPONENT_DB)
+        matcher_mod._load_learned_components(path=fake_path)
+
+        assert len(matcher_mod._COMPONENT_DB) == initial_db_len + 1
+        assert "PRELOADED_PART" in matcher_mod._LOOKUP
+
+        # Clean up
+        matcher_mod._COMPONENT_DB[:] = [
+            e for e in matcher_mod._COMPONENT_DB if e.get("part") != "PRELOADED_PART"
+        ]
+        matcher_mod._LOOKUP.pop("PRELOADED_PART", None)
+        matcher_mod._LOOKUP.pop("TESTPART", None)
+        matcher_mod._LOOKUP.pop("TP9999", None)

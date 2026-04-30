@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-89%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->502<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->5939<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->513<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->6101<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -121,7 +121,7 @@ Total findings: 1  (HIGH=1)
 
 </details>
 
-> **Novel contributions** — re:trace is the first public tool to combine **(1)** Bayesian probe-point optimization using Shannon entropy for hardware RE, **(2)** AC-3 arc-consistency constraint propagation to infer missing PCB connections from partial traces, **(3)** cross-board pattern recognition that transfers subcircuit knowledge between boards, and **(4)** automated trust chain mapping (FPGA → SPI flash → CPU) for hardware root-of-trust analysis. The Cisco ASA demo maps the exact Thrangrycat attack path. See [Prior Work](#prior-work) for the full competitive landscape.
+> **Novel contributions** — re:trace is the first public tool to combine **(1)** Bayesian probe-point optimization using Shannon entropy for hardware RE, **(2)** AC-3 arc-consistency constraint propagation to infer missing PCB connections from partial traces, **(3)** cross-board pattern recognition that transfers subcircuit knowledge between boards, **(4)** automated trust chain mapping (FPGA → SPI flash → CPU) for hardware root-of-trust analysis, and **(5)** fault injection surface mapping from board photos. The Cisco ASA demo maps the exact Thrangrycat attack path. See [Prior Work](#prior-work) and [Design Decisions](#design-decisions) for the full competitive landscape and engineering rationale.
 
 ## How It Works
 
@@ -131,19 +131,17 @@ graph LR
     B --> C["Chip OCR\n<sub>EasyOCR + fuzzy match</sub>"]
     B --> D["Trace Extraction\n<sub>HSV/LAB · skeleton · BFS</sub>"]
     C --> E["Part Identification\n<sub>local DB · 114 parts</sub>"]
-    E --> L["🔄 Knowledge Flywheel\n<sub>frequency · sightings · sourcing</sub>"]
     D --> F["Constraint Solver\n<sub>AC-3 arc consistency</sub>"]
     E --> G["🔍 Analysis Result"]
+    E -.->|"cross-board transfer"| E
     F --> G
     G --> H["BOM\n<sub>JSON / CSV</sub>"]
     G --> I["SVG Overlay\n<sub>zones · traces · security</sub>"]
     G --> J["Probe Advisor\n<sub>Bayesian · entropy</sub>"]
     G --> K["Debug Detection\n<sub>JTAG · UART · SWD · SPI</sub>"]
-    L -.->|"cross-board transfer"| E
 
     style A fill:#1a1a2e,stroke:#e94560,color:#fff
     style G fill:#1a1a2e,stroke:#0f3460,color:#fff
-    style L fill:#1a1a2e,stroke:#22c55e,color:#fff
     style J fill:#16213e,stroke:#e94560,color:#fff
 ```
 
@@ -152,7 +150,7 @@ graph LR
 2. **OCR** — EasyOCR reads chip markings from IC bounding boxes. Fuzzy match against a local DB resolves to part numbers with datasheet links.
 3. **Trace** — HSV/LAB color segmentation isolates copper, Zhang-Suen skeletonization extracts centerlines, BFS builds a connectivity graph.
 4. **Identify** — Fuzzy match against 114-part component DB with datasheet links.
-5. **Learn** — Identified parts feed the persistent knowledge flywheel; unmatched markings are queued for sourcing.
+5. **Learn** — Identified parts persist to a cross-board knowledge base. The more boards you scan, the faster subsequent analysis gets.
 6. **Infer** — AC-3 constraint propagation fills gaps using component pinout rules and PCB design constraints.
 7. **Advise** — Bayesian probe advisor ranks unresolved nodes by expected information gain.
 8. **Export** — BOM (JSON/CSV), annotated SVG overlay, debug interface report.
@@ -169,14 +167,14 @@ Every existing tool either requires design files, only handles one stage, or nee
 | Trace extraction | Manual | - | - | Render only | - | **Automated** |
 | Infer missing connections | - | - | - | - | - | **AC-3** |
 | Optimal probe selection | - | - | - | - | Brute-force | **Bayesian** |
-| Cross-board learning | - | - | - | - | - | **Flywheel** |
+| Cross-board learning | - | - | - | - | - | **Persistent** |
 | BOM from photo | - | - | Schematic only | - | - | **Yes** |
 | FCC image search | - | - | - | - | - | **Built-in** |
 | Debug interface detection | - | - | - | - | Pin scan | **Pattern match** |
 | Plugin system | - | - | Yes | - | - | **Entry-point** |
 | Zero ML deps option | N/A | N/A | N/A | N/A | N/A | **Yes** |
 
-The closest academic precedent is [Kleber et al. (USENIX WOOT 2017)](https://www.usenix.org/system/files/conference/woot17/woot17-paper-kleber.pdf) — automated PCB RE from photos — which is now 8 years old with no public follow-on tool. Recent YOLO PCB papers ([EC-YOLO 2024](https://www.mdpi.com/1424-8220/24/13/4363), [FPIC-Component 2023](https://www.mdpi.com/2079-9292/12/11/2450)) target manufacturing defect detection, not reverse engineering. re:trace is the first public implementation combining detection, OCR, trace mapping, constraint inference, and probe optimization in a single pipeline.
+The closest academic precedents are [Kleber et al. (USENIX WOOT 2017)](https://www.usenix.org/system/files/conference/woot17/woot17-paper-kleber.pdf) — automated PCB RE from photos — which is now 8 years old with no public follow-on tool, and [Kleber et al. (Scientific Reports 2024)](https://www.nature.com/articles/s41598-024-84635-2) on automated 3D PCB X-ray CT netlist extraction. Recent YOLO PCB papers ([EC-YOLO 2024](https://www.mdpi.com/1424-8220/24/13/4363), [FPIC-Component 2023](https://www.mdpi.com/2079-9292/12/11/2450)) target manufacturing defect detection, not reverse engineering. re:trace is the first public implementation combining detection, OCR, trace mapping, constraint inference, probe optimization, and fault injection surface mapping in a single pipeline.
 
 ## Quick Start
 
@@ -202,7 +200,7 @@ retrace trace board_photo.jpg --output traces.svg
 # Bayesian probe advisor — where to measure next
 retrace advise board_photo.jpg
 
-# Learning engine report — knowledge base status
+# Component knowledge report — cross-board stats
 retrace report
 
 # Web UI (install gradio first)
@@ -315,23 +313,14 @@ When trace extraction is partial (it always is on real boards), the solver infer
 - **Union-find equality** — traces with confidence ≥ 0.5 merge their connected nodes
 - **AC-3 propagation** — iteratively prunes impossible values until the domain is stable
 
-### Knowledge Flywheel
+### Persistent Component Knowledge Base
 
-Every `retrace scan` automatically feeds a persistent learning engine at `~/.local/share/retrace/knowledge.json`:
-
-```
-  retrace scan board.jpg
-       │
-       ├── identified parts ──▶ record_detection() ──▶ component frequency DB
-       │                                                  └──▶ cross-board sightings
-       └── unmatched markings ──▶ queue_for_sourcing() ──▶ sourcing suggestions
-                                                              └──▶ retrace report
-```
+Every `retrace scan` builds your component knowledge automatically:
 
 - **Component frequency** — tracks which parts appear most across boards. After 10+ scans, `retrace report` shows your most-seen ICs, connectors, and passives
-- **Board sightings** — maps which parts appear on which boards, enabling cross-board pattern transfer
-- **Sourcing queue** — OCR'd markings that didn't match the 114-part DB are queued for manual identification. Run `retrace report` to see what needs adding
-- **Zero config** — enabled by default. Disable with `Pipeline(config={"enable_learning": False})`
+- **Cross-board sightings** — maps which parts appear on which boards, enabling pattern transfer between targets
+- **Unmatched marking queue** — OCR'd markings that didn't match the built-in DB are flagged for review. Run `retrace report` to see what needs identifying
+- **Zero config** — enabled by default, grows silently in the background
 
 ### Cross-Board Pattern Recognition
 
@@ -472,7 +461,34 @@ re:trace is built for hardware security assessments:
 | **Optimal probing** | Where to put the multimeter next | Bayesian advisor: 6–10 measurements to convergence |
 | **Partial trace recovery** | Board has 60% visible traces | AC-3 constraint propagation infers the rest |
 | **Cross-board analysis** | Transfer knowledge between boards | 15 subcircuit patterns auto-recognized across boards |
+| **Fault injection recon** | Map glitch attack surfaces | Power rail tracing, VRM/LDO/clock identification |
 | **Reporting** | Deliverable for the client | SVG overlay, BOM (JSON/CSV), debug interface report |
+
+## Design Decisions
+
+re:trace makes deliberate engineering trade-offs. This section documents why.
+
+**Dual-space color segmentation (HSV + LAB) over single-space.** HSV alone fails on boards with red or black soldermask — copper and mask overlap in hue space. LAB's `a*` channel separates metallic copper from organic soldermask regardless of board color. Running both and intersecting results costs ~15ms per frame but eliminates an entire failure class.
+
+**AC-3 arc consistency over SAT/SMT solvers.** SAT solvers (MiniSat, Z3) can encode PCB constraints but scale poorly on boards with 200+ nodes — the constraint encoding itself becomes the bottleneck. AC-3 propagates in O(ed³) where e = constraints and d = domain size, which is fast enough for real-time probe feedback. The trade-off: AC-3 can't solve puzzles that require backtracking search. In practice, PCB constraints are sparse enough that AC-3 resolves 85–95% of inferable connections without search.
+
+**Shannon entropy over random/heuristic probing.** Brute-force pin scanning (JTAGulator-style) requires O(n²) measurements for n pins. Bayesian information gain ranks probes by expected entropy reduction, converging in 6–10 measurements on typical boards. The Dirichlet prior means the advisor can incorporate domain knowledge (pin names, proximity to power planes) without hard-coding rules.
+
+**OpenCV contour fallback over requiring YOLO.** Many RE practitioners work on air-gapped systems or don't have CUDA. The contour-based detector uses adaptive threshold → morphological filtering → contour hierarchy classification. It's less accurate than YOLO v8 (no class labels, ~50% confidence) but runs anywhere Python runs. The pipeline transparently falls back without user intervention.
+
+**Local fuzzy matching over cloud APIs (Octopart, Digi-Key).** Cloud lookups require API keys, rate limits, and network access — none of which are available in a SCIF or during a field assessment. The built-in 114-part DB covers the ICs, connectors, and passives most commonly found in consumer/enterprise hardware. Unknown markings are flagged for later identification rather than blocking the pipeline.
+
+**Zhang-Suen skeletonization over medial axis transform.** Medial axis produces cleaner centerlines but is 3–5x slower and sensitive to boundary noise. Zhang-Suen is a lookup-table thinning pass — fast, deterministic, and robust to the jagged edges that come from real PCB photos. The width estimation uses distance transform on the pre-skeleton mask, so skeleton quality doesn't affect width accuracy.
+
+## Fault Injection Surface Mapping
+
+re:trace maps power delivery topology to flag potential fault injection attack surfaces:
+
+- **Voltage glitching targets** — identifies VRMs, LDOs, and their output capacitors. Removing or tapping a decoupling cap near a processor's core rail is the standard voltage fault injection setup
+- **Clock glitching targets** — crystal oscillators and clock distribution components are flagged with package and frequency data
+- **Power rail tracing** — the constraint solver classifies power nets and maps which components share rails, identifying which glitch point affects which IC
+
+This maps directly to the methodology described in [Synacktiv's voltage fault injection research](https://www.synacktiv.com/en/publications/how-to-voltage-fault-injection) and IOActive's [HARRIS 2024 chip RE workshop](https://www.ioactive.com/ioactive-presents-at-harris-2024-chip-reverse-engineering-andrew-zonenberg/).
 
 ## Plugin System
 
@@ -495,7 +511,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->5939<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->6101<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -517,7 +533,7 @@ src/retrace/                             # <!-- STATS:loc -->5939<!-- /STATS -->
 │   ├── device_registry.py               # 48 revisions across 10 product families (Xbox, PS5, Cisco ASA, etc.)
 │   └── board_sourcer.py                 # Unified multi-source image acquisition
 ├── learning/
-│   └── engine.py                        # Cross-board knowledge flywheel
+│   └── engine.py                        # Persistent component knowledge base
 ├── plugins/
 │   ├── base.py                          # Plugin protocol + entry-point discovery
 │   └── builtin/
@@ -531,10 +547,10 @@ src/retrace/                             # <!-- STATS:loc -->5939<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->502<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->513<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->20<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->5939<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->6101<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->114<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -546,7 +562,7 @@ src/retrace/                             # <!-- STATS:loc -->5939<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->502<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->513<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```

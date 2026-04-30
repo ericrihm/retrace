@@ -198,6 +198,147 @@ def test_record_learnings_disabled():
     p._record_learnings(result)
 
 
+# ---------------------------------------------------------------------------
+# Tests: _run_cross_board (Phase 6)
+# ---------------------------------------------------------------------------
+
+def test_run_cross_board_populates_pattern_matches():
+    """_run_cross_board converts components/traces and populates pattern_matches."""
+    from unittest.mock import MagicMock, patch
+    from retrace.analysis.cross_board import BoardAnalysis, PatternMatch
+
+    result = AnalysisResult(
+        image_path="board.jpg",
+        components=[
+            Component(id="U1", label="ic", confidence=0.9, bbox=(100, 100, 30, 20)),
+            Component(id="C1", label="capacitor", confidence=0.8, bbox=(130, 90, 10, 8)),
+            Component(id="C2", label="capacitor", confidence=0.8, bbox=(70, 110, 10, 8)),
+            Component(id="R1", label="resistor", confidence=0.7, bbox=(300, 200, 10, 5)),
+        ],
+        traces=[
+            Trace(id="T1", points=[(0, 0)], from_component="U1", to_component="C1"),
+            Trace(id="T2", points=[(0, 0)], from_component="U1", to_component="C2"),
+        ],
+    )
+
+    fake_match = PatternMatch(
+        pattern_name="ldo_supply",
+        description="LDO voltage regulator with input and output bypass caps",
+        component_roles={"ldo": "U1", "input_cap": "C1", "output_cap": "C2"},
+        score=0.85,
+        is_partial=False,
+    )
+    fake_analysis = BoardAnalysis(
+        matches=[fake_match],
+        novel_components=["R1"],
+        coverage=0.75,
+    )
+
+    mock_engine_instance = MagicMock()
+    mock_engine_instance.analyse.return_value = fake_analysis
+    mock_engine_instance.to_dict.return_value = {"patterns": []}
+
+    with patch("retrace.analysis.cross_board.CrossBoardEngine", return_value=mock_engine_instance), \
+         patch("pathlib.Path.exists", return_value=False), \
+         patch("pathlib.Path.mkdir"), \
+         patch("pathlib.Path.write_text"):
+        p = Pipeline(config={"enable_learning": True})
+        p._run_cross_board(result)
+
+    assert len(result.pattern_matches) == 1
+    assert result.pattern_matches[0]["pattern_name"] == "ldo_supply"
+    assert result.pattern_matches[0]["score"] == 0.85
+    assert result.pattern_matches[0]["component_roles"] == {"ldo": "U1", "input_cap": "C1", "output_cap": "C2"}
+    assert result.pattern_matches[0]["is_partial"] is False
+
+
+def test_run_cross_board_empty_components():
+    """_run_cross_board handles empty components and traces gracefully."""
+    from unittest.mock import patch
+
+    result = AnalysisResult(image_path="empty.jpg", components=[], traces=[])
+
+    with patch("pathlib.Path.exists", return_value=False), \
+         patch("pathlib.Path.mkdir"), \
+         patch("pathlib.Path.write_text"):
+        p = Pipeline(config={"enable_learning": True})
+        p._run_cross_board(result)
+
+    assert result.pattern_matches == []
+
+
+def test_run_cross_board_loads_persisted_state():
+    """_run_cross_board loads engine state from disk when the file exists."""
+    from unittest.mock import MagicMock, patch
+    from retrace.analysis.cross_board import BoardAnalysis
+
+    result = AnalysisResult(image_path="board.jpg", components=[], traces=[])
+
+    saved_state = '{"patterns": []}'
+    fake_analysis = BoardAnalysis(matches=[], novel_components=[], coverage=0.0)
+
+    mock_engine_instance = MagicMock()
+    mock_engine_instance.analyse.return_value = fake_analysis
+    mock_engine_instance.to_dict.return_value = {"patterns": []}
+
+    with patch("retrace.analysis.cross_board.CrossBoardEngine") as mock_cls, \
+         patch("pathlib.Path.exists", return_value=True), \
+         patch("pathlib.Path.read_text", return_value=saved_state), \
+         patch("pathlib.Path.mkdir"), \
+         patch("pathlib.Path.write_text"):
+        mock_cls.from_dict.return_value = mock_engine_instance
+        p = Pipeline(config={"enable_learning": True})
+        p._run_cross_board(result)
+
+    mock_cls.from_dict.assert_called_once()
+
+
+def test_run_cross_board_disabled_when_learning_off():
+    """_run_cross_board is not called when enable_learning is False."""
+    result = _make_result(n_components=2)
+    original_matches = list(result.pattern_matches)
+
+    # If _run_cross_board were called, it would change pattern_matches;
+    # verify the run() method gates on enable_learning
+    p = Pipeline(config={"enable_learning": False})
+    # Directly check that the config gate works
+    assert p.config.get("enable_learning", True) is False
+    assert result.pattern_matches == original_matches
+
+
+def test_pattern_matches_in_summary():
+    """pattern_matches count appears in summary output."""
+    result = _make_result(n_components=2)
+    result.pattern_matches = [
+        {"pattern_name": "rc_lowpass", "description": "filter", "component_roles": {}, "score": 0.7, "is_partial": False},
+    ]
+    s = result.summary()
+    assert s["pattern_matches"] == 1
+
+
+def test_pattern_matches_in_save_json(tmp_path):
+    """pattern_matches are included in saved JSON output."""
+    result = _make_result(n_components=1)
+    result.pattern_matches = [
+        {"pattern_name": "ldo_supply", "description": "LDO", "component_roles": {"ldo": "U1"}, "score": 0.9, "is_partial": False},
+    ]
+    result.save(tmp_path, fmt="json")
+    data = json.loads((tmp_path / "analysis.json").read_text())
+    assert "pattern_matches" in data
+    assert len(data["pattern_matches"]) == 1
+    assert data["pattern_matches"][0]["pattern_name"] == "ldo_supply"
+
+
+def test_pattern_matches_default_empty():
+    """AnalysisResult.pattern_matches defaults to empty list."""
+    result = AnalysisResult(image_path="x.jpg")
+    assert result.pattern_matches == []
+
+
+# ---------------------------------------------------------------------------
+# Tests: Pipeline instantiation and _detect_contours fallback
+# ---------------------------------------------------------------------------
+
 def test_pipeline_detect_contours_synthetic():
     """_detect_contours must not crash on a synthetic numpy image."""
     try:

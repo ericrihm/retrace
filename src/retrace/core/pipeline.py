@@ -46,6 +46,7 @@ class AnalysisResult:
     duration_seconds: float = 0.0
     pipeline_version: str = "0.1.0"
     timestamp: str = ""
+    pattern_matches: list[dict] = field(default_factory=list)
 
     def summary(self) -> dict:
         by_label = {}
@@ -57,6 +58,7 @@ class AnalysisResult:
             "components_by_type": by_label,
             "traces": len(self.traces),
             "identified": sum(1 for c in self.components if c.part_number),
+            "pattern_matches": len(self.pattern_matches),
             "duration_seconds": round(self.duration_seconds, 2),
         }
 
@@ -70,6 +72,7 @@ class AnalysisResult:
                 "image": self.image_path,
                 "components": [asdict(c) for c in self.components],
                 "traces": [asdict(t) for t in self.traces],
+                "pattern_matches": self.pattern_matches,
                 "summary": self.summary(),
             }
             (output_dir / "analysis.json").write_text(json.dumps(data, indent=2) + "\n")
@@ -131,6 +134,10 @@ class Pipeline:
         # Phase 5: Learning — record detections and queue unmatched parts
         if self.config.get("enable_learning", True):
             self._record_learnings(result)
+
+        # Phase 6: Cross-board pattern recognition
+        if self.config.get("enable_learning", True):
+            self._run_cross_board(result)
 
         result.duration_seconds = time.time() - start
         logger.info(f"Analysis complete in {result.duration_seconds:.1f}s")
@@ -218,6 +225,87 @@ class Pipeline:
             return identify_components(components)
         except ImportError:
             return components
+
+    def _run_cross_board(self, result: AnalysisResult) -> None:
+        """Phase 6: Cross-board pattern recognition with persistence."""
+        try:
+            from retrace.analysis.cross_board import (
+                BoardComponent,
+                BoardTrace,
+                CrossBoardEngine,
+            )
+        except ImportError:
+            return
+
+        state_dir = Path.home() / ".local" / "share" / "retrace"
+        state_file = state_dir / "cross_board.json"
+
+        # Load persisted engine state or start fresh
+        if state_file.exists():
+            try:
+                data = json.loads(state_file.read_text())
+                engine = CrossBoardEngine.from_dict(data)
+                logger.info("Phase 6: Loaded cross-board engine state")
+            except Exception:
+                logger.warning("Phase 6: Could not load cross-board state, starting fresh")
+                engine = CrossBoardEngine()
+        else:
+            engine = CrossBoardEngine()
+
+        # Convert pipeline components to BoardComponent format
+        board_components = []
+        for c in result.components:
+            x, y, w, h = c.bbox
+            cx, cy = x + w / 2.0, y + h / 2.0
+            board_components.append(BoardComponent(
+                ref=c.id,
+                kind=c.label,
+                pins=[],
+                location=(cx, cy),
+                attributes={"value": c.value, "package": c.package} if c.value or c.package else {},
+            ))
+
+        # Convert pipeline traces to BoardTrace format
+        board_traces = []
+        for t in result.traces:
+            if t.from_component and t.to_component:
+                board_traces.append(BoardTrace(
+                    ref_a=t.from_component,
+                    pin_a="",
+                    ref_b=t.to_component,
+                    pin_b="",
+                    confidence=1.0,
+                ))
+
+        # Run analysis
+        logger.info(f"Phase 6: Cross-board analysis on {len(board_components)} components, {len(board_traces)} traces...")
+        analysis = engine.analyse(board_components, board_traces)
+
+        # Store matches on result
+        result.pattern_matches = [
+            {
+                "pattern_name": m.pattern_name,
+                "description": m.description,
+                "component_roles": m.component_roles,
+                "score": m.score,
+                "is_partial": m.is_partial,
+            }
+            for m in analysis.matches
+        ]
+
+        logger.info(
+            f"  Found {len(analysis.matches)} pattern matches, "
+            f"coverage={analysis.coverage:.0%}, "
+            f"{len(analysis.novel_components)} novel components"
+        )
+
+        # Persist updated engine state
+        try:
+            state_dir.mkdir(parents=True, exist_ok=True)
+            state_file.write_text(json.dumps(engine.to_dict(), indent=2) + "\n")
+            logger.info("  Saved cross-board engine state")
+        except Exception:
+            logger.warning("  Could not save cross-board engine state")
 
     def _record_learnings(self, result: AnalysisResult) -> None:
         try:
