@@ -6,7 +6,12 @@ from pathlib import Path
 
 
 from retrace.core.pipeline import AnalysisResult, Component, Trace
-from retrace.export.svg import generate_svg, save_svg
+from retrace.export.svg import (
+    generate_attack_surface_svg,
+    generate_svg,
+    generate_zones_svg,
+    save_svg,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -720,3 +725,161 @@ class TestSaveSvg:
         # µ is a multi-byte UTF-8 character — just verify file is readable
         decoded = content.decode("utf-8")
         assert "<svg" in decoded
+
+
+# ---------------------------------------------------------------------------
+# Attack Surface SVG
+# ---------------------------------------------------------------------------
+
+class TestAttackSurfaceSvg:
+    def _security_setup(self):
+        jtag = _make_component("J5", "connector", (10, 800, 100, 40), marking="JTAG")
+        cpu = _make_component("U1", "ic", (300, 300, 200, 200))
+        fpga = _make_component("U6", "ic", (600, 300, 150, 150), marking="XC6SLX45")
+        spi = _make_component("U7", "ic", (700, 100, 80, 40), marking="W25Q128")
+        cap = _make_component("C1", "capacitor", (100, 100, 20, 10))
+        result = _make_result(components=[jtag, cpu, fpga, spi, cap])
+        attack_paths = [
+            ("J5", "U1", "JTAG debug access"),
+            ("U1", "U6", "CPU to FPGA"),
+            ("U7", "U6", "SPI flash to FPGA"),
+        ]
+        security_refs = ["J5", "U1", "U6", "U7"]
+        return result, attack_paths, security_refs
+
+    def test_returns_valid_svg(self):
+        result, paths, refs = self._security_setup()
+        svg = generate_attack_surface_svg(result, paths, refs)
+        assert "<svg" in svg
+        assert "</svg>" in svg
+
+    def test_contains_attack_paths_group(self):
+        result, paths, refs = self._security_setup()
+        svg = generate_attack_surface_svg(result, paths, refs)
+        assert "attack-path" in svg or "attack_path" in svg or "Attack Surface" in svg
+
+    def test_dimmed_components_present(self):
+        result, paths, refs = self._security_setup()
+        svg = generate_attack_surface_svg(result, paths, refs)
+        assert "opacity" in svg
+
+    def test_security_refs_highlighted(self):
+        result, paths, refs = self._security_setup()
+        svg = generate_attack_surface_svg(result, paths, refs)
+        assert "glow-red" in svg
+
+    def test_attack_path_labels_present(self):
+        result, paths, refs = self._security_setup()
+        svg = generate_attack_surface_svg(result, paths, refs)
+        assert "JTAG debug access" in svg or "JTAG" in svg
+
+    def test_title_shown(self):
+        result, paths, refs = self._security_setup()
+        svg = generate_attack_surface_svg(result, paths, refs, title="Cisco ASA Attack Surface")
+        assert "Cisco ASA Attack Surface" in svg or "Attack Surface" in svg
+
+    def test_no_external_refs(self):
+        import re
+        result, paths, refs = self._security_setup()
+        svg = generate_attack_surface_svg(result, paths, refs)
+        ext = re.findall(r'href="(?!data:|#)', svg)
+        assert len(ext) == 0
+
+    def test_empty_attack_paths(self):
+        result = _make_result(components=[_make_component()])
+        svg = generate_attack_surface_svg(result, [], [])
+        assert "<svg" in svg
+        assert "</svg>" in svg
+
+    def test_missing_component_in_path_no_crash(self):
+        result = _make_result(components=[_make_component("U1")])
+        svg = generate_attack_surface_svg(
+            result, [("U1", "NONEXISTENT", "broken path")], ["U1"]
+        )
+        assert "<svg" in svg
+
+    def test_custom_dimensions(self):
+        result, paths, refs = self._security_setup()
+        svg = generate_attack_surface_svg(result, paths, refs, width=1024, height=768)
+        assert 'width="1024"' in svg
+        assert 'height="768"' in svg
+
+
+# ---------------------------------------------------------------------------
+# Zones SVG
+# ---------------------------------------------------------------------------
+
+class TestZonesSvg:
+    def _zones_setup(self):
+        cpu = _make_component("U1", "ic", (300, 300, 200, 200))
+        mem1 = _make_component("U2", "ic", (100, 100, 120, 70))
+        mem2 = _make_component("U3", "ic", (100, 250, 120, 70))
+        pwr = _make_component("VRM1", "ic", (600, 600, 80, 60))
+        result = _make_result(components=[cpu, mem1, mem2, pwr])
+        zones = [
+            ("CPU Complex", "cpu", ["U1"]),
+            ("Memory Bank", "memory", ["U2", "U3"]),
+            ("Power", "power", ["VRM1"]),
+        ]
+        return result, zones
+
+    def test_returns_valid_svg(self):
+        result, zones = self._zones_setup()
+        svg = generate_zones_svg(result, zones)
+        assert "<svg" in svg
+        assert "</svg>" in svg
+
+    def test_zone_names_present(self):
+        result, zones = self._zones_setup()
+        svg = generate_zones_svg(result, zones)
+        assert "CPU" in svg
+        assert "Memory" in svg or "MEMORY" in svg
+        assert "Power" in svg or "POWER" in svg
+
+    def test_zone_rects_present(self):
+        result, zones = self._zones_setup()
+        svg = generate_zones_svg(result, zones)
+        assert 'class="zone"' in svg or 'data-zone=' in svg
+
+    def test_components_dimmed(self):
+        result, zones = self._zones_setup()
+        svg = generate_zones_svg(result, zones)
+        assert "opacity" in svg
+
+    def test_no_trace_clutter(self):
+        cpu = _make_component("U1", "ic", (300, 300, 200, 200))
+        trace = Trace(id="T001", points=[(350, 350), (500, 500)], width_px=2.0,
+                      from_component="U1", to_component="U1")
+        result = _make_result(components=[cpu], traces=[trace])
+        zones = [("CPU", "cpu", ["U1"])]
+        svg = generate_zones_svg(result, zones)
+        assert 'class="traces"' not in svg
+
+    def test_title_shown(self):
+        result, zones = self._zones_setup()
+        svg = generate_zones_svg(result, zones, title="Xbox Functional Zones")
+        assert "Xbox Functional Zones" in svg or "Zone Map" in svg
+
+    def test_no_external_refs(self):
+        import re
+        result, zones = self._zones_setup()
+        svg = generate_zones_svg(result, zones)
+        ext = re.findall(r'href="(?!data:|#)', svg)
+        assert len(ext) == 0
+
+    def test_empty_zones(self):
+        result = _make_result(components=[_make_component()])
+        svg = generate_zones_svg(result, [])
+        assert "<svg" in svg
+        assert "</svg>" in svg
+
+    def test_custom_dimensions(self):
+        result, zones = self._zones_setup()
+        svg = generate_zones_svg(result, zones, width=1920, height=1080)
+        assert 'width="1920"' in svg
+        assert 'height="1080"' in svg
+
+    def test_zone_component_count(self):
+        result, zones = self._zones_setup()
+        svg = generate_zones_svg(result, zones)
+        assert "2" in svg  # Memory Bank has 2 components

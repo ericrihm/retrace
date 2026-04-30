@@ -7,11 +7,11 @@
 *Identifies components, extracts traces, maps trust chains, and tells you where to probe. No schematics. No NDA. No design files.*
 
 [![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://pypi.org/project/retrace-pcb/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://github.com/ericrihm/retrace)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-86%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->513<!-- /STATS --> tests** · **<!-- STATS:modules -->20<!-- /STATS --> modules** · **<!-- STATS:loc -->6500<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->533<!-- /STATS --> tests** · **<!-- STATS:modules -->21<!-- /STATS --> modules** · **<!-- STATS:loc -->6756<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
 
@@ -22,7 +22,7 @@
 Feed it a board photo. Get back identified components, traced connections, debug interfaces, and Bayesian-optimal probe points -- no microscope, no schematic, no prior knowledge of the board required.
 
 ```bash
-pip install retrace-pcb
+pip install git+https://github.com/ericrihm/retrace.git
 retrace scan board_photo.jpg
 ```
 
@@ -360,7 +360,7 @@ re:trace tells you *where* to probe. Here's *what* to probe with — optimized f
 2. `retrace advise board.jpg` — get probe priority list ranked by information gain
 3. Solder 30AWG wire to highest-EIG test point under microscope, strain-relief with kapton tape
 4. Connect logic analyzer, auto-detect baud in PulseView
-5. `retrace advise board.jpg --update` — feed measurement back, get next probe point
+5. Feed measurement back into the model, re-run `retrace advise` for updated rankings
 6. Repeat until convergence (typically 6–10 measurements)
 
 </details>
@@ -575,7 +575,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->6500<!-- /STATS --> lines across <!-- STATS:modules -->20<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:loc -->6756<!-- /STATS --> lines across <!-- STATS:modules -->21<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -611,10 +611,10 @@ src/retrace/                             # <!-- STATS:loc -->6500<!-- /STATS -->
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->513<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->533<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->86%<!-- /STATS --> |
-| Modules | <!-- STATS:modules -->20<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->6500<!-- /STATS --> |
+| Modules | <!-- STATS:modules -->21<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->6756<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -626,7 +626,7 @@ src/retrace/                             # <!-- STATS:loc -->6500<!-- /STATS -->
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->513<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->533<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
