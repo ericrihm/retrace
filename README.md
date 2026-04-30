@@ -11,9 +11,9 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-89%25-green.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->671<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->8226<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->671<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->8247<!-- /STATS --> LOC** · **Zero required ML deps**
 
-[Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples)
+[Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/)
 
 </div>
 
@@ -300,6 +300,16 @@ retrace report-html board_photo.jpg --output assessment.html
 
 # KiCad netlist — import into EDA for schematic reconstruction
 retrace export-kicad board_photo.jpg --output board.net
+
+# Cross-board subcircuit pattern analysis — 15 known patterns
+retrace cross-board board_photo.jpg
+
+# Export scan results in any format
+retrace export board_photo.jpg --format csv --output ./results
+
+# Teach the tool a new part (persists across sessions)
+retrace learn STM32F030 --manufacturer ST --package LQFP-48 --category mcu \
+  --datasheet https://www.st.com/resource/en/datasheet/stm32f030c8.pdf
 
 # Component knowledge report — cross-board stats
 retrace report
@@ -636,8 +646,8 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:loc -->8226<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
-├── cli.py                               # Click CLI: scan, search, trace, advise, ui, report
+src/retrace/                             # <!-- STATS:loc -->8247<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
+├── cli.py                               # Click CLI: 16 commands (scan, search, trace, advise, identify, debug, learn, compare, cross-board, export, export-kicad, report, report-html, ui)
 ├── web.py                               # Gradio web interface
 ├── core/
 │   ├── pipeline.py                      # Orchestrator: photo → AnalysisResult
@@ -677,7 +687,7 @@ src/retrace/                             # <!-- STATS:loc -->8226<!-- /STATS -->
 | Tests | <!-- STATS:tests -->671<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->89%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->23<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->8226<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->8247<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 

@@ -164,13 +164,18 @@ def _build_executive_summary(
             count = by_sev.get(sev, 0)
             if count:
                 parts.append(f"{count} {sev}")
-        lines.append(f"Security scan detected {', '.join(parts)} severity finding{'s' if len(findings) != 1 else ''}.")
+        max_cvss = max((f.get("cvss_base") or 0 for f in findings), default=0)
+        cvss_note = f" (max CVSS {max_cvss})" if max_cvss else ""
+        lines.append(f"Security scan detected {', '.join(parts)} severity finding{'s' if len(findings) != 1 else ''}{cvss_note}.")
         debug_count = sum(1 for f in findings if f["severity"] == "HIGH")
         if debug_count:
             lines.append(
-                f"{debug_count} debug interface{'s' if debug_count != 1 else ''} "
-                f"detected requiring physical access controls."
+                f"{debug_count} exposed debug interface{'s' if debug_count != 1 else ''} "
+                f"requiring physical access controls."
             )
+        attack_ids = sorted({tid for f in findings for tid in (f.get("mitre_attack") or [])})
+        if attack_ids:
+            lines.append(f"Mapped to MITRE ATT&amp;CK technique{'s' if len(attack_ids) != 1 else ''}: {', '.join(attack_ids)}.")
     else:
         lines.append("No exposed debug interfaces detected.")
 
@@ -582,7 +587,23 @@ def generate_html_report(
     _a(f'<div class="exec-summary">{exec_text}</div>')
     _a("</section>")
 
-    # ── 3. Security Findings ────────────────────────────────────────
+    # ── 3. Methodology ────────────────────────────────────────────
+    _a('<section class="section">')
+    _a("<h2>Methodology</h2>")
+    _a('<div style="color:var(--text-mid);font-size:13px;line-height:1.7;">')
+    _a("<p>This assessment was performed using automated PCB reverse engineering techniques:</p>")
+    _a("<ol>")
+    _a("<li><strong>Component Detection</strong> &mdash; YOLO v8 object detection with OpenCV contour fallback for air-gapped environments.</li>")
+    _a("<li><strong>OCR &amp; Identification</strong> &mdash; EasyOCR marking extraction with fuzzy matching against a 128-part component database.</li>")
+    _a("<li><strong>Trace Extraction</strong> &mdash; Dual-space (HSV+LAB) color segmentation with Zhang-Suen skeletonization for copper trace mapping.</li>")
+    _a("<li><strong>Constraint Inference</strong> &mdash; AC-3 arc consistency propagation to infer connections not directly visible.</li>")
+    _a("<li><strong>Security Analysis</strong> &mdash; Pattern-matched debug interface detection with CVSS 3.1 scoring and MITRE ATT&amp;CK mapping.</li>")
+    _a("</ol>")
+    _a("<p>Findings are classified per CVSS v3.1 (physical access vector). CWE references follow MITRE CWE v4.x. ATT&amp;CK technique IDs reference both Enterprise (T1200) and ICS (T0839, T0845) matrices.</p>")
+    _a("</div>")
+    _a("</section>")
+
+    # ── 4. Security Findings ────────────────────────────────────────
     _a('<section class="section">')
     _a("<h2>Security Findings</h2>")
     if findings:
