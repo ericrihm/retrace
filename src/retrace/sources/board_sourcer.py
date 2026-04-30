@@ -15,7 +15,7 @@ from retrace.sources.ifixit import download_guide_images, search_ifixit
 
 logger = logging.getLogger(__name__)
 
-_DEFAULT_DEST = Path.home() / ".retrace" / "images"
+_DEFAULT_DEST = Path.home() / ".local" / "share" / "retrace" / "images"
 
 
 def download_all(

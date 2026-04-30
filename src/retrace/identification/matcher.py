@@ -440,12 +440,12 @@ _COMPONENT_DB: list[dict] = [
         "description": "1A linear regulator, 12V fixed output",
     },
     {
-        "part": "LM7833",
-        "aliases": ["7833", "L7833"],
+        "part": "L7833",
+        "aliases": ["7833", "L7833CV", "L7833ABV"],
         "category": "regulator",
-        "manufacturer": "Texas Instruments",
+        "manufacturer": "STMicroelectronics",
         "package": "TO-220",
-        "datasheet": "https://www.ti.com/lit/ds/symlink/lm7833.pdf",
+        "datasheet": "https://www.st.com/resource/en/datasheet/l78.pdf",
         "description": "1A linear regulator, 3.3V fixed output",
     },
     {
