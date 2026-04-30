@@ -943,3 +943,203 @@ def test_pinout_filter_interface(runner, tmp_path):
         result = runner.invoke(main, ["pinout", str(img), "--interface", "UART"])
     assert result.exit_code == 0
     assert mock_save.call_count == 1
+
+
+# ---------------------------------------------------------------------------
+# debug --output
+# ---------------------------------------------------------------------------
+
+def test_debug_output_file(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    out_file = tmp_path / "debug_findings.txt"
+    mock_result = _make_analysis_result(str(img))
+    debug_output = {
+        "summary": "Found 1 debug interface",
+        "findings": [
+            {
+                "severity": "high",
+                "interface": "JTAG",
+                "description": "Exposed JTAG header",
+                "component_label": "J5",
+                "component_marking": "ARM-JTAG-20",
+                "cve_reference": "CWE-1191",
+            },
+        ],
+    }
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.debug_interfaces.DebugInterfaceAnalyzer.analyze",
+               return_value=debug_output):
+        result = runner.invoke(main, ["debug", str(img), "--output", str(out_file)])
+    assert result.exit_code == 0
+    assert out_file.exists()
+    saved = out_file.read_text()
+    assert "JTAG" in saved
+    assert "Found 1 debug interface" in saved
+
+
+def test_debug_output_file_json(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    out_file = tmp_path / "debug.txt"
+    mock_result = _make_analysis_result(str(img))
+    debug_output = {"summary": "No debug interfaces", "findings": []}
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.debug_interfaces.DebugInterfaceAnalyzer.analyze",
+               return_value=debug_output):
+        result = runner.invoke(main, ["debug", str(img), "--json", "--output", str(out_file)])
+    assert result.exit_code == 0
+    assert out_file.exists()
+    data = json.loads(out_file.read_text())
+    assert data["findings"] == []
+
+
+def test_debug_no_output_flag_no_file(runner, tmp_path):
+    """Without --output, no file should be created."""
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+    debug_output = {"summary": "No debug interfaces", "findings": []}
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.debug_interfaces.DebugInterfaceAnalyzer.analyze",
+               return_value=debug_output):
+        result = runner.invoke(main, ["debug", str(img)])
+    assert result.exit_code == 0
+    assert not any(tmp_path.glob("*.txt"))
+
+
+# ---------------------------------------------------------------------------
+# advise --output
+# ---------------------------------------------------------------------------
+
+def test_advise_output_file(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    out_file = tmp_path / "probe_recs.txt"
+    recs = [
+        {"location": (100, 200), "reason": "High entropy node", "entropy_reduction": 1.5},
+        {"location": (300, 400), "reason": "Unresolved net", "entropy_reduction": 0.8},
+    ]
+    with patch("retrace.analysis.probe_advisor.ProbeAdvisor.recommend", return_value=recs):
+        result = runner.invoke(main, ["advise", str(img), "--output", str(out_file)])
+    assert result.exit_code == 0
+    assert out_file.exists()
+    saved = out_file.read_text()
+    assert "High entropy node" in saved
+    assert "information gain" in saved.lower() or "probe" in saved.lower()
+
+
+def test_advise_output_file_json(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    out_file = tmp_path / "probe.txt"
+    recs = [{"location": (10, 20), "reason": "Test", "entropy_reduction": 0.5}]
+    with patch("retrace.analysis.probe_advisor.ProbeAdvisor.recommend", return_value=recs):
+        result = runner.invoke(main, ["advise", str(img), "--json", "--output", str(out_file)])
+    assert result.exit_code == 0
+    assert out_file.exists()
+    data = json.loads(out_file.read_text())
+    assert isinstance(data, list)
+    assert data[0]["entropy_reduction"] == 0.5
+
+
+def test_advise_no_output_flag_no_file(runner, tmp_path):
+    """Without --output, no file should be created."""
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    recs = [{"location": (100, 200), "reason": "Test", "entropy_reduction": 1.0}]
+    with patch("retrace.analysis.probe_advisor.ProbeAdvisor.recommend", return_value=recs):
+        result = runner.invoke(main, ["advise", str(img)])
+    assert result.exit_code == 0
+    assert not any(tmp_path.glob("*.txt"))
+
+
+# ---------------------------------------------------------------------------
+# solve command
+# ---------------------------------------------------------------------------
+
+def test_solve_help(runner):
+    result = runner.invoke(main, ["solve", "--help"])
+    assert result.exit_code == 0
+    assert "constraint" in result.output.lower() or "solve" in result.output.lower()
+
+
+def test_solve_missing_file(runner):
+    result = runner.invoke(main, ["solve", "/nonexistent/board.jpg"])
+    assert result.exit_code != 0
+
+
+def test_solve_command(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+
+    from retrace.analysis.constraint_solver import SolverResult
+    solver_result = SolverResult(
+        net_assignment={"U1.OUT": "SIGNAL", "R1.A": "SIGNAL"},
+        inferred_traces=[("U1.OUT", "R1.A")],
+        ambiguous_nodes=[],
+        conflicts=[],
+        iterations=3,
+    )
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.analysis.constraint_solver.ConstraintSolver.solve",
+               return_value=solver_result):
+        result = runner.invoke(main, ["solve", str(img)])
+    assert result.exit_code == 0
+    assert "3 iteration" in result.output
+    assert "U1.OUT" in result.output
+    assert "SIGNAL" in result.output
+    assert "Inferred" in result.output
+
+
+def test_solve_output_file(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    out_file = tmp_path / "solve_results.txt"
+    mock_result = _make_analysis_result(str(img))
+
+    from retrace.analysis.constraint_solver import SolverResult
+    solver_result = SolverResult(
+        net_assignment={"U1.VCC": "POWER", "U1.GND": "GROUND"},
+        inferred_traces=[],
+        ambiguous_nodes=["R1.A"],
+        conflicts=[],
+        iterations=5,
+    )
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.analysis.constraint_solver.ConstraintSolver.solve",
+               return_value=solver_result):
+        result = runner.invoke(main, ["solve", str(img), "--output", str(out_file)])
+    assert result.exit_code == 0
+    assert out_file.exists()
+    saved = out_file.read_text()
+    assert "POWER" in saved
+    assert "GROUND" in saved
+    assert "5 iteration" in saved
+    assert f"saved to {out_file}" in result.output
+
+
+def test_solve_with_conflicts(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+
+    from retrace.analysis.constraint_solver import SolverResult
+    solver_result = SolverResult(
+        net_assignment={"U1.OUT": "UNKNOWN"},
+        inferred_traces=[],
+        ambiguous_nodes=["U1.OUT"],
+        conflicts=["Domain wipeout at U1.OUT"],
+        iterations=10,
+    )
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.analysis.constraint_solver.ConstraintSolver.solve",
+               return_value=solver_result):
+        result = runner.invoke(main, ["solve", str(img)])
+    assert result.exit_code == 0
+    assert "Conflicts" in result.output
+    assert "Domain wipeout" in result.output

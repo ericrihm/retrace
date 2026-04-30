@@ -109,7 +109,8 @@ def trace(image: str, output: str) -> None:
 @main.command()
 @click.argument("image", type=click.Path(exists=True))
 @click.option("--json", "as_json", is_flag=True, help="Output as JSON")
-def advise(image: str, as_json: bool) -> None:
+@click.option("--output", "-o", type=click.Path(), help="Save findings to a .txt file")
+def advise(image: str, as_json: bool, output: str) -> None:
     """Bayesian probe point advisor — where to measure next."""
     from retrace.analysis.probe_advisor import ProbeAdvisor
 
@@ -117,13 +118,21 @@ def advise(image: str, as_json: bool) -> None:
     recommendations = advisor.recommend(image)
 
     if as_json:
-        click.echo(json.dumps(recommendations[:10], indent=2))
+        text = json.dumps(recommendations[:10], indent=2)
+        click.echo(text)
+        if output:
+            Path(output).write_text(text)
         return
 
-    click.echo("\nRecommended probe points (by information gain):\n")
+    lines = ["\nRecommended probe points (by information gain):\n"]
     for i, rec in enumerate(recommendations[:5], 1):
-        click.echo(f"  {i}. {rec['location']} — {rec['reason']}")
-        click.echo(f"     Expected info gain: {rec['entropy_reduction']:.2f} bits")
+        lines.append(f"  {i}. {rec['location']} — {rec['reason']}")
+        lines.append(f"     Expected info gain: {rec['entropy_reduction']:.2f} bits")
+    out_text = "\n".join(lines)
+    click.echo(out_text)
+
+    if output:
+        Path(output).write_text(out_text)
 
 
 @main.command()
@@ -176,7 +185,8 @@ def identify(marking: str, as_json: bool) -> None:
 @main.command("debug")
 @click.argument("image", type=click.Path(exists=True))
 @click.option("--json", "as_json", is_flag=True, help="Output as JSON")
-def debug(image: str, as_json: bool) -> None:
+@click.option("--output", "-o", type=click.Path(), help="Save findings to a .txt file")
+def debug(image: str, as_json: bool, output: str) -> None:
     """Detect exposed debug interfaces (JTAG, SWD, UART, SPI) in a PCB photo."""
     from retrace.core.pipeline import Pipeline
     from retrace.plugins.builtin.debug_interfaces import DebugInterfaceAnalyzer
@@ -185,30 +195,112 @@ def debug(image: str, as_json: bool) -> None:
     result = pipeline.run(image)
 
     analyzer = DebugInterfaceAnalyzer()
-    output = analyzer.analyze(result)
+    analyzer_output = analyzer.analyze(result)
 
     if as_json:
-        click.echo(json.dumps(output, indent=2))
+        text = json.dumps(analyzer_output, indent=2)
+        click.echo(text)
+        if output:
+            Path(output).write_text(text)
         return
 
-    click.echo(output["summary"])
-    findings = output.get("findings", [])
+    lines = [analyzer_output["summary"]]
+    findings = analyzer_output.get("findings", [])
     if not findings:
-        click.echo("  No debug interfaces detected.")
+        lines.append("  No debug interfaces detected.")
+        click.echo("\n".join(lines))
+        if output:
+            Path(output).write_text("\n".join(lines))
         return
 
-    click.echo()
+    lines.append("")
     severity_order = {"high": 0, "medium": 1, "low": 2}
     for f in sorted(findings, key=lambda x: severity_order.get(x["severity"], 9)):
         sev = f["severity"].upper()
         cvss = f.get("cvss_base")
         cvss_str = f"  CVSS {cvss}" if cvss else ""
-        click.echo(f"  [{sev}]{cvss_str} {f['interface']} — {f['description']}")
-        click.echo(f"         Component: {f['component_label']} (marking: {f['component_marking']})")
+        lines.append(f"  [{sev}]{cvss_str} {f['interface']} — {f['description']}")
+        lines.append(f"         Component: {f['component_label']} (marking: {f['component_marking']})")
         if f.get("cve_reference"):
-            click.echo(f"         CWE: {f['cve_reference']}")
+            lines.append(f"         CWE: {f['cve_reference']}")
         if f.get("mitre_attack"):
-            click.echo(f"         ATT&CK: {', '.join(f['mitre_attack'])}")
+            lines.append(f"         ATT&CK: {', '.join(f['mitre_attack'])}")
+    out_text = "\n".join(lines)
+    click.echo(out_text)
+
+    if output:
+        Path(output).write_text(out_text)
+
+
+@main.command("solve")
+@click.argument("image", type=click.Path(exists=True))
+@click.option("--output", "-o", type=click.Path(), help="Save results to a .txt file")
+def solve(image: str, output: str) -> None:
+    """Run the constraint solver on a PCB photo — infer net assignments and connections."""
+    from retrace.analysis.constraint_solver import ComponentSpec, ConstraintSolver, Trace, Pin
+    from retrace.core.pipeline import Pipeline
+
+    pipeline = Pipeline()
+    result = pipeline.run(image)
+
+    # Map pipeline components to solver ComponentSpec
+    components = [
+        ComponentSpec(
+            ref=c.id,
+            kind=c.label,
+            pins=[c.marking or "PIN"] if not hasattr(c, "pins") or not getattr(c, "pins", None) else list(c.pins),
+            location=(float(c.bbox[0]), float(c.bbox[1])),
+        )
+        for c in result.components
+    ]
+
+    # Map pipeline traces to solver Trace objects
+    traces = []
+    for t in result.traces:
+        if t.from_component and t.to_component:
+            # Use generic pin names since pipeline traces connect components, not specific pins
+            traces.append(Trace(
+                pin_a=Pin(t.from_component, "OUT"),
+                pin_b=Pin(t.to_component, "IN"),
+                confidence=getattr(t, "confidence", 1.0),
+            ))
+
+    solver = ConstraintSolver()
+    solver_result = solver.solve(components, traces)
+
+    lines = [
+        f"Constraint solver — {solver_result.iterations} iteration(s)",
+        f"  {len(solver_result.net_assignment)} nodes, "
+        f"{len(solver_result.inferred_traces)} inferred connection(s), "
+        f"{len(solver_result.ambiguous_nodes)} ambiguous, "
+        f"{len(solver_result.conflicts)} conflict(s)",
+        "",
+        "Net assignments:",
+    ]
+    for nid, net in sorted(solver_result.net_assignment.items()):
+        lines.append(f"  {nid:30s} -> {net}")
+
+    if solver_result.inferred_traces:
+        lines.append(f"\nInferred connections ({len(solver_result.inferred_traces)}):")
+        for a, b in solver_result.inferred_traces:
+            lines.append(f"  {a} <-> {b}")
+
+    if solver_result.ambiguous_nodes:
+        lines.append(f"\nAmbiguous nodes ({len(solver_result.ambiguous_nodes)}):")
+        for nid in solver_result.ambiguous_nodes:
+            lines.append(f"  {nid}")
+
+    if solver_result.conflicts:
+        lines.append("\nConflicts:")
+        for c in solver_result.conflicts:
+            lines.append(f"  {c}")
+
+    out_text = "\n".join(lines)
+    click.echo(out_text)
+
+    if output:
+        Path(output).write_text(out_text)
+        click.echo(f"\nResults saved to {output}")
 
 
 @main.command("learn")
