@@ -12,6 +12,8 @@ from retrace.export.svg import (
     _resolve_image_href,
     generate_attack_surface_svg,
     generate_bus_topology_svg,
+    generate_diff_svg,
+    generate_lineage_svg,
     generate_power_tree_svg,
     generate_svg,
     generate_zones_svg,
@@ -1170,3 +1172,91 @@ class TestBusTopology:
         result = _make_result(components=[mcu, dev], traces=[t])
         svg = generate_bus_topology_svg(result, width=1000)
         assert 'width="1000"' in svg
+
+
+class TestDiffSvg:
+    def test_identical_results_returns_empty(self):
+        c = Component(id="U1", label="ic", confidence=0.9,
+                      bbox=(10, 10, 50, 50), marking="STM32")
+        a = _make_result(components=[c])
+        b = _make_result(components=[c])
+        assert generate_diff_svg(a, b) == ""
+
+    def test_added_components_shown_green(self):
+        a = _make_result(components=[])
+        c = Component(id="U1", label="ic", confidence=0.9,
+                      bbox=(10, 10, 50, 50), marking="STM32")
+        b = _make_result(components=[c])
+        svg = generate_diff_svg(a, b)
+        assert svg
+        assert "ADDED" in svg
+        assert "#22c55e" in svg
+
+    def test_removed_components_shown_red(self):
+        c = Component(id="U1", label="ic", confidence=0.9,
+                      bbox=(10, 10, 50, 50), marking="STM32")
+        a = _make_result(components=[c])
+        b = _make_result(components=[])
+        svg = generate_diff_svg(a, b)
+        assert svg
+        assert "REMOVED" in svg
+        assert "#ef4444" in svg
+
+    def test_changed_components_shown_amber(self):
+        c1 = Component(id="U1", label="ic", confidence=0.9,
+                       bbox=(10, 10, 50, 50), marking="STM32F103")
+        c2 = Component(id="U1", label="ic", confidence=0.9,
+                       bbox=(10, 10, 50, 50), marking="STM32F407")
+        a = _make_result(components=[c1])
+        b = _make_result(components=[c2])
+        svg = generate_diff_svg(a, b)
+        assert svg
+        assert "CHANGED" in svg
+        assert "#f59e0b" in svg
+
+    def test_unchanged_not_shown_just_counted(self):
+        c = Component(id="U1", label="ic", confidence=0.9,
+                      bbox=(10, 10, 50, 50), marking="STM32")
+        c_new = Component(id="U2", label="ic", confidence=0.9,
+                          bbox=(20, 20, 50, 50), marking="ESP32")
+        a = _make_result(components=[c])
+        b = _make_result(components=[c, c_new])
+        svg = generate_diff_svg(a, b)
+        assert "1 unchanged" in svg
+
+    def test_custom_labels(self):
+        c = Component(id="U1", label="ic", confidence=0.9,
+                      bbox=(10, 10, 50, 50), marking="old")
+        c2 = Component(id="U2", label="ic", confidence=0.9,
+                       bbox=(20, 20, 50, 50), marking="new")
+        a = _make_result(components=[c])
+        b = _make_result(components=[c, c2])
+        svg = generate_diff_svg(a, b, label_a="Rev A", label_b="Rev B")
+        assert "Rev A" in svg
+        assert "Rev B" in svg
+
+
+class TestLineageSvg:
+    def test_empty_boards_returns_empty(self):
+        assert generate_lineage_svg({}, []) == ""
+
+    def test_single_board_returns_empty(self):
+        assert generate_lineage_svg({"board1": 50}, []) == ""
+
+    def test_two_boards_with_edge(self):
+        boards = {"Cisco ASA": 177, "Xbox One": 150}
+        edges = [("Cisco ASA", "Xbox One", 0.45)]
+        svg = generate_lineage_svg(boards, edges)
+        assert svg
+        assert "Cisco ASA" in svg
+        assert "Xbox One" in svg
+        assert "45%" in svg
+        assert "Cross-Board Lineage" in svg
+
+    def test_edge_thickness_scales_with_score(self):
+        boards = {"A": 10, "B": 20, "C": 30}
+        edges = [("A", "B", 0.9), ("A", "C", 0.2)]
+        svg = generate_lineage_svg(boards, edges)
+        assert svg
+        assert 'stroke-width="5"' in svg  # 0.9 * 6 ≈ 5
+        assert 'stroke-width="1"' in svg  # 0.2 * 6 ≈ 1

@@ -12,7 +12,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-99%25-brightgreen.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->1190<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->11506<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->1222<!-- /STATS --> tests** · **<!-- STATS:modules -->24<!-- /STATS --> modules** · **<!-- STATS:loc -->12038<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/) · [Issues](https://github.com/ericrihm/retrace/issues)
 
@@ -717,7 +717,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS --> lines across <!-- STATS:modules -->23<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS --> lines across <!-- STATS:modules -->24<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: 17 commands (scan, search, trace, advise, identify, debug, solve, learn, compare, cross-board, export, export-kicad, batch, pinout, report, report-html, ui)
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -730,9 +730,10 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
 ├── identification/
 │   └── matcher.py                       # Fuzzy part number → datasheet lookup
 ├── analysis/
+│   ├── attack_path.py                   # Chip-to-chip attack path ranking (exploitability scoring)
 │   ├── probe_advisor.py                 # Bayesian optimal probe selection (Shannon entropy)
 │   ├── constraint_solver.py             # AC-3 arc-consistency propagation
-│   └── cross_board.py                   # Cross-board subcircuit pattern matching
+│   └── cross_board.py                   # Cross-board subcircuit pattern matching + lineage tree
 ├── sources/
 │   ├── fcc.py                           # FCC filing scraper (47 CFR § 0.457, public domain)
 │   ├── ifixit.py                        # iFixit API v2.0 client (CC BY-NC-SA)
@@ -749,17 +750,17 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
     ├── html_report.py                   # Self-contained HTML assessment report
     ├── kicad.py                         # KiCad netlist (.net) exporter
     ├── pinout_diagram.py                # Debug header pinout diagrams with probe wiring guides
-    └── svg.py                           # Dark-theme SVG: zones, traces, net classification, security panel, BOM
+    └── svg.py                           # Dark-theme SVG: zones, traces, security, diff, lineage, power tree, bus topology
 ```
 
 ## Stats
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->1190<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->1222<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->99%<!-- /STATS --> |
-| Modules | <!-- STATS:modules -->23<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->11506<!-- /STATS --> |
+| Modules | <!-- STATS:modules -->24<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->12038<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -771,7 +772,7 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->1190<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->1222<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```

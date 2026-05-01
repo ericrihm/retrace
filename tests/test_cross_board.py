@@ -12,6 +12,8 @@ from retrace.analysis.cross_board import (
     PatternMatch,
     PatternNode,
     SubcircuitPattern,
+    build_lineage_tree,
+    compute_board_similarity,
 )
 
 # ---------------------------------------------------------------------------
@@ -395,3 +397,83 @@ class TestScoringLogic:
         # 4*4=16 combos are checked for any pattern — matches are still found
         decoupling_matches = [m for m in result.matches if m.pattern_name == "decoupling_pair"]
         assert len(decoupling_matches) >= 1
+
+
+class TestBoardSimilarity:
+    def test_identical_boards(self):
+        comps = [
+            BoardComponent("U1", "ic", ["1", "2"], (0.0, 0.0),
+                           {"part_number": "STM32F103", "marking": "STM32F103"}),
+            BoardComponent("C1", "capacitor", ["1", "2"], (10.0, 0.0),
+                           {"part_number": "100nF"}),
+        ]
+        assert compute_board_similarity(comps, comps) == 1.0
+
+    def test_no_overlap(self):
+        a = [BoardComponent("U1", "ic", ["1"], (0.0, 0.0),
+                            {"part_number": "STM32F103"})]
+        b = [BoardComponent("U1", "ic", ["1"], (0.0, 0.0),
+                            {"part_number": "ESP32S3"})]
+        sim = compute_board_similarity(a, b)
+        assert sim < 1.0
+
+    def test_empty_boards(self):
+        assert compute_board_similarity([], []) == 0.0
+
+    def test_partial_overlap(self):
+        shared = BoardComponent("U1", "ic", ["1"], (0.0, 0.0),
+                                {"part_number": "W25Q128", "marking": "W25Q128"})
+        a = [shared, BoardComponent("U2", "ic", ["1"], (10.0, 0.0),
+                                    {"part_number": "STM32"})]
+        b = [shared, BoardComponent("U2", "ic", ["1"], (10.0, 0.0),
+                                    {"part_number": "ESP32"})]
+        sim = compute_board_similarity(a, b)
+        assert 0.0 < sim < 1.0
+
+    def test_kind_only_fallback(self):
+        a = [BoardComponent("R1", "resistor", ["1", "2"], (0.0, 0.0))]
+        b = [BoardComponent("R1", "resistor", ["1", "2"], (0.0, 0.0))]
+        sim = compute_board_similarity(a, b)
+        assert sim > 0
+
+
+class TestLineageTree:
+    def test_single_board(self):
+        boards = {"A": [BoardComponent("U1", "ic", ["1"], (0.0, 0.0),
+                                       {"part_number": "STM32"})]}
+        assert build_lineage_tree(boards) == []
+
+    def test_two_similar_boards(self):
+        shared = BoardComponent("U1", "ic", ["1"], (0.0, 0.0),
+                                {"part_number": "STM32F103", "marking": "STM32"})
+        boards = {
+            "Board A": [shared],
+            "Board B": [shared],
+        }
+        edges = build_lineage_tree(boards)
+        assert len(edges) == 1
+        assert edges[0][2] == 1.0
+
+    def test_threshold_filters_low_similarity(self):
+        a = [BoardComponent("U1", "ic", ["1"], (0.0, 0.0),
+                            {"part_number": "STM32F103"})]
+        b = [BoardComponent("U1", "ic", ["1"], (0.0, 0.0),
+                            {"part_number": "COMPLETELY_DIFFERENT_CHIP"})]
+        boards = {"A": a, "B": b}
+        edges = build_lineage_tree(boards, threshold=0.99)
+        assert len(edges) == 0
+
+    def test_sorted_descending(self):
+        shared = BoardComponent("U1", "ic", ["1"], (0.0, 0.0),
+                                {"part_number": "STM32", "marking": "STM32"})
+        different = BoardComponent("U2", "ic", ["1"], (10.0, 0.0),
+                                   {"part_number": "UNIQUE_PART"})
+        boards = {
+            "A": [shared, different],
+            "B": [shared],
+            "C": [shared, BoardComponent("U2", "ic", ["1"], (10.0, 0.0),
+                                         {"part_number": "STM32", "marking": "STM32"})],
+        }
+        edges = build_lineage_tree(boards, threshold=0.0)
+        if len(edges) >= 2:
+            assert edges[0][2] >= edges[1][2]

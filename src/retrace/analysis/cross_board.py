@@ -718,3 +718,84 @@ if __name__ == "__main__":  # pragma: no cover
     d = engine.to_dict()
     engine2 = CrossBoardEngine.from_dict(d)
     print(f"\nRestored engine has {len(engine2.list_patterns())} patterns.")
+
+
+# ── Cross-Board Lineage ──────────────────────────────────────────
+
+
+def compute_board_similarity(
+    comps_a: list[BoardComponent],
+    comps_b: list[BoardComponent],
+) -> float:
+    """Compute weighted Jaccard similarity between two boards.
+
+    IC part numbers and markings are weighted 2× relative to passives.
+    Fuzzy matching (SequenceMatcher ≥ 0.7) is used for IC markings.
+    """
+    from difflib import SequenceMatcher
+
+    if not comps_a or not comps_b:
+        return 0.0
+
+    def _sig(c: BoardComponent) -> tuple[str, str]:
+        pn = c.attributes.get("part_number", "") if c.attributes else ""
+        return (c.kind, pn)
+
+    sigs_a = {_sig(c) for c in comps_a if _sig(c)[1]}
+    sigs_b = {_sig(c) for c in comps_b if _sig(c)[1]}
+
+    if not sigs_a and not sigs_b:
+        kinds_a = {c.kind for c in comps_a}
+        kinds_b = {c.kind for c in comps_b}
+        union = kinds_a | kinds_b
+        if not union:
+            return 0.0
+        return len(kinds_a & kinds_b) / len(union)
+
+    ic_markings_a = [c.attributes.get("marking", "") for c in comps_a
+                     if c.kind == "ic" and c.attributes.get("marking")]
+    ic_markings_b = [c.attributes.get("marking", "") for c in comps_b
+                     if c.kind == "ic" and c.attributes.get("marking")]
+
+    exact_inter = len(sigs_a & sigs_b)
+    exact_union = len(sigs_a | sigs_b)
+
+    fuzzy_matches = 0
+    used_b: set[int] = set()
+    for ma in ic_markings_a:
+        for j, mb in enumerate(ic_markings_b):
+            if j in used_b:
+                continue
+            if SequenceMatcher(None, ma.lower(), mb.lower()).ratio() >= 0.7:
+                fuzzy_matches += 1
+                used_b.add(j)
+                break
+
+    ic_weight = 2.0
+    passive_inter = max(0, exact_inter - fuzzy_matches)
+    weighted_inter = passive_inter + fuzzy_matches * ic_weight
+    weighted_union = max(1, exact_union + fuzzy_matches * (ic_weight - 1))
+
+    return min(1.0, weighted_inter / weighted_union)
+
+
+def build_lineage_tree(
+    boards: dict[str, list[BoardComponent]],
+    threshold: float = 0.15,
+) -> list[tuple[str, str, float]]:
+    """Build a lineage tree from multiple boards.
+
+    Returns (board_a, board_b, similarity) tuples sorted by similarity
+    descending.  Only includes pairs with similarity >= threshold.
+    """
+    names = list(boards.keys())
+    edges: list[tuple[str, str, float]] = []
+
+    for i in range(len(names)):
+        for j in range(i + 1, len(names)):
+            sim = compute_board_similarity(boards[names[i]], boards[names[j]])
+            if sim >= threshold:
+                edges.append((names[i], names[j], sim))
+
+    edges.sort(key=lambda e: e[2], reverse=True)
+    return edges

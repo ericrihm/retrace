@@ -1217,6 +1217,207 @@ def generate_bus_topology_svg(
     return "\n".join(parts)
 
 
+# ── Board Diff SVG ────────────────────────────────────────────────
+
+
+_DIFF_COLORS = {
+    "added": "#22c55e",
+    "removed": "#ef4444",
+    "changed": "#f59e0b",
+    "unchanged": "#334155",
+}
+
+
+def generate_diff_svg(
+    result_a: AnalysisResult,
+    result_b: AnalysisResult,
+    width: int = 900,
+    label_a: str = "Board A",
+    label_b: str = "Board B",
+) -> str:
+    """Generate a visual diff SVG showing component changes between two boards."""
+    comps_a = {c.id: c for c in (result_a.components or [])}
+    comps_b = {c.id: c for c in (result_b.components or [])}
+
+    added = sorted(set(comps_b) - set(comps_a))
+    removed = sorted(set(comps_a) - set(comps_b))
+    common = sorted(set(comps_a) & set(comps_b))
+
+    changed: list[tuple[str, dict[str, tuple[str, str]]]] = []
+    unchanged_count = 0
+    for cid in common:
+        a, b = comps_a[cid], comps_b[cid]
+        diffs: dict[str, tuple[str, str]] = {}
+        if a.label != b.label:
+            diffs["label"] = (a.label, b.label)
+        if a.marking != b.marking:
+            diffs["marking"] = (a.marking, b.marking)
+        if a.part_number != b.part_number:
+            diffs["part_number"] = (a.part_number, b.part_number)
+        if diffs:
+            changed.append((cid, diffs))
+        else:
+            unchanged_count += 1
+
+    total_rows = len(added) + len(removed) + len(changed)
+    if total_rows == 0:
+        return ""
+
+    title_h = 50
+    summary_h = 36
+    row_h = 24
+    header_h = 28
+    pad = 16
+    svg_h = title_h + summary_h + header_h + total_rows * row_h + pad * 2 + 30
+
+    p: list[str] = []
+    p.append(f'<svg xmlns="http://www.w3.org/2000/svg" '
+             f'width="{width}" height="{svg_h}" viewBox="0 0 {width} {svg_h}">')
+    p.append(f'  <rect width="{width}" height="{svg_h}" fill="{_BG}"/>')
+
+    p.append(f'  <rect width="{width}" height="{title_h}" '
+             f'fill="{_PANEL_BG}" fill-opacity="0.92"/>')
+    p.append(f'  <text x="16" y="30" font-family={_q(_FONT)} '
+             f'font-size="14" fill="{_ACCENT}" font-weight="bold">re:trace</text>')
+    p.append(f'  <text x="90" y="30" font-family={_q(_FONT)} '
+             f'font-size="12" fill="{_TEXT_HI}">Board Diff</text>')
+
+    sy = title_h + 24
+    traces_a = len(result_a.traces or [])
+    traces_b = len(result_b.traces or [])
+    summary = (
+        f'{html.escape(label_a)}: {len(comps_a)} components, {traces_a} traces  →  '
+        f'{html.escape(label_b)}: {len(comps_b)} components, {traces_b} traces  |  '
+        f'+{len(added)} added, -{len(removed)} removed, ~{len(changed)} changed'
+    )
+    p.append(f'  <text x="16" y="{sy}" font-family={_q(_FONT)} '
+             f'font-size="10" fill="{_TEXT_MID}">{summary}</text>')
+
+    y = title_h + summary_h
+    p.append(f'  <line x1="16" y1="{y}" x2="{width - 16}" y2="{y}" '
+             f'stroke="{_DIVIDER}" stroke-width="1"/>')
+    y += 4
+
+    p.append(f'  <text x="16" y="{y + 18}" font-family={_q(_FONT)} '
+             f'font-size="9" fill="{_TEXT_LO}" font-weight="bold">ID</text>')
+    p.append(f'  <text x="120" y="{y + 18}" font-family={_q(_FONT)} '
+             f'font-size="9" fill="{_TEXT_LO}" font-weight="bold">TYPE</text>')
+    p.append(f'  <text x="240" y="{y + 18}" font-family={_q(_FONT)} '
+             f'font-size="9" fill="{_TEXT_LO}" font-weight="bold">MARKING</text>')
+    p.append(f'  <text x="{width - 120}" y="{y + 18}" font-family={_q(_FONT)} '
+             f'font-size="9" fill="{_TEXT_LO}" font-weight="bold">STATUS</text>')
+    y += header_h
+
+    def _row(cid: str, label: str, marking: str, status: str, color: str) -> None:
+        nonlocal y
+        p.append(f'  <text x="16" y="{y + 16}" font-family={_q(_FONT)} '
+                 f'font-size="10" fill="{color}">{html.escape(cid)}</text>')
+        p.append(f'  <text x="120" y="{y + 16}" font-family={_q(_FONT)} '
+                 f'font-size="9" fill="{_TEXT_MID}">{html.escape(label)}</text>')
+        p.append(f'  <text x="240" y="{y + 16}" font-family={_q(_FONT)} '
+                 f'font-size="9" fill="{_TEXT_MID}">{html.escape(marking[:40])}</text>')
+        bw = len(status) * 7 + 12
+        p.append(f'  <rect x="{width - 122}" y="{y + 4}" width="{bw}" height="16" '
+                 f'rx="3" fill="{color}" fill-opacity="0.15"/>')
+        p.append(f'  <text x="{width - 116}" y="{y + 16}" font-family={_q(_FONT)} '
+                 f'font-size="8" fill="{color}" font-weight="bold">{status}</text>')
+        y += row_h
+
+    for cid in added:
+        c = comps_b[cid]
+        _row(cid, c.label, c.marking, "ADDED", _DIFF_COLORS["added"])
+
+    for cid in removed:
+        c = comps_a[cid]
+        _row(cid, c.label, c.marking, "REMOVED", _DIFF_COLORS["removed"])
+
+    for cid, diffs in changed:
+        c_b = comps_b[cid]
+        detail = ", ".join(f"{k}: {v[0]}→{v[1]}" for k, v in diffs.items())
+        _row(cid, c_b.label, detail, "CHANGED", _DIFF_COLORS["changed"])
+
+    y += 8
+    p.append(f'  <text x="16" y="{y + 12}" font-family={_q(_FONT)} '
+             f'font-size="9" fill="{_TEXT_LO}">'
+             f'{unchanged_count} unchanged component(s) not shown</text>')
+
+    p.append('</svg>')
+    return "\n".join(p)
+
+
+# ── Lineage Tree SVG ──────────────────────────────────────────────
+
+
+def generate_lineage_svg(
+    boards: dict[str, int],
+    edges: list[tuple[str, str, float]],
+    width: int = 800,
+) -> str:
+    """Generate a lineage tree SVG showing board relationships."""
+    if len(boards) < 2 or not edges:
+        return ""
+
+    import math
+
+    names = list(boards.keys())
+    n = len(names)
+    title_h = 50
+    graph_r = min(width, 600) // 2 - 80
+    cx = width // 2
+    cy = title_h + graph_r + 60
+    svg_h = cy + graph_r + 60
+
+    p: list[str] = []
+    p.append(f'<svg xmlns="http://www.w3.org/2000/svg" '
+             f'width="{width}" height="{svg_h}" viewBox="0 0 {width} {svg_h}">')
+    p.append(f'  <rect width="{width}" height="{svg_h}" fill="{_BG}"/>')
+    p.append(f'  <rect width="{width}" height="{title_h}" '
+             f'fill="{_PANEL_BG}" fill-opacity="0.92"/>')
+    p.append(f'  <text x="16" y="30" font-family={_q(_FONT)} '
+             f'font-size="14" fill="{_ACCENT}" font-weight="bold">re:trace</text>')
+    p.append(f'  <text x="90" y="30" font-family={_q(_FONT)} '
+             f'font-size="12" fill="{_TEXT_HI}">Cross-Board Lineage</text>')
+
+    positions: dict[str, tuple[int, int]] = {}
+    for i, name in enumerate(names):
+        angle = 2 * math.pi * i / n - math.pi / 2
+        nx = int(cx + graph_r * math.cos(angle))
+        ny = int(cy + graph_r * math.sin(angle))
+        positions[name] = (nx, ny)
+
+    for name_a, name_b, score in edges:
+        if name_a in positions and name_b in positions:
+            ax, ay = positions[name_a]
+            bx, by = positions[name_b]
+            sw = max(1, int(score * 6))
+            opacity = 0.3 + score * 0.5
+            mx, my = (ax + bx) // 2, (ay + by) // 2
+            p.append(f'  <line x1="{ax}" y1="{ay}" x2="{bx}" y2="{by}" '
+                     f'stroke="{_ACCENT}" stroke-width="{sw}" '
+                     f'stroke-opacity="{opacity:.2f}"/>')
+            p.append(f'  <text x="{mx}" y="{my - 6}" text-anchor="middle" '
+                     f'font-family={_q(_FONT)} font-size="8" fill="{_TEXT_MID}">'
+                     f'{int(score * 100)}%</text>')
+
+    for name in names:
+        nx, ny = positions[name]
+        count = boards[name]
+        nw = max(110, len(name) * 8 + 20)
+        nh = 36
+        p.append(f'  <rect x="{nx - nw // 2}" y="{ny - nh // 2}" '
+                 f'width="{nw}" height="{nh}" rx="6" '
+                 f'fill="{_PANEL_BG}" stroke="{_ACCENT}" stroke-width="1.5"/>')
+        p.append(f'  <text x="{nx}" y="{ny - 2}" text-anchor="middle" '
+                 f'font-family={_q(_FONT)} font-size="9" fill="{_TEXT_HI}" '
+                 f'font-weight="bold">{html.escape(name)}</text>')
+        p.append(f'  <text x="{nx}" y="{ny + 12}" text-anchor="middle" '
+                 f'font-family={_q(_FONT)} font-size="7" fill="{_TEXT_MID}">'
+                 f'{count} components</text>')
+
+    p.append('</svg>')
+    return "\n".join(p)
+
+
 # ── Power Tree Diagram ─────────────────────────────────────────────
 
 
