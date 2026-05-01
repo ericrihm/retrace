@@ -253,7 +253,7 @@ class TestDownloadGuideImages:
 
     def test_oserror_writing_image_skipped(self, tmp_path):
         """Lines 151-152 — OSError when writing downloaded image is logged and skipped."""
-        from unittest.mock import patch, mock_open
+        from unittest.mock import patch
         steps = [
             {"media": {"data": [{"original": "https://img.example.com/step1.jpg"}]}}
         ]

@@ -140,7 +140,7 @@ def generate_extraction_guide(result: AnalysisResult) -> list[dict[str, Any]]:
             guide["commands"].append({
                 "tool": "flashrom",
                 "description": "Read via flashrom I2C support",
-                "command": f"flashrom -p buspirate_spi:dev=/dev/ttyUSB0 -r eeprom.bin",
+                "command": "flashrom -p buspirate_spi:dev=/dev/ttyUSB0 -r eeprom.bin",
             })
 
         guides.append(guide)

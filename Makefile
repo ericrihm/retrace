@@ -21,7 +21,7 @@ lint-fix:
 	ruff check --fix src/ tests/
 
 typecheck:
-	mypy src/retrace/ --ignore-missing-imports
+	mypy src/retrace/ --ignore-missing-imports --disable-error-code import-untyped
 
 demo:
 	python tools/generate_demo.py generate

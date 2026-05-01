@@ -88,8 +88,6 @@ def detect_glitch_surfaces(board: AnalysisResult) -> list[dict[str, Any]]:
     clock_sources = [c for c in comps if _is_clock_source(c)]
 
     for sec in security_ics:
-        sec_text = _text(sec)
-
         for vr in voltage_regs:
             dist = _distance(sec, vr)
             if dist <= _PROXIMITY_PX:

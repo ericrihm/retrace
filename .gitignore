@@ -18,3 +18,5 @@ venv/
 .flywheel_state.json
 .flywheel_brain.json
 .flywheel_history.jsonl
+board_jtagulator/
+myboard_export/

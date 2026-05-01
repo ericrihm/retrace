@@ -1396,7 +1396,6 @@ class TestPowerTreeRegulatorLabels:
         result = _make_result(components=[ldo])
         # Patch sys.modules to make the import fail for lookup_security_intel
         import sys
-        from unittest.mock import patch
         # Remove the module from sys.modules to force the ImportError path
         matcher_backup = sys.modules.get("retrace.identification.matcher")
         try:

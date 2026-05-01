@@ -4,13 +4,13 @@ from __future__ import annotations
 
 from retrace.core.pipeline import AnalysisResult, Component
 from retrace.plugins.builtin.glitch_surface import (
+    _PROXIMITY_PX,
     GlitchSurfaceAnalyzer,
-    detect_glitch_surfaces,
+    _distance,
+    _is_clock_source,
     _is_security_ic,
     _is_voltage_regulator,
-    _is_clock_source,
-    _distance,
-    _PROXIMITY_PX,
+    detect_glitch_surfaces,
 )
 
 

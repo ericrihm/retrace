@@ -9,8 +9,7 @@ from __future__ import annotations
 
 from xml.sax.saxutils import escape as _esc
 
-from retrace.analysis.firmware_triage import EntropyBlock, MagicMatch, TriageResult
-
+from retrace.analysis.firmware_triage import TriageResult
 
 _CLASSIFICATION_COLORS = {
     "null/padding": "#1a1a2e",
@@ -79,7 +78,7 @@ def generate_entropy_svg(
 
     # Y-axis ticks
     for val in range(0, 9):
-        y = margin_top + graph_height - (val / 8.0 * graph_height)
+        y: float = margin_top + graph_height - (val / 8.0 * graph_height)
         parts.append(
             f'<text x="{margin_left - 5}" y="{y + 3}" text-anchor="end" '
             f'fill="#8b949e" font-size="8">{val}</text>'
@@ -97,11 +96,11 @@ def generate_entropy_svg(
         (6.0, "text", "#3fb950"),
         (7.5, "compressed", "#f0883e"),
     ]
-    for val, label, color in thresholds:
-        y = margin_top + graph_height - (val / 8.0 * graph_height)
+    for thresh_val, label, color in thresholds:
+        ty = margin_top + graph_height - (thresh_val / 8.0 * graph_height)
         parts.append(
-            f'<line x1="{margin_left}" y1="{y}" x2="{margin_left + graph_width}" '
-            f'y2="{y}" stroke="{color}" stroke-width="0.5" stroke-dasharray="4,4" '
+            f'<line x1="{margin_left}" y1="{ty}" x2="{margin_left + graph_width}" '
+            f'y2="{ty}" stroke="{color}" stroke-width="0.5" stroke-dasharray="4,4" '
             f'opacity="0.5"/>'
         )
 
@@ -137,8 +136,8 @@ def generate_entropy_svg(
 
     # Dots on points
     for pt in points:
-        x, y = pt.split(",")
-        parts.append(f'<circle cx="{x}" cy="{y}" r="2" fill="#58a6ff"/>')
+        px, py = pt.split(",")
+        parts.append(f'<circle cx="{px}" cy="{py}" r="2" fill="#58a6ff"/>')
 
     # Heatmap bar below graph
     bar_y = margin_top + graph_height + 15

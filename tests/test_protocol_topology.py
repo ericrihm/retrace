@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
-from retrace.core.pipeline import AnalysisResult, Component, Trace
 from retrace.analysis.protocol_topology import (
     BusTopology,
     _parse_ohms,
@@ -12,7 +9,7 @@ from retrace.analysis.protocol_topology import (
     format_topology,
     infer_topology,
 )
-
+from retrace.core.pipeline import AnalysisResult, Component
 
 # ---------------------------------------------------------------------------
 # Component / board factory helpers
@@ -566,10 +563,8 @@ class TestMultipleBuses:
         can = next((b for b in buses if b.protocol == "CAN"), None)
 
         if spi and can:
-            spi_nodes = set(spi.nodes)
-            can_nodes = set(can.nodes)
-            # Flash chip ID must only appear in SPI
-            assert "U2" not in can_nodes
+            # Flash chip ID must only appear in SPI, not CAN
+            assert "U2" not in set(can.nodes)
 
 
 # ---------------------------------------------------------------------------

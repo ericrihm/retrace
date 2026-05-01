@@ -11,7 +11,6 @@ from retrace.core.pipeline import AnalysisResult, Component
 from retrace.export.bom import generate_bom
 from retrace.export.sbom import bom_to_cyclonedx, bom_to_spdx
 
-
 # ---------------------------------------------------------------------------
 # Test fixtures
 # ---------------------------------------------------------------------------

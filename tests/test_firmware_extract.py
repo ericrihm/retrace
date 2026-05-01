@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from retrace.core.pipeline import AnalysisResult, Component
 from retrace.export.firmware_extract import (
-    generate_extraction_guide,
-    format_extraction_guide,
     _classify_storage,
+    format_extraction_guide,
+    generate_extraction_guide,
 )
 
 

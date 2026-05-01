@@ -3,16 +3,8 @@
 from __future__ import annotations
 
 import os
-import struct
-from pathlib import Path
-
-import pytest
 
 from retrace.analysis.firmware_triage import (
-    EntropyBlock,
-    ExtractedString,
-    MagicMatch,
-    TriageResult,
     _classify_entropy,
     _shannon_entropy,
     compute_entropy_map,
@@ -21,7 +13,6 @@ from retrace.analysis.firmware_triage import (
     format_triage_report,
     triage_firmware,
 )
-
 
 # ---------------------------------------------------------------------------
 # Shannon entropy

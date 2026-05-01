@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
 
     steps:
       - uses: actions/checkout@v4
@@ -28,6 +28,9 @@ jobs:
 
       - name: Lint
         run: ruff check src/ tests/
+
+      - name: Type check
+        run: mypy src/retrace/ --ignore-missing-imports --disable-error-code import-untyped
 
       - name: Test
         run: pytest --cov=retrace --cov-report=xml -q

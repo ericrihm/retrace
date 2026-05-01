@@ -480,6 +480,7 @@ class TestEdgeCases:
         would not be matched first (i.e., result['TRST'] was already None at the start
         of that iteration because no earlier pin set it)."""
         from retrace.export.jtagulator import _jtag_signal_pins
+
         # Pin list: only nTRST — no prior TRST. The inner loop matches TRST in NTRST,
         # setting result["TRST"] = 1 on line 118. Then line 121 checks
         # result["TRST"] is None → False, so line 122 is not reached here.

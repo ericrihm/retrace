@@ -927,8 +927,8 @@ def extract(ctx: click.Context, image: str, as_json: bool, output: str) -> None:
     """
     from retrace.core.pipeline import Pipeline
     from retrace.export.firmware_extract import (
-        generate_extraction_guide,
         format_extraction_guide,
+        generate_extraction_guide,
     )
 
     pipeline = Pipeline()

@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-import zipfile
 import io
+import zipfile
 
 from retrace.export.sigrok import (
+    format_sigrok_summary,
     generate_sigrok_metadata,
     generate_sigrok_session,
     get_decoder_config,
-    format_sigrok_summary,
 )
 
 

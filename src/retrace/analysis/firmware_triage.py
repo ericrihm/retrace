@@ -12,10 +12,8 @@ from __future__ import annotations
 
 import math
 import re
-import struct
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
 
 
 @dataclass
@@ -226,7 +224,7 @@ def triage_firmware(file_path: str | Path, block_size: int = 4096) -> TriageResu
 def format_triage_report(result: TriageResult) -> str:
     """Format triage results as a human-readable report."""
     lines = [
-        f"Firmware Triage Report",
+        "Firmware Triage Report",
         f"{'=' * 60}",
         f"  File: {result.file_path}",
         f"  Size: {result.file_size:,} bytes ({result.file_size / 1024:.1f} KB)",
