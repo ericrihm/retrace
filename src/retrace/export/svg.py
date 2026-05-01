@@ -1184,14 +1184,16 @@ def generate_bus_topology_svg(
 
     for node in nodes:
         nx, ny = node_positions[node.id]
-        nw, nh = 100, 32
+        label = node.marking or node.part_number or node.id
+        nw = max(110, len(label) * 8 + 20)
+        nh = 32
+        color = _LABEL_COLORS.get(node.label, "#22d3ee")
         parts.append(f'  <rect x="{nx - nw // 2}" y="{ny - nh // 2}" '
                      f'width="{nw}" height="{nh}" rx="6" '
-                     f'fill="{_PANEL_BG}" stroke="#22d3ee" stroke-width="1.5"/>')
-        label = node.marking or node.part_number or node.id
+                     f'fill="{_PANEL_BG}" stroke="{color}" stroke-width="1.5"/>')
         parts.append(f'  <text x="{nx}" y="{ny + 4}" text-anchor="middle" '
                      f'font-family={_q(_FONT)} font-size="9" fill="#e2e8f0" '
-                     f'font-weight="bold">{html.escape(label[:14])}</text>')
+                     f'font-weight="bold">{html.escape(label)}</text>')
 
     legend_y = svg_h - 50
     buses_used = sorted(set(b for _, _, b in bus_edges))
@@ -1228,7 +1230,6 @@ def generate_power_tree_svg(
     with voltage rail labels and decoupling capacitor annotations.
     """
     comps = result.components or []
-    traces = result.traces or []
 
     sources: list[Component] = []
     regulators: list[Component] = []
@@ -1259,7 +1260,7 @@ def generate_power_tree_svg(
 
     title_h = 50
     row_h = 60
-    node_w = 120
+    node_w = 140
     node_h = 36
     margin = 40
 
@@ -1289,10 +1290,10 @@ def generate_power_tree_svg(
                      f'rx="6" fill="{_PANEL_BG}" stroke="{color}" stroke-width="1.5"/>')
         parts.append(f'  <text x="{x + node_w // 2}" y="{y + 15}" text-anchor="middle" '
                      f'font-family={_q(_FONT)} font-size="9" fill="{color}" '
-                     f'font-weight="bold">{html.escape(label[:18])}</text>')
+                     f'font-weight="bold">{html.escape(label[:22])}</text>')
         parts.append(f'  <text x="{x + node_w // 2}" y="{y + 28}" text-anchor="middle" '
                      f'font-family={_q(_FONT)} font-size="7" fill="#94a3b8">'
-                     f'{html.escape(sublabel[:22])}</text>')
+                     f'{html.escape(sublabel[:28])}</text>')
 
     def _arrow(x1: int, y1: int, x2: int, y2: int, color: str) -> None:
         parts.append(f'  <line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" '
@@ -1576,7 +1577,7 @@ def _render_interactive_script() -> str:
     """JavaScript for layer toggling, preset switching, and style modes."""
     presets_js = "{"
     for pid, pdef in _PRESET_DEFS.items():
-        layers_str = ",".join(f'"{l}"' for l in pdef["layers"])
+        layers_str = ",".join(f'"{ly}"' for ly in pdef["layers"])
         style = pdef.get("style", "photo")
         presets_js += f'"{pid}":{{"layers":[{layers_str}],"style":"{style}"}},'
     presets_js += "}"

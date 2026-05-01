@@ -2,7 +2,7 @@ re:trace Constraint Solver — Inferred Netlist
 ==================================================
 
 Board: Xbox One Model 1540 — Durango (AMD Liverpool APU, 28nm)
-Timestamp: 2026-05-01T00:43:39Z
+Timestamp: 2026-05-01T01:11:38Z
 AC-3 iterations: 84
 
 Net Assignments (596 nodes):

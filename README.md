@@ -6,6 +6,7 @@
 
 *Identifies components, extracts traces, maps trust chains, and tells you where to probe. No schematics. No NDA. No design files.*
 
+[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/ericrihm/retrace/releases)
 [![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://github.com/ericrihm/retrace)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -13,7 +14,7 @@
 
 **<!-- STATS:tests -->1190<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->11506<!-- /STATS --> LOC** · **Zero required ML deps**
 
-[Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/)
+[Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/) · [Issues](https://github.com/ericrihm/retrace/issues)
 
 </div>
 
@@ -26,6 +27,20 @@ pip install git+https://github.com/ericrihm/retrace.git
 retrace scan board_photo.jpg
 ```
 
+```
+  re:trace v0.1.0 — PCB Reverse Engineering Toolkit
+  ──────────────────────────────────────────────────
+
+  [detect]   Found 177 components (20 ICs, 8 connectors, 56 caps, 29 resistors...)
+  [ocr]      Read 18 IC markings — 16 matched (89%)
+  [trace]    Extracted 88 traces, 269 nodes
+  [identify] Matched: Intel Atom C2508, Xilinx Spartan-6 XC6SLX9, W25Q128JV...
+  [infer]    AC-3: 88 iterations, 3 inferred connections
+  [advise]   Top probe: U1.DDR3_DQ0 (EIG: 4.807 bits)
+  [security] 2 findings: JTAG (HIGH, CVSS 7.6), UART (MEDIUM, CVSS 6.8)
+  [export]   Wrote: annotated.svg, attack_surface.svg, zones.svg, bom.json
+```
+
 ### Built For
 
 - **Hardware penetration testing** -- map debug interfaces, trust chains, and glitch surfaces during IoT/embedded security assessments
@@ -35,7 +50,7 @@ retrace scan board_photo.jpg
 
 ### Demo: Dual-Board Analysis
 
-Two boards. Two worlds. Both analyzed from photos alone.
+Two boards. Two worlds. Both analyzed from photos alone. Demo uses synthetic PCB images with verified real-world component data — see [Known Limitations](#known-limitations) for photo requirements on real boards.
 
 <table>
 <tr>
@@ -767,9 +782,21 @@ CI runs on Python 3.10, 3.11, and 3.12 with coverage uploaded to Codecov.
 
 re:trace is a **read-only analysis tool**. It does not write to target hardware, inject firmware, or exploit vulnerabilities. No exploit code is included or referenced. If you discover a vulnerability using re:trace, please follow [coordinated disclosure](https://www.cisa.gov/coordinated-vulnerability-disclosure-process) practices.
 
+## Known Limitations
+
+**Photo requirements.** re:trace works best with high-resolution top-down photos (≥8MP, even lighting, minimal glare). Angled shots, blurry images, and photos with heavy shadowing degrade detection accuracy. For best results, use a scanner or a phone camera mounted directly above the board.
+
+**Synthetic demo images.** The demo boards (Cisco ASA, Xbox One) use synthetic PCB images with verified real-world component data. The component list, trace routing, and debug interfaces are accurate to the real hardware, but the images are rendered rather than photographed. This means the demo represents the analysis output accurately while avoiding IP/NDA issues with real board photos.
+
+**Trace extraction fidelity.** Copper trace extraction from photos is inherently noisy. Expect 40-70% trace recovery on typical boards — the constraint solver exists specifically to fill the gaps. Multi-layer boards have traces on inner layers that are physically invisible from surface photos.
+
+**Component DB coverage.** The built-in database covers 128 parts. Uncommon or new parts will be OCR'd but not identified. Use `retrace learn` to add parts, or file a PR to expand the DB.
+
+**No inner-layer analysis.** re:trace analyzes the visible surface only. Via stitching, buried traces, and internal planes require X-ray CT imaging (see [Kleber et al. 2024](https://www.nature.com/articles/s41598-024-84635-2)).
+
 ## Tested Hardware
 
-The demo boards use synthetic PCB images with verified real-world component data. The pipeline has been tested against:
+The pipeline has been tested against:
 
 | Board | Components | Traces | Zones | Security Findings |
 |---|---|---|---|---|

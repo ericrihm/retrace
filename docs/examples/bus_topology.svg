@@ -5,27 +5,35 @@
   <text x="90" y="30" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="12" fill="#e2e8f0">Bus Topology Graph</text>
   <line x1="400" y1="110" x2="590" y2="220" stroke="#3b82f6" stroke-width="2" stroke-opacity="0.6"/>
   <text x="495" y="161" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#3b82f6" font-weight="bold">SPI</text>
-  <line x1="400" y1="110" x2="590" y2="439" stroke="#3b82f6" stroke-width="2" stroke-opacity="0.6"/>
-  <text x="495" y="270" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#3b82f6" font-weight="bold">SPI</text>
-  <line x1="400" y1="110" x2="400" y2="550" stroke="#3b82f6" stroke-width="2" stroke-opacity="0.6"/>
-  <text x="400" y="326" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#3b82f6" font-weight="bold">SPI</text>
-  <line x1="400" y1="110" x2="209" y2="440" stroke="#3b82f6" stroke-width="2" stroke-opacity="0.6"/>
-  <text x="304" y="271" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#3b82f6" font-weight="bold">SPI</text>
-  <line x1="400" y1="110" x2="209" y2="219" stroke="#3b82f6" stroke-width="2" stroke-opacity="0.6"/>
-  <text x="304" y="160" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#3b82f6" font-weight="bold">SPI</text>
-  <rect x="350" y="94" width="100" height="32" rx="6" fill="#111827" stroke="#22d3ee" stroke-width="1.5"/>
-  <text x="400" y="114" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0" font-weight="bold">STM32F103 SPI </text>
-  <rect x="540" y="204" width="100" height="32" rx="6" fill="#111827" stroke="#22d3ee" stroke-width="1.5"/>
-  <text x="590" y="224" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0" font-weight="bold">W25Q128 flash</text>
-  <rect x="540" y="423" width="100" height="32" rx="6" fill="#111827" stroke="#22d3ee" stroke-width="1.5"/>
-  <text x="590" y="443" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0" font-weight="bold">AT24C256 eepro</text>
-  <rect x="350" y="534" width="100" height="32" rx="6" fill="#111827" stroke="#22d3ee" stroke-width="1.5"/>
-  <text x="400" y="554" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0" font-weight="bold">JTAG header</text>
-  <rect x="159" y="424" width="100" height="32" rx="6" fill="#111827" stroke="#22d3ee" stroke-width="1.5"/>
-  <text x="209" y="444" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0" font-weight="bold">UART console d</text>
-  <rect x="159" y="203" width="100" height="32" rx="6" fill="#111827" stroke="#22d3ee" stroke-width="1.5"/>
-  <text x="209" y="223" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0" font-weight="bold">USB hub</text>
-  <rect x="20" y="600" width="12" height="12" rx="2" fill="#3b82f6"/>
-  <text x="36" y="610" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">SPI</text>
+  <line x1="400" y1="110" x2="209" y2="219" stroke="#22c55e" stroke-width="2" stroke-opacity="0.6"/>
+  <text x="304" y="160" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#22c55e" font-weight="bold">I2C</text>
+  <line x1="400" y1="110" x2="590" y2="439" stroke="#ef4444" stroke-width="2" stroke-opacity="0.6"/>
+  <text x="495" y="270" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#ef4444" font-weight="bold">JTAG</text>
+  <line x1="400" y1="110" x2="400" y2="550" stroke="#f59e0b" stroke-width="2" stroke-opacity="0.6"/>
+  <text x="400" y="326" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#f59e0b" font-weight="bold">UART</text>
+  <line x1="400" y1="110" x2="209" y2="440" stroke="#a855f7" stroke-width="2" stroke-opacity="0.6"/>
+  <text x="304" y="271" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#a855f7" font-weight="bold">USB</text>
+  <rect x="345" y="94" width="110" height="32" rx="6" fill="#111827" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="400" y="114" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0" font-weight="bold">STM32F103</text>
+  <rect x="535" y="204" width="110" height="32" rx="6" fill="#111827" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="590" y="224" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0" font-weight="bold">W25Q128</text>
+  <rect x="535" y="423" width="110" height="32" rx="6" fill="#111827" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="590" y="443" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0" font-weight="bold">JTAG header</text>
+  <rect x="342" y="534" width="116" height="32" rx="6" fill="#111827" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="400" y="554" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0" font-weight="bold">UART console</text>
+  <rect x="154" y="424" width="110" height="32" rx="6" fill="#111827" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="209" y="444" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0" font-weight="bold">USB hub</text>
+  <rect x="139" y="203" width="140" height="32" rx="6" fill="#111827" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="209" y="223" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0" font-weight="bold">AT24C256 eeprom</text>
+  <rect x="20" y="600" width="12" height="12" rx="2" fill="#22c55e"/>
+  <text x="36" y="610" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">I2C</text>
+  <rect x="90" y="600" width="12" height="12" rx="2" fill="#ef4444"/>
+  <text x="106" y="610" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">JTAG</text>
+  <rect x="160" y="600" width="12" height="12" rx="2" fill="#3b82f6"/>
+  <text x="176" y="610" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">SPI</text>
+  <rect x="230" y="600" width="12" height="12" rx="2" fill="#f59e0b"/>
+  <text x="246" y="610" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">UART</text>
+  <rect x="300" y="600" width="12" height="12" rx="2" fill="#a855f7"/>
+  <text x="316" y="610" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">USB</text>
   <text x="400" y="630" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#64748b">re:trace bus topology — 6 node(s), 5 connection(s)</text>
 </svg>

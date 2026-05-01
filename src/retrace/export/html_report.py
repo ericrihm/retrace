@@ -828,7 +828,6 @@ def generate_html_report(
             else:
                 conf_color = "#ef4444"
             conf_pct = int(conf * 100)
-            conf_width = max(1, int(80 * conf))
 
             ds_url = _safe_url(comp.datasheet_url)
 

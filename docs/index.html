@@ -10,6 +10,16 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ericrihm.github.io/retrace/">
 <meta property="og:image" content="https://ericrihm.github.io/retrace/examples/cisco_annotated.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="re:trace — PCB Reverse Engineering Toolkit">
+<meta name="twitter:description" content="Photo in, attack surface out. Identifies components, extracts traces, maps trust chains.">
+<meta name="twitter:image" content="https://ericrihm.github.io/retrace/examples/cisco_annotated.svg">
+<link rel="canonical" href="https://ericrihm.github.io/retrace/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════
    DESIGN TOKENS
@@ -39,6 +49,8 @@
   --green-glow:  rgba(34,197,94,0.12);
   --orange:      #f97316;
   --orange-glow: rgba(249,115,22,0.12);
+  --yellow:      #eab308;
+  --yellow-glow: rgba(234,179,8,0.12);
   --slate:       #6b7280;
 
   /* Spacing (4px base) */
@@ -82,6 +94,10 @@
 
 body {
   background: var(--bg);
+  background-image:
+    linear-gradient(rgba(30,41,59,0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30,41,59,0.3) 1px, transparent 1px);
+  background-size: 64px 64px;
   color: var(--text);
   font-family: var(--font-sans);
   font-size: var(--text-base);
@@ -94,6 +110,70 @@ a { color: var(--accent); text-decoration: none; transition: color var(--duratio
 a:hover { color: #67e8f9; }
 
 .container { max-width: 1100px; margin: 0 auto; padding: 0 var(--sp-6); }
+
+/* ═══ Sticky Nav ═══ */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 14, 26, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: var(--sp-2) var(--sp-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+}
+.site-nav .nav-brand {
+  font-size: var(--text-lg);
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.03em;
+}
+.site-nav .nav-brand span { color: var(--accent); }
+.site-nav .nav-links {
+  display: flex;
+  gap: var(--sp-4);
+  align-items: center;
+}
+.site-nav .nav-links a {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: color var(--duration-fast);
+}
+.site-nav .nav-links a:hover { color: var(--accent); }
+
+/* ═══ Install block ═══ */
+.install-block {
+  margin: var(--sp-6) auto 0;
+  max-width: 480px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-3) var(--sp-5);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  cursor: pointer;
+  transition: border-color var(--duration-normal);
+}
+.install-block:hover { border-color: var(--accent); }
+.install-block code {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text);
+  flex: 1;
+}
+.install-block .install-hint {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+  white-space: nowrap;
+}
 
 /* ═══ Scroll Animation ═══ */
 .reveal {
@@ -111,7 +191,7 @@ a:hover { color: #67e8f9; }
    ═══════════════════════════════════════════════════════ */
 .hero {
   text-align: center;
-  padding: var(--sp-24) var(--sp-6) var(--sp-16);
+  padding: var(--sp-16) var(--sp-6) var(--sp-12);
   position: relative;
   overflow: hidden;
 }
@@ -631,6 +711,165 @@ section {
 .card-meta a:hover { color: var(--accent); }
 
 /* ═══════════════════════════════════════════════════════
+   FEATURE SPOTLIGHT — Deep-Dive Feature Sections
+   ═══════════════════════════════════════════════════════ */
+.feature-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-8);
+  align-items: center;
+  margin-bottom: var(--sp-16);
+}
+.feature-row.reverse { direction: rtl; }
+.feature-row.reverse > * { direction: ltr; }
+.feature-text h3 {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  margin-bottom: var(--sp-3);
+  letter-spacing: -0.02em;
+}
+.feature-text p {
+  color: var(--text-mid);
+  font-size: var(--text-base);
+  line-height: 1.7;
+  margin-bottom: var(--sp-4);
+}
+.feature-text .feature-detail {
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+  line-height: 1.6;
+  border-left: 2px solid var(--border);
+  padding-left: var(--sp-4);
+}
+.feature-visual {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-6);
+  position: relative;
+  overflow: hidden;
+}
+.feature-visual::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle at top right, var(--accent-glow), transparent 70%);
+  pointer-events: none;
+}
+
+/* Metrics row inside feature sections */
+.metric-row {
+  display: flex;
+  gap: var(--sp-5);
+  margin-top: var(--sp-4);
+}
+.metric {
+  flex: 1;
+}
+.metric-val {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.metric-label {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Terminal mock */
+.terminal-mock {
+  background: #0c0c14;
+  border-radius: var(--radius-lg);
+  padding: var(--sp-4) var(--sp-5);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.7;
+  color: var(--text-mid);
+  overflow-x: auto;
+}
+.terminal-mock .term-prompt { color: var(--green); }
+.terminal-mock .term-cmd { color: var(--text); }
+.terminal-mock .term-dim { color: var(--text-dim); }
+.terminal-mock .term-accent { color: var(--accent); }
+.terminal-mock .term-amber { color: var(--amber); }
+.terminal-mock .term-red { color: var(--red); }
+.terminal-mock .term-green { color: var(--green); }
+.terminal-mock .term-purple { color: var(--purple); }
+
+/* Use-case pills */
+.use-cases {
+  display: flex;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: var(--sp-6) 0 0;
+}
+.use-pill {
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: 999px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  border: 1px solid var(--border);
+  color: var(--text-mid);
+  transition: all var(--duration-normal) var(--ease-out);
+}
+.use-pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-glow);
+}
+
+/* Thrangrycat case study callout */
+.case-study {
+  background: linear-gradient(135deg, rgba(239,68,68,0.06), rgba(168,85,247,0.06));
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-8);
+  margin-top: var(--sp-12);
+  position: relative;
+  overflow: hidden;
+}
+.case-study::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--red), var(--purple));
+}
+.case-study h3 {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  margin-bottom: var(--sp-3);
+  color: var(--red);
+}
+.case-study p {
+  color: var(--text-mid);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+}
+.case-study .attack-chain {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text);
+  flex-wrap: wrap;
+}
+.attack-chain .chain-node {
+  padding: var(--sp-1) var(--sp-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.attack-chain .chain-arrow { color: var(--red); font-weight: 700; }
+
+/* ═══════════════════════════════════════════════════════
    FOOTER
    ═══════════════════════════════════════════════════════ */
 footer {
@@ -657,15 +896,39 @@ footer a { color: var(--text-mid); }
   .pipeline { gap: var(--sp-2); }
   .pipe-arrow { display: none; }
   .pipe-stage { min-width: 80px; padding: var(--sp-3); }
+  .feature-row, .feature-row.reverse { grid-template-columns: 1fr; direction: ltr; }
+  .metric-row { flex-wrap: wrap; }
+  .attack-chain { flex-direction: column; }
 }
 @media (max-width: 480px) {
   .presets-grid { grid-template-columns: 1fr; }
   .card-grid { grid-template-columns: 1fr; }
   .hero h1 { font-size: var(--text-3xl); }
+  .site-nav .nav-links { gap: var(--sp-2); flex-wrap: wrap; }
+  .site-nav .nav-links a { font-size: 10px; }
+  .install-block { flex-direction: column; gap: var(--sp-1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  * { transition-duration: 0s !important; }
 }
 </style>
 </head>
 <body>
+
+<!-- ═══ Nav ═══════════════════════════════════════════ -->
+<nav class="site-nav">
+  <div class="nav-brand">re<span>:</span>trace</div>
+  <div class="nav-links">
+    <a href="#layers">Layers</a>
+    <a href="#boards">Analysis</a>
+    <a href="#intel">Intel</a>
+    <a href="#features">Deep Dives</a>
+    <a href="#reports">Reports</a>
+    <a href="#exports">Exports</a>
+    <a href="https://github.com/ericrihm/retrace">GitHub</a>
+  </div>
+</nav>
 
 <!-- ═══ Hero ══════════════════════════════════════════ -->
 <div class="hero">
@@ -689,6 +952,11 @@ footer a { color: var(--text-mid); }
     <a href="#reports" class="btn btn-ghost">Assessment Reports</a>
   </div>
 
+  <div class="install-block" onclick="navigator.clipboard.writeText('pip install git+https://github.com/ericrihm/retrace.git').then(()=>{const h=this.querySelector('.install-hint');h.textContent='copied!';h.style.color='var(--green)';setTimeout(()=>{h.textContent='click to copy';h.style.color=''},1500)})">
+    <code>$ pip install git+https://github.com/ericrihm/retrace.git</code>
+    <span class="install-hint">click to copy</span>
+  </div>
+
   <!-- Before → After demo -->
   <div class="hero-demo reveal">
     <div class="demo-side">
@@ -702,6 +970,26 @@ footer a { color: var(--text-mid); }
     </div>
   </div>
 </div>
+
+<!-- ═══ Value Prop ═══════════════════════════════════ -->
+<section class="reveal">
+  <div class="container">
+    <div class="card-grid" style="grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); margin-bottom: 0;">
+      <div class="card" style="text-align: center;">
+        <h3 style="color: var(--accent); font-size: var(--text-lg);">No Design Files</h3>
+        <p>Works from a photograph alone. No Gerbers, no schematics, no vendor cooperation needed. Point your phone at a board.</p>
+      </div>
+      <div class="card" style="text-align: center;">
+        <h3 style="color: var(--amber); font-size: var(--text-lg);">Security-First</h3>
+        <p>Every output is threat-informed. CVSS scoring, MITRE ATT&amp;CK mapping, attack path visualization, debug interface enumeration.</p>
+      </div>
+      <div class="card" style="text-align: center;">
+        <h3 style="color: var(--green); font-size: var(--text-lg);">Zero ML Dependencies</h3>
+        <p>YOLO and EasyOCR are optional. Core pipeline runs on pure Python with OpenCV. Works air-gapped on classified networks.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ═══ Pipeline ═════════════════════════════════════ -->
 <section class="reveal">
@@ -1006,6 +1294,132 @@ footer a { color: var(--text-mid); }
   </div>
 </section>
 
+<!-- ═══ Feature Deep Dives ═══════════════════════════ -->
+<section id="features" class="reveal">
+  <div class="container">
+    <div class="section-header">
+      <h2>What Makes re:trace Different</h2>
+      <p>Not just detection — inference, optimization, and learning across boards.</p>
+      <div class="section-divider"></div>
+    </div>
+
+    <!-- Bayesian Probe Advisor -->
+    <div class="feature-row">
+      <div class="feature-text">
+        <h3 style="color: var(--accent);">Bayesian Probe Advisor</h3>
+        <p>Stop guessing where to put your multimeter. The probe advisor maintains a Dirichlet belief distribution per unresolved node and ranks every point by expected Shannon entropy reduction.</p>
+        <div class="feature-detail">Pin-name priors give 10&times; weight to likely labels. After each measurement, beliefs collapse at the probed node and propagate through union-find groups. Voltage, resistance, and continuity readings are auto-classified to net labels.</div>
+        <div class="metric-row">
+          <div class="metric"><div class="metric-val">6&ndash;10</div><div class="metric-label">measurements to converge</div></div>
+          <div class="metric"><div class="metric-val">O(n)</div><div class="metric-label">vs O(n&sup2;) brute-force</div></div>
+          <div class="metric"><div class="metric-val">4.8</div><div class="metric-label">bits avg info gain</div></div>
+        </div>
+      </div>
+      <div class="feature-visual">
+        <div class="terminal-mock">
+          <div><span class="term-prompt">$</span> <span class="term-cmd">retrace advise board.jpg</span></div>
+          <br>
+          <div><span class="term-accent">Top 5 Probe Recommendations</span> <span class="term-dim">(269 nodes, Dirichlet belief)</span></div>
+          <br>
+          <div><span class="term-green">#1</span>  U1.DDR3_DQ0   <span class="term-accent">EIG: 4.807 bits</span>    <span class="term-dim">VCC_CORE (3.6%)</span></div>
+          <div><span class="term-green">#2</span>  U1.DDR3_A0    <span class="term-accent">EIG: 4.807 bits</span>    <span class="term-dim">VCC_CORE (3.6%)</span></div>
+          <div><span class="term-green">#3</span>  U1.PCIE_TX0   <span class="term-accent">EIG: 4.807 bits</span>    <span class="term-dim">VCC_CORE (3.6%)</span></div>
+          <div><span class="term-green">#4</span>  U1.PCIE_RX0   <span class="term-accent">EIG: 4.807 bits</span>    <span class="term-dim">VCC_CORE (3.6%)</span></div>
+          <div><span class="term-green">#5</span>  U1.SATA_TX    <span class="term-accent">EIG: 4.807 bits</span>    <span class="term-dim">VCC_CORE (3.6%)</span></div>
+          <br>
+          <div><span class="term-dim">&gt; Feed measurements back with</span> <span class="term-cmd">retrace advise --update</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Constraint Solver -->
+    <div class="feature-row reverse">
+      <div class="feature-text">
+        <h3 style="color: var(--purple);">AC-3 Constraint Solver</h3>
+        <p>Trace extraction from photos is inherently partial — expect 40&ndash;70% recovery. The constraint solver infers the rest using pinout rules, proximity heuristics, and arc consistency propagation.</p>
+        <div class="feature-detail">Pinout rules enforce MCU VDD→power, GND→ground. Proximity rules link decoupling caps to nearby IC power pins. Differential pair detection, union-find merging of traced connections, and AC-3 propagation iteratively prune impossible values. Runs in O(ed&sup3;) — fast enough for real-time probe feedback loops.</div>
+        <div class="metric-row">
+          <div class="metric"><div class="metric-val">85&ndash;95%</div><div class="metric-label">gaps resolved</div></div>
+          <div class="metric"><div class="metric-val">88</div><div class="metric-label">iterations on Cisco ASA</div></div>
+          <div class="metric"><div class="metric-val">&lt;50ms</div><div class="metric-label">propagation time</div></div>
+        </div>
+      </div>
+      <div class="feature-visual">
+        <div class="terminal-mock">
+          <div><span class="term-prompt">$</span> <span class="term-cmd">retrace solve board.jpg</span></div>
+          <br>
+          <div><span class="term-purple">AC-3 iterations: 88</span> <span class="term-dim">| 269 nodes | 3 inferred</span></div>
+          <br>
+          <div><span class="term-amber">[POWER]</span>  U1.VCC, U2-U5.VDD, U6.VCC, U10-U12.VIN</div>
+          <div><span class="term-dim">[GROUND]</span> U1.GND, J1-J9.GND, J10-J15.GND <span class="term-dim">(36 nodes)</span></div>
+          <br>
+          <div><span class="term-green">Inferred:</span> U1.VCC  &harr;  U11.SW  <span class="term-dim">(VRM &rarr; CPU core)</span></div>
+          <div><span class="term-green">Inferred:</span> U6.TRUST_VERIFY &harr; U11.SW  <span class="term-dim">(FPGA via rail)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cross-Board Learning -->
+    <div class="feature-row">
+      <div class="feature-text">
+        <h3 style="color: var(--amber);">Cross-Board Learning</h3>
+        <p>Every scan builds a persistent knowledge base. The more boards you analyze, the faster the next one goes. 15 subcircuit patterns transfer automatically between targets.</p>
+        <div class="feature-detail">Recognizes LDO supplies, buck converters, crystal oscillator circuits, SPI flash circuits, I2C pull-up pairs, USB ESD protection, H-bridges, reset circuits, and 7 more. Component frequency tracking shows which parts appear most across your fleet. Extensible via the plugin system.</div>
+        <div class="metric-row">
+          <div class="metric"><div class="metric-val">15</div><div class="metric-label">built-in patterns</div></div>
+          <div class="metric"><div class="metric-val">128</div><div class="metric-label">component DB</div></div>
+          <div class="metric"><div class="metric-val">&infin;</div><div class="metric-label">extensible via plugins</div></div>
+        </div>
+      </div>
+      <div class="feature-visual">
+        <div class="terminal-mock">
+          <div><span class="term-prompt">$</span> <span class="term-cmd">retrace cross-board board.jpg</span></div>
+          <br>
+          <div><span class="term-accent">Subcircuit Pattern Matches</span></div>
+          <br>
+          <div><span class="term-green">&#10003;</span> <span class="term-cmd">ldo_supply</span>      <span class="term-dim">U10 + C12, C13 &mdash; 3.3V LDO regulator</span></div>
+          <div><span class="term-green">&#10003;</span> <span class="term-cmd">buck_converter</span>  <span class="term-dim">U11 + L1 + C14 &mdash; 1.8V switching reg</span></div>
+          <div><span class="term-green">&#10003;</span> <span class="term-cmd">spi_flash</span>       <span class="term-dim">U7 + R3, R4 + C8 &mdash; W25Q128JV</span></div>
+          <div><span class="term-green">&#10003;</span> <span class="term-cmd">crystal_osc</span>     <span class="term-dim">Y1 + C2, C3 &mdash; 25MHz reference</span></div>
+          <div><span class="term-green">&#10003;</span> <span class="term-cmd">decoupling_pair</span> <span class="term-dim">C20, C21 near U1 &mdash; bulk+bypass</span></div>
+          <br>
+          <div><span class="term-dim">5 patterns matched &middot; 119/128 parts with intel</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thrangrycat case study -->
+    <div class="case-study reveal">
+      <h3>Case Study: Thrangrycat (CVE-2019-1649)</h3>
+      <p>Cisco's Trust Anchor module is a Xilinx Spartan-6 FPGA that verifies boot image integrity on ASA, IOS-XE, and NX-OS. The FPGA loads its bitstream from an external SPI flash (W25Q128JV) at power-on — and that bitstream is <strong>not authenticated or encrypted</strong>. re:trace maps this entire attack path automatically from a board photo: identifies the FPGA, traces the SPI flash connection, flags the unencrypted bitstream, and marks the JTAG header that provides initial access.</p>
+      <div class="attack-chain">
+        <span class="chain-node" style="border-color: var(--red);">JTAG (J15)</span>
+        <span class="chain-arrow">&rarr;</span>
+        <span class="chain-node">CPU (U1)</span>
+        <span class="chain-arrow">&rarr;</span>
+        <span class="chain-node" style="border-color: var(--purple);">FPGA (U6)</span>
+        <span class="chain-arrow">&larr;</span>
+        <span class="chain-node" style="border-color: var(--amber);">SPI Flash (U7)</span>
+        <span class="chain-arrow">=</span>
+        <span class="chain-node" style="border-color: var(--red); color: var(--red);">Unencrypted Bitstream</span>
+      </div>
+      <p style="margin-top: var(--sp-4); font-size: var(--text-xs); color: var(--text-dim);">Same attack surface exploited by the <strong>ArcaneDoor</strong> state-sponsored campaign (2024) &mdash; CISA Emergency Directive ED 25-03</p>
+    </div>
+
+    <!-- Use cases -->
+    <div class="use-cases">
+      <span class="use-pill">Hardware pentesting</span>
+      <span class="use-pill">Supply chain verification</span>
+      <span class="use-pill">Incident response</span>
+      <span class="use-pill">CTF challenges</span>
+      <span class="use-pill">Academic research</span>
+      <span class="use-pill">Product teardowns</span>
+      <span class="use-pill">Fault injection recon</span>
+      <span class="use-pill">Counterfeit detection</span>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ Assessment Reports ═══════════════════════════ -->
 <section id="reports" class="reveal">
   <div class="container">
@@ -1080,6 +1494,22 @@ footer a { color: var(--text-mid); }
           <a href="examples/xbox_interactive.svg">xbox interactive</a>
         </div>
       </div>
+      <div class="card">
+        <h3>Power Tree &amp; Bus Topology</h3>
+        <p>Power delivery topology from input through VRMs to loads. Bus topology graph with auto-detected SPI, I2C, UART, JTAG, USB, PCIe, DDR connections.</p>
+        <div class="card-meta">
+          <a href="examples/power_tree.svg">Power tree</a> &middot;
+          <a href="examples/bus_topology.svg">Bus topology</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Probe Plan &amp; Solver Output</h3>
+        <p>Bayesian probe advisor output and AC-3 constraint solver results. Machine-readable for automated test rigs or field assessment notes.</p>
+        <div class="card-meta">
+          <a href="examples/cisco_probe.txt">cisco probe plan</a> &middot;
+          <a href="examples/cisco_solver.txt">cisco solver</a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1087,7 +1517,8 @@ footer a { color: var(--text-mid); }
 <!-- ═══ Footer ═══════════════════════════════════════ -->
 <footer>
   <div class="container">
-    <p>re:trace &middot; MIT License &middot; <a href="https://github.com/ericrihm/retrace">github.com/ericrihm/retrace</a></p>
+    <p style="margin-bottom: var(--sp-2);">re:trace &mdash; PCB Reverse Engineering Toolkit</p>
+    <p>Built by <a href="https://github.com/ericrihm">Eric Rihm</a> &middot; MIT License &middot; <a href="https://github.com/ericrihm/retrace">Source on GitHub</a> &middot; <a href="https://github.com/ericrihm/retrace/issues">Report Issues</a></p>
   </div>
 </footer>
 
