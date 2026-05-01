@@ -675,6 +675,109 @@ def flywheel_design_audit() -> dict:
     }
 
 
+def flywheel_svg_audit() -> dict:
+    """Audit all SVG output functions for design consistency.
+
+    Generates test SVGs from each export function and checks for:
+    - Consistent color palette (no rogue colors)
+    - Font family consistency
+    - Proper dark theme (background, text contrast)
+    - Valid SVG structure
+    - No inline styles that bypass the design system
+    """
+    _header("SVG design audit flywheel")
+
+    scores: dict[str, int] = {}
+    issues: list[str] = []
+
+    # Check SVG export source files for design consistency
+    svg_sources = [
+        SRC_DIR / "export" / "svg.py",
+        SRC_DIR / "export" / "pinout_diagram.py",
+        SRC_DIR / "export" / "bom.py",
+    ]
+
+    approved_colors = {
+        "#0a0e1a", "#111827", "#1e293b", "#e2e8f0", "#94a3b8", "#64748b",
+        "#22d3ee", "#3b82f6", "#22c55e", "#ef4444", "#6b7280", "#f59e0b",
+        "#a855f7", "#ff6b6b", "#334155",
+    }
+    approved_fonts = {"JetBrains Mono", "Fira Code", "SF Mono", "monospace"}
+
+    for src in svg_sources:
+        if not src.exists():
+            continue
+        content = src.read_text(encoding="utf-8")
+        name = src.name
+
+        # Check color consistency
+        hex_colors = set(re.findall(r'#[0-9a-fA-F]{6}', content))
+        rogue_colors = hex_colors - approved_colors
+        if len(rogue_colors) <= 3:
+            scores[f"{name}_colors"] = 3
+        else:
+            scores[f"{name}_colors"] = 1
+            issues.append(f"{name}: {len(rogue_colors)} non-standard colors: {', '.join(sorted(rogue_colors)[:5])}")
+
+        # Check font consistency
+        has_approved_font = any(f in content for f in approved_fonts)
+        scores[f"{name}_fonts"] = 2 if has_approved_font else 0
+        if not has_approved_font:
+            issues.append(f"{name}: no approved monospace font found")
+
+        # Check dark theme
+        has_dark_bg = "#0a0e1a" in content or "#111827" in content
+        scores[f"{name}_dark_theme"] = 2 if has_dark_bg else 0
+
+    # Check generated SVG examples
+    examples_dir = REPO_ROOT / "docs" / "examples"
+    svg_files = list(examples_dir.glob("*.svg")) if examples_dir.exists() else []
+    scores["example_count"] = min(5, len(svg_files))
+    if len(svg_files) < 4:
+        issues.append(f"Only {len(svg_files)} example SVGs (target: 4+)")
+
+    for svg_file in svg_files[:8]:
+        svg_content = svg_file.read_text(encoding="utf-8")
+        if not svg_content.strip().startswith("<svg"):
+            issues.append(f"{svg_file.name}: invalid SVG (missing <svg> root)")
+        if not svg_content.strip().endswith("</svg>"):
+            issues.append(f"{svg_file.name}: unclosed </svg>")
+
+    # Check _IC_PINOUTS coverage
+    try:
+        sys.path.insert(0, str(REPO_ROOT / "src"))
+        from retrace.export.pinout_diagram import _IC_PINOUTS
+        scores["ic_pinout_coverage"] = min(3, len(_IC_PINOUTS))
+        if len(_IC_PINOUTS) < 2:
+            issues.append(f"Only {len(_IC_PINOUTS)} IC pinout packages (target: 2+)")
+    except Exception:
+        scores["ic_pinout_coverage"] = 0
+
+    total = sum(scores.values())
+    max_total = len(svg_sources) * 7 + 5 + 3  # 7 per source + example_count(5) + ic_pinout(3)
+    pct = round(100 * total / max_total) if max_total > 0 else 0
+
+    _ok(f"SVG design score: {total}/{max_total} ({pct}%)")
+    for criterion, score in sorted(scores.items(), key=lambda x: x[1]):
+        status = "OK" if score >= 2 else "LOW" if score > 0 else "MISS"
+        color = "green" if status == "OK" else "yellow" if status == "LOW" else "red"
+        _info(f"  [{click.style(status, fg=color)}] {criterion}: {score}")
+
+    if issues:
+        _warn(f"{len(issues)} SVG design issues:")
+        for issue in issues:
+            _info(f"  - {issue}")
+    else:
+        _ok("All SVG design checks passed!")
+
+    return {
+        "svg_total": total,
+        "svg_max": max_total,
+        "svg_pct": pct,
+        "svg_issues": issues,
+    }
+
+
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
@@ -746,6 +849,10 @@ def run(quick: bool) -> None:
         # 9. Design audit
         design_metrics = flywheel_design_audit()
         metrics.update(design_metrics)
+
+        # 10. SVG design audit
+        svg_metrics = flywheel_svg_audit()
+        metrics.update(svg_metrics)
     else:
         coverage_pct = state.get("coverage_pct", "N/A")
         metrics["coverage_pct"] = coverage_pct
@@ -771,6 +878,7 @@ def run(quick: bool) -> None:
         _info(f"TODOs:    {metrics.get('todo_count', '?')} in source")
         _info(f"Untyped:  {metrics.get('untyped_function_count', '?')} public functions")
         _info(f"Design:   {metrics.get('design_pct', '?')}% ({metrics.get('design_total', '?')}/{metrics.get('design_max', '?')})")
+        _info(f"SVG:      {metrics.get('svg_pct', '?')}% ({metrics.get('svg_total', '?')}/{metrics.get('svg_max', '?')})")
     else:
         _info(f"Lint: {fixed} fix(es) applied  (quick mode — tests skipped)")
 

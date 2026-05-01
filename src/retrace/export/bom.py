@@ -232,7 +232,7 @@ def bom_to_svg(bom: dict[str, Any], title: str = "", board_name: str = "") -> st
         label = comp.get("label", "unknown")
         groups.setdefault(label, []).append(comp)
 
-    sorted_labels = sorted(groups.keys(), key=lambda l: (_SORT_ORDER.get(l, 50), l))
+    sorted_labels = sorted(groups.keys(), key=lambda lb: (_SORT_ORDER.get(lb, 50), lb))
 
     # Count total rows (group headers + data rows)
     total_rows = 0
