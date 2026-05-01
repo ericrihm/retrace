@@ -60,8 +60,9 @@ _SECURITY_KEYWORDS = {
 }
 
 _DEFAULT_COLOR = "#6b7280"
-_FONT = "'JetBrains Mono', 'Fira Code', 'SF Mono', monospace"
+_FONT = "'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace"
 _FONT_SIZE = 10
+_FONT_SIZE_SM = 9
 _BOX_OPACITY = "0.25"
 _STROKE_WIDTH = "1.5"
 
@@ -292,7 +293,7 @@ def _render_component(comp: Component) -> str:
     )
     parts.append(
         f'      <text x="{x + 3}" y="{y + 10}" font-family={_q(_FONT)} '
-        f'font-size="8" fill="{color}" fill-opacity="0.6">'
+        f'font-size="9" fill="{color}" fill-opacity="0.6">'
         f'{_escape(comp.id)}</text>'
     )
     parts.append(
@@ -360,8 +361,8 @@ def _render_trace(
             mx, my = trace.points[mid_idx]
             parts.append(
                 f'      <text x="{mx}" y="{my - 5}" text-anchor="middle" '
-                f'font-family={_q(_FONT)} font-size="7" fill="{color}" '
-                f'fill-opacity="0.6">{net_type.upper()}</text>'
+                f'font-family={_q(_FONT)} font-size="{_FONT_SIZE_SM}" fill="{color}" '
+                f'fill-opacity="0.35">{net_type.upper()}</text>'
             )
 
     elif trace.from_component and trace.to_component:
@@ -502,7 +503,7 @@ def _render_bom_panel(result: AnalysisResult, svg_w: int, svg_h: int) -> str:
             for line_text in intel_lines[:8]:
                 parts.append(
                     f'      <text x="{tx}" y="{ty}" font-family={_q(_FONT)} '
-                    f'font-size="8" fill="{_TEXT_MID}">{_escape(line_text)}</text>'
+                    f'font-size="9" fill="{_TEXT_MID}">{_escape(line_text)}</text>'
                 )
                 ty += BOM_LINE_H - 2
     except Exception:
@@ -564,7 +565,7 @@ def _render_zones(
         )
         parts.append(
             f'      <text x="{min_x + 4}" y="{min_y - 4}" '
-            f'font-family={_q(_FONT)} font-size="8" fill="{color}" '
+            f'font-family={_q(_FONT)} font-size="9" fill="{color}" '
             f'fill-opacity="0.5" font-weight="bold">'
             f'{_escape(name.upper())}</text>'
         )
@@ -616,11 +617,11 @@ def _render_security_panel(
         sev_color = "#ef4444" if sev == "HIGH" else "#f59e0b"
         parts.append(
             f'    <text x="{tx}" y="{ty}" font-family={_q(_FONT)} '
-            f'font-size="8" fill="{sev_color}" font-weight="bold">[{sev}]</text>'
+            f'font-size="9" fill="{sev_color}" font-weight="bold">[{sev}]</text>'
         )
         parts.append(
             f'    <text x="{tx + 36}" y="{ty}" font-family={_q(_FONT)} '
-            f'font-size="8" fill="{_TEXT_MID}">'
+            f'font-size="9" fill="{_TEXT_MID}">'
             f'{_escape(comp.id)} {_escape(desc)} ({cwe})</text>'
         )
         ty += line_h
@@ -656,13 +657,13 @@ def _render_legend(svg_w: int) -> str:
         )
         parts.append(
             f'    <text x="{lx + 14}" y="{row_y}" '
-            f'font-family={_q(_FONT)} font-size="8" fill="{_TEXT_MID}">{lbl}</text>'
+            f'font-family={_q(_FONT)} font-size="9" fill="{_TEXT_MID}">{lbl}</text>'
         )
 
     net_start_y = ly + n_labels * 14 + 8
     parts.append(
         f'    <text x="{lx}" y="{net_start_y}" '
-        f'font-family={_q(_FONT)} font-size="8" fill="{_TEXT_LO}" '
+        f'font-family={_q(_FONT)} font-size="9" fill="{_TEXT_LO}" '
         f'font-weight="bold">nets:</text>'
     )
     for i, (net, color) in enumerate(_NET_COLORS.items()):
@@ -673,7 +674,7 @@ def _render_legend(svg_w: int) -> str:
         )
         parts.append(
             f'    <text x="{lx + 14}" y="{row_y}" '
-            f'font-family={_q(_FONT)} font-size="8" fill="{_TEXT_MID}">{net}</text>'
+            f'font-family={_q(_FONT)} font-size="9" fill="{_TEXT_MID}">{net}</text>'
         )
 
     parts.append('  </g>')
@@ -868,7 +869,7 @@ def generate_attack_surface_svg(
             )
             lines.append(
                 f'      <text x="{x + 3}" y="{y + 10}" font-family={_q(_FONT)} '
-                f'font-size="8" fill="#ef4444" fill-opacity="0.9">'
+                f'font-size="9" fill="#ef4444" fill-opacity="0.9">'
                 f'{_escape(comp.id)}</text>'
             )
             lines.append(
@@ -911,7 +912,7 @@ def generate_attack_surface_svg(
         my = (p1[1] + p2[1]) // 2
         lines.append(
             f'    <text x="{mx}" y="{my - 8}" text-anchor="middle" '
-            f'font-family={_q(_FONT)} font-size="8" fill="#fca5a5" '
+            f'font-family={_q(_FONT)} font-size="9" fill="#fca5a5" '
             f'font-weight="bold">{_escape(label)}</text>'
         )
     lines.append('  </g>')
@@ -950,7 +951,7 @@ def generate_attack_surface_svg(
 
     lines.append(
         f'    <text x="{tx}" y="{ty}" font-family={_q(_FONT)} '
-        f'font-size="8" fill="{_TEXT_MID}">'
+        f'font-size="9" fill="{_TEXT_MID}">'
         f'{n_sec} critical components, {n_paths} attack paths</text>'
     )
     ty += legend_line_h + 2
@@ -959,12 +960,12 @@ def generate_attack_surface_svg(
         step_num = i + 1
         lines.append(
             f'    <text x="{tx}" y="{ty}" font-family={_q(_FONT)} '
-            f'font-size="8" fill="#fca5a5" font-weight="bold">[{step_num}]</text>'
+            f'font-size="9" fill="#fca5a5" font-weight="bold">[{step_num}]</text>'
         )
         lines.append(
             f'    <text x="{tx + 22}" y="{ty}" font-family={_q(_FONT)} '
-            f'font-size="8" fill="{_TEXT_MID}">'
-            f'{_escape(from_ref)} → {_escape(to_ref)}: {_escape(label)}</text>'
+            f'font-size="9" fill="{_TEXT_MID}">'
+            f'{_escape(from_ref)} -&gt; {_escape(to_ref)}: {_escape(label)}</text>'
         )
         ty += legend_line_h
 
@@ -1179,7 +1180,7 @@ def generate_bus_topology_svg(
             parts.append(f'  <line x1="{fx}" y1="{fy}" x2="{tx}" y2="{ty}" '
                          f'stroke="{color}" stroke-width="2" stroke-opacity="0.6"/>')
             parts.append(f'  <text x="{mx}" y="{my - 4}" text-anchor="middle" '
-                         f'font-family={_q(_FONT)} font-size="8" fill="{color}" '
+                         f'font-family={_q(_FONT)} font-size="9" fill="{color}" '
                          f'font-weight="bold">{html.escape(bus)}</text>')
 
     for node in nodes:
@@ -1209,7 +1210,7 @@ def generate_bus_topology_svg(
 
     fy = svg_h - 20
     parts.append(f'  <text x="{width // 2}" y="{fy}" text-anchor="middle" '
-                 f'font-family={_q(_FONT)} font-size="8" fill="#64748b">'
+                 f'font-family={_q(_FONT)} font-size="9" fill="#64748b">'
                  f're:trace bus topology — {len(nodes)} node(s), '
                  f'{len(bus_edges)} connection(s)</text>')
 
@@ -1286,7 +1287,7 @@ def generate_diff_svg(
     traces_a = len(result_a.traces or [])
     traces_b = len(result_b.traces or [])
     summary = (
-        f'{html.escape(label_a)}: {len(comps_a)} components, {traces_a} traces  →  '
+        f'{html.escape(label_a)}: {len(comps_a)} components, {traces_a} traces  -&gt;  '
         f'{html.escape(label_b)}: {len(comps_b)} components, {traces_b} traces  |  '
         f'+{len(added)} added, -{len(removed)} removed, ~{len(changed)} changed'
     )
@@ -1320,7 +1321,7 @@ def generate_diff_svg(
         p.append(f'  <rect x="{width - 122}" y="{y + 4}" width="{bw}" height="16" '
                  f'rx="3" fill="{color}" fill-opacity="0.15"/>')
         p.append(f'  <text x="{width - 116}" y="{y + 16}" font-family={_q(_FONT)} '
-                 f'font-size="8" fill="{color}" font-weight="bold">{status}</text>')
+                 f'font-size="9" fill="{color}" font-weight="bold">{status}</text>')
         y += row_h
 
     for cid in added:
@@ -1333,7 +1334,7 @@ def generate_diff_svg(
 
     for cid, diffs in changed:
         c_b = comps_b[cid]
-        detail = ", ".join(f"{k}: {v[0]}→{v[1]}" for k, v in diffs.items())
+        detail = ", ".join(f"{k}: {v[0]}->{v[1]}" for k, v in diffs.items())
         _row(cid, c_b.label, detail, "CHANGED", _DIFF_COLORS["changed"])
 
     y += 8
@@ -1396,7 +1397,7 @@ def generate_lineage_svg(
                      f'stroke="{_ACCENT}" stroke-width="{sw}" '
                      f'stroke-opacity="{opacity:.2f}"/>')
             p.append(f'  <text x="{mx}" y="{my - 6}" text-anchor="middle" '
-                     f'font-family={_q(_FONT)} font-size="8" fill="{_TEXT_MID}">'
+                     f'font-family={_q(_FONT)} font-size="9" fill="{_TEXT_MID}">'
                      f'{int(score * 100)}%</text>')
 
     for name in names:
@@ -1411,7 +1412,7 @@ def generate_lineage_svg(
                  f'font-family={_q(_FONT)} font-size="9" fill="{_TEXT_HI}" '
                  f'font-weight="bold">{html.escape(name)}</text>')
         p.append(f'  <text x="{nx}" y="{ny + 12}" text-anchor="middle" '
-                 f'font-family={_q(_FONT)} font-size="7" fill="{_TEXT_MID}">'
+                 f'font-family={_q(_FONT)} font-size="9" fill="{_TEXT_MID}">'
                  f'{count} components</text>')
 
     p.append('</svg>')
@@ -1493,7 +1494,7 @@ def generate_power_tree_svg(
                      f'font-family={_q(_FONT)} font-size="9" fill="{color}" '
                      f'font-weight="bold">{html.escape(label[:22])}</text>')
         parts.append(f'  <text x="{x + node_w // 2}" y="{y + 28}" text-anchor="middle" '
-                     f'font-family={_q(_FONT)} font-size="7" fill="#94a3b8">'
+                     f'font-family={_q(_FONT)} font-size="9" fill="#94a3b8">'
                      f'{html.escape(sublabel[:28])}</text>')
 
     def _arrow(x1: int, y1: int, x2: int, y2: int, color: str) -> None:
@@ -1563,12 +1564,12 @@ def generate_power_tree_svg(
     if caps:
         cap_y = svg_h - 40
         parts.append(f'  <text x="16" y="{cap_y}" font-family={_q(_FONT)} '
-                     f'font-size="8" fill="#64748b">'
+                     f'font-size="9" fill="#64748b">'
                      f'Decoupling: {len(caps)} capacitor(s) detected</text>')
 
     fy = svg_h - 20
     parts.append(f'  <text x="{svg_w // 2}" y="{fy}" text-anchor="middle" '
-                 f'font-family={_q(_FONT)} font-size="8" fill="#64748b">'
+                 f'font-family={_q(_FONT)} font-size="9" fill="#64748b">'
                  f're:trace power tree — {len(regulators)} regulator(s), '
                  f'{len(load_list)} load(s)</text>')
 
@@ -1598,54 +1599,54 @@ _STYLE_MODES = {
 
 _PRESET_DEFS = {
     "satellite": {
-        "label": "📡 Satellite",
+        "label": "Satellite",
         "layers": ["board-image"],
         "style": "photo",
     },
     "analysis": {
-        "label": "🔍 Analysis",
+        "label": "Analysis",
         "layers": ["board-image", "components", "traces", "bom-panel"],
         "style": "photo",
     },
     "schematic": {
-        "label": "📐 Schematic",
+        "label": "Schematic",
         "layers": ["components", "traces", "net-labels", "grid-ref", "bom-panel"],
         "style": "schematic",
     },
     "xray": {
-        "label": "☢ X-Ray",
+        "label": "X-Ray",
         "layers": ["board-image", "components", "traces", "zones",
                    "security", "power-rails", "net-labels"],
         "style": "xray",
     },
     "attack": {
-        "label": "🎯 Attack Surface",
+        "label": "Attack Surface",
         "layers": ["board-image", "security", "traces"],
         "style": "photo",
     },
     "recon": {
-        "label": "🔦 Recon",
+        "label": "Recon",
         "layers": ["board-image", "security", "traces", "power-rails",
                    "net-labels"],
         "style": "xray",
     },
     "power": {
-        "label": "⚡ Power Map",
+        "label": "Power Map",
         "layers": ["board-image", "power-rails", "zones", "components"],
         "style": "photo",
     },
     "zones": {
-        "label": "🗺 Zones",
+        "label": "Zones",
         "layers": ["board-image", "zones", "components"],
         "style": "photo",
     },
     "debug": {
-        "label": "🐛 Debug",
+        "label": "Debug",
         "layers": ["board-image", "security", "net-labels"],
         "style": "photo",
     },
     "all": {
-        "label": "🌐 All Layers",
+        "label": "All Layers",
         "layers": [ld[0] for ld in _LAYER_DEFS],
         "style": "photo",
     },
@@ -1728,16 +1729,16 @@ def _render_interactive_controls(svg_w: int) -> str:
         )
         if default_on:
             parts.append(
-                f'      <text x="{tx + 6}" y="{ty}" text-anchor="middle" '
-                f'font-family={_q(_FONT)} font-size="9" fill="{_BG}" '
-                f'font-weight="bold" id="tick-{layer_id}">✓</text>'
+                f'      <polyline points="{tx + 2},{ty - 3} {tx + 5},{ty} {tx + 10},{ty - 7}" '
+                f'fill="none" stroke="{_BG}" stroke-width="1.5" '
+                f'stroke-linecap="round" stroke-linejoin="round" id="tick-{layer_id}"/>'
             )
         else:
             parts.append(
-                f'      <text x="{tx + 6}" y="{ty}" text-anchor="middle" '
-                f'font-family={_q(_FONT)} font-size="9" fill="{_BG}" '
-                f'font-weight="bold" id="tick-{layer_id}" '
-                f'style="display:none">✓</text>'
+                f'      <polyline points="{tx + 2},{ty - 3} {tx + 5},{ty} {tx + 10},{ty - 7}" '
+                f'fill="none" stroke="{_BG}" stroke-width="1.5" '
+                f'stroke-linecap="round" stroke-linejoin="round" id="tick-{layer_id}" '
+                f'style="display:none"/>'
             )
         parts.append(
             f'      <text x="{tx + 18}" y="{ty}" font-family={_q(_FONT)} '
@@ -1849,7 +1850,7 @@ def _render_grid_reference(svg_w: int, svg_h: int, spacing: int = 50) -> str:
         if x > 0 and x % (spacing * 2) == 0:
             parts.append(
                 f'    <text x="{x}" y="{y_start + 10}" font-family={_q(_FONT)} '
-                f'font-size="7" fill="{label_color}" fill-opacity="0.5">{x}</text>'
+                f'font-size="9" fill="{label_color}" fill-opacity="0.5">{x}</text>'
             )
 
     for y in range(y_start, y_end, spacing):
@@ -1860,7 +1861,7 @@ def _render_grid_reference(svg_w: int, svg_h: int, spacing: int = 50) -> str:
         if y > y_start and (y - y_start) % (spacing * 2) == 0:
             parts.append(
                 f'    <text x="2" y="{y + 3}" font-family={_q(_FONT)} '
-                f'font-size="7" fill="{label_color}" fill-opacity="0.5">{y}</text>'
+                f'font-size="9" fill="{label_color}" fill-opacity="0.5">{y}</text>'
             )
 
     return "\n".join(parts)
@@ -1870,8 +1871,10 @@ def _render_net_labels(
     traces: list[Trace],
     comp_map: dict[str, Component],
 ) -> str:
-    """Render net-type labels at trace midpoints."""
+    """Render net-type labels at trace midpoints (deduplicated per grid cell)."""
     parts: list[str] = []
+    seen_cells: set[tuple[int, int, str]] = set()
+    cell_size = 60
     for trace in traces:
         if not trace.points or len(trace.points) < 2:
             if not (trace.from_component and trace.to_component):
@@ -1889,6 +1892,10 @@ def _render_net_labels(
             mx, my = trace.points[mid]
 
         net_type = _classify_net(trace, comp_map)
+        cell_key = (mx // cell_size, my // cell_size, net_type)
+        if cell_key in seen_cells:
+            continue
+        seen_cells.add(cell_key)
         color = _NET_COLORS.get(net_type, _NET_COLORS["unknown"])
 
         parts.append(
@@ -1897,7 +1904,7 @@ def _render_net_labels(
         )
         parts.append(
             f'    <text x="{mx}" y="{my + 1}" text-anchor="middle" '
-            f'font-family={_q(_FONT)} font-size="7" fill="{color}" '
+            f'font-family={_q(_FONT)} font-size="{_FONT_SIZE_SM}" fill="{color}" '
             f'font-weight="bold">{net_type.upper()}</text>'
         )
 
@@ -1939,10 +1946,12 @@ def _render_power_rails(
             f'rx="3" fill="#f59e0b" fill-opacity="0.18" '
             f'stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,2"/>'
         )
+        bx = x + w + 4
+        by_ = y + h // 2 - 4
         parts.append(
-            f'    <text x="{x + w + 5}" y="{y + h // 2 + 3}" '
-            f'font-family={_q(_FONT)} font-size="7" fill="#fbbf24" '
-            f'font-weight="bold">⚡</text>'
+            f'    <path d="M{bx + 4},{by_} L{bx + 1},{by_ + 4} L{bx + 3},{by_ + 4} '
+            f'L{bx},{by_ + 8} L{bx + 5},{by_ + 3} L{bx + 3},{by_ + 3} L{bx + 4},{by_}z" '
+            f'fill="#fbbf24" fill-opacity="0.9"/>'
         )
 
     for trace in traces:
@@ -2071,7 +2080,7 @@ def generate_interactive_svg(
             my = (p1[1] + p2[1]) // 2
             lines.append(
                 f'      <text x="{mx}" y="{my - 8}" text-anchor="middle" '
-                f'font-family={_q(_FONT)} font-size="8" fill="#fca5a5" '
+                f'font-family={_q(_FONT)} font-size="9" fill="#fca5a5" '
                 f'font-weight="bold">{_escape(label)}</text>'
             )
         lines.append('    </g>')

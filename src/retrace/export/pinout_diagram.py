@@ -92,21 +92,21 @@ _PINOUTS: dict[str, dict[int, list[tuple[str, str, str]]]] = {
     "UART": {
         4: [
             ("VCC", "power", "Supply (3.3V or 5V)"),
-            ("TX", "data", "Transmit → host"),
-            ("RX", "data", "Receive ← host"),
+            ("TX", "data", "Transmit to host"),
+            ("RX", "data", "Receive from host"),
             ("GND", "ground", "Ground"),
         ],
         3: [
-            ("TX", "data", "Transmit → host"),
-            ("RX", "data", "Receive ← host"),
+            ("TX", "data", "Transmit to host"),
+            ("RX", "data", "Receive from host"),
             ("GND", "ground", "Ground"),
         ],
         6: [
             ("GND", "ground", "Ground"),
             ("CTS", "control", "Clear to send"),
             ("VCC", "power", "Supply voltage"),
-            ("TX", "data", "Transmit → host"),
-            ("RX", "data", "Receive ← host"),
+            ("TX", "data", "Transmit to host"),
+            ("RX", "data", "Receive from host"),
             ("RTS", "control", "Request to send"),
         ],
     },
@@ -415,7 +415,7 @@ _TEXT_HI = "#e2e8f0"
 _TEXT_MID = "#94a3b8"
 _TEXT_LO = "#64748b"
 _ACCENT = "#22d3ee"
-_FONT = "'JetBrains Mono', 'Fira Code', 'SF Mono', monospace"
+_FONT = "'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace"
 
 
 def _esc(text: str) -> str:
@@ -761,7 +761,7 @@ def _render_notes(
     pad = 16
     notes: list[str] = []
 
-    notes.append("⚠  Verify target voltage (1.8V / 3.3V / 5V) before connecting probe")
+    notes.append("WARNING: Verify target voltage (1.8V / 3.3V / 5V) before connecting probe")
 
     if interface == "UART":
         rates = ", ".join(str(r) for r in _UART_BAUD_RATES)

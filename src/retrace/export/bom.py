@@ -39,7 +39,7 @@ _LABEL_COLORS: dict[str, str] = {
     "unknown": "#6b7280",
 }
 
-_FONT = "'JetBrains Mono', 'Fira Code', 'SF Mono', monospace"
+_FONT = "'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace"
 
 # Sort priority for component grouping — lower number = earlier in table
 _SORT_ORDER: dict[str, int] = {

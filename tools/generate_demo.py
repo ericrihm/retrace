@@ -1748,11 +1748,11 @@ XBOX_SECURITY_REFS = ["J5", "U1", "U6", "U7", "TP1", "TP2", "TP3", "TP4", "TP5"]
 
 # Cisco ASA attack paths (Thrangrycat CVE-2019-1649)
 CISCO_ATTACK_PATHS = [
-    ("J15", "U1", "JTAG debug → CPU"),
-    ("J10", "U1", "Serial console → bootloader"),
-    ("U1", "U6", "CPU → FPGA Trust Anchor"),
-    ("U7", "U6", "Unencrypted SPI flash → FPGA bitstream"),
-    ("U1", "U7", "CPU SPI bus → flash R/W"),
+    ("J15", "U1", "JTAG debug -> CPU"),
+    ("J10", "U1", "Serial console -> bootloader"),
+    ("U1", "U6", "CPU -> FPGA Trust Anchor"),
+    ("U7", "U6", "Unencrypted SPI flash -> FPGA bitstream"),
+    ("U1", "U7", "CPU SPI bus -> flash R/W"),
 ]
 CISCO_SECURITY_REFS = ["J15", "J10", "U1", "U6", "U7", "TP1", "TP2", "TP3", "TP4"]
 

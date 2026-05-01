@@ -16,8 +16,8 @@
   <rect width="760" height="474" fill="#0a0e1a"/>
   <rect width="760" height="40" fill="#111827" fill-opacity="0.92"/>
   <line x1="0" y1="40" x2="760" y2="40" stroke="#22d3ee" stroke-width="1" stroke-opacity="0.4"/>
-  <text x="12" y="26" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="13" fill="#22d3ee" font-weight="bold">re:trace</text>
-  <text x="80" y="26" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="11" fill="#e2e8f0">SPI Pinout — SPI_CLK (CVSS 5.3)</text>
+  <text x="12" y="26" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="13" fill="#22d3ee" font-weight="bold">re:trace</text>
+  <text x="80" y="26" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="11" fill="#e2e8f0">SPI Pinout — SPI_CLK (CVSS 5.3)</text>
   <image href="data:image/png;base64,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" x="160" y="60" width="26" height="26" preserveAspectRatio="xMidYMid meet"/>
   <rect x="160" y="60" width="26" height="26" rx="4" fill="none" stroke="#1e293b" stroke-width="1"/>
   <rect x="167" y="67" width="12" height="12" rx="2" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-dasharray="4,2" opacity="0.6"/>
@@ -31,74 +31,74 @@
   <circle cx="168" cy="76" r="4" fill="#3b82f6" stroke="#fff" stroke-width="1" filter="url(#glow)"/>
   <circle cx="178" cy="76" r="4" fill="#22c55e" stroke="#fff" stroke-width="1" filter="url(#glow)"/>
   <line x1="58" y1="60" x2="168" y2="69" stroke="#ef4444" stroke-width="1" stroke-opacity="0.4" marker-end="url(#pin-arrow)"/>
-  <text x="12" y="64" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#ef4444" font-weight="bold">1  VCC</text>
+  <text x="12" y="64" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="10" fill="#ef4444" font-weight="bold">1  VCC</text>
   <line x1="51" y1="74" x2="168" y2="71" stroke="#f59e0b" stroke-width="1" stroke-opacity="0.4" marker-end="url(#pin-arrow)"/>
-  <text x="12" y="78" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#f59e0b" font-weight="bold">3  WP</text>
+  <text x="12" y="78" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="10" fill="#f59e0b" font-weight="bold">3  WP</text>
   <line x1="51" y1="88" x2="168" y2="74" stroke="#f59e0b" stroke-width="1" stroke-opacity="0.4" marker-end="url(#pin-arrow)"/>
-  <text x="12" y="92" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#f59e0b" font-weight="bold">5  CS</text>
+  <text x="12" y="92" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="10" fill="#f59e0b" font-weight="bold">5  CS</text>
   <line x1="65" y1="102" x2="168" y2="76" stroke="#3b82f6" stroke-width="1" stroke-opacity="0.4" marker-end="url(#pin-arrow)"/>
-  <text x="12" y="106" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6" font-weight="bold">7  MISO</text>
+  <text x="12" y="106" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="10" fill="#3b82f6" font-weight="bold">7  MISO</text>
   <line x1="178" y1="69" x2="695" y2="60" stroke="#f59e0b" stroke-width="1" stroke-opacity="0.4" marker-end="url(#pin-arrow)"/>
-  <text x="748" y="64" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#f59e0b" font-weight="bold">HOLD  2</text>
+  <text x="748" y="64" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="10" fill="#f59e0b" font-weight="bold">HOLD  2</text>
   <line x1="178" y1="71" x2="702" y2="74" stroke="#6b7280" stroke-width="1" stroke-opacity="0.4" marker-end="url(#pin-arrow)"/>
-  <text x="748" y="78" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#6b7280" font-weight="bold">GND  4</text>
+  <text x="748" y="78" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="10" fill="#6b7280" font-weight="bold">GND  4</text>
   <line x1="178" y1="74" x2="695" y2="88" stroke="#3b82f6" stroke-width="1" stroke-opacity="0.4" marker-end="url(#pin-arrow)"/>
-  <text x="748" y="92" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6" font-weight="bold">MOSI  6</text>
+  <text x="748" y="92" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="10" fill="#3b82f6" font-weight="bold">MOSI  6</text>
   <line x1="178" y1="76" x2="695" y2="102" stroke="#22c55e" stroke-width="1" stroke-opacity="0.4" marker-end="url(#pin-arrow)"/>
-  <text x="748" y="106" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#22c55e" font-weight="bold">SCLK  8</text>
+  <text x="748" y="106" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="10" fill="#22c55e" font-weight="bold">SCLK  8</text>
   <g class="probe-guide" transform="translate(0, 106)">
     <rect x="16" y="0" width="728" height="190" rx="6" fill="#111827" stroke="#1e293b" stroke-width="1" filter="url(#shadow)"/>
-    <text x="28" y="24" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="11" fill="#22d3ee" font-weight="bold">Probe Connection Guide</text>
-    <text x="28" y="40" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0" font-weight="bold">Target Pin</text>
-    <text x="204" y="40" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#22d3ee" font-weight="bold">Bus Pirate</text>
-    <text x="380" y="40" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#22d3ee" font-weight="bold">FTDI FT232H</text>
-    <text x="556" y="40" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#22d3ee" font-weight="bold">flashrom</text>
+    <text x="28" y="24" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="11" fill="#22d3ee" font-weight="bold">Probe Connection Guide</text>
+    <text x="28" y="40" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#e2e8f0" font-weight="bold">Target Pin</text>
+    <text x="204" y="40" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#22d3ee" font-weight="bold">Bus Pirate</text>
+    <text x="380" y="40" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#22d3ee" font-weight="bold">FTDI FT232H</text>
+    <text x="556" y="40" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#22d3ee" font-weight="bold">flashrom</text>
     <line x1="28" y1="46" x2="732" y2="46" stroke="#1e293b" stroke-width="0.5"/>
-    <text x="28" y="58" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#3b82f6">MOSI</text>
-    <text x="204" y="58" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">MOSI (BP)</text>
-    <text x="380" y="58" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">ADBUS1 (TDI)</text>
-    <text x="556" y="58" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">chip pin 5 (DI)</text>
-    <text x="28" y="76" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#3b82f6">MISO</text>
-    <text x="204" y="76" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">MISO (BP)</text>
-    <text x="380" y="76" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">ADBUS2 (TDO)</text>
-    <text x="556" y="76" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">chip pin 2 (DO)</text>
-    <text x="28" y="94" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#22c55e">SCLK</text>
-    <text x="204" y="94" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">CLK (BP)</text>
-    <text x="380" y="94" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">ADBUS0 (TCK)</text>
-    <text x="556" y="94" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">chip pin 6 (CLK)</text>
-    <text x="28" y="112" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#f59e0b">CS</text>
-    <text x="204" y="112" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">CS (BP)</text>
-    <text x="380" y="112" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">ADBUS3 (TMS)</text>
-    <text x="556" y="112" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">chip pin 1</text>
-    <text x="28" y="130" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#6b7280">GND</text>
-    <text x="204" y="130" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">GND</text>
-    <text x="380" y="130" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">GND</text>
-    <text x="556" y="130" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">chip pin 4</text>
-    <text x="28" y="148" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#ef4444">VCC</text>
-    <text x="204" y="148" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">—</text>
-    <text x="380" y="148" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">—</text>
-    <text x="556" y="148" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">chip pin 8</text>
+    <text x="28" y="58" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#3b82f6">MOSI</text>
+    <text x="204" y="58" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">MOSI (BP)</text>
+    <text x="380" y="58" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">ADBUS1 (TDI)</text>
+    <text x="556" y="58" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">chip pin 5 (DI)</text>
+    <text x="28" y="76" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#3b82f6">MISO</text>
+    <text x="204" y="76" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">MISO (BP)</text>
+    <text x="380" y="76" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">ADBUS2 (TDO)</text>
+    <text x="556" y="76" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">chip pin 2 (DO)</text>
+    <text x="28" y="94" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#22c55e">SCLK</text>
+    <text x="204" y="94" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">CLK (BP)</text>
+    <text x="380" y="94" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">ADBUS0 (TCK)</text>
+    <text x="556" y="94" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">chip pin 6 (CLK)</text>
+    <text x="28" y="112" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#f59e0b">CS</text>
+    <text x="204" y="112" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">CS (BP)</text>
+    <text x="380" y="112" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">ADBUS3 (TMS)</text>
+    <text x="556" y="112" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">chip pin 1</text>
+    <text x="28" y="130" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#6b7280">GND</text>
+    <text x="204" y="130" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">GND</text>
+    <text x="380" y="130" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">GND</text>
+    <text x="556" y="130" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">chip pin 4</text>
+    <text x="28" y="148" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#ef4444">VCC</text>
+    <text x="204" y="148" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">—</text>
+    <text x="380" y="148" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">—</text>
+    <text x="556" y="148" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">chip pin 8</text>
   </g>
   <g class="notes" transform="translate(0, 304)">
     <rect x="16" y="0" width="728" height="94" rx="6" fill="#111827" stroke="#7f1d1d" stroke-width="1" filter="url(#shadow)"/>
-    <text x="28" y="28" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">⚠  Verify target voltage (1.8V / 3.3V / 5V) before connecting probe</text>
-    <text x="28" y="46" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">For flash chips: hold WP and HOLD pins high, or use a clip (SOIC-8/SOIC-16)</text>
-    <text x="28" y="64" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">Use flashrom, spiflash, or Bus Pirate to dump firmware</text>
+    <text x="28" y="28" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">WARNING: Verify target voltage (1.8V / 3.3V / 5V) before connecting probe</text>
+    <text x="28" y="46" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">For flash chips: hold WP and HOLD pins high, or use a clip (SOIC-8/SOIC-16)</text>
+    <text x="28" y="64" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">Use flashrom, spiflash, or Bus Pirate to dump firmware</text>
   </g>
   <g class="legend" transform="translate(0, 406)">
     <circle cx="116" cy="10" r="4" fill="#3b82f6"/>
-    <text x="124" y="14" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">data</text>
+    <text x="124" y="14" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">data</text>
     <circle cx="206" cy="10" r="4" fill="#22c55e"/>
-    <text x="214" y="14" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">clock</text>
+    <text x="214" y="14" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">clock</text>
     <circle cx="296" cy="10" r="4" fill="#ef4444"/>
-    <text x="304" y="14" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">power</text>
+    <text x="304" y="14" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">power</text>
     <circle cx="386" cy="10" r="4" fill="#6b7280"/>
-    <text x="394" y="14" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">ground</text>
+    <text x="394" y="14" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">ground</text>
     <circle cx="476" cy="10" r="4" fill="#f59e0b"/>
-    <text x="484" y="14" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">control</text>
+    <text x="484" y="14" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">control</text>
     <circle cx="566" cy="10" r="4" fill="#a855f7"/>
-    <text x="574" y="14" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">debug</text>
+    <text x="574" y="14" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#94a3b8">debug</text>
   </g>
   <rect y="450" width="760" height="24" fill="#111827" fill-opacity="0.92"/>
-  <text x="380" y="466" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b">re:trace pinout diagram — SPI 8-pin</text>
+  <text x="380" y="466" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace" font-size="9" fill="#64748b">re:trace pinout diagram — SPI 8-pin</text>
 </svg>
