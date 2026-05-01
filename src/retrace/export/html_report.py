@@ -776,6 +776,20 @@ def generate_html_report(
                 td_class = f' class="{highlight}"' if highlight else ""
                 _a(f"<tr><td>{_esc(display_key)}</td><td{td_class}>{_esc(val_str)}</td></tr>")
             _a("</table>")
+            try:
+                from retrace.export.pinout_diagram import generate_ic_pinout_svg
+                ic_svg = generate_ic_pinout_svg(comp, width=560)
+                if ic_svg:
+                    b64 = __import__("base64").b64encode(ic_svg.encode("utf-8")).decode("ascii")
+                    _a(f'<details style="margin-top: 8px;">')
+                    _a(f'<summary style="cursor: pointer; color: var(--accent); '
+                       f'font-size: 11px;">IC Pinout Diagram</summary>')
+                    _a(f'<img src="data:image/svg+xml;base64,{b64}" '
+                       f'alt="{_esc(part)} pinout" style="width: 100%; max-width: 560px; '
+                       f'margin-top: 0.5em; border-radius: 6px;"/>')
+                    _a("</details>")
+            except Exception:
+                pass
             _a("</div>")
         _a("</div>")
         _a("</section>")

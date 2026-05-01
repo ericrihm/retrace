@@ -247,6 +247,30 @@ _PROBE_GUIDES: dict[str, dict[str, list[tuple[str, str]]]] = {
 
 _UART_BAUD_RATES = [9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600]
 
+# ── IC package pinouts (SOIC-8 SPI flash, EEPROM, etc.) ───────────
+_IC_PINOUTS: dict[str, list[tuple[str, str, str]]] = {
+    "SOIC8_SPI_FLASH": [
+        ("CS#", "control", "Chip select (active low)"),
+        ("DO (MISO)", "data", "Data out / MISO"),
+        ("WP#", "control", "Write protect (active low)"),
+        ("GND", "ground", "Ground"),
+        ("DI (MOSI)", "data", "Data in / MOSI"),
+        ("CLK", "clock", "Serial clock"),
+        ("HOLD#", "control", "Hold (active low) / IO3"),
+        ("VCC", "power", "Supply 2.7V–3.6V"),
+    ],
+    "SOIC8_EEPROM": [
+        ("A0", "control", "Address bit 0"),
+        ("A1", "control", "Address bit 1"),
+        ("A2", "control", "Address bit 2"),
+        ("GND", "ground", "Ground"),
+        ("SDA", "data", "I2C data"),
+        ("SCL", "clock", "I2C clock"),
+        ("WP", "control", "Write protect"),
+        ("VCC", "power", "Supply 1.8V–5.5V"),
+    ],
+}
+
 # ── Color scheme ─────────────────────────────────────────────────────
 
 _GROUP_COLORS: dict[str, str] = {
@@ -837,6 +861,144 @@ def generate_all_pinout_svgs(
         svg = generate_pinout_svg(result, finding, width=width)
         diagrams.append((interface, svg))
     return diagrams
+
+
+def generate_ic_pinout_svg(
+    comp: Component,
+    width: int = 600,
+) -> str:
+    """Generate a schematic IC pinout diagram for a component with security_intel.
+
+    Renders a DIP-style IC package with pin labels and security-relevant
+    specifications from the component database.
+
+    Returns:
+        Self-contained SVG string, or empty string if no IC pinout data available.
+    """
+    try:
+        from retrace.identification.matcher import _LOOKUP
+    except ImportError:
+        return ""
+
+    entry = _LOOKUP.get((comp.part_number or "").upper())
+    if not entry or "security_intel" not in entry:
+        return ""
+
+    intel = entry["security_intel"]
+    cat = entry.get("category", "")
+    pkg = entry.get("package", comp.package or "")
+
+    ic_pinout_key = None
+    if cat == "flash" and "SOP8" in pkg.upper():
+        ic_pinout_key = "SOIC8_SPI_FLASH"
+    elif cat == "eeprom" and "SOIC8" in pkg.upper():
+        ic_pinout_key = "SOIC8_EEPROM"
+
+    pins = _IC_PINOUTS.get(ic_pinout_key, []) if ic_pinout_key else []
+
+    title_h = 40
+    chip_w = 140
+    chip_h = max(160, len(pins) // 2 * 36 + 40) if pins else 120
+    pin_label_w = 180
+    chip_x = width // 2 - chip_w // 2
+    chip_y = title_h + 30
+    intel_y = chip_y + chip_h + 30
+    intel_line_h = 18
+
+    intel_items = [(k.replace("_", " ").title(), ", ".join(v) if isinstance(v, list) else str(v))
+                   for k, v in intel.items()]
+    intel_h = len(intel_items) * intel_line_h + 40
+
+    svg_h = intel_y + intel_h + 30
+
+    part_name = entry.get("part", comp.part_number or "IC")
+    desc = entry.get("description", "")
+
+    lines: list[str] = []
+    lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" '
+                 f'width="{width}" height="{svg_h}" viewBox="0 0 {width} {svg_h}">')
+    lines.append('  <!-- re:trace IC pinout diagram -->')
+    lines.append(_render_defs())
+    lines.append(f'  <rect width="{width}" height="{svg_h}" fill="{_BG}"/>')
+
+    lines.append(f'  <rect width="{width}" height="{title_h}" '
+                 f'fill="{_PANEL_BG}" fill-opacity="0.92"/>')
+    lines.append(f'  <line x1="0" y1="{title_h}" x2="{width}" y2="{title_h}" '
+                 f'stroke="{_ACCENT}" stroke-width="1" stroke-opacity="0.4"/>')
+    lines.append(f'  <text x="12" y="26" font-family={_q(_FONT)} '
+                 f'font-size="13" fill="{_ACCENT}" font-weight="bold">re:trace</text>')
+    lines.append(f'  <text x="80" y="26" font-family={_q(_FONT)} '
+                 f'font-size="11" fill="{_TEXT_HI}">{_esc(part_name)} — {_esc(pkg)}</text>')
+
+    lines.append(f'  <rect x="{chip_x}" y="{chip_y}" width="{chip_w}" height="{chip_h}" '
+                 f'rx="4" fill="{_PANEL_BG}" stroke="{_ACCENT}" stroke-width="1.5"/>')
+    notch_cx = chip_x + chip_w // 2
+    notch_cy = chip_y
+    lines.append(f'  <path d="M {notch_cx - 10} {notch_cy} '
+                 f'A 10 10 0 0 0 {notch_cx + 10} {notch_cy}" '
+                 f'fill="{_BG}" stroke="{_ACCENT}" stroke-width="1"/>')
+    lines.append(f'  <text x="{chip_x + chip_w // 2}" y="{chip_y + chip_h // 2 - 8}" '
+                 f'text-anchor="middle" font-family={_q(_FONT)} font-size="10" '
+                 f'fill="{_TEXT_HI}" font-weight="bold">{_esc(part_name)}</text>')
+    lines.append(f'  <text x="{chip_x + chip_w // 2}" y="{chip_y + chip_h // 2 + 8}" '
+                 f'text-anchor="middle" font-family={_q(_FONT)} font-size="8" '
+                 f'fill="{_TEXT_LO}">{_esc(pkg)}</text>')
+
+    if pins:
+        half = len(pins) // 2
+        pin_spacing = (chip_h - 20) / max(half, 1)
+        for i in range(half):
+            py = chip_y + 20 + i * pin_spacing + pin_spacing / 2
+            name, group, desc_pin = pins[i]
+            color = _GROUP_COLORS.get(group, _TEXT_MID)
+            lines.append(f'  <line x1="{chip_x}" y1="{py}" '
+                         f'x2="{chip_x - 30}" y2="{py}" stroke="{color}" stroke-width="1.5"/>')
+            lines.append(f'  <circle cx="{chip_x}" cy="{py}" r="3" fill="{color}"/>')
+            lines.append(f'  <text x="{chip_x - 35}" y="{py + 4}" text-anchor="end" '
+                         f'font-family={_q(_FONT)} font-size="10" fill="{color}" '
+                         f'font-weight="bold">{i + 1} {_esc(name)}</text>')
+            lines.append(f'  <text x="{chip_x + 8}" y="{py + 4}" '
+                         f'font-family={_q(_FONT)} font-size="7" fill="{_TEXT_LO}">{i + 1}</text>')
+        for i in range(half, len(pins)):
+            mirror_i = len(pins) - 1 - i
+            py = chip_y + 20 + mirror_i * pin_spacing + pin_spacing / 2
+            name, group, desc_pin = pins[i]
+            color = _GROUP_COLORS.get(group, _TEXT_MID)
+            lines.append(f'  <line x1="{chip_x + chip_w}" y1="{py}" '
+                         f'x2="{chip_x + chip_w + 30}" y2="{py}" stroke="{color}" stroke-width="1.5"/>')
+            lines.append(f'  <circle cx="{chip_x + chip_w}" cy="{py}" r="3" fill="{color}"/>')
+            lines.append(f'  <text x="{chip_x + chip_w + 35}" y="{py + 4}" '
+                         f'font-family={_q(_FONT)} font-size="10" fill="{color}" '
+                         f'font-weight="bold">{_esc(name)} {i + 1}</text>')
+            lines.append(f'  <text x="{chip_x + chip_w - 8}" y="{py + 4}" text-anchor="end" '
+                         f'font-family={_q(_FONT)} font-size="7" fill="{_TEXT_LO}">{i + 1}</text>')
+
+    lines.append(f'  <rect x="20" y="{intel_y}" width="{width - 40}" height="{intel_h}" '
+                 f'rx="6" fill="{_PANEL_BG}" stroke="{_PANEL_BORDER}" stroke-width="1"/>')
+    lines.append(f'  <text x="36" y="{intel_y + 20}" font-family={_q(_FONT)} '
+                 f'font-size="11" fill="{_ACCENT}" font-weight="bold">Security Intelligence</text>')
+
+    iy = intel_y + 36
+    highlight_keys = {"debug interfaces", "readout protection", "boot mode pins",
+                      "write protect pin", "flashrom support", "debug relevance",
+                      "config interface", "attestation", "certification"}
+    for key, val in intel_items:
+        key_color = "#ff6b6b" if key.lower() in highlight_keys else _TEXT_LO
+        lines.append(f'  <text x="36" y="{iy}" font-family={_q(_FONT)} '
+                     f'font-size="9" fill="{key_color}" font-weight="600">{_esc(key)}</text>')
+        lines.append(f'  <text x="200" y="{iy}" font-family={_q(_FONT)} '
+                     f'font-size="9" fill="{_TEXT_HI}">{_esc(val)}</text>')
+        iy += intel_line_h
+
+    fy = svg_h - 24
+    lines.append(f'  <rect y="{fy}" width="{width}" height="24" '
+                 f'fill="{_PANEL_BG}" fill-opacity="0.92"/>')
+    lines.append(f'  <text x="{width // 2}" y="{fy + 16}" text-anchor="middle" '
+                 f'font-family={_q(_FONT)} font-size="9" fill="{_TEXT_LO}">'
+                 f're:trace IC pinout — {_esc(part_name)}</text>')
+
+    lines.append('</svg>')
+    return "\n".join(lines)
 
 
 def save_pinout_svg(

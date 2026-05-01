@@ -1,4 +1,4 @@
-"""Tests for the security_intel feature across matcher, bom, html_report, and svg."""
+"""Tests for the security_intel feature across matcher, bom, html_report, svg, and IC pinout."""
 
 from __future__ import annotations
 
@@ -26,6 +26,7 @@ def _make_component(
     marking: str = "",
     bbox: tuple[int, int, int, int] = (10, 20, 50, 40),
     confidence: float = 0.9,
+    package: str = "",
 ) -> Component:
     return Component(
         id=cid,
@@ -34,6 +35,7 @@ def _make_component(
         bbox=bbox,
         part_number=part_number,
         marking=marking,
+        package=package,
     )
 
 
@@ -687,3 +689,100 @@ class TestSvgBomPanelSecurityIntel:
         ])
         svg = generate_svg(result)
         assert "Security Intel" in svg
+
+
+# ---------------------------------------------------------------------------
+# IC Pinout Diagram Tests
+# ---------------------------------------------------------------------------
+
+from retrace.export.pinout_diagram import generate_ic_pinout_svg, _IC_PINOUTS
+
+
+class TestICPinoutSVG:
+    def test_soic8_flash_has_pins(self):
+        comp = _make_component(cid="U1", label="ic", part_number="W25Q128JV",
+                               package="SOP8")
+        svg = generate_ic_pinout_svg(comp)
+        assert svg, "Expected non-empty SVG for SOIC8 flash"
+        assert "CS#" in svg
+        assert "DO (MISO)" in svg
+        assert "WP#" in svg
+        assert "VCC" in svg
+
+    def test_soic8_flash_has_intel_section(self):
+        comp = _make_component(cid="U1", label="ic", part_number="W25Q128JV",
+                               package="SOP8")
+        svg = generate_ic_pinout_svg(comp)
+        assert "Security Intelligence" in svg
+        assert "Jedec Id" in svg or "0xEF4018" in svg
+
+    def test_soic8_eeprom_has_pins(self):
+        comp = _make_component(cid="U2", label="ic", part_number="AT24C256",
+                               package="SOIC8")
+        svg = generate_ic_pinout_svg(comp)
+        assert svg
+        assert "SDA" in svg
+        assert "SCL" in svg
+        assert "WP" in svg
+
+    def test_mcu_no_package_pins_but_has_intel(self):
+        comp = _make_component(cid="U3", label="ic", part_number="STM32F103C8T6",
+                               package="LQFP48")
+        svg = generate_ic_pinout_svg(comp)
+        assert svg
+        assert "Security Intelligence" in svg
+        assert "Debug Interfaces" in svg or "JTAG" in svg
+
+    def test_fpga_has_intel(self):
+        comp = _make_component(cid="U4", label="ic", part_number="iCE40UP5K",
+                               package="QFN-48")
+        svg = generate_ic_pinout_svg(comp)
+        assert svg
+        assert "Yosys" in svg or "icestorm" in svg or "Toolchain" in svg
+
+    def test_unknown_part_returns_empty(self):
+        comp = _make_component(cid="U5", label="ic", part_number="NONEXISTENT")
+        svg = generate_ic_pinout_svg(comp)
+        assert svg == ""
+
+    def test_no_part_number_returns_empty(self):
+        comp = _make_component(cid="U6", label="ic")
+        svg = generate_ic_pinout_svg(comp)
+        assert svg == ""
+
+    def test_svg_is_well_formed(self):
+        comp = _make_component(cid="U1", label="ic", part_number="W25Q128JV",
+                               package="SOP8")
+        svg = generate_ic_pinout_svg(comp)
+        assert svg.startswith("<svg")
+        assert svg.endswith("</svg>")
+        assert svg.count("<svg") == 1
+
+    def test_custom_width(self):
+        comp = _make_component(cid="U1", label="ic", part_number="W25Q128JV",
+                               package="SOP8")
+        svg = generate_ic_pinout_svg(comp, width=400)
+        assert 'width="400"' in svg
+
+    def test_ic_pinouts_data_integrity(self):
+        for key, pins in _IC_PINOUTS.items():
+            assert len(pins) == 8, f"{key} should have 8 pins"
+            for name, group, desc in pins:
+                assert name, f"Empty pin name in {key}"
+                assert group in ("data", "clock", "power", "ground", "control"), \
+                    f"Invalid group {group!r} in {key}"
+                assert desc, f"Empty description in {key}"
+
+    def test_tpm_has_intel(self):
+        comp = _make_component(cid="U7", label="ic", part_number="SLB9670",
+                               package="QFN-32")
+        svg = generate_ic_pinout_svg(comp)
+        assert svg
+        assert "FIPS" in svg or "Certification" in svg
+
+    def test_ethernet_phy_has_intel(self):
+        comp = _make_component(cid="U8", label="ic", part_number="RTL8211F",
+                               package="QFN-48")
+        svg = generate_ic_pinout_svg(comp)
+        assert svg
+        assert "MDIO" in svg or "Mdio" in svg
