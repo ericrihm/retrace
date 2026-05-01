@@ -157,6 +157,61 @@ class TestRankAttackPaths:
         assert len(paths) >= 1
         assert paths[0].entry_point == "TP1"
 
+    def test_trace_with_missing_component_is_skipped(self):
+        """Line 144 — trace referencing unknown component IDs is filtered out."""
+        result = _Result(
+            components=[
+                _Comp(id="J1", label="connector", marking="JTAG"),
+            ],
+            traces=[
+                # to_component "GHOST" doesn't exist in components
+                _Trace(from_component="J1", to_component="GHOST"),
+            ],
+        )
+        # No high-value targets exist so no paths, but must not crash
+        paths = rank_attack_paths(result)
+        assert paths == []
+
+    def test_trace_with_null_from_component_is_skipped(self):
+        """Line 144 — trace with empty from_component is filtered out."""
+        result = _Result(
+            components=[
+                _Comp(id="J1", label="connector", marking="JTAG"),
+                _Comp(id="U1", label="ic", marking="STM32 mcu"),
+            ],
+            traces=[
+                _Trace(from_component="", to_component="U1"),
+            ],
+        )
+        paths = rank_attack_paths(result)
+        assert paths == []
+
+    def test_max_depth_limits_hop_count(self):
+        """Line 207 — paths at max depth are not extended further."""
+        # Build a chain longer than max_depth (4) to exercise the depth-limit
+        # continue branch.
+        result = _Result(
+            components=[
+                _Comp(id="J1", label="connector", marking="JTAG"),
+                _Comp(id="U1", label="ic", marking="CPU"),
+                _Comp(id="U2", label="ic", marking="router chip"),
+                _Comp(id="U3", label="ic", marking="FPGA spartan"),
+                _Comp(id="U4", label="ic", marking="W25Q128 flash"),
+                _Comp(id="U5", label="ic", marking="EEPROM memory"),
+            ],
+            traces=[
+                _Trace(id="T1", from_component="J1", to_component="U1"),
+                _Trace(id="T2", from_component="U1", to_component="U2"),
+                _Trace(id="T3", from_component="U2", to_component="U3"),
+                _Trace(id="T4", from_component="U3", to_component="U4"),
+                _Trace(id="T5", from_component="U4", to_component="U5"),
+            ],
+        )
+        paths = rank_attack_paths(result)
+        # All paths must have at most 4 hops (max_depth)
+        for p in paths:
+            assert len(p.edges) <= 4
+
 
 class TestFormatAttackPaths:
     def test_empty_paths(self):

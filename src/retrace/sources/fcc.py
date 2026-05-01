@@ -16,7 +16,7 @@ import requests
 
 logger = logging.getLogger(__name__)
 
-USER_AGENT = "retrace-pcb/0.1.0 (PCB reverse engineering research)"
+USER_AGENT = "retrace-pcb/0.3.0 (PCB reverse engineering research)"
 REQUEST_DELAY = 1.0
 
 _BASE = "https://fcc.report"

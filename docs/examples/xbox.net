@@ -1,8 +1,8 @@
 (export (version "E")
   (design
     (source "docs/examples/xbox_board.png")
-    (date "2026-05-01T10:21:20Z")
-    (tool "retrace 0.1.0")
+    (date "2026-05-01T10:48:56Z")
+    (tool "retrace 0.3.0")
   )
   (components
     (comp (ref "U1")

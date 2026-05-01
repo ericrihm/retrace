@@ -43,7 +43,7 @@ class AnalysisResult:
     board_dimensions: tuple[int, int] = (0, 0)
     layer_count_estimate: int = 0
     duration_seconds: float = 0.0
-    pipeline_version: str = "0.1.0"
+    pipeline_version: str = "0.3.0"
     timestamp: str = ""
     pattern_matches: list[dict] = field(default_factory=list)
 

@@ -128,7 +128,7 @@ def _make_analysis_result_with_components(components: list[Component]) -> Analys
             Trace(id="T0002", points=[(200, 50), (200, 200)]),
         ],
         board_dimensions=(800, 600),
-        pipeline_version="0.1.0",
+        pipeline_version="0.3.0",
         timestamp="2026-04-30T00:00:00Z",
     )
 
@@ -168,7 +168,7 @@ class TestFullPipelineSyntheticBoard:
         assert isinstance(result, AnalysisResult)
         assert result.image_path == image_path
         assert result.board_dimensions == (800, 600)
-        assert result.pipeline_version == "0.1.0"
+        assert result.pipeline_version == "0.3.0"
         assert result.duration_seconds > 0.0
 
         # 4. Content assertions — the detector must have found *something*

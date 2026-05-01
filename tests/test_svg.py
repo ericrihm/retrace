@@ -28,7 +28,7 @@ def _make_result(
     components: list[Component] | None = None,
     traces: list[Trace] | None = None,
     board_dimensions: tuple[int, int] = (800, 600),
-    pipeline_version: str = "0.1.0",
+    pipeline_version: str = "0.3.0",
 ) -> AnalysisResult:
     return AnalysisResult(
         image_path="test_board.jpg",

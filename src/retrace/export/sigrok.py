@@ -65,11 +65,11 @@ def generate_sigrok_metadata(
         INI-formatted metadata string for a .sr session file.
     """
     config = configparser.ConfigParser()
-    config.optionxform = str
+    config.optionxform = str  # type: ignore[assignment]
 
     config["global"] = {
         "sigrok version": "0.5.2",
-        "retrace version": "0.1.0",
+        "retrace version": "0.3.0",
     }
 
     label = board_name or "retrace_capture"

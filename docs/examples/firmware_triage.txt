@@ -1,0 +1,36 @@
+Firmware Triage Report
+============================================================
+  File: /tmp/demo_router_firmware.bin
+  Size: 39,183 bytes (38.3 KB)
+  SHA-256: 0b27dc222c0d5fb21b00c3a3acabb388296c1419ab71a98713a4648bbd6f9c18
+  Overall entropy: 7.040 bits/byte
+
+  [*] U-Boot bootloader detected
+  [*] Filesystem signature detected
+
+  Signatures (5):
+    0x00000000  U-Boot        U-Boot image header
+    0x00001100  SquashFS      SquashFS filesystem (little-endian)
+    0x00004108  JFFS2         JFFS2 filesystem (little-endian)
+    0x0000490C  gzip          gzip compressed data
+    0x00006178  bzip2         bzip2 compressed data
+
+  Interesting strings (12):
+    0x00001B3A  [credential]  password=admin:changeme123
+    0x00001B55  [api_key]  api_key=sk_live_4eC39HqLyjWDarjtT1zdp7dc
+    0x00001B95  [ssh_key]  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7
+    0x00001C1A  [crypto_key]  -----BEGIN RSA PRIVATE KEY-----
+    0x00001A9B  [url]  https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC68U/
+    0x00001ADE  [url]  http://update.router.internal:8080/firmware
+    0x000019DB  [ip_address]  192.168.1.1
+    0x000019EF  [ip_address]  192.168.1.254
+    0x00001A02  [ip_address]  8.8.8.8
+    0x00001A0F  [ip_address]  8.8.4.4
+    0x0000193D  [passwd_entry]  root:x:0:0:
+    0x00001A35  [version]  VERSION=4.2.1
+
+  Entropy profile:
+    encrypted/random         6 blocks  (60%)
+    text/structured          2 blocks  (20%)
+    code/data                1 blocks  (10%)
+    null/padding             1 blocks  (10%)

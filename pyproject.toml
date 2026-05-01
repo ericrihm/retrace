@@ -4,19 +4,30 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "retrace-pcb"
-version = "0.1.0"
-description = "AI-powered PCB reverse engineering toolkit"
+version = "0.3.0"
+description = "AI-powered PCB reverse engineering toolkit — component detection, trace extraction, security assessment"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
 authors = [{name = "Eric Rihm", email = "hello@cobaltsystems.io"}]
-keywords = ["pcb", "reverse-engineering", "computer-vision", "hardware-security", "yolo"]
+keywords = [
+    "pcb", "reverse-engineering", "computer-vision", "hardware-security",
+    "firmware-analysis", "jtag", "swd", "uart", "spi", "i2c",
+    "entropy-analysis", "fault-injection", "cvss", "iot-security",
+]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
+    "Intended Audience :: Information Technology",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Image Recognition",
     "Topic :: Security",
+    "Topic :: Security :: Cryptography",
+    "Typing :: Typed",
 ]
 dependencies = [
     "click>=8.1",

@@ -436,6 +436,34 @@ class TestBoardSimilarity:
         sim = compute_board_similarity(a, b)
         assert sim > 0
 
+    def test_fuzzy_ic_marking_match_used_b_skip(self):
+        """Line 768 — used_b set skips already-matched ic_markings_b entries."""
+        # Two IC markings in A, one in B that closely matches both A markings.
+        # The second A marking should not re-use the already-matched B entry.
+        a = [
+            BoardComponent("U1", "ic", ["1"], (0.0, 0.0),
+                           {"part_number": "STM32F103", "marking": "STM32F103"}),
+            BoardComponent("U2", "ic", ["1"], (10.0, 0.0),
+                           {"part_number": "STM32F104", "marking": "STM32F104"}),
+        ]
+        b = [
+            BoardComponent("U1", "ic", ["1"], (0.0, 0.0),
+                           {"part_number": "STM32F103", "marking": "STM32F103"}),
+        ]
+        sim = compute_board_similarity(a, b)
+        # Should still work without crashing; second A marking can't re-use the B slot
+        assert 0.0 <= sim <= 1.0
+
+    def test_empty_both_comp_lists_kind_fallback(self):
+        """Lines 751-753 — both sigs_a and sigs_b empty but kinds present."""
+        # Components with no part_number and no marking yield empty sigs sets,
+        # so the kinds-only fallback path runs.
+        a = [BoardComponent("R1", "resistor", ["1", "2"], (0.0, 0.0))]
+        b = [BoardComponent("C1", "capacitor", ["1", "2"], (0.0, 0.0))]
+        sim = compute_board_similarity(a, b)
+        # resistor ∩ capacitor = 0, union = 2 → 0.0
+        assert sim == 0.0
+
 
 class TestLineageTree:
     def test_single_board(self):

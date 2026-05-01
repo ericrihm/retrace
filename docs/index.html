@@ -936,8 +936,8 @@ footer a { color: var(--text-mid); }
   <p class="tagline">Photo in, attack surface out. The first open-source toolkit that identifies PCB components, extracts traces, maps trust chains, and tells you where to probe.</p>
 
   <div class="stats-bar">
-    <div class="stat"><div class="stat-val" data-target="1691">1691</div><div class="stat-label">Tests</div></div>
-    <div class="stat"><div class="stat-val" data-target="98" data-suffix="%">98%</div><div class="stat-label">Coverage</div></div>
+    <div class="stat"><div class="stat-val" data-target="1703">1703</div><div class="stat-label">Tests</div></div>
+    <div class="stat"><div class="stat-val" data-target="99" data-suffix="%">99%</div><div class="stat-label">Coverage</div></div>
     <div class="stat"><div class="stat-val" data-target="30">30</div><div class="stat-label">Modules</div></div>
     <div class="stat"><div class="stat-val" data-target="196">196</div><div class="stat-label">Components DB</div></div>
     <div class="stat"><div class="stat-val" data-target="25">25</div><div class="stat-label">CLI Commands</div></div>
@@ -1418,6 +1418,49 @@ footer a { color: var(--text-mid); }
       <span class="use-pill">Counterfeit detection</span>
       <span class="use-pill">JTAGulator / OpenOCD automation</span>
       <span class="use-pill">Fault injection surface mapping</span>
+      <span class="use-pill">Firmware entropy triage</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Technical Depth ═════════════════════════════ -->
+<section id="technical-depth" class="reveal">
+  <div class="container">
+    <div class="section-header">
+      <h2>Technical Depth</h2>
+      <p>Engineering techniques under the hood &mdash; not wrappers around existing tools.</p>
+      <div class="section-divider"></div>
+    </div>
+    <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+      <div class="card">
+        <h3>Computer Vision</h3>
+        <p>Multi-stage pipeline: adaptive thresholding, morphological filtering (dilate/erode), contour hierarchy analysis, HSV+LAB dual-colorspace copper trace extraction. No ML dependency for core detection.</p>
+      </div>
+      <div class="card">
+        <h3>Graph Algorithms</h3>
+        <p>Trace connectivity via proximity-based endpoint matching builds a component adjacency graph. Bus topology extraction, net grouping, and attack-path traversal from debug ports to high-value targets.</p>
+      </div>
+      <div class="card">
+        <h3>Constraint Satisfaction</h3>
+        <p>Pin assignment solving under electrical rules: pin count vs. package geometry, protocol-specific signal ordering (UART TX/RX, SPI MOSI/MISO/CLK/CS), voltage level constraints from datasheet cross-reference.</p>
+      </div>
+      <div class="card">
+        <h3>Information Theory</h3>
+        <p>Shannon entropy profiling over configurable block sizes classifies firmware regions as null/padding, code, text, compressed, or encrypted. Drives automated encrypted-firmware detection at 80% high-entropy threshold.</p>
+      </div>
+      <div class="card">
+        <h3>Security Scoring</h3>
+        <p>CVSS 3.1 base score computation with physical access vectors. CWE mapping (1191, 1247, 1299) and MITRE ATT&amp;CK technique references (T1200, T0839). Severity-ranked findings with remediation guidance.</p>
+      </div>
+      <div class="card">
+        <h3>Protocol Analysis</h3>
+        <p>Automated UART baud-rate inference, SPI/I2C bus parameter extraction, JTAG/SWD chain detection. Generates Sigrok/PulseView session files with pre-labeled channels and decoder configuration.</p>
+      </div>
+    </div>
+
+    <!-- Pipeline Architecture Diagram -->
+    <div style="margin-top: var(--sp-6); text-align: center;">
+      <img src="examples/pipeline_architecture.svg" alt="re:trace analysis pipeline architecture" style="max-width: 100%; border-radius: 8px; border: 1px solid var(--border);">
     </div>
   </div>
 </section>

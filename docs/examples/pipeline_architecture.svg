@@ -1,0 +1,176 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" font-family="'SF Mono','Fira Code','Consolas',monospace">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#161b22"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#58a6ff"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#3fb950"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="680" fill="url(#bg)" rx="8"/>
+
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" fill="#f0f6fc" font-size="18" font-weight="bold">re:trace Analysis Pipeline</text>
+  <text x="600" y="60" text-anchor="middle" fill="#8b949e" font-size="11">Board Photo → Component Detection → Classification → Trace Extraction → Security Assessment → Report</text>
+
+  <!-- Phase 1: Input -->
+  <rect x="30" y="90" width="160" height="70" rx="6" fill="#1c2128" stroke="#30363d" stroke-width="1.5"/>
+  <text x="110" y="115" text-anchor="middle" fill="#f0f6fc" font-size="12" font-weight="bold">INPUT</text>
+  <text x="110" y="133" text-anchor="middle" fill="#8b949e" font-size="9">PCB Photo (JPEG/PNG)</text>
+  <text x="110" y="147" text-anchor="middle" fill="#8b949e" font-size="9">Firmware Dump (BIN)</text>
+
+  <!-- Arrow 1→2 -->
+  <line x1="190" y1="125" x2="230" y2="125" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Phase 2: Vision Pipeline -->
+  <rect x="235" y="80" width="200" height="90" rx="6" fill="#1c2128" stroke="#1f6feb" stroke-width="1.5"/>
+  <text x="335" y="102" text-anchor="middle" fill="#58a6ff" font-size="10" font-weight="bold">VISION PIPELINE</text>
+  <text x="335" y="118" text-anchor="middle" fill="#c9d1d9" font-size="9">Adaptive thresholding</text>
+  <text x="335" y="132" text-anchor="middle" fill="#c9d1d9" font-size="9">Morphological filtering</text>
+  <text x="335" y="146" text-anchor="middle" fill="#c9d1d9" font-size="9">Contour hierarchy analysis</text>
+  <text x="335" y="160" text-anchor="middle" fill="#c9d1d9" font-size="9">HSV+LAB copper extraction</text>
+
+  <!-- Arrow 2→3 -->
+  <line x1="435" y1="125" x2="475" y2="125" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Phase 3: Classification -->
+  <rect x="480" y="80" width="200" height="90" rx="6" fill="#1c2128" stroke="#a371f7" stroke-width="1.5"/>
+  <text x="580" y="102" text-anchor="middle" fill="#a371f7" font-size="10" font-weight="bold">CLASSIFICATION</text>
+  <text x="580" y="118" text-anchor="middle" fill="#c9d1d9" font-size="9">196-entry component DB</text>
+  <text x="580" y="132" text-anchor="middle" fill="#c9d1d9" font-size="9">Marking OCR + fuzzy match</text>
+  <text x="580" y="146" text-anchor="middle" fill="#c9d1d9" font-size="9">Package geometry inference</text>
+  <text x="580" y="160" text-anchor="middle" fill="#c9d1d9" font-size="9">Datasheet cross-reference</text>
+
+  <!-- Arrow 3→4 -->
+  <line x1="680" y1="125" x2="720" y2="125" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Phase 4: Graph Analysis -->
+  <rect x="725" y="80" width="200" height="90" rx="6" fill="#1c2128" stroke="#f0883e" stroke-width="1.5"/>
+  <text x="825" y="102" text-anchor="middle" fill="#f0883e" font-size="10" font-weight="bold">GRAPH ANALYSIS</text>
+  <text x="825" y="118" text-anchor="middle" fill="#c9d1d9" font-size="9">Trace connectivity graph</text>
+  <text x="825" y="132" text-anchor="middle" fill="#c9d1d9" font-size="9">Bus topology extraction</text>
+  <text x="825" y="146" text-anchor="middle" fill="#c9d1d9" font-size="9">Net grouping + naming</text>
+  <text x="825" y="160" text-anchor="middle" fill="#c9d1d9" font-size="9">Constraint solver (pin assign)</text>
+
+  <!-- Arrow 4→5 -->
+  <line x1="925" y1="125" x2="965" y2="125" stroke="#58a6ff" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Phase 5: Security Assessment -->
+  <rect x="970" y="80" width="200" height="90" rx="6" fill="#1c2128" stroke="#f85149" stroke-width="1.5"/>
+  <text x="1070" y="102" text-anchor="middle" fill="#f85149" font-size="10" font-weight="bold">SECURITY ASSESSMENT</text>
+  <text x="1070" y="118" text-anchor="middle" fill="#c9d1d9" font-size="9">CVSS 3.1 base scoring</text>
+  <text x="1070" y="132" text-anchor="middle" fill="#c9d1d9" font-size="9">CWE + ATT&amp;CK mapping</text>
+  <text x="1070" y="146" text-anchor="middle" fill="#c9d1d9" font-size="9">Glitch surface detection</text>
+  <text x="1070" y="160" text-anchor="middle" fill="#c9d1d9" font-size="9">Boot mode pin analysis</text>
+
+  <!-- Second row: Outputs -->
+  <text x="600" y="220" text-anchor="middle" fill="#f0f6fc" font-size="14" font-weight="bold">Output Artifacts</text>
+
+  <!-- Output boxes -->
+  <rect x="30" y="240" width="155" height="60" rx="6" fill="#0d1117" stroke="#3fb950" stroke-width="1"/>
+  <text x="107" y="262" text-anchor="middle" fill="#3fb950" font-size="9" font-weight="bold">HTML Report</text>
+  <text x="107" y="278" text-anchor="middle" fill="#8b949e" font-size="8">Interactive, self-contained</text>
+  <text x="107" y="290" text-anchor="middle" fill="#8b949e" font-size="8">CVSS gauges, risk matrix</text>
+
+  <rect x="200" y="240" width="155" height="60" rx="6" fill="#0d1117" stroke="#3fb950" stroke-width="1"/>
+  <text x="277" y="262" text-anchor="middle" fill="#3fb950" font-size="9" font-weight="bold">SVG Diagrams</text>
+  <text x="277" y="278" text-anchor="middle" fill="#8b949e" font-size="8">Annotated board, pinouts</text>
+  <text x="277" y="290" text-anchor="middle" fill="#8b949e" font-size="8">Attack surface, bus topology</text>
+
+  <rect x="370" y="240" width="155" height="60" rx="6" fill="#0d1117" stroke="#3fb950" stroke-width="1"/>
+  <text x="447" y="262" text-anchor="middle" fill="#3fb950" font-size="9" font-weight="bold">KiCad Export</text>
+  <text x="447" y="278" text-anchor="middle" fill="#8b949e" font-size="8">.net netlist + .kicad_pcb</text>
+  <text x="447" y="290" text-anchor="middle" fill="#8b949e" font-size="8">Component placement</text>
+
+  <rect x="540" y="240" width="155" height="60" rx="6" fill="#0d1117" stroke="#3fb950" stroke-width="1"/>
+  <text x="617" y="262" text-anchor="middle" fill="#3fb950" font-size="9" font-weight="bold">Sigrok Session</text>
+  <text x="617" y="278" text-anchor="middle" fill="#8b949e" font-size="8">Pre-labeled channels</text>
+  <text x="617" y="290" text-anchor="middle" fill="#8b949e" font-size="8">Protocol decoder config</text>
+
+  <rect x="710" y="240" width="155" height="60" rx="6" fill="#0d1117" stroke="#3fb950" stroke-width="1"/>
+  <text x="787" y="262" text-anchor="middle" fill="#3fb950" font-size="9" font-weight="bold">Firmware Triage</text>
+  <text x="787" y="278" text-anchor="middle" fill="#8b949e" font-size="8">Entropy map, magic sigs</text>
+  <text x="787" y="290" text-anchor="middle" fill="#8b949e" font-size="8">Credential extraction</text>
+
+  <rect x="880" y="240" width="155" height="60" rx="6" fill="#0d1117" stroke="#3fb950" stroke-width="1"/>
+  <text x="957" y="262" text-anchor="middle" fill="#3fb950" font-size="9" font-weight="bold">Extraction Guide</text>
+  <text x="957" y="278" text-anchor="middle" fill="#8b949e" font-size="8">flashrom commands</text>
+  <text x="957" y="290" text-anchor="middle" fill="#8b949e" font-size="8">SPI wiring diagrams</text>
+
+  <rect x="1050" y="240" width="120" height="60" rx="6" fill="#0d1117" stroke="#3fb950" stroke-width="1"/>
+  <text x="1110" y="262" text-anchor="middle" fill="#3fb950" font-size="9" font-weight="bold">JSON / CSV</text>
+  <text x="1110" y="278" text-anchor="middle" fill="#8b949e" font-size="8">BOM, detection data</text>
+  <text x="1110" y="290" text-anchor="middle" fill="#8b949e" font-size="8">Machine-readable</text>
+
+  <!-- Third row: Plugin Architecture -->
+  <text x="600" y="350" text-anchor="middle" fill="#f0f6fc" font-size="14" font-weight="bold">Plugin Architecture</text>
+
+  <rect x="130" y="370" width="940" height="80" rx="6" fill="#1c2128" stroke="#30363d" stroke-width="1"/>
+  <text x="600" y="392" text-anchor="middle" fill="#8b949e" font-size="10">setuptools entry_points — drop-in analyzers via Protocol interface</text>
+
+  <rect x="160" y="405" width="170" height="35" rx="4" fill="#0d1117" stroke="#f85149" stroke-width="1"/>
+  <text x="245" y="427" text-anchor="middle" fill="#f85149" font-size="9">debug_interfaces</text>
+
+  <rect x="350" y="405" width="170" height="35" rx="4" fill="#0d1117" stroke="#f0883e" stroke-width="1"/>
+  <text x="435" y="427" text-anchor="middle" fill="#f0883e" font-size="9">glitch_surface</text>
+
+  <rect x="540" y="405" width="170" height="35" rx="4" fill="#0d1117" stroke="#a371f7" stroke-width="1"/>
+  <text x="625" y="427" text-anchor="middle" fill="#a371f7" font-size="9">boot_mode</text>
+
+  <rect x="730" y="405" width="170" height="35" rx="4" fill="#0d1117" stroke="#3fb950" stroke-width="1"/>
+  <text x="815" y="427" text-anchor="middle" fill="#3fb950" font-size="9">custom (your plugin)</text>
+
+  <!-- Fourth row: Kill Chain -->
+  <text x="600" y="500" text-anchor="middle" fill="#f0f6fc" font-size="14" font-weight="bold">Hardware Security Kill Chain</text>
+
+  <!-- Kill chain nodes -->
+  <rect x="60" y="520" width="170" height="55" rx="6" fill="#1c2128" stroke="#58a6ff" stroke-width="2"/>
+  <text x="145" y="543" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="bold">1. PHOTOGRAPH</text>
+  <text x="145" y="560" text-anchor="middle" fill="#8b949e" font-size="9">retrace scan board.jpg</text>
+
+  <line x1="230" y1="547" x2="270" y2="547" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="275" y="520" width="170" height="55" rx="6" fill="#1c2128" stroke="#a371f7" stroke-width="2"/>
+  <text x="360" y="543" text-anchor="middle" fill="#a371f7" font-size="11" font-weight="bold">2. IDENTIFY</text>
+  <text x="360" y="560" text-anchor="middle" fill="#8b949e" font-size="9">retrace debug / glitch</text>
+
+  <line x1="445" y1="547" x2="485" y2="547" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="490" y="520" width="170" height="55" rx="6" fill="#1c2128" stroke="#f0883e" stroke-width="2"/>
+  <text x="575" y="543" text-anchor="middle" fill="#f0883e" font-size="11" font-weight="bold">3. PROBE</text>
+  <text x="575" y="560" text-anchor="middle" fill="#8b949e" font-size="9">retrace advise / jtagulator</text>
+
+  <line x1="660" y1="547" x2="700" y2="547" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="705" y="520" width="170" height="55" rx="6" fill="#1c2128" stroke="#f85149" stroke-width="2"/>
+  <text x="790" y="543" text-anchor="middle" fill="#f85149" font-size="11" font-weight="bold">4. EXTRACT</text>
+  <text x="790" y="560" text-anchor="middle" fill="#8b949e" font-size="9">retrace extract / sigrok</text>
+
+  <line x1="875" y1="547" x2="915" y2="547" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="920" y="520" width="210" height="55" rx="6" fill="#1c2128" stroke="#3fb950" stroke-width="2"/>
+  <text x="1025" y="543" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="bold">5. TRIAGE</text>
+  <text x="1025" y="560" text-anchor="middle" fill="#8b949e" font-size="9">retrace triage firmware.bin</text>
+
+  <!-- Stats footer -->
+  <rect x="30" y="610" width="1140" height="50" rx="6" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+  <text x="150" y="638" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="bold">1691+ Tests</text>
+  <text x="340" y="638" text-anchor="middle" fill="#58a6ff" font-size="11" font-weight="bold">30 Modules</text>
+  <text x="530" y="638" text-anchor="middle" fill="#a371f7" font-size="11" font-weight="bold">25 CLI Commands</text>
+  <text x="720" y="638" text-anchor="middle" fill="#f0883e" font-size="11" font-weight="bold">99% Coverage</text>
+  <text x="910" y="638" text-anchor="middle" fill="#f85149" font-size="11" font-weight="bold">Zero Dependencies*</text>
+  <text x="1080" y="638" text-anchor="middle" fill="#8b949e" font-size="9">*core analysis only</text>
+
+  <!-- Watermark -->
+  <text x="600" y="675" text-anchor="middle" fill="#30363d" font-size="9">re:trace v0.3.0 | github.com/ericrihm/retrace</text>
+</svg>

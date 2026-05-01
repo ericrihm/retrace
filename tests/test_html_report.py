@@ -17,7 +17,7 @@ def _empty_result() -> AnalysisResult:
 def _basic_result() -> AnalysisResult:
     return AnalysisResult(
         image_path="test_board.jpg",
-        pipeline_version="0.1.0",
+        pipeline_version="0.3.0",
         timestamp="2024-06-15T12:00:00Z",
         components=[
             Component(
@@ -131,7 +131,7 @@ class TestBasicReport:
         result = _basic_result()
         report = generate_html_report(result)
         assert "re:trace — Hardware Security Assessment" in report
-        assert "Pipeline v0.1.0" in report
+        assert "Pipeline v0.3.0" in report
 
     def test_component_count_in_stats(self):
         result = _basic_result()

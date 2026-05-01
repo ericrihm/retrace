@@ -47,7 +47,7 @@ def _make_result(
     components: list[Component] | None = None,
     traces: list[Trace] | None = None,
     board_dimensions: tuple[int, int] = (640, 480),
-    pipeline_version: str = "0.1.0",
+    pipeline_version: str = "0.3.0",
     timestamp: str = "2026-04-30T00:00:00Z",
     duration_seconds: float = 1.23,
 ) -> AnalysisResult:

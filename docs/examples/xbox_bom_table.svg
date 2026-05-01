@@ -1850,5 +1850,5 @@
 <line x1="0" y1="3234" x2="900" y2="3234" stroke="#1e293b" stroke-width="1"/>
 <rect x="0" y="3234" width="900" height="24" fill="#111827"/>
 <text x="16" y="3250" fill="#94a3b8" font-size="10">150 components · 35 identified</text>
-<text x="884" y="3250" fill="#64748b" font-size="10" text-anchor="end">re:trace v0.1.0</text>
+<text x="884" y="3250" fill="#64748b" font-size="10" text-anchor="end">re:trace v0.3.0</text>
 </svg>

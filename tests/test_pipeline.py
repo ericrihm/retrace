@@ -82,7 +82,7 @@ def test_analysis_result_defaults():
     assert result.components == []
     assert result.traces == []
     assert result.board_dimensions == (0, 0)
-    assert result.pipeline_version == "0.1.0"
+    assert result.pipeline_version == "0.3.0"
 
 
 # ---------------------------------------------------------------------------
