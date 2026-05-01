@@ -426,6 +426,18 @@ def _q(s: str) -> str:
     return f'"{s}"'
 
 
+def _n(value: float) -> str:
+    """Format a coordinate for SVG: integers stay integers, floats get rounded
+    to one decimal place with trailing zero/dot stripped. Keeps generated SVGs
+    readable and ~25% smaller without losing sub-pixel positioning."""
+    if isinstance(value, int):
+        return str(value)
+    rounded = round(float(value), 1)
+    if rounded == int(rounded):
+        return str(int(rounded))
+    return f"{rounded:.1f}"
+
+
 # ── Pin layout calculation ───────────────────────────────────────────
 
 def _is_dual_row(interface: str, pin_count: int) -> bool:
@@ -1095,17 +1107,18 @@ def generate_ic_pinout_svg(
         offsets = [0, sides[0], sides[0] + sides[1], sides[0] + sides[1] + sides[2]]
         fs = 8 if len(pins) > 32 else 10
         for si in range(sides[0]):
-            py = chip_y + 20 + si * ((chip_h - 40) / max(sides[0] - 1, 1))
+            py = _n(chip_y + 20 + si * ((chip_h - 40) / max(sides[0] - 1, 1)))
+            py3 = _n(chip_y + 20 + si * ((chip_h - 40) / max(sides[0] - 1, 1)) + 3)
             name, group, _ = pins[offsets[0] + si]
             color = _GROUP_COLORS.get(group, _TEXT_MID)
             lines.append(f'  <line x1="{chip_x}" y1="{py}" x2="{chip_x - 20}" y2="{py}" '
                          f'stroke="{color}" stroke-width="1.5"/>')
             lines.append(f'  <circle cx="{chip_x}" cy="{py}" r="2.5" fill="{color}"/>')
-            lines.append(f'  <text x="{chip_x - 24}" y="{py + 3}" text-anchor="end" '
+            lines.append(f'  <text x="{chip_x - 24}" y="{py3}" text-anchor="end" '
                          f'font-family={_q(_FONT)} font-size="{fs}" fill="{color}">'
                          f'{offsets[0] + si + 1} {_esc(name)}</text>')
         for si in range(sides[1]):
-            px = chip_x + 20 + si * ((chip_w - 40) / max(sides[1] - 1, 1))
+            px = _n(chip_x + 20 + si * ((chip_w - 40) / max(sides[1] - 1, 1)))
             name, group, _ = pins[offsets[1] + si]
             color = _GROUP_COLORS.get(group, _TEXT_MID)
             lines.append(f'  <line x1="{px}" y1="{chip_y + chip_h}" '
@@ -1117,18 +1130,19 @@ def generate_ic_pinout_svg(
                          f'transform="rotate(-90,{px},{chip_y + chip_h + 34})">'
                          f'{_esc(name)}</text>')
         for si in range(sides[2]):
-            py = chip_y + chip_h - 20 - si * ((chip_h - 40) / max(sides[2] - 1, 1))
+            py = _n(chip_y + chip_h - 20 - si * ((chip_h - 40) / max(sides[2] - 1, 1)))
+            py3 = _n(chip_y + chip_h - 20 - si * ((chip_h - 40) / max(sides[2] - 1, 1)) + 3)
             name, group, _ = pins[offsets[2] + si]
             color = _GROUP_COLORS.get(group, _TEXT_MID)
             lines.append(f'  <line x1="{chip_x + chip_w}" y1="{py}" '
                          f'x2="{chip_x + chip_w + 20}" y2="{py}" '
                          f'stroke="{color}" stroke-width="1.5"/>')
             lines.append(f'  <circle cx="{chip_x + chip_w}" cy="{py}" r="2.5" fill="{color}"/>')
-            lines.append(f'  <text x="{chip_x + chip_w + 24}" y="{py + 3}" '
+            lines.append(f'  <text x="{chip_x + chip_w + 24}" y="{py3}" '
                          f'font-family={_q(_FONT)} font-size="{fs}" fill="{color}">'
                          f'{_esc(name)} {offsets[2] + si + 1}</text>')
         for si in range(sides[3]):
-            px = chip_x + chip_w - 20 - si * ((chip_w - 40) / max(sides[3] - 1, 1))
+            px = _n(chip_x + chip_w - 20 - si * ((chip_w - 40) / max(sides[3] - 1, 1)))
             name, group, _ = pins[offsets[3] + si]
             color = _GROUP_COLORS.get(group, _TEXT_MID)
             lines.append(f'  <line x1="{px}" y1="{chip_y}" '
@@ -1143,29 +1157,31 @@ def generate_ic_pinout_svg(
         half = len(pins) // 2
         pin_spacing = (chip_h - 20) / max(half, 1)
         for i in range(half):
-            py = chip_y + 20 + i * pin_spacing + pin_spacing / 2
+            py = _n(chip_y + 20 + i * pin_spacing + pin_spacing / 2)
+            py4 = _n(chip_y + 20 + i * pin_spacing + pin_spacing / 2 + 4)
             name, group, _ = pins[i]
             color = _GROUP_COLORS.get(group, _TEXT_MID)
             lines.append(f'  <line x1="{chip_x}" y1="{py}" '
                          f'x2="{chip_x - 30}" y2="{py}" stroke="{color}" stroke-width="1.5"/>')
             lines.append(f'  <circle cx="{chip_x}" cy="{py}" r="3" fill="{color}"/>')
-            lines.append(f'  <text x="{chip_x - 35}" y="{py + 4}" text-anchor="end" '
+            lines.append(f'  <text x="{chip_x - 35}" y="{py4}" text-anchor="end" '
                          f'font-family={_q(_FONT)} font-size="10" fill="{color}" '
                          f'font-weight="bold">{i + 1} {_esc(name)}</text>')
-            lines.append(f'  <text x="{chip_x + 8}" y="{py + 4}" '
+            lines.append(f'  <text x="{chip_x + 8}" y="{py4}" '
                          f'font-family={_q(_FONT)} font-size="7" fill="{_TEXT_LO}">{i + 1}</text>')
         for i in range(half, len(pins)):
             mirror_i = len(pins) - 1 - i
-            py = chip_y + 20 + mirror_i * pin_spacing + pin_spacing / 2
+            py = _n(chip_y + 20 + mirror_i * pin_spacing + pin_spacing / 2)
+            py4 = _n(chip_y + 20 + mirror_i * pin_spacing + pin_spacing / 2 + 4)
             name, group, _ = pins[i]
             color = _GROUP_COLORS.get(group, _TEXT_MID)
             lines.append(f'  <line x1="{chip_x + chip_w}" y1="{py}" '
                          f'x2="{chip_x + chip_w + 30}" y2="{py}" stroke="{color}" stroke-width="1.5"/>')
             lines.append(f'  <circle cx="{chip_x + chip_w}" cy="{py}" r="3" fill="{color}"/>')
-            lines.append(f'  <text x="{chip_x + chip_w + 35}" y="{py + 4}" '
+            lines.append(f'  <text x="{chip_x + chip_w + 35}" y="{py4}" '
                          f'font-family={_q(_FONT)} font-size="10" fill="{color}" '
                          f'font-weight="bold">{_esc(name)} {i + 1}</text>')
-            lines.append(f'  <text x="{chip_x + chip_w - 8}" y="{py + 4}" text-anchor="end" '
+            lines.append(f'  <text x="{chip_x + chip_w - 8}" y="{py4}" text-anchor="end" '
                          f'font-family={_q(_FONT)} font-size="7" fill="{_TEXT_LO}">{i + 1}</text>')
 
     lines.append(f'  <rect x="20" y="{intel_y}" width="{width - 40}" height="{intel_h}" '

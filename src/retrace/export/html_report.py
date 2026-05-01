@@ -708,15 +708,19 @@ def _cvss_gauge_svg(score: float, size: int = 36) -> str:
         color = "#f59e0b"
     else:
         color = "#3b82f6"
+    _mono = "'JetBrains Mono','Fira Code','SF Mono',monospace"
+    cx_s = f"{cx:.1f}".rstrip("0").rstrip(".")
+    cy_s = cx_s
+    r_s = f"{r:.1f}".rstrip("0").rstrip(".")
     return (
         f'<svg class="cvss-gauge" width="{size}" height="{size}" viewBox="0 0 {size} {size}">'
-        f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="#1e293b" stroke-width="3"/>'
-        f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="{color}" stroke-width="3" '
+        f'<circle cx="{cx_s}" cy="{cy_s}" r="{r_s}" fill="none" stroke="#1e293b" stroke-width="3"/>'
+        f'<circle cx="{cx_s}" cy="{cy_s}" r="{r_s}" fill="none" stroke="{color}" stroke-width="3" '
         f'stroke-dasharray="{dash:.1f} {circum:.1f}" stroke-linecap="round" '
-        f'transform="rotate(-90 {cx} {cy})"/>'
-        f'<text x="{cx}" y="{cy}" text-anchor="middle" dominant-baseline="central" '
+        f'transform="rotate(-90 {cx_s} {cy_s})"/>'
+        f'<text x="{cx_s}" y="{cy_s}" text-anchor="middle" dominant-baseline="central" '
         f'fill="{color}" font-size="{size*0.32:.0f}" font-weight="700" '
-        f'font-family="monospace">{score}</text></svg>'
+        f'font-family="{_mono}">{score}</text></svg>'
     )
 
 
@@ -748,23 +752,24 @@ def _attack_chain_svg(attack_paths: list[tuple[str, str, str]]) -> str:
         f'<svg class="attack-chain-svg" width="700" height="{total_h}" '
         f'viewBox="0 0 700 {total_h}" xmlns="http://www.w3.org/2000/svg">'
     ]
+    _mono = "'JetBrains Mono','Fira Code','SF Mono',monospace"
     for i, (src, tgt, desc) in enumerate(attack_paths):
         y = 20 + i * h_per
         # Source box
         lines.append(f'<rect x="10" y="{y}" width="160" height="36" rx="6" '
                       f'fill="#1e293b" stroke="#22d3ee" stroke-width="1"/>')
         lines.append(f'<text x="90" y="{y+22}" text-anchor="middle" fill="#e2e8f0" '
-                      f'font-size="11" font-family="monospace">{_esc(src[:20])}</text>')
+                      f'font-size="11" font-family="{_mono}">{_esc(src[:20])}</text>')
         # Arrow with label
         lines.append(f'<line x1="170" y1="{y+18}" x2="370" y2="{y+18}" '
                       f'stroke="#64748b" stroke-width="1.5" marker-end="url(#ah)"/>')
         lines.append(f'<text x="270" y="{y+12}" text-anchor="middle" fill="#94a3b8" '
-                      f'font-size="9" font-family="sans-serif">{_esc(desc[:30])}</text>')
+                      f'font-size="9" font-family="{_mono}">{_esc(desc[:30])}</text>')
         # Target box
         lines.append(f'<rect x="370" y="{y}" width="160" height="36" rx="6" '
                       f'fill="#1e293b" stroke="#ef4444" stroke-width="1"/>')
         lines.append(f'<text x="450" y="{y+22}" text-anchor="middle" fill="#e2e8f0" '
-                      f'font-size="11" font-family="monospace">{_esc(tgt[:20])}</text>')
+                      f'font-size="11" font-family="{_mono}">{_esc(tgt[:20])}</text>')
     # Arrowhead marker
     lines.insert(1, '<defs><marker id="ah" viewBox="0 0 10 10" refX="10" refY="5" '
                      'markerWidth="6" markerHeight="6" orient="auto-start-reverse">'

@@ -991,7 +991,7 @@ class TestExportPrometheus:
     def test_no_source_lines_when_no_sources_recorded(self, tmp_path: Path) -> None:
         brain = self._make_brain(tmp_path)
         text = brain.export_prometheus(tmp_path / "m.prom")
-        data_lines = [l for l in text.splitlines() if l.startswith("retrace_source_reliability")]
+        data_lines = [ln for ln in text.splitlines() if ln.startswith("retrace_source_reliability")]
         assert data_lines == [], (
             "Expected no source_reliability lines when no sources have been recorded"
         )
