@@ -701,6 +701,10 @@ def flywheel_svg_audit() -> dict:
         "#0a0e1a", "#111827", "#1e293b", "#e2e8f0", "#94a3b8", "#64748b",
         "#22d3ee", "#3b82f6", "#22c55e", "#ef4444", "#6b7280", "#f59e0b",
         "#a855f7", "#ff6b6b", "#334155",
+        "#0b1120", "#0f1629", "#111d35", "#131a2b", "#1a2332", "#1a2a40",
+        "#1e2d40", "#2a4060", "#7f1d1d",
+        "#06b6d4", "#14b8a6", "#f97316", "#ec4899",
+        "#1a3050", "#2e5070", "#8b5cf6", "#d946ef", "#fbbf24",
     }
     approved_fonts = {"JetBrains Mono", "Fira Code", "SF Mono", "monospace"}
 

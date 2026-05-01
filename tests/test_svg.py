@@ -4,15 +4,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
-
 from retrace.core.pipeline import AnalysisResult, Component, Trace
 from retrace.export.svg import (
+    _classify_net,
+    _edge_point,
+    _render_zones,
+    _resolve_image_href,
     generate_attack_surface_svg,
     generate_svg,
     generate_zones_svg,
     save_svg,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers / fixtures
@@ -883,3 +885,161 @@ class TestZonesSvg:
         result, zones = self._zones_setup()
         svg = generate_zones_svg(result, zones)
         assert "2" in svg  # Memory Bank has 2 components
+
+
+# ---------------------------------------------------------------------------
+# _classify_net branch coverage
+# ---------------------------------------------------------------------------
+
+class TestClassifyNet:
+    """Cover the remaining _classify_net branches (lines 98-107)."""
+
+    def _trace(self, width_px: float = 2.0, from_c: str = "", to_c: str = "") -> Trace:
+        return Trace(id="T001", points=[(0, 0), (100, 100)],
+                     width_px=width_px, from_component=from_c, to_component=to_c)
+
+    def _comp(self, cid: str, marking: str = "", label: str = "ic") -> Component:
+        return Component(id=cid, label=label, confidence=0.9,
+                         bbox=(10, 10, 50, 50), marking=marking)
+
+    def test_wide_trace_classified_as_power(self):
+        trace = self._trace(width_px=6.0)
+        net = _classify_net(trace, {})
+        assert net == "power"
+
+    def test_width_exactly_5_is_power(self):
+        trace = self._trace(width_px=5.0)
+        net = _classify_net(trace, {})
+        assert net == "power"
+
+    def test_inductor_with_width4_is_power(self):
+        ind = self._comp("L1", marking="inductor", label="inductor")
+        trace = self._trace(width_px=4.0, from_c="L1")
+        net = _classify_net(trace, {"L1": ind})
+        assert net == "power"
+
+    def test_clk_marking_classified_as_clock(self):
+        clk = self._comp("U1", marking="CLK")
+        trace = self._trace(width_px=1.0, from_c="U1")
+        net = _classify_net(trace, {"U1": clk})
+        assert net == "clock"
+
+    def test_ddr_marking_classified_as_data(self):
+        mem = self._comp("U2", marking="DDR4")
+        trace = self._trace(width_px=1.0, from_c="U2")
+        net = _classify_net(trace, {"U2": mem})
+        assert net == "data"
+
+    def test_gnd_marking_classified_as_ground(self):
+        gnd = self._comp("J1", marking="GND")
+        trace = self._trace(width_px=1.0, from_c="J1")
+        net = _classify_net(trace, {"J1": gnd})
+        assert net == "ground"
+
+
+# ---------------------------------------------------------------------------
+# _edge_point branch coverage
+# ---------------------------------------------------------------------------
+
+class TestEdgePoint:
+    """Cover the degenerate branches of _edge_point (lines 122-135)."""
+
+    def _comp(self, x: int, y: int, w: int, h: int) -> Component:
+        return Component(id="C1", label="ic", confidence=0.9,
+                         bbox=(x, y, w, h))
+
+    def test_near_zero_delta_returns_top_center(self):
+        # dx < 1 and dy < 1 -> returns (cx, y)
+        comp = self._comp(100, 200, 50, 40)
+        cx = 100 + 50 // 2  # 125
+        cy = 200 + 40 // 2  # 220
+        # Target is effectively the same as center
+        result = _edge_point(comp, cx, cy)
+        assert result == (cx, 200)  # (cx, y)
+
+    def test_zero_size_component_returns_center(self):
+        # w=0 h=0 -> returns (cx, cy)
+        comp = self._comp(100, 200, 0, 0)
+        result = _edge_point(comp, 200, 300)
+        assert result == (100, 200)  # (cx, cy) when w=0 h=0
+
+
+# ---------------------------------------------------------------------------
+# _render_zones direct call coverage
+# ---------------------------------------------------------------------------
+
+class TestRenderZonesDirect:
+    """Cover _render_zones with empty list (line 536)."""
+
+    def test_empty_zones_returns_empty_string(self):
+        result = _render_zones([], {})
+        assert result == ""
+
+    def test_zone_with_no_valid_members_skipped(self):
+        # All comp_ids are missing from comp_map -> members is empty -> continue
+        comp_map = {}
+        zones = [("Ghost", "cpu", ["MISSING1", "MISSING2"])]
+        out = _render_zones(zones, comp_map)
+        # The outer group is created but no zone rect is added
+        assert "GHOST" not in out
+
+
+# ---------------------------------------------------------------------------
+# _resolve_image_href coverage (lines 1607-1626)
+# ---------------------------------------------------------------------------
+
+class TestResolveImageHref:
+    """Cover all branches of _resolve_image_href."""
+
+    def test_none_returns_none(self):
+        assert _resolve_image_href(None) is None
+
+    def test_javascript_uri_returns_none(self):
+        assert _resolve_image_href("javascript:alert(1)") is None
+
+    def test_javascript_uri_case_insensitive(self):
+        assert _resolve_image_href("  JAVASCRIPT:evil()") is None
+
+    def test_http_url_returned_as_is(self):
+        url = "http://example.com/board.jpg"
+        assert _resolve_image_href(url) == url
+
+    def test_https_url_returned_as_is(self):
+        url = "https://example.com/board.png"
+        assert _resolve_image_href(url) == url
+
+    def test_data_uri_returned_as_is(self):
+        uri = "data:image/png;base64,abc123"
+        assert _resolve_image_href(uri) == uri
+
+    def test_nonexistent_local_file_returns_none(self):
+        assert _resolve_image_href("/nonexistent/path/board.jpg") is None
+
+    def test_existing_local_file_returns_data_uri(self, tmp_path: Path):
+        img = tmp_path / "board.png"
+        img.write_bytes(b"\x89PNG\r\n\x1a\n" + b"\x00" * 8)
+        result = _resolve_image_href(str(img))
+        assert result is not None
+        assert result.startswith("data:image/png;base64,")
+
+    def test_existing_jpg_file_uses_jpeg_mime(self, tmp_path: Path):
+        img = tmp_path / "board.jpg"
+        img.write_bytes(b"\xff\xd8\xff" + b"\x00" * 8)
+        result = _resolve_image_href(str(img))
+        assert result is not None
+        assert result.startswith("data:image/jpeg;base64,")
+
+    def test_unknown_extension_defaults_to_png_mime(self, tmp_path: Path):
+        img = tmp_path / "board.bmp"
+        img.write_bytes(b"BM" + b"\x00" * 10)
+        result = _resolve_image_href(str(img))
+        assert result is not None
+        assert result.startswith("data:image/png;base64,")
+
+    def test_generate_svg_embeds_local_file(self, tmp_path: Path):
+        img = tmp_path / "board.png"
+        img.write_bytes(b"\x89PNG\r\n\x1a\n" + b"\x00" * 8)
+        result = _make_result()
+        svg = generate_svg(result, image_href=str(img))
+        assert "<image" in svg
+        assert "data:image/png;base64," in svg

@@ -2,17 +2,15 @@
 
 from __future__ import annotations
 
-
 from retrace.analysis.constraint_solver import (
-    ComponentSpec,
-    ConstraintSolver,
     NET_GROUND,
     NET_POWER,
+    ComponentSpec,
+    ConstraintSolver,
     Pin,
     SolverResult,
     Trace,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -489,3 +487,68 @@ def test_unknown_pin_name_gets_open_domain():
     # Open domain → ambiguous (not resolved to a single net)
     for pin in comp.pins:
         assert f"U1.{pin}" in result.ambiguous_nodes
+
+
+# ---------------------------------------------------------------------------
+# Line 231: arc skipped when node_a or node_b not in domains
+# ---------------------------------------------------------------------------
+
+def test_arc_with_missing_node_is_skipped(monkeypatch):
+    """Line 231: an arc whose node_a is not in domains is silently skipped.
+
+    We monkey-patch _find_diff_pairs to return a pair containing a phantom
+    node that was never registered in domains.  The solver must not raise.
+    """
+    comp = ComponentSpec("U1", "ic", ["IN+", "IN-"])
+    solver = ConstraintSolver()
+
+    original_find = solver._find_diff_pairs
+
+    def patched_find(pins, comp_ref):
+        pairs = original_find(pins, comp_ref)
+        # Inject an arc where node_b is a phantom not in domains
+        pairs.append(("U1.IN+", "PHANTOM.X"))
+        return pairs
+
+    monkeypatch.setattr(solver, "_find_diff_pairs", patched_find)
+    # Must complete without raising; phantom arc is silently skipped
+    result = solver.solve([comp], [])
+    assert isinstance(result, SolverResult)
+    assert "U1.IN+" in result.net_assignment
+
+
+# ---------------------------------------------------------------------------
+# Lines 236-240: domain wipeout inside AC-3 loop records a conflict
+# ---------------------------------------------------------------------------
+
+def test_ac3_loop_domain_wipeout_records_conflict(monkeypatch):
+    """Lines 236-240: when _revise returns True but leaves the domain empty,
+    a conflict is recorded and the domain is restored to {NET_UNKNOWN}.
+
+    We monkey-patch _revise to simulate this edge case (the real _revise
+    restores empty domains itself, but the outer loop has its own guard).
+    """
+    comp = ComponentSpec("U1", "ic", ["VCC", "GND"])
+    traces = [
+        Trace(Pin("U1", "VCC"), Pin("U1", "GND"), confidence=1.0),
+    ]
+    solver = ConstraintSolver()
+
+    original_revise = solver._revise
+
+    call_count = [0]
+
+    def patched_revise(domains, node_a, node_b, ctype):
+        call_count[0] += 1
+        # On the first call, wipe the domain empty and signal revised=True
+        # so that the outer guard at lines 235-240 is exercised.
+        if call_count[0] == 1:
+            domains[node_a] = set()
+            return True
+        return original_revise(domains, node_a, node_b, ctype)
+
+    monkeypatch.setattr(solver, "_revise", patched_revise)
+    result = solver.solve([comp], traces)
+    # Conflict should have been recorded by the outer AC-3 guard
+    assert len(result.conflicts) >= 1
+    assert isinstance(result, SolverResult)

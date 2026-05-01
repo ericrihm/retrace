@@ -2,20 +2,17 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-
-import pytest
-
 from retrace.core.pipeline import AnalysisResult, Component, Trace
 from retrace.export.svg import (
-    generate_interactive_svg,
-    save_interactive_svg,
-    _render_interactive_controls,
-    _render_interactive_script,
-    _render_grid_reference,
-    _render_net_labels,
     _LAYER_DEFS,
     _PRESET_DEFS,
+    _render_grid_reference,
+    _render_interactive_controls,
+    _render_interactive_script,
+    _render_net_labels,
+    _render_power_rails,
+    generate_interactive_svg,
+    save_interactive_svg,
 )
 
 
@@ -341,7 +338,6 @@ class TestPowerRails:
                       value="10uF"),
         ]
         result = _make_result(components=comps)
-        from retrace.export.svg import _render_power_rails
         comp_map = {c.id: c for c in comps}
         html = _render_power_rails(comps, [], comp_map)
         assert "U10" not in html or "f59e0b" in html
@@ -389,3 +385,111 @@ class TestSvgFormatSave:
         content = svg_path.read_text()
         assert "toggleLayer" in content
         assert "setPreset" in content
+
+
+# ---------------------------------------------------------------------------
+# _render_net_labels missing component paths (lines 1373, 1381)
+# ---------------------------------------------------------------------------
+
+class TestNetLabelsMissingComponents:
+    def test_trace_no_points_no_components_skipped(self):
+        # Trace has no points AND no from/to component -> should be skipped
+        traces = [Trace(id="T1", points=[], width_px=1.0)]
+        labels = _render_net_labels(traces, {})
+        assert labels == ""
+
+    def test_trace_no_points_missing_to_component_skipped(self):
+        # has from_component but to_component is missing from comp_map
+        comp_map = {
+            "U1": Component(id="U1", label="ic", confidence=0.9,
+                            bbox=(100, 100, 80, 80)),
+        }
+        traces = [
+            Trace(id="T1", points=[], from_component="U1", to_component="MISSING",
+                  width_px=1.0),
+        ]
+        # to_c will be None -> skipped
+        labels = _render_net_labels(traces, comp_map)
+        assert labels == ""
+
+    def test_trace_no_points_both_components_missing_skipped(self):
+        traces = [
+            Trace(id="T1", points=[], from_component="X", to_component="Y",
+                  width_px=1.0),
+        ]
+        labels = _render_net_labels(traces, {})
+        assert labels == ""
+
+
+# ---------------------------------------------------------------------------
+# _render_power_rails trace connecting power components (lines 1444-1450)
+# ---------------------------------------------------------------------------
+
+class TestPowerRailsTraceLines:
+    def test_power_trace_line_rendered(self):
+        vrm = Component(id="U10", label="ic", confidence=0.9,
+                        bbox=(100, 100, 60, 40), marking="VRM buck")
+        cap = Component(id="C1", label="capacitor", confidence=0.9,
+                        bbox=(200, 110, 15, 8), value="10uF")
+        comp_map = {"U10": vrm, "C1": cap}
+        trace = Trace(id="T1", points=[], from_component="U10", to_component="C1",
+                      width_px=2.0)
+        html = _render_power_rails([vrm, cap], [trace], comp_map)
+        # Dashed connecting line between power components should appear
+        assert 'stroke-dasharray="6,3"' in html
+        assert "f59e0b" in html
+
+    def test_power_trace_skipped_if_one_component_missing(self):
+        vrm = Component(id="U10", label="ic", confidence=0.9,
+                        bbox=(100, 100, 60, 40), marking="VRM buck")
+        comp_map = {"U10": vrm}
+        trace = Trace(id="T1", points=[], from_component="U10", to_component="MISSING",
+                      width_px=2.0)
+        html = _render_power_rails([vrm], [trace], comp_map)
+        # VRM highlight rect still present (f59e0b color)
+        assert "f59e0b" in html
+        # Connecting line (stroke-dasharray="6,3") should NOT appear when to_c is missing
+        assert 'stroke-dasharray="6,3"' not in html
+
+
+# ---------------------------------------------------------------------------
+# interactive SVG with local image file (line 1498)
+# ---------------------------------------------------------------------------
+
+class TestInteractiveSvgWithLocalImage:
+    def test_local_image_embedded_as_data_uri(self, tmp_path):
+        img = tmp_path / "board.png"
+        img.write_bytes(b"\x89PNG\r\n\x1a\n" + b"\x00" * 8)
+        result = _make_result()
+        svg = generate_interactive_svg(result, image_href=str(img))
+        assert "<image" in svg
+        assert "data:image/png;base64," in svg
+
+    def test_nonexistent_local_image_omitted(self):
+        result = _make_result()
+        svg = generate_interactive_svg(result, image_href="/no/such/file.png")
+        assert "/no/such/file.png" not in svg
+
+
+# ---------------------------------------------------------------------------
+# interactive SVG attack path with missing component (line 1550)
+# ---------------------------------------------------------------------------
+
+class TestInteractiveSvgAttackPathMissing:
+    def test_attack_path_with_missing_to_component_skipped(self):
+        result = _make_result()
+        # "GHOST" doesn't exist in result.components
+        attack_paths = [("U1", "GHOST", "phantom path")]
+        svg = generate_interactive_svg(result, attack_paths=attack_paths,
+                                       security_refs=["U1"])
+        # Should not crash; phantom path label should not appear
+        assert "phantom path" not in svg
+        assert "<svg" in svg
+
+    def test_attack_path_with_both_missing_skipped(self):
+        result = _make_result()
+        attack_paths = [("GHOST1", "GHOST2", "double phantom")]
+        svg = generate_interactive_svg(result, attack_paths=attack_paths,
+                                       security_refs=[])
+        assert "double phantom" not in svg
+        assert "<svg" in svg

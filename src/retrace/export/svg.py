@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import html
 from collections import Counter
-from typing import Optional
 
 from retrace.core.pipeline import AnalysisResult, Component, Trace
 
@@ -724,13 +723,13 @@ def _q(s: str) -> str:
 
 def generate_svg(
     result: AnalysisResult,
-    width: Optional[int] = None,
-    height: Optional[int] = None,
-    image_href: Optional[str] = None,
+    width: int | None = None,
+    height: int | None = None,
+    image_href: str | None = None,
     show_traces: bool = True,
     show_bom: bool = True,
     title: str = "",
-    zones: Optional[list[tuple[str, str, list[str]]]] = None,
+    zones: list[tuple[str, str, list[str]]] | None = None,
 ) -> str:
     bw, bh = result.board_dimensions
     svg_w = width or bw or 800
@@ -817,8 +816,8 @@ def generate_attack_surface_svg(
     result: AnalysisResult,
     attack_paths: list[tuple[str, str, str]],  # (from_ref, to_ref, label)
     security_refs: list[str],  # component refs to highlight
-    width: Optional[int] = None,
-    height: Optional[int] = None,
+    width: int | None = None,
+    height: int | None = None,
     title: str = "",
 ) -> str:
     """Generate an attack-surface SVG highlighting security-critical components and attack paths."""
@@ -982,8 +981,8 @@ def generate_attack_surface_svg(
 def generate_zones_svg(
     result: AnalysisResult,
     zones: list[tuple[str, str, list[str]]],  # (name, zone_type, [comp_ids])
-    width: Optional[int] = None,
-    height: Optional[int] = None,
+    width: int | None = None,
+    height: int | None = None,
     title: str = "",
 ) -> str:
     """Generate a clean functional-zone SVG — zones only, no trace clutter."""
@@ -1164,7 +1163,7 @@ def _render_interactive_controls(svg_w: int) -> str:
     panel_h = preset_section_h + layer_section_h + 16
 
     parts: list[str] = []
-    parts.append(f'  <g id="layer-controls" class="controls">')
+    parts.append('  <g id="layer-controls" class="controls">')
     parts.append(
         f'    <rect x="{panel_x}" y="{panel_y}" width="{panel_w}" '
         f'height="{panel_h}" rx="8" fill="{_PANEL_BG}" fill-opacity="0.95" '
@@ -1459,13 +1458,13 @@ def _render_power_rails(
 
 def generate_interactive_svg(
     result: AnalysisResult,
-    width: Optional[int] = None,
-    height: Optional[int] = None,
-    image_href: Optional[str] = None,
+    width: int | None = None,
+    height: int | None = None,
+    image_href: str | None = None,
     title: str = "",
-    zones: Optional[list[tuple[str, str, list[str]]]] = None,
-    attack_paths: Optional[list[tuple[str, str, str]]] = None,
-    security_refs: Optional[list[str]] = None,
+    zones: list[tuple[str, str, list[str]]] | None = None,
+    attack_paths: list[tuple[str, str, str]] | None = None,
+    security_refs: list[str] | None = None,
 ) -> str:
     """Generate an interactive layered SVG with toggleable layers and view presets.
 
@@ -1494,7 +1493,7 @@ def generate_interactive_svg(
 
     resolved_href = _resolve_image_href(image_href)
 
-    lines.append(f'  <g id="layer-board-image" visibility="visible">')
+    lines.append('  <g id="layer-board-image" visibility="visible">')
     if resolved_href:
         lines.append(
             f'    <image href="{_escape(resolved_href)}" x="0" y="{_TITLE_H}" '
@@ -1503,16 +1502,16 @@ def generate_interactive_svg(
         )
     lines.append('  </g>')
 
-    lines.append(f'  <g id="layer-grid-ref" visibility="hidden">')
+    lines.append('  <g id="layer-grid-ref" visibility="hidden">')
     lines.append(_render_grid_reference(svg_w, svg_h))
     lines.append('  </g>')
 
-    lines.append(f'  <g id="layer-zones" visibility="hidden">')
+    lines.append('  <g id="layer-zones" visibility="hidden">')
     if zones:
         lines.append(_render_zones(zones, comp_map))
     lines.append('  </g>')
 
-    lines.append(f'  <g id="layer-traces" visibility="visible">')
+    lines.append('  <g id="layer-traces" visibility="visible">')
     if result.traces:
         lines.append('    <g class="traces">')
         for trace in result.traces:
@@ -1521,14 +1520,14 @@ def generate_interactive_svg(
         lines.append('    </g>')
     lines.append('  </g>')
 
-    lines.append(f'  <g id="layer-components" visibility="visible">')
+    lines.append('  <g id="layer-components" visibility="visible">')
     lines.append('    <g class="components">')
     for comp in result.components:
         lines.append(_render_component(comp))
     lines.append('    </g>')
     lines.append('  </g>')
 
-    lines.append(f'  <g id="layer-security" visibility="hidden">')
+    lines.append('  <g id="layer-security" visibility="hidden">')
     if security_set:
         lines.append('    <g class="security-highlights">')
         for comp in result.components:
@@ -1576,16 +1575,16 @@ def generate_interactive_svg(
         lines.append(_render_security_panel(sec_findings, svg_w, svg_h))
     lines.append('  </g>')
 
-    lines.append(f'  <g id="layer-power-rails" visibility="hidden">')
+    lines.append('  <g id="layer-power-rails" visibility="hidden">')
     lines.append(_render_power_rails(result.components, result.traces, comp_map))
     lines.append('  </g>')
 
-    lines.append(f'  <g id="layer-net-labels" visibility="hidden">')
+    lines.append('  <g id="layer-net-labels" visibility="hidden">')
     if result.traces:
         lines.append(_render_net_labels(result.traces, comp_map))
     lines.append('  </g>')
 
-    lines.append(f'  <g id="layer-bom-panel" visibility="visible">')
+    lines.append('  <g id="layer-bom-panel" visibility="visible">')
     if result.components:
         lines.append(_render_bom_panel(result, svg_w, svg_h))
     lines.append('  </g>')
@@ -1601,7 +1600,7 @@ def generate_interactive_svg(
     return "\n".join(lines)
 
 
-def _resolve_image_href(image_href: Optional[str]) -> Optional[str]:
+def _resolve_image_href(image_href: str | None) -> str | None:
     """Resolve image href to base64 data URI if it's a local file."""
     if not image_href:
         return None

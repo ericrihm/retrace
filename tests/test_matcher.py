@@ -4,10 +4,9 @@ from __future__ import annotations
 
 import json
 
+import retrace.identification.matcher as matcher_mod
 from retrace.core.pipeline import Component
 from retrace.identification.matcher import identify_components, lookup_part
-import retrace.identification.matcher as matcher_mod
-
 
 # ---------------------------------------------------------------------------
 # Tests: lookup_part()
@@ -190,5 +189,99 @@ class TestLearnComponent:
             e for e in matcher_mod._COMPONENT_DB if e.get("part") != "PRELOADED_PART"
         ]
         matcher_mod._LOOKUP.pop("PRELOADED_PART", None)
+        matcher_mod._LOOKUP.pop("TESTPART", None)
+        matcher_mod._LOOKUP.pop("TP9999", None)
+
+    def test_load_learned_components_invalid_json(self, tmp_path):
+        """_load_learned_components() silently returns on bad JSON (lines 1950-1951)."""
+        bad_file = tmp_path / "bad.json"
+        bad_file.write_text("{ not valid json !!!")
+        db_len_before = len(matcher_mod._COMPONENT_DB)
+        matcher_mod._load_learned_components(path=bad_file)
+        assert len(matcher_mod._COMPONENT_DB) == db_len_before
+
+    def test_load_learned_components_non_list_json(self, tmp_path):
+        """_load_learned_components() silently returns when root is not a list (line 1953)."""
+        bad_file = tmp_path / "nonlist.json"
+        bad_file.write_text(json.dumps({"part": "OOPS"}))
+        db_len_before = len(matcher_mod._COMPONENT_DB)
+        matcher_mod._load_learned_components(path=bad_file)
+        assert len(matcher_mod._COMPONENT_DB) == db_len_before
+
+    def test_load_learned_components_skips_malformed_entries(self, tmp_path):
+        """_load_learned_components() skips non-dict entries and entries missing 'part' (line 1956)."""
+        good_part = "GOODPART_LOAD_TEST"
+        entries = [
+            "not_a_dict",           # non-dict — skipped
+            {"aliases": ["X"]},    # dict but no 'part' key — skipped
+            {"part": good_part},   # valid
+        ]
+        f = tmp_path / "mixed.json"
+        f.write_text(json.dumps(entries))
+        db_len_before = len(matcher_mod._COMPONENT_DB)
+        matcher_mod._load_learned_components(path=f)
+        assert len(matcher_mod._COMPONENT_DB) == db_len_before + 1
+        assert good_part in matcher_mod._LOOKUP
+        # Clean up
+        matcher_mod._COMPONENT_DB[:] = [
+            e for e in matcher_mod._COMPONENT_DB if e.get("part") != good_part
+        ]
+        matcher_mod._LOOKUP.pop(good_part, None)
+
+    def test_load_learned_components_skips_duplicate_part(self, tmp_path):
+        """_load_learned_components() skips parts already in _LOOKUP (line 1959)."""
+        # Pick a part we know is already in the DB (e.g. ESP32-WROOM-32)
+        existing_key = "ESP32-WROOM-32"
+        assert existing_key in matcher_mod._LOOKUP, "precondition: part must be in _LOOKUP"
+        entries = [{"part": existing_key}]
+        f = tmp_path / "dup.json"
+        f.write_text(json.dumps(entries))
+        db_len_before = len(matcher_mod._COMPONENT_DB)
+        matcher_mod._load_learned_components(path=f)
+        # Nothing new should be appended
+        assert len(matcher_mod._COMPONENT_DB) == db_len_before
+
+    def test_learn_component_corrupted_existing_file(self, monkeypatch, tmp_path):
+        """learn_component() resets to [] when existing file is corrupt JSON (lines 1995-1997)."""
+        fake_path = self._patch_path(monkeypatch, tmp_path)
+        # Write corrupt JSON so the read inside learn_component fails
+        fake_path.write_text("NOT VALID JSON")
+
+        entry = {**self._NEW_PART, "part": "CORRUPT_RECOVER"}
+        matcher_mod.learn_component(entry, path=fake_path)
+
+        # File should now contain exactly one entry (the new one)
+        saved = json.loads(fake_path.read_text())
+        assert isinstance(saved, list)
+        assert len(saved) == 1
+        assert saved[0]["part"] == "CORRUPT_RECOVER"
+
+        # Clean up
+        matcher_mod._COMPONENT_DB[:] = [
+            e for e in matcher_mod._COMPONENT_DB if e.get("part") != "CORRUPT_RECOVER"
+        ]
+        matcher_mod._LOOKUP.pop("CORRUPT_RECOVER", None)
+        matcher_mod._LOOKUP.pop("TESTPART", None)
+        matcher_mod._LOOKUP.pop("TP9999", None)
+
+    def test_learn_component_non_list_existing_file(self, monkeypatch, tmp_path):
+        """learn_component() resets to [] when existing file contains non-list JSON (line 1995)."""
+        fake_path = self._patch_path(monkeypatch, tmp_path)
+        # Write a dict instead of a list
+        fake_path.write_text(json.dumps({"part": "SOME_DICT"}))
+
+        entry = {**self._NEW_PART, "part": "NONLIST_RECOVER"}
+        matcher_mod.learn_component(entry, path=fake_path)
+
+        saved = json.loads(fake_path.read_text())
+        assert isinstance(saved, list)
+        assert len(saved) == 1
+        assert saved[0]["part"] == "NONLIST_RECOVER"
+
+        # Clean up
+        matcher_mod._COMPONENT_DB[:] = [
+            e for e in matcher_mod._COMPONENT_DB if e.get("part") != "NONLIST_RECOVER"
+        ]
+        matcher_mod._LOOKUP.pop("NONLIST_RECOVER", None)
         matcher_mod._LOOKUP.pop("TESTPART", None)
         matcher_mod._LOOKUP.pop("TP9999", None)

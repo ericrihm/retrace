@@ -30,10 +30,9 @@ from __future__ import annotations
 
 import itertools
 from dataclasses import dataclass, field
-from typing import Any, Dict, FrozenSet, List, Set, Tuple
+from typing import Any
 
 import numpy as np
-
 
 # ---------------------------------------------------------------------------
 # Data structures
@@ -44,9 +43,9 @@ class BoardComponent:
     """A component instance on a board being analysed."""
     ref: str
     kind: str                           # 'ic', 'resistor', 'capacitor', 'diode', …
-    pins: List[str]
-    location: Tuple[float, float]
-    attributes: Dict[str, Any] = field(default_factory=dict)
+    pins: list[str]
+    location: tuple[float, float]
+    attributes: dict[str, Any] = field(default_factory=dict)
     # e.g. {"package": "SOT-23", "value": "10uF", "footprint": "0402"}
 
 
@@ -64,9 +63,9 @@ class BoardTrace:
 class PatternNode:
     """One role within a subcircuit pattern."""
     role: str                           # e.g. "regulator", "input_cap"
-    kind_options: List[str]             # acceptable component kinds
-    required_pins: List[str] = field(default_factory=list)
-    attribute_hints: Dict[str, Any] = field(default_factory=dict)
+    kind_options: list[str]             # acceptable component kinds
+    required_pins: list[str] = field(default_factory=list)
+    attribute_hints: dict[str, Any] = field(default_factory=dict)
     # e.g. {"value_range_uf": (0.1, 100)}
 
 
@@ -90,8 +89,8 @@ class SubcircuitPattern:
     """
     name: str
     description: str
-    nodes: List[PatternNode]
-    edges: List[PatternEdge]
+    nodes: list[PatternNode]
+    edges: list[PatternEdge]
     seen_count: int = 0                 # how many boards this pattern appeared on
     confidence_sum: float = 0.0        # cumulative match confidence
 
@@ -101,7 +100,7 @@ class PatternMatch:
     """A detected instance of a known pattern on a board."""
     pattern_name: str
     description: str
-    component_roles: Dict[str, str]     # role -> component ref
+    component_roles: dict[str, str]     # role -> component ref
     score: float                        # 0–1
     is_partial: bool                    # True if some optional edges missing
 
@@ -109,8 +108,8 @@ class PatternMatch:
 @dataclass
 class BoardAnalysis:
     """Result of cross-board analysis for a single board."""
-    matches: List[PatternMatch]
-    novel_components: List[str]         # refs that matched no known pattern
+    matches: list[PatternMatch]
+    novel_components: list[str]         # refs that matched no known pattern
     coverage: float                     # fraction of components in a match
 
 
@@ -118,7 +117,7 @@ class BoardAnalysis:
 # Built-in pattern definitions
 # ---------------------------------------------------------------------------
 
-def _builtin_patterns() -> List[SubcircuitPattern]:
+def _builtin_patterns() -> list[SubcircuitPattern]:
     """Return a small library of common subcircuit patterns."""
     return [
         SubcircuitPattern(
@@ -372,7 +371,7 @@ class CrossBoardEngine:
     ) -> None:
         self._threshold = match_threshold
         self._proximity = proximity_px
-        self._patterns: List[SubcircuitPattern] = _builtin_patterns()
+        self._patterns: list[SubcircuitPattern] = _builtin_patterns()
 
     # ------------------------------------------------------------------
     # Public API
@@ -380,8 +379,8 @@ class CrossBoardEngine:
 
     def analyse(
         self,
-        components: List[BoardComponent],
-        traces: List[BoardTrace],
+        components: list[BoardComponent],
+        traces: list[BoardTrace],
     ) -> BoardAnalysis:
         """
         Search for known patterns in the board and return matches.
@@ -396,8 +395,8 @@ class CrossBoardEngine:
         BoardAnalysis
         """
         adjacency = self._build_adjacency(components, traces)
-        all_matches: List[PatternMatch] = []
-        matched_refs: Set[str] = set()
+        all_matches: list[PatternMatch] = []
+        matched_refs: set[str] = set()
 
         for pattern in self._patterns:
             matches = self._match_pattern(pattern, components, adjacency)
@@ -429,13 +428,13 @@ class CrossBoardEngine:
                 return
         self._patterns.append(pattern)
 
-    def list_patterns(self) -> List[str]:
+    def list_patterns(self) -> list[str]:
         """Return names of all known patterns."""
         return [p.name for p in self._patterns]
 
-    def pattern_stats(self) -> Dict[str, Dict[str, Any]]:
+    def pattern_stats(self) -> dict[str, dict[str, Any]]:
         """Return seen_count and mean confidence for each pattern."""
-        out: Dict[str, Dict[str, Any]] = {}
+        out: dict[str, dict[str, Any]] = {}
         for p in self._patterns:
             mean_conf = p.confidence_sum / p.seen_count if p.seen_count > 0 else 0.0
             out[p.name] = {
@@ -445,9 +444,9 @@ class CrossBoardEngine:
             }
         return out
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Serialise knowledge base to a plain dict (JSON-serialisable)."""
-        def pat_to_d(p: SubcircuitPattern) -> Dict:
+        def pat_to_d(p: SubcircuitPattern) -> dict:
             return {
                 "name": p.name,
                 "description": p.description,
@@ -474,7 +473,7 @@ class CrossBoardEngine:
         return {"patterns": [pat_to_d(p) for p in self._patterns]}
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any], **kwargs) -> "CrossBoardEngine":
+    def from_dict(cls, data: dict[str, Any], **kwargs) -> CrossBoardEngine:
         """Restore a CrossBoardEngine from a serialised dict."""
         engine = cls(**kwargs)
         engine._patterns = []
@@ -512,13 +511,13 @@ class CrossBoardEngine:
 
     def _build_adjacency(
         self,
-        components: List[BoardComponent],
-        traces: List[BoardTrace],
-    ) -> Dict[str, Set[str]]:
+        components: list[BoardComponent],
+        traces: list[BoardTrace],
+    ) -> dict[str, set[str]]:
         """
         Build adjacency: ref -> set of refs connected by trace or proximity.
         """
-        adj: Dict[str, Set[str]] = {c.ref: set() for c in components}
+        adj: dict[str, set[str]] = {c.ref: set() for c in components}
 
         # Trace-based adjacency
         for t in traces:
@@ -541,9 +540,9 @@ class CrossBoardEngine:
     def _match_pattern(
         self,
         pattern: SubcircuitPattern,
-        components: List[BoardComponent],
-        adjacency: Dict[str, Set[str]],
-    ) -> List[PatternMatch]:
+        components: list[BoardComponent],
+        adjacency: dict[str, set[str]],
+    ) -> list[PatternMatch]:
         """
         Find all instances of `pattern` in the board component graph.
 
@@ -555,7 +554,7 @@ class CrossBoardEngine:
             return []
 
         # Candidate components per role
-        candidates_per_role: Dict[str, List[BoardComponent]] = {}
+        candidates_per_role: dict[str, list[BoardComponent]] = {}
         for pnode in pattern.nodes:
             cands = [
                 c for c in components
@@ -565,7 +564,7 @@ class CrossBoardEngine:
             candidates_per_role[pnode.role] = cands
 
         roles = [pn.role for pn in pattern.nodes]
-        matches: List[PatternMatch] = []
+        matches: list[PatternMatch] = []
 
         # Generate all candidate assignments
         candidate_lists = [candidates_per_role[r] for r in roles]
@@ -586,7 +585,7 @@ class CrossBoardEngine:
             if len(set(refs)) < len(refs):
                 continue
 
-            role_assignment: Dict[str, str] = {
+            role_assignment: dict[str, str] = {
                 roles[i]: combo[i].ref for i in range(len(roles))
             }
             score, is_partial = self._score_assignment(
@@ -606,9 +605,9 @@ class CrossBoardEngine:
     def _score_assignment(
         self,
         pattern: SubcircuitPattern,
-        role_assignment: Dict[str, str],
-        adjacency: Dict[str, Set[str]],
-    ) -> Tuple[float, bool]:
+        role_assignment: dict[str, str],
+        adjacency: dict[str, set[str]],
+    ) -> tuple[float, bool]:
         """
         Score a candidate role assignment.
 
@@ -646,12 +645,12 @@ class CrossBoardEngine:
         is_partial = req_satisfied < len(required_edges)
         return float(np.clip(edge_score, 0.0, 1.0)), is_partial
 
-    def _deduplicate(self, matches: List[PatternMatch]) -> List[PatternMatch]:
+    def _deduplicate(self, matches: list[PatternMatch]) -> list[PatternMatch]:
         """
         Remove duplicate matches: if two matches of the same pattern share all
         components, keep only the higher-scored one.
         """
-        seen: Dict[Tuple[str, FrozenSet[str]], PatternMatch] = {}
+        seen: dict[tuple[str, frozenset[str]], PatternMatch] = {}
         for m in matches:
             key = (m.pattern_name, frozenset(m.component_roles.values()))
             if key not in seen or m.score > seen[key].score:
@@ -663,7 +662,7 @@ class CrossBoardEngine:
 # CLI / standalone demo
 # ---------------------------------------------------------------------------
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     print("CrossBoardEngine — standalone demo")
 
     engine = CrossBoardEngine(match_threshold=0.4, proximity_px=80.0)

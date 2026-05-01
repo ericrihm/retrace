@@ -23,7 +23,6 @@ cv2 = pytest.importorskip("cv2", reason="OpenCV required for trace extractor tes
 
 from retrace.detection.trace_extractor import extract_traces_from_image  # noqa: E402
 
-
 # ---------------------------------------------------------------------------
 # Synthetic image helpers
 # ---------------------------------------------------------------------------
@@ -287,3 +286,150 @@ class TestSkeletonizeFallback:
             result = extract_traces_from_image(img)
         # Should still succeed via morphological fallback
         assert isinstance(result, list)
+
+
+# ---------------------------------------------------------------------------
+# extract_traces (file-path API)
+# ---------------------------------------------------------------------------
+
+class TestExtractTracesFileAPI:
+    """Tests for the file-path-based extract_traces() entry point."""
+
+    def test_file_not_found_raises(self, tmp_path):
+        """Nonexistent path raises FileNotFoundError."""
+        from retrace.detection.trace_extractor import extract_traces
+        missing = str(tmp_path / "no_such_file.png")
+        with pytest.raises(FileNotFoundError, match="Image not found"):
+            extract_traces(missing)
+
+    def test_unreadable_file_raises_value_error(self, tmp_path):
+        """A file that exists but cannot be decoded raises ValueError."""
+        from retrace.detection.trace_extractor import extract_traces
+        bad_file = tmp_path / "garbage.png"
+        bad_file.write_bytes(b"this is not a valid image")
+        with pytest.raises(ValueError, match="Could not decode image"):
+            extract_traces(str(bad_file))
+
+    def test_valid_image_returns_dict_structure(self, tmp_path):
+        """A valid PNG image returns a dict with 'count' and 'traces' keys."""
+        import cv2
+
+        from retrace.detection.trace_extractor import extract_traces
+        img = _image_with_horizontal_line(h=100, w=200, thickness=8)
+        img_path = str(tmp_path / "test.png")
+        cv2.imwrite(img_path, img)
+        result = extract_traces(img_path)
+        assert isinstance(result, dict)
+        assert "count" in result
+        assert "traces" in result
+
+    def test_valid_image_count_matches_traces(self, tmp_path):
+        """count field matches len(traces) list."""
+        import cv2
+
+        from retrace.detection.trace_extractor import extract_traces
+        img = _image_with_horizontal_line(h=100, w=200, thickness=8)
+        img_path = str(tmp_path / "test.png")
+        cv2.imwrite(img_path, img)
+        result = extract_traces(img_path)
+        assert result["count"] == len(result["traces"])
+
+    def test_valid_image_trace_dict_fields(self, tmp_path):
+        """Each trace dict has id, points, width_px, from_component, to_component."""
+        import cv2
+
+        from retrace.detection.trace_extractor import extract_traces
+        img = _image_with_horizontal_line(h=100, w=200, thickness=8)
+        img_path = str(tmp_path / "test.png")
+        cv2.imwrite(img_path, img)
+        result = extract_traces(img_path)
+        for t in result["traces"]:
+            assert "id" in t
+            assert "points" in t
+            assert "width_px" in t
+            assert "from_component" in t
+            assert "to_component" in t
+
+    def test_black_image_returns_zero_count(self, tmp_path):
+        """A black image produces count=0 and empty traces list."""
+        import cv2
+
+        from retrace.detection.trace_extractor import extract_traces
+        img = _blank_black_image(100, 100)
+        img_path = str(tmp_path / "black.png")
+        cv2.imwrite(img_path, img)
+        result = extract_traces(img_path)
+        assert result["count"] == 0
+        assert result["traces"] == []
+
+    def test_path_object_accepted(self, tmp_path):
+        """extract_traces accepts a Path object as well as a string."""
+
+        import cv2
+
+        from retrace.detection.trace_extractor import extract_traces
+        img = _blank_black_image(50, 50)
+        img_path = tmp_path / "path_obj.png"
+        cv2.imwrite(str(img_path), img)
+        result = extract_traces(img_path)  # Path object
+        assert isinstance(result, dict)
+
+    def test_cv2_unavailable_raises_import_error(self, tmp_path):
+        """If cv2 is not installed, extract_traces raises ImportError with helpful message."""
+        from retrace.detection.trace_extractor import extract_traces
+        # Write a real file so we get past the existence check
+        dummy = tmp_path / "dummy.png"
+        dummy.write_bytes(b"\x89PNG\r\n")
+        with patch.dict(sys.modules, {"cv2": None}):
+            with pytest.raises(ImportError, match="OpenCV is required"):
+                extract_traces(str(dummy))
+
+
+# ---------------------------------------------------------------------------
+# cv2 ImportError path in extract_traces_from_image
+# ---------------------------------------------------------------------------
+
+class TestCv2MissingInExtractFromImage:
+    def test_cv2_unavailable_raises_import_error(self):
+        """extract_traces_from_image raises ImportError with helpful message when cv2 absent."""
+        img = np.zeros((10, 10, 3), dtype=np.uint8)
+        with patch.dict(sys.modules, {"cv2": None}):
+            with pytest.raises(ImportError, match="OpenCV is required"):
+                extract_traces_from_image(img)
+
+
+# ---------------------------------------------------------------------------
+# Skimage happy path (mocked)
+# ---------------------------------------------------------------------------
+
+class TestSkeletonizeSkimagePath:
+    def test_skimage_skeletonize_used_when_available(self):
+        """When skimage IS importable, the skimage code path (lines 174-176) runs."""
+        import types
+
+        import cv2
+
+        # Build a real binary mask from a copper image
+        img = _image_with_horizontal_line(h=100, w=200, thickness=8)
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        lo = np.array([5, 60, 60], dtype=np.uint8)
+        hi = np.array([25, 255, 255], dtype=np.uint8)
+        mask = cv2.inRange(hsv, lo, hi)
+
+        # Create a fake skimage.morphology module with a real skeletonize impl
+        from retrace.detection.trace_extractor import _skeletonize
+
+        fake_skel_result = (mask > 0).astype(np.uint8) * 255  # identity passthrough
+
+        fake_morph = types.ModuleType("skimage.morphology")
+        fake_morph.skeletonize = lambda binary: binary.astype(np.uint8)
+
+        fake_skimage = types.ModuleType("skimage")
+        fake_skimage.morphology = fake_morph
+
+        with patch.dict(sys.modules, {"skimage": fake_skimage, "skimage.morphology": fake_morph}):
+            result = _skeletonize(mask)
+
+        assert isinstance(result, np.ndarray)
+        assert result.shape == mask.shape
+        assert result.dtype == np.uint8

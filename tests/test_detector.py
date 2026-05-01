@@ -11,7 +11,6 @@ import pytest
 
 from retrace.core.pipeline import Component
 
-
 # ---------------------------------------------------------------------------
 # Import smoke test (no ultralytics required)
 # ---------------------------------------------------------------------------
@@ -108,6 +107,7 @@ def test_detect_returns_list_of_components():
     with patch.dict(sys.modules, {"ultralytics": fake_ultra}):
         # Must reimport to pick up the patched module
         import importlib
+
         import retrace.detection.detector as det_mod
         importlib.reload(det_mod)
         detector = det_mod.YOLODetector.__new__(det_mod.YOLODetector)
@@ -146,6 +146,7 @@ def test_detect_maps_class_index_to_label():
 
         with patch.dict(sys.modules, {"ultralytics": fake_ultra}):
             import importlib
+
             import retrace.detection.detector as det_mod
             importlib.reload(det_mod)
             detector = det_mod.YOLODetector.__new__(det_mod.YOLODetector)
@@ -168,6 +169,7 @@ def test_detect_unknown_class_index_produces_class_label():
 
     with patch.dict(sys.modules, {"ultralytics": fake_ultra}):
         import importlib
+
         import retrace.detection.detector as det_mod
         importlib.reload(det_mod)
         detector = det_mod.YOLODetector.__new__(det_mod.YOLODetector)
@@ -189,6 +191,7 @@ def test_detect_returns_empty_when_no_boxes():
 
     with patch.dict(sys.modules, {"ultralytics": fake_ultra}):
         import importlib
+
         import retrace.detection.detector as det_mod
         importlib.reload(det_mod)
         detector = det_mod.YOLODetector.__new__(det_mod.YOLODetector)
@@ -204,6 +207,7 @@ def test_detect_returns_empty_when_model_is_none():
     """If _model is None detect() should return [] without raising."""
     with patch.dict(sys.modules, {"ultralytics": MagicMock()}):
         import importlib
+
         import retrace.detection.detector as det_mod
         importlib.reload(det_mod)
         detector = det_mod.YOLODetector.__new__(det_mod.YOLODetector)
@@ -224,6 +228,7 @@ def test_detect_handles_predict_exception():
 
     with patch.dict(sys.modules, {"ultralytics": fake_ultra}):
         import importlib
+
         import retrace.detection.detector as det_mod
         importlib.reload(det_mod)
         detector = det_mod.YOLODetector.__new__(det_mod.YOLODetector)
@@ -246,6 +251,7 @@ def test_detect_synthetic_rgb_image():
 
     with patch.dict(sys.modules, {"ultralytics": fake_ultra}):
         import importlib
+
         import retrace.detection.detector as det_mod
         importlib.reload(det_mod)
         detector = det_mod.YOLODetector.__new__(det_mod.YOLODetector)
@@ -272,6 +278,7 @@ def test_component_id_is_unique():
 
     with patch.dict(sys.modules, {"ultralytics": fake_ultra}):
         import importlib
+
         import retrace.detection.detector as det_mod
         importlib.reload(det_mod)
         detector = det_mod.YOLODetector.__new__(det_mod.YOLODetector)
@@ -284,3 +291,113 @@ def test_component_id_is_unique():
     assert len(ids) == len(set(ids)), "Component IDs should be unique"
     for cid in ids:
         assert cid.startswith("D")
+
+
+# ---------------------------------------------------------------------------
+# _load_model() success paths (lines 77-82)
+# ---------------------------------------------------------------------------
+
+def test_load_model_success_no_device():
+    """_load_model() should call YOLO with the model path and no device kwarg."""
+    fake_model_instance = MagicMock()
+    fake_yolo_cls = MagicMock(return_value=fake_model_instance)
+    fake_ultra = types.ModuleType("ultralytics")
+    fake_ultra.YOLO = fake_yolo_cls
+
+    with patch.dict(sys.modules, {"ultralytics": fake_ultra}):
+        import importlib
+
+        import retrace.detection.detector as det_mod
+        importlib.reload(det_mod)
+
+        detector = det_mod.YOLODetector.__new__(det_mod.YOLODetector)
+        detector._model_path = "yolov8n.pt"
+        detector._confidence = 0.35
+        detector._device = None
+        detector._model = None
+
+        detector._load_model()
+
+    fake_yolo_cls.assert_called_once_with("yolov8n.pt")
+    assert detector._model is fake_model_instance
+
+
+def test_load_model_success_with_device():
+    """_load_model() should pass device kwarg when _device is set (line 80)."""
+    fake_model_instance = MagicMock()
+    fake_yolo_cls = MagicMock(return_value=fake_model_instance)
+    fake_ultra = types.ModuleType("ultralytics")
+    fake_ultra.YOLO = fake_yolo_cls
+
+    with patch.dict(sys.modules, {"ultralytics": fake_ultra}):
+        import importlib
+
+        import retrace.detection.detector as det_mod
+        importlib.reload(det_mod)
+
+        detector = det_mod.YOLODetector.__new__(det_mod.YOLODetector)
+        detector._model_path = "yolov8n.pt"
+        detector._confidence = 0.35
+        detector._device = "cpu"
+        detector._model = None
+
+        detector._load_model()
+
+    fake_yolo_cls.assert_called_once_with("yolov8n.pt", device="cpu")
+    assert detector._model is fake_model_instance
+
+
+# ---------------------------------------------------------------------------
+# detect() with result.boxes is None (line 114)
+# ---------------------------------------------------------------------------
+
+def test_detect_skips_result_with_none_boxes():
+    """When result.boxes is None detect() skips that result and returns []."""
+    fake_model = MagicMock()
+    # result with boxes=None
+    none_box_result = MagicMock()
+    none_box_result.boxes = None
+    fake_model.predict.return_value = [none_box_result]
+
+    fake_ultra = _inject_fake_ultralytics(fake_model)
+
+    with patch.dict(sys.modules, {"ultralytics": fake_ultra}):
+        import importlib
+
+        import retrace.detection.detector as det_mod
+        importlib.reload(det_mod)
+        detector = det_mod.YOLODetector.__new__(det_mod.YOLODetector)
+        detector._model = fake_model
+        detector._confidence = 0.35
+
+        components = detector.detect(np.zeros((100, 100, 3), dtype=np.uint8))
+
+    assert components == []
+
+
+def test_detect_mixed_none_and_valid_boxes():
+    """Results with None boxes are skipped; valid results are still processed."""
+    fake_model = MagicMock()
+    none_box_result = MagicMock()
+    none_box_result.boxes = None
+
+    box = _make_fake_box(0, 0, 40, 40, cls_idx=1, conf=0.85)
+    valid_result = _make_fake_yolo_result([box])
+
+    fake_model.predict.return_value = [none_box_result, valid_result]
+
+    fake_ultra = _inject_fake_ultralytics(fake_model)
+
+    with patch.dict(sys.modules, {"ultralytics": fake_ultra}):
+        import importlib
+
+        import retrace.detection.detector as det_mod
+        importlib.reload(det_mod)
+        detector = det_mod.YOLODetector.__new__(det_mod.YOLODetector)
+        detector._model = fake_model
+        detector._confidence = 0.35
+
+        components = detector.detect(np.zeros((100, 100, 3), dtype=np.uint8))
+
+    assert len(components) == 1
+    assert components[0].label == "capacitor"

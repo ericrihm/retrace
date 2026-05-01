@@ -5,7 +5,6 @@ from __future__ import annotations
 import difflib
 import json
 from pathlib import Path
-from typing import Optional
 
 from retrace.core.pipeline import Component
 
@@ -2008,7 +2007,7 @@ def learn_component(entry: dict, path: Path = LEARNED_DB_PATH) -> None:
 _load_learned_components()
 
 
-def _best_fuzzy_match(marking: str, threshold: float = 0.55) -> Optional[dict]:
+def _best_fuzzy_match(marking: str, threshold: float = 0.55) -> dict | None:
     """Return the best DB entry matching the marking via SequenceMatcher, or None."""
     if not marking:
         return None
@@ -2021,7 +2020,7 @@ def _best_fuzzy_match(marking: str, threshold: float = 0.55) -> Optional[dict]:
 
     # Fuzzy search against all keys
     best_score = 0.0
-    best_entry: Optional[dict] = None
+    best_entry: dict | None = None
 
     for key, entry in _LOOKUP.items():
         score = difflib.SequenceMatcher(None, upper, key).ratio()
@@ -2060,7 +2059,7 @@ def identify_components(components: list[Component]) -> list[Component]:
     return components
 
 
-def lookup_part(marking: str) -> Optional[dict]:
+def lookup_part(marking: str) -> dict | None:
     """Public single-part lookup used by tests and CLI helpers.
 
     Args:
@@ -2073,7 +2072,7 @@ def lookup_part(marking: str) -> Optional[dict]:
     return _best_fuzzy_match(marking)
 
 
-def lookup_security_intel(part_number: str) -> Optional[dict]:
+def lookup_security_intel(part_number: str) -> dict | None:
     """Return the security_intel dict for a known part number, or None."""
     entry = _LOOKUP.get(part_number.upper())
     if entry:

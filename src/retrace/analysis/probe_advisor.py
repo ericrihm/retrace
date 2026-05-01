@@ -17,10 +17,8 @@ No external dependencies beyond numpy.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
 
 import numpy as np
-
 
 # ---------------------------------------------------------------------------
 # Data structures
@@ -31,15 +29,15 @@ class Component:
     """A component detected on the board."""
     ref: str                        # e.g. "U1", "R12"
     kind: str                       # e.g. "IC", "resistor", "capacitor"
-    pins: List[str]                 # pin names, e.g. ["VCC","GND","OUT"]
-    location: Tuple[float, float]   # (x, y) in image-space pixels
+    pins: list[str]                 # pin names, e.g. ["VCC","GND","OUT"]
+    location: tuple[float, float]   # (x, y) in image-space pixels
 
 
 @dataclass
 class ProbePoint:
     """A candidate probe location on the board."""
     node_id: str                    # unique identifier, e.g. "U1.VCC"
-    location: Tuple[float, float]   # (x, y) pixels
+    location: tuple[float, float]   # (x, y) pixels
     component_ref: str
     pin_name: str
 
@@ -48,16 +46,16 @@ class ProbePoint:
 class Measurement:
     """A measurement taken at a probe point."""
     node_id: str
-    voltage: Optional[float] = None
-    resistance: Optional[float] = None
-    continuity_to: Optional[str] = None  # node_id of node that rings out
+    voltage: float | None = None
+    resistance: float | None = None
+    continuity_to: str | None = None  # node_id of node that rings out
 
 
 @dataclass
 class Recommendation:
     """Output of the advisor: a ranked list of probe points."""
     node_id: str
-    location: Tuple[float, float]
+    location: tuple[float, float]
     expected_info_gain: float       # bits
     rationale: str
 
@@ -86,29 +84,29 @@ class ProbeAdvisor:
 
     def __init__(
         self,
-        net_labels: Optional[List[str]] = None,
+        net_labels: list[str] | None = None,
         alpha: float = 1.0,
     ) -> None:
-        self._labels: List[str] = list(net_labels or ["VCC", "GND", "NET_UNKNOWN"])
+        self._labels: list[str] = list(net_labels or ["VCC", "GND", "NET_UNKNOWN"])
         self._alpha = alpha
 
         # node_id -> Dirichlet counts array (len == number of net labels)
-        self._counts: Dict[str, np.ndarray] = {}
+        self._counts: dict[str, np.ndarray] = {}
 
         # node_id -> ProbePoint metadata
-        self._nodes: Dict[str, ProbePoint] = {}
+        self._nodes: dict[str, ProbePoint] = {}
 
         # already-measured nodes (their entropy is 0 — collapsed to known net)
-        self._resolved: Dict[str, str] = {}  # node_id -> net_label
+        self._resolved: dict[str, str] = {}  # node_id -> net_label
 
         # continuity groups: union-find parent map
-        self._parent: Dict[str, str] = {}
+        self._parent: dict[str, str] = {}
 
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
 
-    def add_components(self, components: List[Component]) -> None:
+    def add_components(self, components: list[Component]) -> None:
         """Register components and initialise probe point nodes."""
         for comp in components:
             for pin in comp.pins:
@@ -129,9 +127,9 @@ class ProbeAdvisor:
 
     def recommend(
         self,
-        image_path: Optional[str] = None,
+        image_path: str | None = None,
         top_k: int = 5,
-    ) -> List[Recommendation]:
+    ) -> list[Recommendation]:
         """
         Return the top-k probe points ranked by expected information gain.
 
@@ -148,7 +146,7 @@ class ProbeAdvisor:
         list[Recommendation]
             Sorted descending by expected_info_gain (bits).
         """
-        candidates: List[Recommendation] = []
+        candidates: list[Recommendation] = []
 
         for node_id, pp in self._nodes.items():
             if node_id in self._resolved:
@@ -347,7 +345,7 @@ class ProbeAdvisor:
 # CLI / standalone demo
 # ---------------------------------------------------------------------------
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     print("ProbeAdvisor — standalone demo")
 
     advisor = ProbeAdvisor(net_labels=["VCC", "GND", "NET_A", "NET_B"])

@@ -7,7 +7,6 @@ import logging
 import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Optional
 
 import numpy as np
 
@@ -95,7 +94,7 @@ class AnalysisResult:
 class Pipeline:
     """Orchestrates the full PCB analysis pipeline."""
 
-    def __init__(self, config: Optional[dict] = None):
+    def __init__(self, config: dict | None = None):
         self.config = config or {}
         self._detector = None
         self._ocr = None
@@ -314,7 +313,7 @@ class Pipeline:
 
     def _record_learnings(self, result: AnalysisResult) -> None:
         try:
-            from retrace.learning.engine import record_detection, queue_for_sourcing
+            from retrace.learning.engine import queue_for_sourcing, record_detection
         except ImportError:
             return
 

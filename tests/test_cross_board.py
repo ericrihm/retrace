@@ -14,7 +14,6 @@ from retrace.analysis.cross_board import (
     SubcircuitPattern,
 )
 
-
 # ---------------------------------------------------------------------------
 # Helpers / fixtures
 # ---------------------------------------------------------------------------
@@ -363,3 +362,36 @@ class TestScoringLogic:
         result = engine.analyse(comps, [])
         rc_matches = [m for m in result.matches if m.pattern_name == "rc_lowpass"]
         assert rc_matches == []
+
+    def test_zero_node_pattern_returns_no_matches(self):
+        """A pattern with no nodes yields no matches (covers line 554)."""
+        engine = CrossBoardEngine(match_threshold=0.0)
+        empty_pattern = SubcircuitPattern(
+            name="empty_pattern",
+            description="Pattern with no nodes",
+            nodes=[],
+            edges=[],
+        )
+        engine.record_pattern(empty_pattern)
+        comps = [BoardComponent("R1", "resistor", ["A", "B"], (0.0, 0.0))]
+        result = engine.analyse(comps, [])
+        empty_matches = [m for m in result.matches if m.pattern_name == "empty_pattern"]
+        assert empty_matches == []
+
+    def test_combinatorial_explosion_pruning(self):
+        """More than 10,000 candidate combos triggers pruning to 4 per role (line 580)."""
+        # The decoupling_pair pattern has 2 roles, each accepting 'capacitor'.
+        # With 101+ capacitors per role, combos = 101*101 > 10,000 → pruning fires.
+        engine = CrossBoardEngine(match_threshold=0.5, proximity_px=200.0)
+        # Create 101 capacitors, all within proximity of each other
+        comps = [
+            BoardComponent(f"C{i}", "capacitor", ["1", "2"], (float(i * 5), 0.0))
+            for i in range(101)
+        ]
+        # This must complete without error and return a BoardAnalysis
+        result = engine.analyse(comps, [])
+        assert isinstance(result, BoardAnalysis)
+        # With pruning the engine limits candidates per role to 4, so at most
+        # 4*4=16 combos are checked for any pattern — matches are still found
+        decoupling_matches = [m for m in result.matches if m.pattern_name == "decoupling_pair"]
+        assert len(decoupling_matches) >= 1

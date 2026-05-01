@@ -26,10 +26,8 @@ from __future__ import annotations
 import copy
 from collections import deque
 from dataclasses import dataclass, field
-from typing import Dict, FrozenSet, List, Set, Tuple
 
 import numpy as np
-
 
 # ---------------------------------------------------------------------------
 # Data structures
@@ -63,8 +61,8 @@ class ComponentSpec:
     """
     ref: str
     kind: str
-    pins: List[str]
-    location: Tuple[float, float] = field(default_factory=lambda: (0.0, 0.0))
+    pins: list[str]
+    location: tuple[float, float] = field(default_factory=lambda: (0.0, 0.0))
 
 
 @dataclass
@@ -78,10 +76,10 @@ class Trace:
 @dataclass
 class SolverResult:
     """Output of ConstraintSolver.solve()."""
-    net_assignment: Dict[str, str]          # node_id -> net label
-    inferred_traces: List[Tuple[str, str]]  # pairs inferred by the solver
-    ambiguous_nodes: List[str]              # nodes whose net is still unknown
-    conflicts: List[str]                    # constraint violations detected
+    net_assignment: dict[str, str]          # node_id -> net label
+    inferred_traces: list[tuple[str, str]]  # pairs inferred by the solver
+    ambiguous_nodes: list[str]              # nodes whose net is still unknown
+    conflicts: list[str]                    # constraint violations detected
     iterations: int
 
 
@@ -100,16 +98,16 @@ class ConstraintSolver:
     """
 
     # Pin-name vocabularies
-    _POWER_NAMES: FrozenSet[str] = frozenset({
+    _POWER_NAMES: frozenset[str] = frozenset({
         "vcc", "vdd", "v+", "vin", "vbat", "3v3", "5v", "3.3v", "5.0v",
         "vcc1", "vcc2", "avcc", "dvcc", "pvcc",
     })
-    _GROUND_NAMES: FrozenSet[str] = frozenset({
+    _GROUND_NAMES: frozenset[str] = frozenset({
         "gnd", "vss", "agnd", "pgnd", "dgnd", "v-", "sg", "rtn",
         "gnd1", "gnd2", "ground",
     })
-    _DIFFP_SUFFIXES: Tuple[str, ...] = ("+", "p", "_p", "pos")
-    _DIFFN_SUFFIXES: Tuple[str, ...] = ("-", "n", "_n", "neg")
+    _DIFFP_SUFFIXES: tuple[str, ...] = ("+", "p", "_p", "pos")
+    _DIFFN_SUFFIXES: tuple[str, ...] = ("-", "n", "_n", "neg")
 
     def __init__(self, proximity_threshold_px: float = 50.0) -> None:
         """
@@ -126,8 +124,8 @@ class ConstraintSolver:
 
     def solve(
         self,
-        components: List[ComponentSpec],
-        traces: List[Trace],
+        components: list[ComponentSpec],
+        traces: list[Trace],
         max_iterations: int = 200,
     ) -> SolverResult:
         """
@@ -147,8 +145,8 @@ class ConstraintSolver:
         SolverResult
         """
         # Build domain: node_id -> set of possible net classes
-        domains: Dict[str, Set[str]] = {}
-        pin_map: Dict[str, Pin] = {}
+        domains: dict[str, set[str]] = {}
+        pin_map: dict[str, Pin] = {}
 
         for comp in components:
             for pname in comp.pins:
@@ -158,7 +156,7 @@ class ConstraintSolver:
                 domains[nid] = self._initial_domain(pname)
 
         # Build union-find for trace-connected nodes
-        parent: Dict[str, str] = {nid: nid for nid in domains}
+        parent: dict[str, str] = {nid: nid for nid in domains}
 
         def find(x: str) -> str:
             while parent[x] != x:
@@ -182,7 +180,7 @@ class ConstraintSolver:
                 union(a, b)
 
         # Merge domains within each union-find group
-        groups: Dict[str, Set[str]] = {}  # root -> union of domains? No — intersection
+        groups: dict[str, set[str]] = {}  # root -> union of domains? No — intersection
         for nid in domains:
             r = find(nid)
             if r not in groups:
@@ -198,13 +196,13 @@ class ConstraintSolver:
             domains[nid] = copy.copy(groups[r])
 
         # Apply proximity bypass-cap rules
-        comp_by_ref: Dict[str, ComponentSpec] = {c.ref: c for c in components}
+        comp_by_ref: dict[str, ComponentSpec] = {c.ref: c for c in components}
         self._apply_proximity_rules(components, comp_by_ref, domains, find)
 
         # AC-3: build arc queue
         # Arcs: (node_a, node_b, constraint_fn)
         arcs: deque = deque()
-        constraints: List[Tuple[str, str, str]] = []
+        constraints: list[tuple[str, str, str]] = []
 
         for trace in traces:
             a, b = trace.pin_a.node_id, trace.pin_b.node_id
@@ -222,7 +220,7 @@ class ConstraintSolver:
         for arc in constraints:
             arcs.append(arc)
 
-        conflicts: List[str] = []
+        conflicts: list[str] = []
         iters = 0
 
         while arcs and iters < max_iterations:
@@ -246,8 +244,8 @@ class ConstraintSolver:
                         arcs.append((other_a, other_b, other_type))
 
         # Build final assignment: single-element domains are resolved
-        net_assignment: Dict[str, str] = {}
-        ambiguous: List[str] = []
+        net_assignment: dict[str, str] = {}
+        ambiguous: list[str] = []
 
         for nid, dom in domains.items():
             if len(dom) == 1:
@@ -257,7 +255,7 @@ class ConstraintSolver:
                 net_assignment[nid] = NET_UNKNOWN
 
         # Infer additional traces from resolved nodes in same group
-        inferred: List[Tuple[str, str]] = []
+        inferred: list[tuple[str, str]] = []
         for nid in domains:
             r = find(nid)
             if r != nid and nid in net_assignment and r in net_assignment:
@@ -276,7 +274,7 @@ class ConstraintSolver:
     # Internal helpers
     # ------------------------------------------------------------------
 
-    def _initial_domain(self, pin_name: str) -> Set[str]:
+    def _initial_domain(self, pin_name: str) -> set[str]:
         """Return the initial domain for a pin based on its name."""
         pn = pin_name.lower().strip()
         if pn in self._POWER_NAMES:
@@ -294,7 +292,7 @@ class ConstraintSolver:
 
     def _revise(
         self,
-        domains: Dict[str, Set[str]],
+        domains: dict[str, set[str]],
         node_a: str,
         node_b: str,
         ctype: str,
@@ -320,10 +318,10 @@ class ConstraintSolver:
         return len(domains[node_a]) != before
 
     def _find_diff_pairs(
-        self, pins: List[str], comp_ref: str
-    ) -> List[Tuple[str, str]]:
+        self, pins: list[str], comp_ref: str
+    ) -> list[tuple[str, str]]:
         """Detect differential pairs within a component's pin list."""
-        pairs: List[Tuple[str, str]] = []
+        pairs: list[tuple[str, str]] = []
         for p in pins:
             pl = p.lower()
             for sfx_p, sfx_n in zip(self._DIFFP_SUFFIXES, self._DIFFN_SUFFIXES):
@@ -340,9 +338,9 @@ class ConstraintSolver:
 
     def _apply_proximity_rules(
         self,
-        components: List[ComponentSpec],
-        comp_by_ref: Dict[str, ComponentSpec],
-        domains: Dict[str, Set[str]],
+        components: list[ComponentSpec],
+        comp_by_ref: dict[str, ComponentSpec],
+        domains: dict[str, set[str]],
         find,  # union-find callable
     ) -> None:
         """
@@ -390,7 +388,7 @@ class ConstraintSolver:
 # CLI / standalone demo
 # ---------------------------------------------------------------------------
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     print("ConstraintSolver — standalone demo")
 
     components = [
