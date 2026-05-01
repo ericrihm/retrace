@@ -1071,6 +1071,150 @@ def save_svg(result: AnalysisResult, output_path: str, **kwargs) -> None:
     Path(output_path).write_text(svg, encoding="utf-8")
 
 
+# ── Bus Topology Graph ─────────────────────────────────────────────
+
+_BUS_PATTERNS = {
+    "SPI": frozenset({"mosi", "miso", "sclk", "cs", "spi", "flash", "w25q", "mx25", "at25"}),
+    "I2C": frozenset({"sda", "scl", "i2c", "eeprom", "at24", "rtc", "sensor"}),
+    "UART": frozenset({"uart", "tx", "rx", "serial", "console", "debug"}),
+    "JTAG": frozenset({"jtag", "tdi", "tdo", "tms", "tck", "swd", "swdio", "swclk"}),
+    "USB": frozenset({"usb", "dp", "dm", "hub", "xhci", "ehci"}),
+    "SDIO": frozenset({"sdio", "emmc", "sd", "mmc", "nand"}),
+    "PCIe": frozenset({"pcie", "pci", "lane", "nvme"}),
+    "DDR": frozenset({"ddr", "dram", "sdram", "dimm"}),
+}
+
+
+def _infer_bus(trace: Trace, comp_map: dict[str, Component]) -> str:
+    """Infer bus protocol from trace endpoints and connected component context."""
+    parts = []
+    for cid in (trace.from_component, trace.to_component):
+        c = comp_map.get(cid)
+        if c:
+            parts.append(f"{c.marking} {c.part_number} {c.label}".lower())
+    text = " ".join(parts)
+    for bus, keywords in _BUS_PATTERNS.items():
+        if any(kw in text for kw in keywords):
+            return bus
+    return ""
+
+
+_BUS_COLORS = {
+    "SPI": "#3b82f6",
+    "I2C": "#22c55e",
+    "UART": "#f59e0b",
+    "JTAG": "#ef4444",
+    "USB": "#a855f7",
+    "SDIO": "#06b6d4",
+    "PCIe": "#ec4899",
+    "DDR": "#14b8a6",
+}
+
+
+def generate_bus_topology_svg(
+    result: AnalysisResult,
+    width: int = 800,
+) -> str:
+    """Generate a bus topology graph showing how components connect via protocol buses."""
+    comps = result.components or []
+    traces = result.traces or []
+
+    if not traces:
+        return ""
+
+    comp_map = {c.id: c for c in comps}
+
+    bus_edges: list[tuple[str, str, str]] = []
+    for t in traces:
+        bus = _infer_bus(t, comp_map)
+        if bus and t.from_component and t.to_component:
+            bus_edges.append((t.from_component, t.to_component, bus))
+
+    if not bus_edges:
+        return ""
+
+    connected_ids: set[str] = set()
+    for f, t, _ in bus_edges:
+        connected_ids.add(f)
+        connected_ids.add(t)
+
+    nodes = [c for c in comps if c.id in connected_ids]
+    if not nodes:
+        return ""
+
+    import math
+
+    title_h = 50
+    graph_r = min(width, 600) // 2 - 80
+    cx = width // 2
+    cy = title_h + graph_r + 60
+    svg_h = cy + graph_r + 100
+
+    parts: list[str] = []
+    parts.append(f'<svg xmlns="http://www.w3.org/2000/svg" '
+                 f'width="{width}" height="{svg_h}" viewBox="0 0 {width} {svg_h}">')
+    parts.append(f'  <rect width="{width}" height="{svg_h}" fill="{_BG}"/>')
+
+    parts.append(f'  <rect width="{width}" height="{title_h}" '
+                 f'fill="{_PANEL_BG}" fill-opacity="0.92"/>')
+    parts.append(f'  <text x="16" y="30" font-family={_q(_FONT)} '
+                 f'font-size="14" fill="#22d3ee" font-weight="bold">re:trace</text>')
+    parts.append(f'  <text x="90" y="30" font-family={_q(_FONT)} '
+                 f'font-size="12" fill="#e2e8f0">Bus Topology Graph</text>')
+
+    node_positions: dict[str, tuple[int, int]] = {}
+    n = len(nodes)
+    for i, node in enumerate(nodes):
+        angle = 2 * math.pi * i / n - math.pi / 2
+        nx = int(cx + graph_r * math.cos(angle))
+        ny = int(cy + graph_r * math.sin(angle))
+        node_positions[node.id] = (nx, ny)
+
+    for from_id, to_id, bus in bus_edges:
+        if from_id in node_positions and to_id in node_positions:
+            fx, fy = node_positions[from_id]
+            tx, ty = node_positions[to_id]
+            color = _BUS_COLORS.get(bus, "#64748b")
+            mx, my = (fx + tx) // 2, (fy + ty) // 2
+            parts.append(f'  <line x1="{fx}" y1="{fy}" x2="{tx}" y2="{ty}" '
+                         f'stroke="{color}" stroke-width="2" stroke-opacity="0.6"/>')
+            parts.append(f'  <text x="{mx}" y="{my - 4}" text-anchor="middle" '
+                         f'font-family={_q(_FONT)} font-size="8" fill="{color}" '
+                         f'font-weight="bold">{html.escape(bus)}</text>')
+
+    for node in nodes:
+        nx, ny = node_positions[node.id]
+        nw, nh = 100, 32
+        parts.append(f'  <rect x="{nx - nw // 2}" y="{ny - nh // 2}" '
+                     f'width="{nw}" height="{nh}" rx="6" '
+                     f'fill="{_PANEL_BG}" stroke="#22d3ee" stroke-width="1.5"/>')
+        label = node.marking or node.part_number or node.id
+        parts.append(f'  <text x="{nx}" y="{ny + 4}" text-anchor="middle" '
+                     f'font-family={_q(_FONT)} font-size="9" fill="#e2e8f0" '
+                     f'font-weight="bold">{html.escape(label[:14])}</text>')
+
+    legend_y = svg_h - 50
+    buses_used = sorted(set(b for _, _, b in bus_edges))
+    lx = 20
+    for bus in buses_used:
+        color = _BUS_COLORS.get(bus, "#64748b")
+        parts.append(f'  <rect x="{lx}" y="{legend_y}" width="12" height="12" '
+                     f'rx="2" fill="{color}"/>')
+        parts.append(f'  <text x="{lx + 16}" y="{legend_y + 10}" '
+                     f'font-family={_q(_FONT)} font-size="9" fill="#94a3b8">'
+                     f'{html.escape(bus)}</text>')
+        lx += 70
+
+    fy = svg_h - 20
+    parts.append(f'  <text x="{width // 2}" y="{fy}" text-anchor="middle" '
+                 f'font-family={_q(_FONT)} font-size="8" fill="#64748b">'
+                 f're:trace bus topology — {len(nodes)} node(s), '
+                 f'{len(bus_edges)} connection(s)</text>')
+
+    parts.append('</svg>')
+    return "\n".join(parts)
+
+
 # ── Power Tree Diagram ─────────────────────────────────────────────
 
 

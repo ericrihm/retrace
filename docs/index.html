@@ -673,7 +673,7 @@ footer a { color: var(--text-mid); }
   <p class="tagline">Photo in, attack surface out. The first open-source toolkit that identifies PCB components, extracts traces, maps trust chains, and tells you where to probe.</p>
 
   <div class="stats-bar">
-    <div class="stat"><div class="stat-val" data-target="970">1177</div><div class="stat-label">Tests</div></div>
+    <div class="stat"><div class="stat-val" data-target="970">1190</div><div class="stat-label">Tests</div></div>
     <div class="stat"><div class="stat-val" data-target="94" data-suffix="%">99%</div><div class="stat-label">Coverage</div></div>
     <div class="stat"><div class="stat-val" data-target="23">23</div><div class="stat-label">Modules</div></div>
     <div class="stat"><div class="stat-val" data-target="128">128</div><div class="stat-label">Components DB</div></div>
@@ -994,6 +994,11 @@ footer a { color: var(--text-mid); }
         <h3 style="color: var(--yellow);">Power Tree Diagram</h3>
         <p>Standalone schematic-style power delivery topology. Shows power flow from input sources through VRMs/LDOs to load ICs with voltage rail labels and decoupling cap counts.</p>
         <div class="card-meta"><a href="examples/power_tree.svg">Example power tree</a> &middot; auto-classifies sources, regulators, loads</div>
+      </div>
+      <div class="card">
+        <h3 style="color: var(--purple);">Bus Topology Graph</h3>
+        <p>Circular graph showing component interconnections via inferred protocol buses. Auto-detects SPI, I2C, UART, JTAG, USB, SDIO, PCIe, and DDR from trace context and component markings.</p>
+        <div class="card-meta"><a href="examples/bus_topology.svg">Example topology</a> &middot; 8 bus protocols &middot; color-coded legend</div>
       </div>
     </div>
 

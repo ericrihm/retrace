@@ -11,6 +11,7 @@ from retrace.export.svg import (
     _render_zones,
     _resolve_image_href,
     generate_attack_surface_svg,
+    generate_bus_topology_svg,
     generate_power_tree_svg,
     generate_svg,
     generate_zones_svg,
@@ -1103,3 +1104,69 @@ class TestPowerTree:
         svg = generate_power_tree_svg(result)
         assert svg
         assert "INPUT" in svg
+
+
+# ---------------------------------------------------------------------------
+# Bus topology graph tests
+# ---------------------------------------------------------------------------
+
+class TestBusTopology:
+
+    def test_no_traces_returns_empty(self):
+        c = Component(id="U1", label="ic", confidence=0.9,
+                      bbox=(10, 10, 50, 50), marking="MCU")
+        result = _make_result(components=[c], traces=[])
+        svg = generate_bus_topology_svg(result)
+        assert svg == ""
+
+    def test_no_bus_match_returns_empty(self):
+        c1 = Component(id="U1", label="ic", confidence=0.9,
+                       bbox=(10, 10, 50, 50), marking="generic chip")
+        c2 = Component(id="U2", label="ic", confidence=0.9,
+                       bbox=(200, 200, 50, 50), marking="other chip")
+        t = Trace(id="T1", points=[(10, 10)], width_px=1.0,
+                  from_component="U1", to_component="U2")
+        result = _make_result(components=[c1, c2], traces=[t])
+        svg = generate_bus_topology_svg(result)
+        assert svg == ""
+
+    def test_spi_bus_detected(self):
+        mcu = Component(id="U1", label="ic", confidence=0.9,
+                        bbox=(10, 10, 50, 50), marking="STM32 SPI master")
+        flash = Component(id="U2", label="ic", confidence=0.9,
+                          bbox=(200, 200, 50, 50), marking="W25Q128 flash")
+        t = Trace(id="T1", points=[(10, 10)], width_px=1.0,
+                  from_component="U1", to_component="U2")
+        result = _make_result(components=[mcu, flash], traces=[t])
+        svg = generate_bus_topology_svg(result)
+        assert svg
+        assert "SPI" in svg
+        assert "Bus Topology" in svg
+
+    def test_multiple_buses(self):
+        mcu = Component(id="U1", label="mcu", confidence=0.9,
+                        bbox=(10, 10, 50, 50), marking="MCU UART console")
+        eeprom = Component(id="U2", label="ic", confidence=0.9,
+                           bbox=(200, 200, 50, 50), marking="AT24C256 eeprom")
+        debug = Component(id="J1", label="connector", confidence=0.9,
+                          bbox=(300, 300, 20, 20), marking="JTAG header")
+        t1 = Trace(id="T1", points=[], width_px=1.0,
+                   from_component="U1", to_component="U2")
+        t2 = Trace(id="T2", points=[], width_px=1.0,
+                   from_component="U1", to_component="J1")
+        result = _make_result(components=[mcu, eeprom, debug], traces=[t1, t2])
+        svg = generate_bus_topology_svg(result)
+        assert svg
+        assert "I2C" in svg
+        assert "JTAG" in svg
+
+    def test_custom_width(self):
+        mcu = Component(id="U1", label="ic", confidence=0.9,
+                        bbox=(10, 10, 50, 50), marking="USB hub")
+        dev = Component(id="U2", label="ic", confidence=0.9,
+                        bbox=(200, 200, 50, 50), marking="USB device")
+        t = Trace(id="T1", points=[], width_px=1.0,
+                  from_component="U1", to_component="U2")
+        result = _make_result(components=[mcu, dev], traces=[t])
+        svg = generate_bus_topology_svg(result, width=1000)
+        assert 'width="1000"' in svg
