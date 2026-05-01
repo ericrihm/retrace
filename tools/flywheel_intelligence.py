@@ -978,6 +978,232 @@ class FlywheelBrain:
         output_path.write_text(svg_content, encoding="utf-8")
         return svg_content
 
+    def export_prometheus(self, output_path: "Path | None" = None) -> str:
+        """Export all flywheel intelligence metrics in Prometheus text exposition format.
+
+        Writes gauge metrics for:
+        - retrace_flywheel_score: current score per flywheel (from calibration history)
+        - retrace_flywheel_ci_width: 95% CI width per flywheel
+        - retrace_source_reliability: EMA reliability per data source
+        - retrace_bandit_effectiveness: Thompson Sampling arm effectiveness per flywheel
+
+        Args:
+            output_path: Where to write the .prom file.
+                         Defaults to REPO_ROOT / ".flywheel_metrics.prom".
+
+        Returns:
+            The Prometheus exposition text (also written to output_path).
+        """
+        if output_path is None:
+            output_path = REPO_ROOT / ".flywheel_metrics.prom"
+
+        lines: list[str] = []
+
+        # ── retrace_flywheel_score ────────────────────────────────────────────
+        lines.append("# HELP retrace_flywheel_score Current flywheel score")
+        lines.append("# TYPE retrace_flywheel_score gauge")
+        for fw in self.ALL_FLYWHEELS:
+            cal_history = self.calibrator.calibration.get(fw, {}).get("raw_history", [])
+            score = cal_history[-1] if cal_history else 0.0
+            lines.append(f'retrace_flywheel_score{{flywheel="{fw}"}} {score}')
+
+        # ── retrace_flywheel_ci_width ─────────────────────────────────────────
+        lines.append("# HELP retrace_flywheel_ci_width 95% confidence interval width")
+        lines.append("# TYPE retrace_flywheel_ci_width gauge")
+        for fw in self.ALL_FLYWHEELS:
+            width = self.confidence.ci_width(fw)
+            lines.append(f'retrace_flywheel_ci_width{{flywheel="{fw}"}} {width}')
+
+        # ── retrace_source_reliability ────────────────────────────────────────
+        lines.append("# HELP retrace_source_reliability Data source reliability EMA")
+        lines.append("# TYPE retrace_source_reliability gauge")
+        for sid, sq in self.sources.sources.items():
+            lines.append(f'retrace_source_reliability{{source="{sid}"}} {sq.ema_reliability}')
+
+        # ── retrace_bandit_effectiveness ──────────────────────────────────────
+        lines.append("# HELP retrace_bandit_effectiveness Thompson Sampling arm effectiveness")
+        lines.append("# TYPE retrace_bandit_effectiveness gauge")
+        for fw in self.ALL_FLYWHEELS:
+            if fw in self.learner.arms:
+                eff = self.learner.arms[fw].effectiveness
+            else:
+                eff = 0.5  # uninformed prior: α=1, β=1 → 0.5
+            lines.append(f'retrace_bandit_effectiveness{{flywheel="{fw}"}} {eff}')
+
+        text = "\n".join(lines) + "\n"
+        output_path.write_text(text, encoding="utf-8")
+        return text
+
+    def suggest_auto_fixes(self) -> list[dict]:
+        """Analyse the latest flywheel state and generate actionable fix suggestions.
+
+        Reads from calibration history (latest scores), component_db state, and
+        design_audit/svg_render state baked into the brain's quality_floors.
+
+        Each suggestion dict contains:
+            flywheel    (str)  — which flywheel triggered this
+            severity    (str)  — "high" | "medium" | "low"
+            description (str)  — human-readable explanation
+            auto_fixable (bool) — whether a template can scaffold the fix
+            fix_template (str | None) — template string or None
+
+        Returns an empty list when there is nothing to act on.
+        """
+        suggestions: list[dict] = []
+
+        # ── 1. gaps flywheel: untested source files ───────────────────────────
+        # We infer from calibration history: a gaps score < 100 means issues exist.
+        # We also scan source directly for files without test counterparts so we
+        # can name them concretely.
+        src_dir = REPO_ROOT / "src" / "retrace"
+        tests_dir = REPO_ROOT / "tests"
+        if src_dir.exists():
+            for src_file in sorted(src_dir.rglob("*.py")):
+                if src_file.name == "__init__.py":
+                    continue
+                stem = src_file.stem
+                expected_test = tests_dir / f"test_{stem}.py"
+                if not expected_test.exists():
+                    suggestions.append({
+                        "flywheel": "gaps",
+                        "severity": "high",
+                        "description": (
+                            f"No test file found for {src_file.relative_to(REPO_ROOT)}"
+                            f" — create {expected_test.relative_to(REPO_ROOT)}"
+                        ),
+                        "auto_fixable": True,
+                        "fix_template": (
+                            f'"""Tests for {src_file.relative_to(REPO_ROOT)}."""\n'
+                            f"from __future__ import annotations\n\n\n"
+                            f"class Test{stem.replace('_', ' ').title().replace(' ', '')}:\n"
+                            f"    def test_placeholder(self) -> None:\n"
+                            f"        pass  # TODO: implement tests\n"
+                        ),
+                    })
+
+        # ── 2. component_db: missing categories ──────────────────────────────
+        matcher_path = REPO_ROOT / "src" / "retrace" / "identification" / "matcher.py"
+        if matcher_path.exists():
+            content = matcher_path.read_text(encoding="utf-8")
+            import re as _re
+            present_cats: set[str] = set()
+            for m in _re.finditer(r'"category"\s*:\s*"(\w+)"', content):
+                present_cats.add(m.group(1))
+            expected_cats = {
+                "mcu", "memory", "regulator", "fpga", "network", "rf",
+                "secure_element", "sensor", "pmic", "display", "automotive",
+            }
+            missing_cats = expected_cats - present_cats
+            for cat in sorted(missing_cats):
+                suggestions.append({
+                    "flywheel": "component_db",
+                    "severity": "medium",
+                    "description": (
+                        f"Component category '{cat}' is missing from matcher.py — "
+                        f"add at least one entry with \"category\": \"{cat}\""
+                    ),
+                    "auto_fixable": True,
+                    "fix_template": (
+                        f'{{\n'
+                        f'    "name": "Example {cat.upper()} component",\n'
+                        f'    "category": "{cat}",\n'
+                        f'    "marking": "EXAMPLE",\n'
+                        f'    "package": "SOT-23",\n'
+                        f'    "description": "Placeholder entry for {cat} category",\n'
+                        f'}}'
+                    ),
+                })
+
+        # ── 3. design_audit: LOW / MISS criteria ─────────────────────────────
+        readme_path = REPO_ROOT / "README.md"
+        if readme_path.exists():
+            import re as _re
+            content = readme_path.read_text(encoding="utf-8")
+            lines = content.splitlines()
+            first_20 = "\n".join(lines[:20]).lower()
+            first_30 = "\n".join(lines[:30]).lower()
+
+            # hero_above_fold
+            if "photo in" not in first_20 and "attack surface" not in first_20:
+                suggestions.append({
+                    "flywheel": "design_audit",
+                    "severity": "medium",
+                    "description": (
+                        "README hero section missing value proposition in first 20 lines "
+                        "(primacy effect) — add a concise value prop sentence"
+                    ),
+                    "auto_fixable": False,
+                    "fix_template": (
+                        "> **retrace** — reverse-engineer PCB attack surfaces "
+                        "from X-ray / optical scans."
+                    ),
+                })
+
+            # stats_visible
+            if "tests" not in first_30 or "loc" not in first_30:
+                suggestions.append({
+                    "flywheel": "design_audit",
+                    "severity": "low",
+                    "description": (
+                        "README missing quantitative stats (tests, LOC) in first 30 lines — "
+                        "add badges or a short stats line near the top"
+                    ),
+                    "auto_fixable": True,
+                    "fix_template": (
+                        "![Tests](https://img.shields.io/badge/tests-1320-brightgreen) "
+                        "![LOC](https://img.shields.io/badge/LOC-8000-blue)"
+                    ),
+                })
+
+            # copy_paste_install
+            if "pip install" not in content:
+                suggestions.append({
+                    "flywheel": "design_audit",
+                    "severity": "high",
+                    "description": (
+                        "README has no pip install command — add a copy-paste install "
+                        "block (friction reduction)"
+                    ),
+                    "auto_fixable": True,
+                    "fix_template": "```bash\npip install retrace\n```",
+                })
+
+        # ── 4. svg_render: structural issues ─────────────────────────────────
+        examples_dir = REPO_ROOT / "docs" / "examples"
+        if examples_dir.exists():
+            import re as _re
+            for svg_file in sorted(examples_dir.glob("*.svg")):
+                svg_content = svg_file.read_text(encoding="utf-8")
+                name = svg_file.name
+
+                if not svg_content.strip().startswith("<svg"):
+                    suggestions.append({
+                        "flywheel": "svg_render",
+                        "severity": "high",
+                        "description": (
+                            f"{name}: missing <svg> root element — file may be corrupt"
+                        ),
+                        "auto_fixable": False,
+                        "fix_template": None,
+                    })
+
+                if "viewBox" not in svg_content:
+                    suggestions.append({
+                        "flywheel": "svg_render",
+                        "severity": "medium",
+                        "description": (
+                            f"{name}: missing viewBox attribute — SVG won't scale "
+                            f"responsively in browsers"
+                        ),
+                        "auto_fixable": True,
+                        "fix_template": (
+                            f"Add viewBox to the <svg> opening tag, e.g.: "
+                            f'viewBox="0 0 800 600"'
+                        ),
+                    })
+
+        return suggestions
+
     def format_brain_summary(self) -> str:
         lines: list[str] = []
         lines.append("═══ Flywheel Brain Summary ═══")

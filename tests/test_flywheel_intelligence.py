@@ -863,3 +863,453 @@ class TestGenerateHeatmapSvg:
         assert len(cells_with_title) == 364, (
             f"Expected 364 data cells, got {len(cells_with_title)}"
         )
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# FlywheelBrain.export_prometheus
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+class TestExportPrometheus:
+    """Tests for the Prometheus text exposition format exporter."""
+
+    def _make_brain(self, tmp_path: Path) -> "FlywheelBrain":
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                return FlywheelBrain()
+
+    # ── output structure ────────────────────────────────────────────────────
+
+    def test_returns_string(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        result = brain.export_prometheus(tmp_path / "out.prom")
+        assert isinstance(result, str)
+
+    def test_written_to_disk(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        out = tmp_path / "metrics.prom"
+        text = brain.export_prometheus(out)
+        assert out.exists()
+        assert out.read_text(encoding="utf-8") == text
+
+    def test_default_output_path(self, tmp_path: Path) -> None:
+        """When output_path=None the file lands at REPO_ROOT/.flywheel_metrics.prom."""
+        import flywheel_intelligence as fi_mod
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", tmp_path):
+                    brain = FlywheelBrain()
+                    text = brain.export_prometheus(None)
+
+        expected = tmp_path / ".flywheel_metrics.prom"
+        assert expected.exists()
+        assert expected.read_text(encoding="utf-8") == text
+
+    # ── HELP / TYPE headers ─────────────────────────────────────────────────
+
+    def test_has_flywheel_score_help_type(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        assert "# HELP retrace_flywheel_score" in text
+        assert "# TYPE retrace_flywheel_score gauge" in text
+
+    def test_has_ci_width_help_type(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        assert "# HELP retrace_flywheel_ci_width" in text
+        assert "# TYPE retrace_flywheel_ci_width gauge" in text
+
+    def test_has_source_reliability_help_type(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        assert "# HELP retrace_source_reliability" in text
+        assert "# TYPE retrace_source_reliability gauge" in text
+
+    def test_has_bandit_effectiveness_help_type(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        assert "# HELP retrace_bandit_effectiveness" in text
+        assert "# TYPE retrace_bandit_effectiveness gauge" in text
+
+    # ── all flywheels are present ───────────────────────────────────────────
+
+    def test_all_flywheels_exported_score(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        for fw in FlywheelBrain.ALL_FLYWHEELS:
+            assert f'retrace_flywheel_score{{flywheel="{fw}"}}' in text
+
+    def test_all_flywheels_exported_ci_width(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        for fw in FlywheelBrain.ALL_FLYWHEELS:
+            assert f'retrace_flywheel_ci_width{{flywheel="{fw}"}}' in text
+
+    def test_all_flywheels_exported_bandit(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        for fw in FlywheelBrain.ALL_FLYWHEELS:
+            assert f'retrace_bandit_effectiveness{{flywheel="{fw}"}}' in text
+
+    # ── label format (Prometheus spec: {key="value"}) ───────────────────────
+
+    def test_label_format_uses_double_quotes(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        # Every data line must use label format with double-quoted values
+        data_lines = [
+            l for l in text.splitlines()
+            if l and not l.startswith("#")
+        ]
+        assert data_lines, "Expected at least one data line"
+        for line in data_lines:
+            assert '{' in line and '="' in line and '"}' in line, (
+                f"Line does not match Prometheus label format: {line!r}"
+            )
+
+    # ── values match recorded scores ────────────────────────────────────────
+
+    def test_score_value_reflects_last_calibration(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        brain.calibrator.record_score("lint", 87.5)
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        assert 'retrace_flywheel_score{flywheel="lint"} 87.5' in text
+
+    def test_score_zero_when_no_history(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        # Don't record any scores — all flywheels should default to 0.0
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        assert 'retrace_flywheel_score{flywheel="lint"} 0.0' in text
+
+    def test_source_reliability_appears_after_recording(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        brain.sources.record("pytest", True, 100.0)
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        assert 'retrace_source_reliability{source="pytest"}' in text
+
+    def test_no_source_lines_when_no_sources_recorded(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        data_lines = [l for l in text.splitlines() if l.startswith("retrace_source_reliability")]
+        assert data_lines == [], (
+            "Expected no source_reliability lines when no sources have been recorded"
+        )
+
+    def test_bandit_default_effectiveness_is_half(self, tmp_path: Path) -> None:
+        """Arms with no data should report the uninformed prior of 0.5."""
+        brain = self._make_brain(tmp_path)
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        assert 'retrace_bandit_effectiveness{flywheel="lint"} 0.5' in text
+
+    def test_bandit_effectiveness_updates_with_arm(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        brain.learner.ensure_arm("lint")
+        brain.learner.arms["lint"].alpha = 9.0
+        brain.learner.arms["lint"].beta = 1.0
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        # effectiveness = 9/(9+1) = 0.9
+        assert 'retrace_bandit_effectiveness{flywheel="lint"} 0.9' in text
+
+    # ── ends with newline ────────────────────────────────────────────────────
+
+    def test_output_ends_with_newline(self, tmp_path: Path) -> None:
+        brain = self._make_brain(tmp_path)
+        text = brain.export_prometheus(tmp_path / "m.prom")
+        assert text.endswith("\n")
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# FlywheelBrain.suggest_auto_fixes
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+class TestSuggestAutoFixes:
+    """Tests for the auto-fix suggestion engine."""
+
+    def _make_brain(self, tmp_path: Path) -> "FlywheelBrain":
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                return FlywheelBrain()
+
+    # ── empty / no-issue state ──────────────────────────────────────────────
+
+    def test_empty_state_returns_list(self, tmp_path: Path) -> None:
+        import flywheel_intelligence as fi_mod
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", tmp_path):
+                    brain = FlywheelBrain()
+                    suggestions = brain.suggest_auto_fixes()
+        assert isinstance(suggestions, list)
+
+    def test_no_src_dir_returns_empty(self, tmp_path: Path) -> None:
+        """When the src/retrace directory doesn't exist there are no gap suggestions."""
+        import flywheel_intelligence as fi_mod
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", tmp_path):
+                    brain = FlywheelBrain()
+                    suggestions = brain.suggest_auto_fixes()
+        # No src/retrace, no matcher.py, no README.md, no docs/examples → no suggestions
+        assert suggestions == []
+
+    # ── gaps flywheel: untested source files ────────────────────────────────
+
+    def test_gaps_untested_source_generates_suggestion(self, tmp_path: Path) -> None:
+        import flywheel_intelligence as fi_mod
+
+        # Create a source file with no corresponding test
+        src_dir = tmp_path / "src" / "retrace"
+        src_dir.mkdir(parents=True)
+        (src_dir / "my_module.py").write_text("# placeholder\n")
+        (tmp_path / "tests").mkdir()
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", tmp_path):
+                    brain = FlywheelBrain()
+                    suggestions = brain.suggest_auto_fixes()
+
+        gaps_suggestions = [s for s in suggestions if s["flywheel"] == "gaps"]
+        assert len(gaps_suggestions) >= 1
+        s = gaps_suggestions[0]
+        assert s["severity"] == "high"
+        assert s["auto_fixable"] is True
+        assert "my_module.py" in s["description"] or "test_my_module.py" in s["description"]
+        assert s["fix_template"] is not None
+        assert "TestMyModule" in s["fix_template"] or "class Test" in s["fix_template"]
+
+    def test_gaps_no_suggestion_when_test_exists(self, tmp_path: Path) -> None:
+        import flywheel_intelligence as fi_mod
+
+        src_dir = tmp_path / "src" / "retrace"
+        src_dir.mkdir(parents=True)
+        (src_dir / "my_module.py").write_text("# placeholder\n")
+        tests_dir = tmp_path / "tests"
+        tests_dir.mkdir()
+        (tests_dir / "test_my_module.py").write_text("# tests\n")
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", tmp_path):
+                    brain = FlywheelBrain()
+                    suggestions = brain.suggest_auto_fixes()
+
+        gaps_suggestions = [s for s in suggestions if s["flywheel"] == "gaps"]
+        assert gaps_suggestions == []
+
+    def test_gaps_ignores_init_py(self, tmp_path: Path) -> None:
+        import flywheel_intelligence as fi_mod
+
+        src_dir = tmp_path / "src" / "retrace"
+        src_dir.mkdir(parents=True)
+        (src_dir / "__init__.py").write_text("")
+        (tmp_path / "tests").mkdir()
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", tmp_path):
+                    brain = FlywheelBrain()
+                    suggestions = brain.suggest_auto_fixes()
+
+        gaps_suggestions = [s for s in suggestions if s["flywheel"] == "gaps"]
+        assert gaps_suggestions == []
+
+    # ── component_db flywheel: missing categories ───────────────────────────
+
+    def test_component_db_missing_category_suggestion(self, tmp_path: Path) -> None:
+        import flywheel_intelligence as fi_mod
+
+        # Create matcher.py missing "fpga" category
+        matcher_dir = tmp_path / "src" / "retrace" / "identification"
+        matcher_dir.mkdir(parents=True)
+        matcher_content = (
+            '"category": "mcu"\n'
+            '"category": "memory"\n'
+            '"category": "regulator"\n'
+        )
+        (matcher_dir / "matcher.py").write_text(matcher_content)
+        (tmp_path / "tests").mkdir()
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", tmp_path):
+                    brain = FlywheelBrain()
+                    suggestions = brain.suggest_auto_fixes()
+
+        db_suggestions = [s for s in suggestions if s["flywheel"] == "component_db"]
+        assert len(db_suggestions) >= 1
+        categories_mentioned = {s["description"].split("'")[1] for s in db_suggestions}
+        # fpga, network, rf, secure_element, sensor, pmic, display, automotive should be missing
+        assert "fpga" in categories_mentioned or "rf" in categories_mentioned
+        for s in db_suggestions:
+            assert s["severity"] == "medium"
+            assert s["auto_fixable"] is True
+            assert s["fix_template"] is not None
+            assert '"category"' in s["fix_template"]
+
+    def test_component_db_no_suggestion_when_all_present(self, tmp_path: Path) -> None:
+        import flywheel_intelligence as fi_mod
+
+        matcher_dir = tmp_path / "src" / "retrace" / "identification"
+        matcher_dir.mkdir(parents=True)
+        all_cats = (
+            '"category": "mcu"\n'
+            '"category": "memory"\n'
+            '"category": "regulator"\n'
+            '"category": "fpga"\n'
+            '"category": "network"\n'
+            '"category": "rf"\n'
+            '"category": "secure_element"\n'
+            '"category": "sensor"\n'
+            '"category": "pmic"\n'
+            '"category": "display"\n'
+            '"category": "automotive"\n'
+        )
+        (matcher_dir / "matcher.py").write_text(all_cats)
+        (tmp_path / "tests").mkdir()
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", tmp_path):
+                    brain = FlywheelBrain()
+                    suggestions = brain.suggest_auto_fixes()
+
+        db_suggestions = [s for s in suggestions if s["flywheel"] == "component_db"]
+        assert db_suggestions == []
+
+    # ── design_audit flywheel: LOW / MISS criteria ──────────────────────────
+
+    def test_design_audit_missing_pip_install(self, tmp_path: Path) -> None:
+        import flywheel_intelligence as fi_mod
+
+        (tmp_path / "README.md").write_text(
+            "# retrace\n\nA great tool with attack surface detection.\n"
+        )
+        (tmp_path / "tests").mkdir()
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", tmp_path):
+                    brain = FlywheelBrain()
+                    suggestions = brain.suggest_auto_fixes()
+
+        design_suggestions = [s for s in suggestions if s["flywheel"] == "design_audit"]
+        # "pip install" is missing → should be suggested
+        pip_sugg = [s for s in design_suggestions if "pip install" in s["description"]]
+        assert len(pip_sugg) >= 1
+        assert pip_sugg[0]["severity"] == "high"
+        assert pip_sugg[0]["auto_fixable"] is True
+        assert "pip install" in pip_sugg[0]["fix_template"]
+
+    def test_design_audit_no_pip_suggestion_when_present(self, tmp_path: Path) -> None:
+        import flywheel_intelligence as fi_mod
+
+        (tmp_path / "README.md").write_text(
+            "# retrace\n\n```bash\npip install retrace\n```\n\n"
+            "attack surface detection.\n"
+            "tests: 1320  loc: 8000\n"
+        )
+        (tmp_path / "tests").mkdir()
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", tmp_path):
+                    brain = FlywheelBrain()
+                    suggestions = brain.suggest_auto_fixes()
+
+        pip_sugg = [
+            s for s in suggestions
+            if s["flywheel"] == "design_audit" and "pip install" in s["description"]
+        ]
+        assert pip_sugg == []
+
+    # ── svg_render flywheel ──────────────────────────────────────────────────
+
+    def test_svg_render_missing_viewbox(self, tmp_path: Path) -> None:
+        import flywheel_intelligence as fi_mod
+
+        examples_dir = tmp_path / "docs" / "examples"
+        examples_dir.mkdir(parents=True)
+        # SVG without viewBox
+        (examples_dir / "test_output.svg").write_text(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300">'
+            "<rect/></svg>"
+        )
+        (tmp_path / "tests").mkdir()
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", tmp_path):
+                    brain = FlywheelBrain()
+                    suggestions = brain.suggest_auto_fixes()
+
+        render_sugg = [s for s in suggestions if s["flywheel"] == "svg_render"]
+        viewbox_sugg = [s for s in render_sugg if "viewBox" in s["description"]]
+        assert len(viewbox_sugg) >= 1
+        assert viewbox_sugg[0]["severity"] == "medium"
+        assert viewbox_sugg[0]["auto_fixable"] is True
+
+    def test_svg_render_no_suggestion_for_valid_svg(self, tmp_path: Path) -> None:
+        import flywheel_intelligence as fi_mod
+
+        examples_dir = tmp_path / "docs" / "examples"
+        examples_dir.mkdir(parents=True)
+        (examples_dir / "good.svg").write_text(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">'
+            "<rect/></svg>"
+        )
+        (tmp_path / "tests").mkdir()
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", tmp_path):
+                    brain = FlywheelBrain()
+                    suggestions = brain.suggest_auto_fixes()
+
+        render_sugg = [s for s in suggestions if s["flywheel"] == "svg_render"]
+        assert render_sugg == []
+
+    # ── suggestion schema ────────────────────────────────────────────────────
+
+    def test_all_suggestions_have_required_keys(self, tmp_path: Path) -> None:
+        import flywheel_intelligence as fi_mod
+
+        src_dir = tmp_path / "src" / "retrace"
+        src_dir.mkdir(parents=True)
+        (src_dir / "orphan.py").write_text("# orphan\n")
+        (tmp_path / "tests").mkdir()
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", tmp_path):
+                    brain = FlywheelBrain()
+                    suggestions = brain.suggest_auto_fixes()
+
+        required_keys = {"flywheel", "severity", "description", "auto_fixable", "fix_template"}
+        for s in suggestions:
+            assert required_keys <= s.keys(), f"Missing keys in suggestion: {s}"
+
+    def test_severity_values_are_valid(self, tmp_path: Path) -> None:
+        import flywheel_intelligence as fi_mod
+
+        src_dir = tmp_path / "src" / "retrace"
+        src_dir.mkdir(parents=True)
+        (src_dir / "orphan.py").write_text("# orphan\n")
+        (tmp_path / "tests").mkdir()
+        (tmp_path / "README.md").write_text("# retrace\n")
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", tmp_path):
+                    brain = FlywheelBrain()
+                    suggestions = brain.suggest_auto_fixes()
+
+        valid_severities = {"high", "medium", "low"}
+        for s in suggestions:
+            assert s["severity"] in valid_severities, (
+                f"Invalid severity {s['severity']!r} in {s}"
+            )

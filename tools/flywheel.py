@@ -1456,5 +1456,87 @@ def heatmap(output: str | None) -> None:
     click.echo("")
 
 
+@cli.command()
+@click.option(
+    "--output",
+    default=None,
+    type=click.Path(),
+    help="Output path for the .prom file (default: .flywheel_metrics.prom).",
+)
+@click.option(
+    "--print", "print_output", is_flag=True, default=False,
+    help="Print the Prometheus text to stdout in addition to writing the file.",
+)
+def metrics(output: str | None, print_output: bool) -> None:
+    """Export flywheel scores in Prometheus text exposition format."""
+    if not _HAS_BRAIN:
+        click.echo(click.style(
+            "  Intelligence layer not available (flywheel_intelligence.py not found)",
+            fg="red",
+        ))
+        return
+
+    b = FlywheelBrain()
+    out_path = Path(output) if output else None
+    click.echo(click.style("\nretrace flywheel metrics", fg="magenta", bold=True))
+    click.echo("")
+    prom_text = b.export_prometheus(out_path)
+    resolved = out_path if out_path else REPO_ROOT / ".flywheel_metrics.prom"
+    click.echo(click.style(f"  Metrics written to {resolved}", fg="green"))
+    metric_count = sum(
+        1 for line in prom_text.splitlines()
+        if line and not line.startswith("#")
+    )
+    click.echo(click.style(f"  · {metric_count} metric samples exported", fg="bright_black"))
+    if print_output:
+        click.echo("")
+        click.echo(prom_text)
+    click.echo("")
+
+
+@cli.command("auto-fixes")
+@click.option("--severity", default=None, type=click.Choice(["high", "medium", "low"]),
+              help="Filter by severity.")
+def auto_fixes(severity: str | None) -> None:
+    """Show actionable auto-fix suggestions from the flywheel intelligence layer."""
+    if not _HAS_BRAIN:
+        click.echo(click.style(
+            "  Intelligence layer not available (flywheel_intelligence.py not found)",
+            fg="red",
+        ))
+        return
+
+    b = FlywheelBrain()
+    click.echo(click.style("\nretrace flywheel auto-fixes", fg="magenta", bold=True))
+    click.echo("")
+    suggestions = b.suggest_auto_fixes()
+    if severity:
+        suggestions = [s for s in suggestions if s["severity"] == severity]
+
+    if not suggestions:
+        click.echo(click.style("  No actionable fixes found — everything looks good!", fg="green"))
+        click.echo("")
+        return
+
+    severity_colors = {"high": "red", "medium": "yellow", "low": "bright_black"}
+    for suggestion in suggestions:
+        sev = suggestion["severity"]
+        color = severity_colors.get(sev, "white")
+        fixable = "auto-fixable" if suggestion["auto_fixable"] else "manual"
+        click.echo(
+            click.style(f"  [{sev.upper()}]", fg=color, bold=True)
+            + f" ({suggestion['flywheel']}, {fixable})"
+        )
+        click.echo(f"    {suggestion['description']}")
+        if suggestion.get("fix_template"):
+            click.echo(click.style("    Template:", fg="bright_black"))
+            for line in suggestion["fix_template"].splitlines()[:4]:
+                click.echo(click.style(f"      {line}", fg="bright_black"))
+        click.echo("")
+
+    _info(f"Total: {len(suggestions)} suggestion(s)")
+    click.echo("")
+
+
 if __name__ == "__main__":
     cli()
