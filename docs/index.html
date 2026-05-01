@@ -945,6 +945,57 @@ footer a { color: var(--text-mid); }
   </div>
 </section>
 
+<!-- ═══ Component Intelligence ══════════════════════ -->
+<section id="intel" class="reveal">
+  <div class="container">
+    <div class="section-header">
+      <h2>Component Intelligence</h2>
+      <p>Every identified IC is enriched with security-relevant datasheet specs. Debug interfaces, boot mode pins, readout protection, JEDEC IDs, flashrom commands — actionable intel for hardware hackers.</p>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <h3 style="color: var(--red);">MCU Debug Intel</h3>
+        <p>42 microcontrollers with JTAG/SWD interfaces, BOOT mode pins, readout protection levels (RDP, APPROTECT, lock bits). STM32, ESP32, nRF52, AVR, PIC, RP2040.</p>
+        <div class="card-meta">JTAG &middot; SWD &middot; debugWIRE &middot; ISP &middot; Spy-Bi-Wire</div>
+      </div>
+      <div class="card">
+        <h3 style="color: var(--accent);">Flash Extraction</h3>
+        <p>9 SPI NOR flash chips with JEDEC IDs, read commands, write-protect pin locations, and exact flashrom command lines. Winbond, Macronix, GigaDevice, ISSI, Infineon.</p>
+        <div class="card-meta">JEDEC ID &middot; flashrom &middot; SOIC-8 pinout &middot; WP# bypass</div>
+      </div>
+      <div class="card">
+        <h3 style="color: var(--purple);">FPGA Bitstreams</h3>
+        <p>4 FPGAs with configuration interfaces, JTAG chain info, bitstream formats, and toolchains. Xilinx Artix-7 and Spartan-6, Lattice iCE40 (open-source reversible), Intel MAX 10.</p>
+        <div class="card-meta">Vivado &middot; ISE &middot; Yosys+icestorm &middot; Quartus</div>
+      </div>
+      <div class="card">
+        <h3 style="color: var(--amber);">Secure Elements &amp; TPMs</h3>
+        <p>8 crypto/trust chips with I2C/SPI addresses, FIPS/CC certifications, key storage capabilities, and attestation protocols. ATECC608, SE050, SLB9670, STSAFE.</p>
+        <div class="card-meta">TPM2_Quote &middot; EK cert &middot; CC EAL4+ &middot; ECDSA P-256</div>
+      </div>
+      <div class="card">
+        <h3 style="color: var(--green);">Power Rails</h3>
+        <p>26 voltage regulators with output voltages, enable pins, input ranges, and topology. LDO, buck, boost, buck-boost. Know which rail to glitch.</p>
+        <div class="card-meta">EN pin &middot; Vout &middot; topology &middot; current rating</div>
+      </div>
+      <div class="card">
+        <h3 style="color: var(--orange);">IC Pinout Diagrams</h3>
+        <p>Schematic-style DIP diagrams for SOIC-8 SPI flash and I2C EEPROM packages. Pin labels, function groups, and inline security intel panels.</p>
+        <div class="card-meta">
+          <a href="examples/W25Q128_IC_pinout.svg">W25Q128JV</a> &middot;
+          <a href="examples/AT24C256_IC_pinout.svg">AT24C256</a> &middot;
+          <a href="examples/STM32F103_IC_pinout.svg">STM32F103</a> &middot;
+          <a href="examples/iCE40UP5K_IC_pinout.svg">iCE40UP5K</a>
+        </div>
+      </div>
+    </div>
+
+    <p style="text-align: center; color: var(--text-dim); font-size: var(--text-sm); margin-top: var(--sp-6);">119 of 128 components enriched with security intel &middot; CSV/JSON exports include flattened intel columns</p>
+  </div>
+</section>
+
 <!-- ═══ Assessment Reports ═══════════════════════════ -->
 <section id="reports" class="reveal">
   <div class="container">
