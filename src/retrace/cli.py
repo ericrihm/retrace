@@ -623,6 +623,30 @@ def export_kicad(image: str, output: str, title: str) -> None:
     )
 
 
+@main.command("export-kicad-pcb")
+@click.argument("image", type=click.Path(exists=True))
+@click.option("--output", "-o", type=click.Path(), help="Output file (default: <image stem>.kicad_pcb)")
+@click.option("--title", default="", help="Board name for PCB metadata")
+@click.option("--scale", default=0.1, show_default=True, help="mm per pixel scale factor")
+def export_kicad_pcb(image: str, output: str, title: str, scale: float) -> None:
+    """Export component placement as KiCad PCB file with positions from photo."""
+    from retrace.core.pipeline import Pipeline
+    from retrace.export.kicad import save_kicad_pcb
+
+    pipeline = Pipeline()
+    result = pipeline.run(image)
+
+    if not output:
+        output = Path(image).stem + ".kicad_pcb"
+
+    save_kicad_pcb(result, output, title=title or Path(image).stem, scale=scale)
+
+    click.echo(
+        f"KiCad PCB saved to {output} — "
+        f"{len(result.components)} components placed from photo coordinates"
+    )
+
+
 @main.command("batch")
 @click.argument("directory", type=click.Path(exists=True, file_okay=False))
 @click.option("--output", "-o", type=click.Path(), help="Output directory (default: <directory>_results)")
@@ -729,6 +753,60 @@ def pinout(ctx: click.Context, image: str, output: str, interface: str, as_json:
             click.echo(f"  {iface} pinout → {out_path}")
 
     click.echo(f"\n{len(findings)} pinout diagram{'s' if len(findings) != 1 else ''} → {out_dir}/")
+
+
+@main.command("jtagulator")
+@click.argument("image", type=click.Path(exists=True))
+@click.option("--output", "-o", type=click.Path(), help="Output directory (default: <image stem>_jtagulator/)")
+@click.option("--board-name", default="", help="Board name for config comments")
+@click.option("--voltage", default=None, help="Target voltage override (e.g. 3.3, 1.8, 5.0)")
+@click.option("--json", "as_json", is_flag=True, help="Output findings as JSON instead of config files")
+@click.pass_context
+def jtagulator(ctx: click.Context, image: str, output: str, board_name: str, voltage: str, as_json: bool) -> None:
+    """Export JTAGulator pin configs and OpenOCD snippets for detected debug interfaces.
+
+    Scans a board photo, detects JTAG/SWD/UART debug interfaces, and generates
+    ready-to-use JTAGulator commands and OpenOCD .cfg files.
+    """
+    from retrace.core.pipeline import Pipeline
+    from retrace.export.jtagulator import export_jtagulator_configs
+    from retrace.plugins.builtin.debug_interfaces import detect_debug_interfaces
+
+    pipeline = Pipeline()
+    result = pipeline.run(image)
+    findings = detect_debug_interfaces(result)
+
+    name = board_name or Path(image).stem
+
+    if as_json:
+        click.echo(json.dumps({
+            "board": name,
+            "findings": findings,
+            "interfaces_detected": [f["interface"] for f in findings],
+        }, indent=2))
+        return
+
+    configs = export_jtagulator_configs(findings, board_name=name, voltage=voltage)
+
+    if not configs:
+        click.echo("No debug interfaces detected — no configs generated.")
+        raise SystemExit(0)
+
+    out_dir = Path(output) if output else Path(f"{Path(image).stem}_jtagulator")
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    quiet = ctx.obj.get("quiet", False)
+    for filename, content in configs.items():
+        out_path = out_dir / filename
+        out_path.write_text(content, encoding="utf-8")
+        if not quiet:
+            click.echo(f"  {filename} -> {out_path}")
+
+    ifaces = [f["interface"] for f in findings]
+    click.echo(
+        f"\n{len(configs)} config file(s) for {len(findings)} interface(s) "
+        f"({', '.join(ifaces)}) -> {out_dir}/"
+    )
 
 
 if __name__ == "__main__":

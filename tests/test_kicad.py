@@ -1,4 +1,4 @@
-"""Tests for KiCad netlist exporter."""
+"""Tests for KiCad netlist and PCB exporters."""
 
 from __future__ import annotations
 
@@ -7,8 +7,11 @@ from retrace.export.kicad import (
     _build_nets,
     _footprint_for,
     _pin_count,
+    _px_to_mm,
     generate_kicad_netlist,
+    generate_kicad_pcb,
     save_kicad_netlist,
+    save_kicad_pcb,
 )
 
 
@@ -372,3 +375,99 @@ class TestRealisticBoard:
         assert '(name "FPGA_CFG")' in xml
         assert "ATOM-C2508" in xml
         assert "W25Q128JV" in xml
+
+
+# ---------------------------------------------------------------------------
+# KiCad PCB positional export tests
+# ---------------------------------------------------------------------------
+
+
+class TestPxToMm:
+    def test_default_scale(self):
+        assert _px_to_mm(100) == 10.0
+
+    def test_custom_scale(self):
+        assert _px_to_mm(100, 0.05) == 5.0
+
+    def test_zero(self):
+        assert _px_to_mm(0) == 0.0
+
+
+class TestGenerateKicadPcb:
+    def test_empty_result(self):
+        result = _make_result()
+        pcb = generate_kicad_pcb(result)
+        assert "(kicad_pcb" in pcb
+        assert "Edge.Cuts" in pcb
+        assert "(thickness 1.6)" in pcb
+
+    def test_board_dimensions(self):
+        result = _make_result()
+        pcb = generate_kicad_pcb(result, scale=0.1)
+        assert "80.00" in pcb  # 800 * 0.1
+        assert "60.00" in pcb  # 600 * 0.1
+
+    def test_component_placement(self):
+        ic = _make_ic(ref="U1")
+        result = _make_result(components=[ic])
+        pcb = generate_kicad_pcb(result)
+        assert '"U1"' in pcb
+        assert "(footprint" in pcb
+        assert "(at" in pcb
+
+    def test_component_center_position(self):
+        comp = Component(
+            id="R1", label="resistor", confidence=0.9,
+            bbox=(100, 200, 20, 10), package="0402",
+        )
+        result = _make_result(components=[comp])
+        pcb = generate_kicad_pcb(result, scale=0.1)
+        assert "11.00" in pcb  # (100+10) * 0.1
+        assert "20.50" in pcb  # (200+5) * 0.1
+
+    def test_multiple_components(self):
+        comps = [_make_ic("U1"), _make_resistor("R1"), _make_resistor("R2")]
+        result = _make_result(components=comps)
+        pcb = generate_kicad_pcb(result)
+        assert pcb.count("(footprint") == 3
+
+    def test_custom_scale(self):
+        comp = Component(
+            id="C1", label="capacitor", confidence=0.8,
+            bbox=(0, 0, 100, 100),
+        )
+        result = _make_result(components=[comp])
+        pcb_small = generate_kicad_pcb(result, scale=0.05)
+        pcb_large = generate_kicad_pcb(result, scale=0.2)
+        assert "2.50" in pcb_small  # 50 * 0.05
+        assert "10.00" in pcb_large  # 50 * 0.2
+
+    def test_title_ignored(self):
+        result = _make_result()
+        pcb = generate_kicad_pcb(result, title="My Board")
+        assert "(kicad_pcb" in pcb
+
+    def test_escape_special_chars(self):
+        comp = Component(
+            id="U&1", label="ic", confidence=0.9,
+            bbox=(0, 0, 10, 10), marking='AT&T "chip"',
+        )
+        result = _make_result(components=[comp])
+        pcb = generate_kicad_pcb(result)
+        assert "&amp;" in pcb
+
+
+class TestSaveKicadPcb:
+    def test_write_file(self, tmp_path):
+        result = _make_result(components=[_make_ic()])
+        out = str(tmp_path / "board.kicad_pcb")
+        save_kicad_pcb(result, out)
+        content = (tmp_path / "board.kicad_pcb").read_text()
+        assert "(kicad_pcb" in content
+        assert '"U1"' in content
+
+    def test_creates_parent_dirs(self, tmp_path):
+        result = _make_result()
+        out = str(tmp_path / "sub" / "dir" / "board.kicad_pcb")
+        save_kicad_pcb(result, out)
+        assert (tmp_path / "sub" / "dir" / "board.kicad_pcb").exists()

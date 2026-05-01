@@ -2797,6 +2797,172 @@ _COMPONENT_DB: list[dict] = [
         },
         "description": "3A 28V step-down converter, EcoMode, 500kHz",
     },
+    # -----------------------------------------------------------------------
+    # Crypto / Security ICs — additional
+    # -----------------------------------------------------------------------
+    {
+        "part": "TPM SLB9670",
+        "aliases": ["SLB9670", "TPM2.0"],
+        "category": "crypto",
+        "manufacturer": "Infineon",
+        "package": "TSSOP-28",
+        "datasheet": "https://www.infineon.com/dgdl/Infineon-SLB_9670VQ2.0-DataSheet-v01_04-EN.pdf",
+        "security_intel": {
+            "interface": "SPI / I2C",
+            "debug_interfaces": ["SPI", "I2C"],
+            "crypto_functions": ["RSA-2048", "ECC P256", "SHA-256", "platform integrity"],
+            "certification": "FIPS 140-2 Level 1, Common Criteria EAL4+",
+            "key_storage": "RSA/ECC key slots, NV storage, monotonic counters, PCR banks",
+            "attestation": "TPM 2.0 remote attestation via PCR quotes and AIK certificates",
+            "debug_relevance": "TPM 2.0 — SPI bus sniffing reveals PCR extend operations and key hierarchy",
+        },
+        "description": "TPM 2.0 trusted platform module, SPI/I2C",
+    },
+    {
+        "part": "MAX32520",
+        "aliases": ["MAX32520", "MAXQ1065"],
+        "category": "mcu",
+        "manufacturer": "Analog Devices",
+        "package": "TQFP-100",
+        "datasheet": "https://www.analog.com/media/en/technical-documentation/data-sheets/MAX32520.pdf",
+        "security_intel": {
+            "debug_interfaces": ["SWD", "JTAG"],
+            "readout_protection": "Secure boot with ChipDNA PUF, JTAG lock, secure ROM bootloader",
+            "crypto_functions": ["ChipDNA PUF", "AES-256", "ECDSA P256", "secure boot"],
+            "debug_relevance": "Secure microcontroller with ChipDNA PUF — physically unclonable function for key generation",
+        },
+        "description": "DeepCover secure ARM Cortex-M4 MCU with ChipDNA PUF",
+    },
+    # -----------------------------------------------------------------------
+    # Networking — Ethernet, WiFi, BLE
+    # -----------------------------------------------------------------------
+    {
+        "part": "RTL8111H",
+        "aliases": ["RTL8111", "8111H"],
+        "category": "network",
+        "manufacturer": "Realtek",
+        "package": "QFN-32",
+        "datasheet": "https://www.realtek.com/en/component/zoo/category/network-interface-controllers-10-100-1000m-gigabit-ethernet-pci-express-rtl8111h",
+        "security_intel": {
+            "debug_interfaces": ["MDIO"],
+            "debug_relevance": "GbE PHY — MDIO management bus exposes register config, sometimes firmware update interface",
+        },
+        "description": "PCIe Gigabit Ethernet controller, wake-on-LAN",
+    },
+    {
+        "part": "KSZ9031RNXIA",
+        "aliases": ["KSZ9031", "9031RNX"],
+        "category": "network",
+        "manufacturer": "Microchip",
+        "package": "QFN-48",
+        "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/00002117F.pdf",
+        "security_intel": {
+            "debug_interfaces": ["MDIO", "RGMII"],
+            "debug_relevance": "GbE PHY with RGMII — MDIO bus allows register read/write, strap pins configure address",
+        },
+        "description": "Gigabit Ethernet PHY, RGMII, IEEE 1588 PTP",
+    },
+    # -----------------------------------------------------------------------
+    # PMIC / Power Management
+    # -----------------------------------------------------------------------
+    {
+        "part": "AXP803",
+        "aliases": ["AXP803"],
+        "category": "pmic",
+        "manufacturer": "X-Powers",
+        "package": "QFN-68",
+        "datasheet": "http://files.pine64.org/doc/datasheet/pine64/AXP803_Datasheet_V1.0.pdf",
+        "security_intel": {
+            "debug_interfaces": ["I2C (RSB)"],
+            "debug_relevance": "PMIC — I2C/RSB bus controls all voltage rails; manipulating DCDC outputs enables voltage glitching",
+        },
+        "description": "Multi-output PMIC for Allwinner SoCs, 5x DCDC + 13x LDO",
+    },
+    # -----------------------------------------------------------------------
+    # Storage — eMMC, UFS, NOR
+    # -----------------------------------------------------------------------
+    {
+        "part": "MTFC4GACAJCN",
+        "aliases": ["MTFC4G", "MT29F"],
+        "category": "storage",
+        "manufacturer": "Micron",
+        "package": "BGA-153",
+        "datasheet": "https://www.micron.com/products/managed-nand/emmc",
+        "security_intel": {
+            "debug_interfaces": ["eMMC (8-bit)"],
+            "debug_relevance": "4GB eMMC — RPMB partition stores secure data, CMD0 boot partition accessible via eMMC reader",
+        },
+        "description": "4GB eMMC 5.1 NAND flash, BGA-153",
+    },
+    {
+        "part": "IS25LP128",
+        "aliases": ["IS25LP128", "25LP128"],
+        "category": "flash",
+        "manufacturer": "ISSI",
+        "package": "SOIC-8",
+        "datasheet": "https://www.issi.com/WW/pdf/IS25LP128.pdf",
+        "security_intel": {
+            "debug_interfaces": ["SPI"],
+            "jedec_id": "9D:60:18",
+            "read_cmd": "flashrom -p ch341a_spi -r dump.bin",
+            "debug_relevance": "128Mbit NOR flash — SPI dump with flashrom, may contain firmware/bootloader/keys",
+        },
+        "description": "128Mbit (16MB) SPI NOR flash, 133MHz",
+    },
+    {
+        "part": "MX25L25645G",
+        "aliases": ["MX25L256", "25L25645"],
+        "category": "flash",
+        "manufacturer": "Macronix",
+        "package": "SOP-16",
+        "datasheet": "https://www.macronix.com/Lists/Datasheet/Attachments/8760/MX25L25645G,%203V,%20256Mb,%20v1.5.pdf",
+        "security_intel": {
+            "debug_interfaces": ["SPI (Quad)"],
+            "jedec_id": "C2:20:19",
+            "read_cmd": "flashrom -p ch341a_spi -r dump.bin",
+            "debug_relevance": "256Mbit NOR flash — common BIOS/UEFI chip, SPI dump with flashrom or CH341A programmer",
+        },
+        "description": "256Mbit (32MB) SPI NOR flash, Quad I/O",
+    },
+    # -----------------------------------------------------------------------
+    # FPGAs — additional families
+    # -----------------------------------------------------------------------
+    {
+        "part": "ECP5-25F",
+        "aliases": ["LFE5U-25F", "ECP5"],
+        "category": "fpga",
+        "manufacturer": "Lattice Semiconductor",
+        "package": "caBGA-256",
+        "datasheet": "https://www.latticesemi.com/view_document?document_id=50461",
+        "security_intel": {
+            "debug_interfaces": ["JTAG"],
+            "config_interface": "SPI / JTAG",
+            "toolchain": "Yosys + nextpnr (open-source), Lattice Diamond (vendor)",
+            "bitstream_format": "Unencrypted by default on -25F, AES-128 optional on -45F/-85F",
+            "lut_count": "24K",
+            "debug_relevance": "25K LUT FPGA — open-source toolchain (Yosys+nextpnr), JTAG for bitstream programming, no bitstream encryption on -25F",
+        },
+        "description": "ECP5 FPGA, 24K LUTs, SERDES, open-source toolchain support",
+    },
+    {
+        "part": "XCZU7EV",
+        "aliases": ["ZU7EV", "Zynq UltraScale+"],
+        "category": "fpga",
+        "manufacturer": "AMD/Xilinx",
+        "package": "FFVC1156",
+        "datasheet": "https://docs.amd.com/r/en-US/ds891-zynq-ultrascale-plus-overview",
+        "security_intel": {
+            "debug_interfaces": ["JTAG"],
+            "boot_mode_pins": ["MIO[2:0]"],
+            "config_interface": "JTAG / QSPI / SD / NAND",
+            "toolchain": "Vivado (vendor)",
+            "bitstream_format": "AES-256 GCM encrypted, RSA-4096 authenticated bitstream supported",
+            "lut_count": "504K",
+            "jtag_chain": "4 TAPs: APU (A53), RPU (R5), PL (FPGA), PMU",
+            "debug_relevance": "Zynq US+ MPSoC — quad ARM A53 + dual R5 + FPGA; JTAG accesses all processors, boot mode pins select QSPI/SD/JTAG boot",
+        },
+        "description": "Zynq UltraScale+ MPSoC, quad A53, dual R5, 504K logic cells",
+    },
 ]
 
 

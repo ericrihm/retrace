@@ -10,9 +10,9 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://github.com/ericrihm/retrace)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Coverage](https://img.shields.io/badge/coverage-98%25-brightgreen.svg)](https://github.com/ericrihm/retrace)
+[![Coverage](https://img.shields.io/badge/coverage-97%25-brightgreen.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->1377<!-- /STATS --> tests** · **<!-- STATS:modules -->24<!-- /STATS --> modules** · **<!-- STATS:loc -->13238<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->1442<!-- /STATS --> tests** · **<!-- STATS:modules -->25<!-- /STATS --> modules** · **<!-- STATS:loc -->14054<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/) · [Issues](https://github.com/ericrihm/retrace/issues)
 
@@ -705,8 +705,8 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS --> lines across <!-- STATS:modules -->24<!-- /STATS --> modules
-├── cli.py                               # Click CLI: 17 commands (scan, search, trace, advise, identify, debug, solve, learn, compare, cross-board, export, export-kicad, batch, pinout, report, report-html, ui)
+src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS --> lines across <!-- STATS:modules -->25<!-- /STATS --> modules
+├── cli.py                               # Click CLI: 20 commands (scan, search, trace, advise, identify, debug, solve, learn, compare, cross-board, export, export-kicad, export-kicad-pcb, jtagulator, attack-paths, batch, pinout, report, report-html, ui)
 ├── web.py                               # Gradio web interface
 ├── core/
 │   ├── pipeline.py                      # Orchestrator: photo → AnalysisResult
@@ -745,11 +745,11 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->1377<!-- /STATS --> |
-| Coverage | <!-- STATS:coverage -->98%<!-- /STATS --> |
-| Modules | <!-- STATS:modules -->24<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->13238<!-- /STATS --> |
-| Component DB | <!-- STATS:components -->186<!-- /STATS --> parts |
+| Tests | <!-- STATS:tests -->1442<!-- /STATS --> |
+| Coverage | <!-- STATS:coverage -->97%<!-- /STATS --> |
+| Modules | <!-- STATS:modules -->25<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->14054<!-- /STATS --> |
+| Component DB | <!-- STATS:components -->196<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
 <sub>Auto-updated by <code>tools/readme_stats.py</code></sub>
@@ -760,7 +760,7 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->1377<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->1442<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```

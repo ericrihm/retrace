@@ -191,3 +191,84 @@ def _build_nets(
         nets[net_name].append((trace.to_component, to_pin))
 
     return nets
+
+
+# ---------------------------------------------------------------------------
+# KiCad PCB positional export (.kicad_pcb)
+# ---------------------------------------------------------------------------
+
+_MM_PER_PX = 0.1
+
+
+def _px_to_mm(px: float, scale: float = _MM_PER_PX) -> float:
+    return px * scale
+
+
+def generate_kicad_pcb(
+    result: AnalysisResult,
+    title: str = "",
+    scale: float = _MM_PER_PX,
+) -> str:
+    """Generate a KiCad PCB file with approximate component placement.
+
+    Converts pixel-space bounding boxes from photo analysis into millimeter
+    positions. The board outline is derived from the image dimensions. Each
+    component is placed as a reference-only footprint at its detected position.
+    """
+    bw = _px_to_mm(result.board_dimensions[0] or 1600, scale)
+    bh = _px_to_mm(result.board_dimensions[1] or 1000, scale)
+
+    lines: list[str] = []
+    _w = lines.append
+
+    _w("(kicad_pcb (version 20221018) (generator retrace)")
+    _w("  (general")
+    _w("    (thickness 1.6)")
+    _w("  )")
+    _w('  (paper "User" {:.2f} {:.2f})'.format(bw, bh))
+    _w("  (layers")
+    _w('    (0 "F.Cu" signal)')
+    _w('    (31 "B.Cu" signal)')
+    _w('    (36 "B.SilkS" user "B.Silkscreen")')
+    _w('    (37 "F.SilkS" user "F.Silkscreen")')
+    _w('    (44 "Edge.Cuts" user)')
+    _w("  )")
+
+    _w("  (gr_rect (start 0 0) (end {:.2f} {:.2f}) (layer \"Edge.Cuts\") (width 0.1))".format(bw, bh))
+
+    for comp in result.components:
+        x, y, w, h = comp.bbox
+        cx = _px_to_mm(x + w / 2, scale)
+        cy = _px_to_mm(y + h / 2, scale)
+        ref = escape(comp.id)
+        value = escape(comp.value or comp.part_number or comp.marking or comp.label)
+        fp = _footprint_for(comp)
+
+        _w(f"  (footprint \"{escape(fp or 'retrace:Unknown')}\"")
+        _w(f"    (layer \"F.Cu\")")
+        _w(f"    (at {cx:.2f} {cy:.2f})")
+        _w(f"    (property \"Reference\" \"{ref}\"")
+        _w(f"      (at 0 -2) (layer \"F.SilkS\")")
+        _w(f"      (effects (font (size 1 1) (thickness 0.15)))")
+        _w(f"    )")
+        _w(f"    (property \"Value\" \"{value}\"")
+        _w(f"      (at 0 2) (layer \"F.SilkS\")")
+        _w(f"      (effects (font (size 1 1) (thickness 0.15)))")
+        _w(f"    )")
+        _w(f"  )")
+
+    _w(")")
+    return "\n".join(lines) + "\n"
+
+
+def save_kicad_pcb(
+    result: AnalysisResult,
+    output_path: str,
+    **kwargs: object,
+) -> None:
+    """Generate and write a KiCad PCB file to disk."""
+    from pathlib import Path
+
+    content = generate_kicad_pcb(result, **kwargs)  # type: ignore[arg-type]
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    Path(output_path).write_text(content, encoding="utf-8")

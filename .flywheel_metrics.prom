@@ -1,0 +1,48 @@
+# HELP retrace_flywheel_score Current flywheel score
+# TYPE retrace_flywheel_score gauge
+retrace_flywheel_score{flywheel="stats"} 0.0
+retrace_flywheel_score{flywheel="lint"} 100.0
+retrace_flywheel_score{flywheel="tests"} 100
+retrace_flywheel_score{flywheel="demo"} 100.0
+retrace_flywheel_score{flywheel="coverage"} 98.0
+retrace_flywheel_score{flywheel="gaps"} 94
+retrace_flywheel_score{flywheel="regression"} 100.0
+retrace_flywheel_score{flywheel="component_db"} 100.0
+retrace_flywheel_score{flywheel="design_audit"} 98.0
+retrace_flywheel_score{flywheel="svg_audit"} 100.0
+retrace_flywheel_score{flywheel="readme_format"} 100.0
+retrace_flywheel_score{flywheel="svg_render"} 100.0
+# HELP retrace_flywheel_ci_width 95% confidence interval width
+# TYPE retrace_flywheel_ci_width gauge
+retrace_flywheel_ci_width{flywheel="stats"} 0.0
+retrace_flywheel_ci_width{flywheel="lint"} 0.0
+retrace_flywheel_ci_width{flywheel="tests"} 2.2727272727272663
+retrace_flywheel_ci_width{flywheel="demo"} 0.0
+retrace_flywheel_ci_width{flywheel="coverage"} 0.0
+retrace_flywheel_ci_width{flywheel="gaps"} 0
+retrace_flywheel_ci_width{flywheel="regression"} 0.0
+retrace_flywheel_ci_width{flywheel="component_db"} 0.0
+retrace_flywheel_ci_width{flywheel="design_audit"} 0.0
+retrace_flywheel_ci_width{flywheel="svg_audit"} 0.0
+retrace_flywheel_ci_width{flywheel="readme_format"} 0.0
+retrace_flywheel_ci_width{flywheel="svg_render"} 0.0
+# HELP retrace_source_reliability Data source reliability EMA
+# TYPE retrace_source_reliability gauge
+retrace_source_reliability{source="readme_stats"} 1.0
+retrace_source_reliability{source="ruff"} 1.0
+retrace_source_reliability{source="pytest"} 1.0
+retrace_source_reliability{source="pytest_cov"} 1.0
+# HELP retrace_bandit_effectiveness Thompson Sampling arm effectiveness
+# TYPE retrace_bandit_effectiveness gauge
+retrace_bandit_effectiveness{flywheel="stats"} 0.5
+retrace_bandit_effectiveness{flywheel="lint"} 0.5
+retrace_bandit_effectiveness{flywheel="tests"} 0.5
+retrace_bandit_effectiveness{flywheel="demo"} 0.5
+retrace_bandit_effectiveness{flywheel="coverage"} 0.5
+retrace_bandit_effectiveness{flywheel="gaps"} 0.5
+retrace_bandit_effectiveness{flywheel="regression"} 0.5
+retrace_bandit_effectiveness{flywheel="component_db"} 0.5
+retrace_bandit_effectiveness{flywheel="design_audit"} 0.5
+retrace_bandit_effectiveness{flywheel="svg_audit"} 0.5
+retrace_bandit_effectiveness{flywheel="readme_format"} 0.5
+retrace_bandit_effectiveness{flywheel="svg_render"} 0.5
