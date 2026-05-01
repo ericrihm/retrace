@@ -309,9 +309,9 @@ def update(dry_run: bool, readme: str) -> None:
 SHOWCASE = REPO_ROOT / "docs" / "index.html"
 
 _SHOWCASE_PATTERNS = {
-    "tests": (re.compile(r'(<div class="stat-val">)\d+(</div><div class="stat-label">Tests</div>)'), r"\g<1>{val}\g<2>"),
-    "coverage": (re.compile(r'(<div class="stat-val">)\d+%(</div><div class="stat-label">Coverage</div>)'), r"\g<1>{val}\g<2>"),
-    "cli_commands": (re.compile(r'(<div class="stat-val">)\d+(</div><div class="stat-label">CLI Commands</div>)'), r"\g<1>{val}\g<2>"),
+    "tests": (re.compile(r'(<div class="stat-val"[^>]*>)\d+(</div><div class="stat-label">Tests</div>)'), r"\g<1>{val}\g<2>"),
+    "coverage": (re.compile(r'(<div class="stat-val"[^>]*>)\d+%(</div><div class="stat-label">Coverage</div>)'), r"\g<1>{val}\g<2>"),
+    "cli_commands": (re.compile(r'(<div class="stat-val"[^>]*>)\d+(</div><div class="stat-label">CLI Commands</div>)'), r"\g<1>{val}\g<2>"),
 }
 
 

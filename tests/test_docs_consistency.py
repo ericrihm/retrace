@@ -64,17 +64,17 @@ class TestShowcaseStats:
         return SHOWCASE.read_text(encoding="utf-8")
 
     def test_tests_stat_present(self, showcase_content):
-        m = re.search(r'<div class="stat-val">(\d+)</div><div class="stat-label">Tests</div>', showcase_content)
+        m = re.search(r'<div class="stat-val"[^>]*>(\d+)</div><div class="stat-label">Tests</div>', showcase_content)
         assert m, "Tests stat not found in showcase"
         assert int(m.group(1)) > 0
 
     def test_coverage_stat_present(self, showcase_content):
-        m = re.search(r'<div class="stat-val">(\d+)%</div><div class="stat-label">Coverage</div>', showcase_content)
+        m = re.search(r'<div class="stat-val"[^>]*>(\d+)%</div><div class="stat-label">Coverage</div>', showcase_content)
         assert m, "Coverage stat not found in showcase"
         assert 0 < int(m.group(1)) <= 100
 
     def test_cli_commands_stat_matches(self, showcase_content):
-        m = re.search(r'<div class="stat-val">(\d+)</div><div class="stat-label">CLI Commands</div>', showcase_content)
+        m = re.search(r'<div class="stat-val"[^>]*>(\d+)</div><div class="stat-label">CLI Commands</div>', showcase_content)
         assert m, "CLI Commands stat not found in showcase"
         from retrace.cli import main
         actual = len(main.commands)

@@ -11,342 +11,657 @@
 <meta property="og:url" content="https://ericrihm.github.io/retrace/">
 <meta property="og:image" content="https://ericrihm.github.io/retrace/examples/cisco_annotated.svg">
 <style>
+/* ═══════════════════════════════════════════════════════
+   DESIGN TOKENS
+   Consistent scale for spacing, typography, radius, shadows
+   ═══════════════════════════════════════════════════════ */
 :root {
-  --bg: #0a0e1a;
-  --surface: #111827;
-  --border: #1e293b;
-  --text: #e2e8f0;
-  --text-mid: #94a3b8;
-  --text-dim: #64748b;
-  --accent: #22d3ee;
-  --accent-glow: rgba(34,211,238,0.15);
-  --red: #ef4444;
-  --amber: #f59e0b;
-  --green: #22c55e;
+  /* Colors */
+  --bg:          #0a0e1a;
+  --bg-elevated: #0f1629;
+  --surface:     #111827;
+  --surface-2:   #1a2236;
+  --border:      #1e293b;
+  --border-hover:#334155;
+  --text:        #e2e8f0;
+  --text-mid:    #94a3b8;
+  --text-dim:    #64748b;
+  --accent:      #22d3ee;
+  --accent-dim:  #0891b2;
+  --accent-glow: rgba(34,211,238,0.12);
+  --purple:      #a855f7;
+  --purple-glow: rgba(168,85,247,0.12);
+  --red:         #ef4444;
+  --red-glow:    rgba(239,68,68,0.12);
+  --amber:       #f59e0b;
+  --amber-glow:  rgba(245,158,11,0.12);
+  --green:       #22c55e;
+  --green-glow:  rgba(34,197,94,0.12);
+  --orange:      #f97316;
+  --orange-glow: rgba(249,115,22,0.12);
+  --slate:       #6b7280;
+
+  /* Spacing (4px base) */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px;
+  --sp-12: 48px;--sp-16: 64px;--sp-20: 80px;--sp-24: 96px;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', ui-monospace, monospace;
+  --text-xs:  0.75rem;  /* 12px */
+  --text-sm:  0.8125rem;/* 13px */
+  --text-base:0.9375rem;/* 15px */
+  --text-lg:  1.0625rem;/* 17px */
+  --text-xl:  1.25rem;  /* 20px */
+  --text-2xl: 1.5rem;   /* 24px */
+  --text-3xl: 2rem;     /* 32px */
+  --text-4xl: 2.5rem;   /* 40px */
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
+  --shadow-glow: 0 0 24px var(--accent-glow);
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
 }
 
+/* ═══ Reset ═══ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Inter', -apple-system, system-ui, sans-serif;
-  font-size: 15px;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
+a { color: var(--accent); text-decoration: none; transition: color var(--duration-fast); }
+a:hover { color: #67e8f9; }
 
-.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 var(--sp-6); }
 
-/* ── Hero ───────────────────────────────────────────── */
+/* ═══ Scroll Animation ═══ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════════════════ */
 .hero {
   text-align: center;
-  padding: 80px 24px 48px;
+  padding: var(--sp-24) var(--sp-6) var(--sp-16);
   position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
 }
 .hero::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 50%;
+  bottom: 0; left: 50%;
   transform: translateX(-50%);
-  width: 120px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  width: 200px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-hover), transparent);
 }
 
 .hero h1 {
-  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-size: clamp(var(--text-3xl), 5vw, var(--text-4xl));
   font-weight: 800;
-  letter-spacing: -0.03em;
-  margin-bottom: 12px;
+  letter-spacing: -0.04em;
+  margin-bottom: var(--sp-3);
+  position: relative;
 }
 .hero h1 span { color: var(--accent); }
 
 .hero .tagline {
-  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  font-size: clamp(var(--text-base), 2.2vw, var(--text-lg));
   color: var(--text-mid);
-  max-width: 640px;
-  margin: 0 auto 24px;
+  max-width: 580px;
+  margin: 0 auto var(--sp-8);
+  line-height: 1.5;
 }
 
-.hero .stats {
+/* Stats bar */
+.stats-bar {
   display: flex;
-  gap: 32px;
+  gap: var(--sp-1);
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 24px;
+  margin: var(--sp-8) auto 0;
+  max-width: 700px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-4) var(--sp-6);
 }
-.hero .stat {
+.stat {
   text-align: center;
+  flex: 1;
+  min-width: 90px;
+  padding: var(--sp-2) var(--sp-3);
 }
-.hero .stat-val {
-  font-size: 1.8rem;
+.stat-val {
+  font-size: var(--text-2xl);
   font-weight: 700;
   color: var(--accent);
   font-variant-numeric: tabular-nums;
+  line-height: 1.2;
 }
-.hero .stat-label {
-  font-size: 0.75rem;
+.stat-label {
+  font-size: var(--text-xs);
   color: var(--text-dim);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
+  margin-top: var(--sp-1);
 }
+.stat + .stat { border-left: 1px solid var(--border); }
 
-.hero .links {
-  margin-top: 32px;
+/* CTA buttons */
+.hero-cta {
+  margin-top: var(--sp-8);
   display: flex;
-  gap: 16px;
+  gap: var(--sp-3);
   justify-content: center;
   flex-wrap: wrap;
 }
-.hero .links a {
+.btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 20px;
-  border-radius: 6px;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--radius-md);
   font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.2s;
+  font-size: var(--text-sm);
+  transition: all var(--duration-normal) var(--ease-out);
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
 }
 .btn-primary {
   background: var(--accent);
-  color: var(--bg) !important;
+  color: var(--bg);
 }
-.btn-primary:hover { background: #06b6d4; text-decoration: none !important; }
+.btn-primary:hover { background: #06b6d4; color: var(--bg); box-shadow: var(--shadow-glow); transform: translateY(-1px); }
 .btn-ghost {
   border: 1px solid var(--border);
-  color: var(--text-mid) !important;
+  color: var(--text-mid);
+  background: transparent;
 }
-.btn-ghost:hover { border-color: var(--accent); color: var(--accent) !important; text-decoration: none !important; }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
 
-/* ── Section ────────────────────────────────────────── */
-section {
-  padding: 64px 0;
+/* ═══════════════════════════════════════════════════════
+   BEFORE/AFTER HERO DEMO
+   ═══════════════════════════════════════════════════════ */
+.hero-demo {
+  margin-top: var(--sp-12);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--sp-4);
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
-section h2 {
-  font-size: 1.5rem;
+.demo-side {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color var(--duration-normal);
+}
+.demo-side:hover { border-color: var(--border-hover); }
+.demo-label {
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--text-xs);
   font-weight: 700;
-  margin-bottom: 8px;
-}
-section .section-sub {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   color: var(--text-dim);
-  margin-bottom: 32px;
-  max-width: 600px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.demo-label .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.demo-side img {
+  width: 100%;
+  display: block;
+}
+.demo-arrow {
+  font-size: var(--text-2xl);
+  color: var(--accent);
+  font-weight: 300;
+  flex-shrink: 0;
 }
 
-/* ── Board cards ────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   SECTIONS
+   ═══════════════════════════════════════════════════════ */
+section {
+  padding: var(--sp-16) 0;
+}
+.section-header {
+  margin-bottom: var(--sp-10);
+}
+.section-header h2 {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--sp-2);
+}
+.section-header p {
+  color: var(--text-dim);
+  max-width: 560px;
+  font-size: var(--text-base);
+}
+.section-divider {
+  width: 48px; height: 2px;
+  background: var(--accent);
+  margin-top: var(--sp-3);
+  border-radius: 1px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PIPELINE
+   ═══════════════════════════════════════════════════════ */
+.pipeline {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: var(--sp-6) 0;
+}
+.pipe-stage {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-4) var(--sp-5);
+  text-align: center;
+  min-width: 100px;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+.pipe-stage:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+.pipe-stage .stage-icon {
+  font-size: var(--text-xl);
+  margin-bottom: var(--sp-1);
+}
+.pipe-stage .stage-name {
+  font-weight: 700;
+  font-size: var(--text-sm);
+}
+.pipe-stage .stage-tech {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+  margin-top: var(--sp-1);
+}
+.pipe-arrow {
+  display: flex;
+  align-items: center;
+  color: var(--text-dim);
+  font-size: var(--text-xl);
+  opacity: 0.4;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RENDERING STYLES & PRESETS
+   ═══════════════════════════════════════════════════════ */
+.styles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-4);
+}
+.style-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-5);
+  transition: all var(--duration-normal) var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+.style-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.style-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.style-photo::before { background: var(--accent); }
+.style-schematic::before { background: var(--purple); }
+.style-xray::before { background: var(--amber); }
+
+.style-card .style-icon {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--sp-2);
+}
+.style-card h3 {
+  font-size: var(--text-base);
+  font-weight: 700;
+  margin-bottom: var(--sp-2);
+}
+.style-card p {
+  font-size: var(--text-sm);
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+
+.subsection-label {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  margin-top: var(--sp-10);
+  margin-bottom: var(--sp-4);
+}
+
+.presets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--sp-3);
+}
+.preset-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--sp-4);
+  transition: all var(--duration-normal) var(--ease-out);
+  border-left: 3px solid var(--border);
+}
+.preset-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
+}
+.preset-card h4 {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin-bottom: var(--sp-1);
+}
+.preset-card p {
+  font-size: var(--text-xs);
+  color: var(--text-mid);
+  line-height: 1.4;
+}
+.preset-satellite  { border-left-color: var(--slate); }
+.preset-analysis   { border-left-color: var(--accent); }
+.preset-schematic  { border-left-color: var(--purple); }
+.preset-xray       { border-left-color: var(--amber); }
+.preset-attack     { border-left-color: var(--red); }
+.preset-recon      { border-left-color: var(--orange); }
+.preset-power      { border-left-color: #eab308; }
+.preset-zones      { border-left-color: #8b5cf6; }
+.preset-debug      { border-left-color: var(--green); }
+.preset-all        { border-left-color: var(--text-dim); }
+
+.cli-hint {
+  margin-top: var(--sp-6);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--text-dim);
+}
+.cli-hint code {
+  background: var(--surface-2);
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════════════
+   BOARD CARDS
+   ═══════════════════════════════════════════════════════ */
 .board-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: var(--sp-6);
 }
 .board-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  transition: border-color 0.2s;
+  transition: all var(--duration-normal) var(--ease-out);
 }
-.board-card:hover { border-color: var(--accent); }
+.board-card:hover { border-color: var(--border-hover); box-shadow: var(--shadow-md); }
 
-.board-card .card-header {
-  padding: 20px 20px 12px;
-}
-.board-card h3 {
-  font-size: 1.1rem;
+.card-header { padding: var(--sp-5) var(--sp-5) var(--sp-3); }
+.card-header h3 {
+  font-size: var(--text-lg);
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: var(--sp-1);
 }
-.board-card .card-desc {
+.card-desc {
   color: var(--text-dim);
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
 }
 
-.board-card .card-chips {
+.card-chips {
   display: flex;
-  gap: 6px;
+  gap: var(--sp-2);
   flex-wrap: wrap;
-  padding: 0 20px 12px;
+  padding: 0 var(--sp-5) var(--sp-3);
 }
 .chip {
-  font-size: 0.7rem;
-  padding: 2px 8px;
-  border-radius: 4px;
+  font-size: var(--text-xs);
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--radius-sm);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-.chip-red { background: rgba(239,68,68,0.15); color: var(--red); }
-.chip-amber { background: rgba(245,158,11,0.15); color: var(--amber); }
-.chip-green { background: rgba(34,197,94,0.15); color: var(--green); }
-.chip-cyan { background: var(--accent-glow); color: var(--accent); }
+.chip-red    { background: var(--red-glow);    color: var(--red); }
+.chip-amber  { background: var(--amber-glow);  color: var(--amber); }
+.chip-green  { background: var(--green-glow);  color: var(--green); }
+.chip-cyan   { background: var(--accent-glow); color: var(--accent); }
 
-/* ── View tabs ──────────────────────────────────────── */
+/* View tabs */
 .view-tabs {
   display: flex;
   border-bottom: 1px solid var(--border);
-  padding: 0 20px;
-  gap: 0;
+  padding: 0 var(--sp-5);
   overflow-x: auto;
+  scrollbar-width: none;
 }
+.view-tabs::-webkit-scrollbar { display: none; }
 .view-tab {
-  padding: 10px 16px;
-  font-size: 0.8rem;
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--text-xs);
   font-weight: 600;
   color: var(--text-dim);
   cursor: pointer;
+  border: none;
   border-bottom: 2px solid transparent;
   white-space: nowrap;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
   background: none;
-  border-top: none;
-  border-left: none;
-  border-right: none;
   font-family: inherit;
 }
 .view-tab:hover { color: var(--text); }
 .view-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-.view-content {
-  padding: 16px 20px 20px;
+.view-content { padding: var(--sp-4) var(--sp-5) var(--sp-5); }
+.view-panel {
+  display: none;
+  animation: fadeIn var(--duration-normal) var(--ease-out);
 }
-.view-panel { display: none; }
 .view-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
 .view-panel img, .view-panel object {
   width: 100%;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
-
-.view-panel .artifact-link {
-  display: inline-block;
-  margin-top: 8px;
-  font-size: 0.8rem;
+.artifact-link {
+  display: block;
+  margin-top: var(--sp-2);
+  font-size: var(--text-xs);
   color: var(--text-dim);
+  line-height: 1.5;
 }
-.view-panel .artifact-link:hover { color: var(--accent); }
 
-/* ── Findings table ─────────────────────────────────── */
-.findings-section {
-  margin-top: 48px;
-}
+/* ═══════════════════════════════════════════════════════
+   FINDINGS TABLE
+   ═══════════════════════════════════════════════════════ */
+.findings-section { margin-top: var(--sp-12); }
+
 .findings-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
 }
 .findings-table th {
   text-align: left;
-  padding: 10px 12px;
+  padding: var(--sp-3) var(--sp-3);
   color: var(--text-dim);
-  font-weight: 600;
-  font-size: 0.75rem;
+  font-weight: 700;
+  font-size: var(--text-xs);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   border-bottom: 1px solid var(--border);
 }
 .findings-table td {
-  padding: 10px 12px;
+  padding: var(--sp-3) var(--sp-3);
   border-bottom: 1px solid var(--border);
 }
-.findings-table tr:hover td { background: rgba(34,211,238,0.03); }
+.findings-table tr { transition: background var(--duration-fast); }
+.findings-table tbody tr:hover td { background: rgba(34,211,238,0.03); }
 
 .badge {
   display: inline-block;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.7rem;
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
   font-weight: 700;
 }
-.badge-high { background: rgba(239,68,68,0.15); color: var(--red); }
-.badge-medium { background: rgba(245,158,11,0.15); color: var(--amber); }
+.badge-high   { background: var(--red-glow);   color: var(--red); }
+.badge-medium { background: var(--amber-glow); color: var(--amber); }
 
 .cvss-score {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
 }
 .attack-link {
-  font-size: 0.8rem;
-  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
 }
 
-/* ── Pipeline ───────────────────────────────────────── */
-.pipeline {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 32px 0;
-}
-.pipe-stage {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 12px 16px;
-  text-align: center;
-  min-width: 100px;
-  position: relative;
-}
-.pipe-stage .stage-name {
-  font-weight: 700;
-  font-size: 0.85rem;
-}
-.pipe-stage .stage-tech {
-  font-size: 0.7rem;
-  color: var(--text-dim);
-  margin-top: 2px;
-}
-.pipe-arrow {
-  display: flex;
-  align-items: center;
-  color: var(--text-dim);
-  font-size: 1.2rem;
-}
-
-/* ── Reports section ────────────────────────────────── */
-.report-cards {
+/* ═══════════════════════════════════════════════════════
+   REPORT & EXPORT CARDS
+   ═══════════════════════════════════════════════════════ */
+.card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--sp-5);
 }
-.report-card {
+.card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 24px;
-  transition: border-color 0.2s;
+  border-radius: var(--radius-lg);
+  padding: var(--sp-6);
+  transition: all var(--duration-normal) var(--ease-out);
+  display: block;
+  color: inherit;
 }
-.report-card:hover { border-color: var(--accent); text-decoration: none; }
-.report-card h3 { font-size: 1rem; margin-bottom: 8px; }
-.report-card p { color: var(--text-dim); font-size: 0.85rem; }
-.report-card .report-meta {
-  margin-top: 12px;
-  font-size: 0.75rem;
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  color: inherit;
+}
+.card h3 {
+  font-size: var(--text-base);
+  font-weight: 700;
+  margin-bottom: var(--sp-2);
+}
+.card p {
+  color: var(--text-mid);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+.card-meta {
+  margin-top: var(--sp-3);
+  font-size: var(--text-xs);
   color: var(--text-dim);
 }
+.card-meta a { color: var(--text-dim); }
+.card-meta a:hover { color: var(--accent); }
 
-/* ── Footer ─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════ */
 footer {
-  padding: 48px 0;
+  padding: var(--sp-12) 0;
   text-align: center;
   color: var(--text-dim);
-  font-size: 0.8rem;
+  font-size: var(--text-sm);
   border-top: 1px solid var(--border);
 }
 footer a { color: var(--text-mid); }
 
-/* ── Responsive ─────────────────────────────────────── */
-@media (max-width: 640px) {
-  .hero { padding: 48px 16px 32px; }
-  .hero .stats { gap: 20px; }
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .hero { padding: var(--sp-16) var(--sp-4) var(--sp-12); }
+  .stats-bar { flex-direction: column; gap: 0; padding: var(--sp-3); }
+  .stat + .stat { border-left: none; border-top: 1px solid var(--border); }
+  .stat { padding: var(--sp-3) var(--sp-2); }
+  .hero-demo { grid-template-columns: 1fr; gap: var(--sp-3); }
+  .demo-arrow { transform: rotate(90deg); justify-self: center; }
+  .styles-grid { grid-template-columns: 1fr; }
   .board-grid { grid-template-columns: 1fr; }
-  .pipeline { gap: 8px; }
+  .pipeline { gap: var(--sp-2); }
   .pipe-arrow { display: none; }
+  .pipe-stage { min-width: 80px; padding: var(--sp-3); }
+}
+@media (max-width: 480px) {
+  .presets-grid { grid-template-columns: 1fr; }
+  .card-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: var(--text-3xl); }
 }
 </style>
 </head>
@@ -357,136 +672,130 @@ footer a { color: var(--text-mid); }
   <h1>re<span>:</span>trace</h1>
   <p class="tagline">Photo in, attack surface out. The first open-source toolkit that identifies PCB components, extracts traces, maps trust chains, and tells you where to probe.</p>
 
-  <div class="stats">
-    <div class="stat"><div class="stat-val">967</div><div class="stat-label">Tests</div></div>
-    <div class="stat"><div class="stat-val">94%</div><div class="stat-label">Coverage</div></div>
-    <div class="stat"><div class="stat-val">23</div><div class="stat-label">Modules</div></div>
-    <div class="stat"><div class="stat-val">128</div><div class="stat-label">Components DB</div></div>
-    <div class="stat"><div class="stat-val">17</div><div class="stat-label">CLI Commands</div></div>
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-val" data-target="970">970</div><div class="stat-label">Tests</div></div>
+    <div class="stat"><div class="stat-val" data-target="94" data-suffix="%">94%</div><div class="stat-label">Coverage</div></div>
+    <div class="stat"><div class="stat-val" data-target="23">23</div><div class="stat-label">Modules</div></div>
+    <div class="stat"><div class="stat-val" data-target="128">128</div><div class="stat-label">Components DB</div></div>
+    <div class="stat"><div class="stat-val" data-target="17">17</div><div class="stat-label">CLI Commands</div></div>
   </div>
 
-  <div class="links">
-    <a href="https://github.com/ericrihm/retrace" class="btn-primary">
+  <div class="hero-cta">
+    <a href="https://github.com/ericrihm/retrace" class="btn btn-primary">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
       Source Code
     </a>
-    <a href="#boards" class="btn-ghost">View Analysis</a>
-    <a href="#reports" class="btn-ghost">Assessment Reports</a>
+    <a href="#boards" class="btn btn-ghost">View Analysis</a>
+    <a href="#reports" class="btn btn-ghost">Assessment Reports</a>
+  </div>
+
+  <!-- Before → After demo -->
+  <div class="hero-demo reveal">
+    <div class="demo-side">
+      <div class="demo-label"><span class="dot" style="background:var(--amber)"></span> Input: Board Photo</div>
+      <img src="examples/cisco_board.png" alt="Cisco ASA 5506-X PCB photograph" loading="lazy" onerror="this.parentElement.style.display='none'">
+    </div>
+    <div class="demo-arrow">&rarr;</div>
+    <div class="demo-side">
+      <div class="demo-label"><span class="dot"></span> Output: Analysis Overlay</div>
+      <img src="examples/cisco_annotated.svg" alt="Cisco ASA 5506-X — annotated with 177 components, traces, and security findings" loading="lazy">
+    </div>
   </div>
 </div>
 
 <!-- ═══ Pipeline ═════════════════════════════════════ -->
-<section>
+<section class="reveal">
   <div class="container">
-    <h2>Pipeline</h2>
-    <p class="section-sub">Nine stages. One command. No design files required.</p>
+    <div class="section-header">
+      <h2>Pipeline</h2>
+      <p>Nine stages. One command. No design files required.</p>
+      <div class="section-divider"></div>
+    </div>
     <div class="pipeline">
-      <div class="pipe-stage"><div class="stage-name">Detect</div><div class="stage-tech">YOLO v8 / OpenCV</div></div>
+      <div class="pipe-stage"><div class="stage-icon">&#128269;</div><div class="stage-name">Detect</div><div class="stage-tech">YOLO v8 / OpenCV</div></div>
       <div class="pipe-arrow">&rarr;</div>
-      <div class="pipe-stage"><div class="stage-name">OCR</div><div class="stage-tech">EasyOCR</div></div>
+      <div class="pipe-stage"><div class="stage-icon">&#128220;</div><div class="stage-name">OCR</div><div class="stage-tech">EasyOCR</div></div>
       <div class="pipe-arrow">&rarr;</div>
-      <div class="pipe-stage"><div class="stage-name">Trace</div><div class="stage-tech">HSV+LAB / Zhang-Suen</div></div>
+      <div class="pipe-stage"><div class="stage-icon">&#128268;</div><div class="stage-name">Trace</div><div class="stage-tech">HSV+LAB / Zhang-Suen</div></div>
       <div class="pipe-arrow">&rarr;</div>
-      <div class="pipe-stage"><div class="stage-name">Identify</div><div class="stage-tech">128-part fuzzy DB</div></div>
+      <div class="pipe-stage"><div class="stage-icon">&#127919;</div><div class="stage-name">Identify</div><div class="stage-tech">128-part fuzzy DB</div></div>
       <div class="pipe-arrow">&rarr;</div>
-      <div class="pipe-stage"><div class="stage-name">Infer</div><div class="stage-tech">AC-3 constraint</div></div>
+      <div class="pipe-stage"><div class="stage-icon">&#129504;</div><div class="stage-name">Infer</div><div class="stage-tech">AC-3 constraint</div></div>
       <div class="pipe-arrow">&rarr;</div>
-      <div class="pipe-stage"><div class="stage-name">Advise</div><div class="stage-tech">Bayesian entropy</div></div>
+      <div class="pipe-stage"><div class="stage-icon">&#128161;</div><div class="stage-name">Advise</div><div class="stage-tech">Bayesian entropy</div></div>
       <div class="pipe-arrow">&rarr;</div>
-      <div class="pipe-stage"><div class="stage-name">Analyze</div><div class="stage-tech">CVSS / ATT&amp;CK</div></div>
+      <div class="pipe-stage"><div class="stage-icon">&#128737;</div><div class="stage-name">Analyze</div><div class="stage-tech">CVSS / ATT&amp;CK</div></div>
       <div class="pipe-arrow">&rarr;</div>
-      <div class="pipe-stage"><div class="stage-name">Pinout</div><div class="stage-tech">Probe diagrams</div></div>
+      <div class="pipe-stage"><div class="stage-icon">&#128204;</div><div class="stage-name">Pinout</div><div class="stage-tech">Probe diagrams</div></div>
       <div class="pipe-arrow">&rarr;</div>
-      <div class="pipe-stage"><div class="stage-name">Export</div><div class="stage-tech">Layered SVG / HTML / KiCad</div></div>
+      <div class="pipe-stage"><div class="stage-icon">&#128230;</div><div class="stage-name">Export</div><div class="stage-tech">SVG / HTML / KiCad</div></div>
     </div>
   </div>
 </section>
 
-<!-- ═══ Interactive Layers ═══════════════════════════ -->
-<section id="layers" style="padding: 3em 0;">
+<!-- ═══ Interactive Analysis Layers ═══════════════════ -->
+<section id="layers" class="reveal">
   <div class="container">
-    <h2>Interactive Analysis Layers</h2>
-    <p class="section-sub">One SVG. Nine layers. Ten view presets. Three rendering styles. Like switching between Satellite and Terrain on Google Maps.</p>
+    <div class="section-header">
+      <h2>Interactive Analysis Layers</h2>
+      <p>One SVG. Nine layers. Ten view presets. Three rendering styles. Like switching between Satellite and Terrain on Google Maps.</p>
+      <div class="section-divider"></div>
+    </div>
 
-    <h3 style="font-size: 0.85em; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 1.5em;">Rendering Styles</h3>
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 0.5em;">
-      <div class="report-card" style="border-left: 3px solid #22d3ee;">
-        <h3 style="font-size: 0.95em; color: #e2e8f0;">&#x1F4F7; Photo</h3>
-        <p style="font-size: 0.8em; color: #94a3b8;">Board image with translucent overlays. Default mode &mdash; like Google Maps satellite view.</p>
+    <div class="subsection-label">Rendering Styles</div>
+    <div class="styles-grid">
+      <div class="style-card style-photo">
+        <div class="style-icon">&#128247;</div>
+        <h3>Photo</h3>
+        <p>Board image with translucent overlays. Default mode &mdash; like Google Maps satellite view.</p>
       </div>
-      <div class="report-card" style="border-left: 3px solid #a855f7;">
-        <h3 style="font-size: 0.95em; color: #e2e8f0;">&#x1F4D0; Schematic</h3>
-        <p style="font-size: 0.8em; color: #94a3b8;">Vector-only, no photo. Opaque component outlines, thick traces, bold labels. Like Google Maps roadmap view.</p>
+      <div class="style-card style-schematic">
+        <div class="style-icon">&#128208;</div>
+        <h3>Schematic</h3>
+        <p>Vector-only, no photo. Opaque component outlines, thick traces, bold labels. Like Google Maps roadmap.</p>
       </div>
-      <div class="report-card" style="border-left: 3px solid #f59e0b;">
-        <h3 style="font-size: 0.95em; color: #e2e8f0;">&#x2622; X-Ray</h3>
-        <p style="font-size: 0.8em; color: #94a3b8;">Dimmed photo with high-contrast overlays. Everything visible at once. Like a hybrid satellite + roadmap.</p>
+      <div class="style-card style-xray">
+        <div class="style-icon">&#9762;</div>
+        <h3>X-Ray</h3>
+        <p>Dimmed photo with high-contrast overlays. Everything visible at once. Hybrid satellite + roadmap.</p>
       </div>
     </div>
 
-    <h3 style="font-size: 0.85em; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 1.5em;">View Presets</h3>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 0.5em;">
-      <div class="report-card" style="border-left: 3px solid #6b7280;">
-        <h3 style="font-size: 0.9em; color: #e2e8f0;">Satellite</h3>
-        <p style="font-size: 0.75em; color: #94a3b8;">Board photo only. Clean view for orientation.</p>
-      </div>
-      <div class="report-card" style="border-left: 3px solid #22d3ee;">
-        <h3 style="font-size: 0.9em; color: #e2e8f0;">Analysis</h3>
-        <p style="font-size: 0.75em; color: #94a3b8;">Components + traces + BOM. Default RE view.</p>
-      </div>
-      <div class="report-card" style="border-left: 3px solid #a855f7;">
-        <h3 style="font-size: 0.9em; color: #e2e8f0;">Schematic</h3>
-        <p style="font-size: 0.75em; color: #94a3b8;">Vector-only view with net labels and grid.</p>
-      </div>
-      <div class="report-card" style="border-left: 3px solid #f59e0b;">
-        <h3 style="font-size: 0.9em; color: #e2e8f0;">X-Ray</h3>
-        <p style="font-size: 0.75em; color: #94a3b8;">All layers with dimmed photo. Full visibility.</p>
-      </div>
-      <div class="report-card" style="border-left: 3px solid #ef4444;">
-        <h3 style="font-size: 0.9em; color: #e2e8f0;">Attack Surface</h3>
-        <p style="font-size: 0.75em; color: #94a3b8;">Security findings + attack path arrows.</p>
-      </div>
-      <div class="report-card" style="border-left: 3px solid #f97316;">
-        <h3 style="font-size: 0.9em; color: #e2e8f0;">Recon</h3>
-        <p style="font-size: 0.75em; color: #94a3b8;">Pentester first look: security + power rails + net labels.</p>
-      </div>
-      <div class="report-card" style="border-left: 3px solid #eab308;">
-        <h3 style="font-size: 0.9em; color: #e2e8f0;">Power Map</h3>
-        <p style="font-size: 0.75em; color: #94a3b8;">VRMs, LDOs, rails, decoupling caps highlighted.</p>
-      </div>
-      <div class="report-card" style="border-left: 3px solid #8b5cf6;">
-        <h3 style="font-size: 0.9em; color: #e2e8f0;">Zones</h3>
-        <p style="font-size: 0.75em; color: #94a3b8;">Functional zone overlay: CPU, memory, power, I/O.</p>
-      </div>
-      <div class="report-card" style="border-left: 3px solid #22c55e;">
-        <h3 style="font-size: 0.9em; color: #e2e8f0;">Debug</h3>
-        <p style="font-size: 0.75em; color: #94a3b8;">Debug interfaces + net classification labels.</p>
-      </div>
-      <div class="report-card" style="border-left: 3px solid #64748b;">
-        <h3 style="font-size: 0.9em; color: #e2e8f0;">All Layers</h3>
-        <p style="font-size: 0.75em; color: #94a3b8;">Everything visible. Full analysis mode.</p>
-      </div>
+    <div class="subsection-label">View Presets</div>
+    <div class="presets-grid">
+      <div class="preset-card preset-satellite"><h4>Satellite</h4><p>Board photo only. Clean view for orientation.</p></div>
+      <div class="preset-card preset-analysis"><h4>Analysis</h4><p>Components + traces + BOM. Default RE view.</p></div>
+      <div class="preset-card preset-schematic"><h4>Schematic</h4><p>Vector-only with net labels and grid.</p></div>
+      <div class="preset-card preset-xray"><h4>X-Ray</h4><p>All layers with dimmed photo. Full visibility.</p></div>
+      <div class="preset-card preset-attack"><h4>Attack Surface</h4><p>Security findings + attack path arrows.</p></div>
+      <div class="preset-card preset-recon"><h4>Recon</h4><p>Pentester first look: security + power rails.</p></div>
+      <div class="preset-card preset-power"><h4>Power Map</h4><p>VRMs, LDOs, rails, decoupling caps.</p></div>
+      <div class="preset-card preset-zones"><h4>Zones</h4><p>Functional zone overlay: CPU, memory, power.</p></div>
+      <div class="preset-card preset-debug"><h4>Debug</h4><p>Debug interfaces + net classification.</p></div>
+      <div class="preset-card preset-all"><h4>All Layers</h4><p>Everything visible. Full analysis mode.</p></div>
     </div>
 
-    <p style="margin-top: 1.5em; font-size: 0.85em; color: #64748b; text-align: center;">
-      <code style="background: #1e293b; padding: 2px 8px; border-radius: 4px;">retrace scan board.jpg --format svg</code> &mdash;
-      self-contained SVG with JavaScript layer controls and style switching. Open in any browser, no server needed.
-    </p>
+    <div class="cli-hint">
+      <code>retrace scan board.jpg --format svg</code> &mdash; self-contained SVG with JavaScript layer controls. Open in any browser.
+    </div>
   </div>
 </section>
 
 <!-- ═══ Board Analysis ═══════════════════════════════ -->
-<section id="boards">
+<section id="boards" class="reveal">
   <div class="container">
-    <h2>Board Analysis</h2>
-    <p class="section-sub">Two targets. Both analyzed from photos alone.</p>
+    <div class="section-header">
+      <h2>Board Analysis</h2>
+      <p>Two targets. Both analyzed from photos alone.</p>
+      <div class="section-divider"></div>
+    </div>
 
     <div class="board-grid">
       <!-- Cisco -->
       <div class="board-card" id="cisco-card">
         <div class="card-header">
           <h3>Cisco ASA 5506-X V05</h3>
-          <div class="card-desc">Enterprise firewall — Thrangrycat target (CVE-2019-1649)</div>
+          <div class="card-desc">Enterprise firewall &mdash; Thrangrycat target (CVE-2019-1649)</div>
         </div>
         <div class="card-chips">
           <span class="chip chip-red">JTAG CVSS 7.6</span>
@@ -505,31 +814,31 @@ footer a { color: var(--text-mid); }
         </div>
         <div class="view-content">
           <div class="view-panel active" data-view="annotated">
-            <img src="examples/cisco_annotated.svg" alt="Cisco ASA 5506-X — annotated board overlay with 177 components" loading="lazy">
+            <img src="examples/cisco_annotated.svg" alt="Cisco ASA 5506-X &mdash; annotated board overlay with 177 components" loading="lazy">
             <div class="artifact-link">Intel Atom C2508 &middot; Xilinx Spartan-6 Trust Anchor &middot; 4&times; DDR3 ECC &middot; W25Q128JV SPI flash</div>
           </div>
           <div class="view-panel" data-view="attack">
-            <img src="examples/cisco_attack_surface.svg" alt="Cisco ASA 5506-X — Thrangrycat attack path" loading="lazy">
+            <img src="examples/cisco_attack_surface.svg" alt="Cisco ASA 5506-X &mdash; Thrangrycat attack path" loading="lazy">
             <div class="artifact-link">JTAG (J15) &rarr; CPU (U1) &rarr; FPGA (U6) &larr; unencrypted SPI flash (U7)</div>
           </div>
           <div class="view-panel" data-view="zones">
-            <img src="examples/cisco_zones.svg" alt="Cisco ASA 5506-X — 16 functional zones" loading="lazy">
+            <img src="examples/cisco_zones.svg" alt="Cisco ASA 5506-X &mdash; 16 functional zones" loading="lazy">
             <div class="artifact-link">16 zones &mdash; CPU, memory, VRM, network, Trust Anchor FPGA</div>
           </div>
           <div class="view-panel" data-view="bom">
-            <img src="examples/cisco_bom_table.svg" alt="Cisco ASA 5506-X — BOM table" loading="lazy">
+            <img src="examples/cisco_bom_table.svg" alt="Cisco ASA 5506-X &mdash; BOM table" loading="lazy">
             <div class="artifact-link">Grouped by type &middot; confidence bars &middot; part numbers</div>
           </div>
           <div class="view-panel" data-view="interactive">
-            <img src="examples/cisco_interactive.svg" alt="Cisco ASA 5506-X — interactive layered SVG with 9 layers, 3 rendering styles" loading="lazy">
+            <img src="examples/cisco_interactive.svg" alt="Cisco ASA 5506-X &mdash; interactive layered SVG with 9 layers, 3 rendering styles" loading="lazy">
             <div class="artifact-link">9 layers &middot; 10 presets &middot; 3 styles (Photo / Schematic / X-Ray) &middot; <a href="examples/cisco_interactive.svg" target="_blank">Open full SVG &rarr;</a></div>
           </div>
           <div class="view-panel" data-view="pinout-jtag">
-            <img src="examples/cisco_JTAG_pinout.svg" alt="Cisco ASA 5506-X — JTAG pinout diagram with probe wiring guide" loading="lazy">
+            <img src="examples/cisco_JTAG_pinout.svg" alt="Cisco ASA 5506-X &mdash; JTAG pinout diagram" loading="lazy">
             <div class="artifact-link">JTAG (J15) &middot; 20-pin ARM standard &middot; J-Link / Bus Pirate / FTDI wiring</div>
           </div>
           <div class="view-panel" data-view="pinout-uart">
-            <img src="examples/cisco_UART_pinout.svg" alt="Cisco ASA 5506-X — UART console pinout diagram" loading="lazy">
+            <img src="examples/cisco_UART_pinout.svg" alt="Cisco ASA 5506-X &mdash; UART console pinout" loading="lazy">
             <div class="artifact-link">UART (J10) &middot; TX/RX/GND &middot; Bus Pirate / FTDI FT232 wiring &middot; Common baud rates</div>
           </div>
         </div>
@@ -539,7 +848,7 @@ footer a { color: var(--text-mid); }
       <div class="board-card" id="xbox-card">
         <div class="card-header">
           <h3>Xbox One Model 1540</h3>
-          <div class="card-desc">Gaming console — AMD Liverpool APU (Durango)</div>
+          <div class="card-desc">Gaming console &mdash; AMD Liverpool APU (Durango)</div>
         </div>
         <div class="card-chips">
           <span class="chip chip-red">JTAG CVSS 7.6</span>
@@ -556,27 +865,27 @@ footer a { color: var(--text-mid); }
         </div>
         <div class="view-content">
           <div class="view-panel active" data-view="annotated">
-            <img src="examples/xbox_annotated.svg" alt="Xbox One Model 1540 — annotated board with 150 components" loading="lazy">
+            <img src="examples/xbox_annotated.svg" alt="Xbox One Model 1540 &mdash; annotated board" loading="lazy">
             <div class="artifact-link">AMD Liverpool APU (BGA-1170) &middot; 8&times; SK Hynix DDR3 &middot; Southbridge X861949</div>
           </div>
           <div class="view-panel" data-view="attack">
-            <img src="examples/xbox_attack_surface.svg" alt="Xbox One Model 1540 — attack surface map" loading="lazy">
+            <img src="examples/xbox_attack_surface.svg" alt="Xbox One Model 1540 &mdash; attack surface" loading="lazy">
             <div class="artifact-link">JTAG (J5) &rarr; APU (U1) &rarr; eMMC (U8) &middot; Southbridge (U9)</div>
           </div>
           <div class="view-panel" data-view="zones">
-            <img src="examples/xbox_zones.svg" alt="Xbox One Model 1540 — 12 functional zones" loading="lazy">
+            <img src="examples/xbox_zones.svg" alt="Xbox One Model 1540 &mdash; 12 functional zones" loading="lazy">
             <div class="artifact-link">12 zones &mdash; CPU, memory, power, I/O, debug, storage, network</div>
           </div>
           <div class="view-panel" data-view="bom">
-            <img src="examples/xbox_bom_table.svg" alt="Xbox One Model 1540 — BOM table" loading="lazy">
+            <img src="examples/xbox_bom_table.svg" alt="Xbox One Model 1540 &mdash; BOM table" loading="lazy">
             <div class="artifact-link">150 components &middot; OCR confidence &middot; part identification</div>
           </div>
           <div class="view-panel" data-view="interactive">
-            <img src="examples/xbox_interactive.svg" alt="Xbox One Model 1540 — interactive layered SVG with 9 layers, 3 rendering styles" loading="lazy">
-            <div class="artifact-link">9 layers &middot; 10 presets &middot; 3 styles (Photo / Schematic / X-Ray) &middot; <a href="examples/xbox_interactive.svg" target="_blank">Open full SVG &rarr;</a></div>
+            <img src="examples/xbox_interactive.svg" alt="Xbox One Model 1540 &mdash; interactive layered SVG" loading="lazy">
+            <div class="artifact-link">9 layers &middot; 10 presets &middot; 3 styles &middot; <a href="examples/xbox_interactive.svg" target="_blank">Open full SVG &rarr;</a></div>
           </div>
           <div class="view-panel" data-view="pinout-jtag">
-            <img src="examples/xbox_JTAG_pinout.svg" alt="Xbox One Model 1540 — JTAG pinout diagram with probe wiring guide" loading="lazy">
+            <img src="examples/xbox_JTAG_pinout.svg" alt="Xbox One Model 1540 &mdash; JTAG pinout" loading="lazy">
             <div class="artifact-link">JTAG (J5) &middot; 20-pin ARM standard &middot; J-Link / Bus Pirate / FTDI / OpenOCD wiring</div>
           </div>
         </div>
@@ -584,9 +893,12 @@ footer a { color: var(--text-mid); }
     </div>
 
     <!-- Findings table -->
-    <div class="findings-section">
-      <h2>Security Findings</h2>
-      <p class="section-sub">Automatically detected debug interfaces with CVSS 3.1 scoring and MITRE ATT&CK mapping.</p>
+    <div class="findings-section reveal">
+      <div class="section-header">
+        <h2>Security Findings</h2>
+        <p>Automatically detected debug interfaces with CVSS 3.1 scoring and MITRE ATT&amp;CK mapping.</p>
+        <div class="section-divider"></div>
+      </div>
       <table class="findings-table">
         <thead>
           <tr>
@@ -596,7 +908,7 @@ footer a { color: var(--text-mid); }
             <th>Target</th>
             <th>Component</th>
             <th>CWE</th>
-            <th>ATT&CK</th>
+            <th>ATT&amp;CK</th>
           </tr>
         </thead>
         <tbody>
@@ -634,73 +946,77 @@ footer a { color: var(--text-mid); }
 </section>
 
 <!-- ═══ Assessment Reports ═══════════════════════════ -->
-<section id="reports">
+<section id="reports" class="reveal">
   <div class="container">
-    <h2>Assessment Reports</h2>
-    <p class="section-sub">Self-contained HTML deliverables. Sortable BOM, datasheet hyperlinks, print-friendly. What a consultancy ships to clients.</p>
+    <div class="section-header">
+      <h2>Assessment Reports</h2>
+      <p>Self-contained HTML deliverables. Sortable BOM, datasheet hyperlinks, print-friendly. What a consultancy ships to clients.</p>
+      <div class="section-divider"></div>
+    </div>
 
-    <div class="report-cards">
-      <a href="examples/cisco_report.html" class="report-card">
+    <div class="card-grid">
+      <a href="examples/cisco_report.html" class="card">
         <h3>Cisco ASA 5506-X V05</h3>
         <p>Enterprise firewall assessment. Intel Atom C2508, Xilinx Spartan-6 Trust Anchor, Thrangrycat attack path mapped. 5 findings, 177 components, 88 traces.</p>
-        <div class="report-meta">CVSS 7.6 (HIGH) &middot; CWE-1191, CWE-1299 &middot; T1200, T0839</div>
+        <div class="card-meta">CVSS 7.6 (HIGH) &middot; CWE-1191, CWE-1299 &middot; T1200, T0839</div>
       </a>
-      <a href="examples/xbox_report.html" class="report-card">
+      <a href="examples/xbox_report.html" class="card">
         <h3>Xbox One Model 1540 (Durango)</h3>
         <p>Gaming console assessment. AMD Liverpool APU, 8x DDR3 banks, Southbridge X861949, SK Hynix eMMC. 1 finding, 150 components, 68 traces.</p>
-        <div class="report-meta">CVSS 7.6 (HIGH) &middot; CWE-1191 &middot; T1200, T0839</div>
+        <div class="card-meta">CVSS 7.6 (HIGH) &middot; CWE-1191 &middot; T1200, T0839</div>
       </a>
     </div>
   </div>
 </section>
 
 <!-- ═══ Exports ══════════════════════════════════════ -->
-<section id="exports">
+<section id="exports" class="reveal">
   <div class="container">
-    <h2>Export Formats</h2>
-    <p class="section-sub">Every artifact from a single scan.</p>
-    <div class="board-grid">
-      <div class="report-card">
+    <div class="section-header">
+      <h2>Export Formats</h2>
+      <p>Every artifact from a single scan.</p>
+      <div class="section-divider"></div>
+    </div>
+    <div class="card-grid">
+      <div class="card">
         <h3>KiCad Netlist</h3>
         <p>Reconstructed schematic netlist. Components mapped to KiCad footprint libraries, nets from trace extraction.</p>
-        <div class="report-meta">
+        <div class="card-meta">
           <a href="examples/cisco.net">cisco.net</a> (54 KB) &middot;
           <a href="examples/xbox.net">xbox.net</a> (44 KB)
         </div>
       </div>
-      <div class="report-card">
+      <div class="card">
         <h3>BOM (JSON / CSV)</h3>
         <p>Machine-readable bill of materials. Part numbers, markings, confidence scores, datasheet URLs.</p>
-        <div class="report-meta">
+        <div class="card-meta">
           <a href="examples/cisco_bom.json">cisco_bom.json</a> &middot;
           <a href="examples/xbox_bom.json">xbox_bom.json</a>
         </div>
       </div>
-      <div class="report-card">
+      <div class="card">
         <h3>Detection JSON</h3>
         <p>Raw pipeline output. Component bounding boxes, trace polylines, pattern matches, timing metadata.</p>
-        <div class="report-meta">
+        <div class="card-meta">
           <a href="examples/cisco_detection.json">cisco_detection.json</a> &middot;
           <a href="examples/xbox_detection.json">xbox_detection.json</a>
         </div>
       </div>
-      <div class="report-card">
+      <div class="card">
         <h3>Pinout Diagrams</h3>
-        <p>Annotated debug header close-ups. Crops the board image around each detected interface, labels every pin, and includes probe wiring guides for J-Link, Bus Pirate, FTDI, and ST-Link.</p>
-        <div class="report-meta">
+        <p>Annotated debug header close-ups with pin labels and probe wiring guides for J-Link, Bus Pirate, FTDI, and ST-Link.</p>
+        <div class="card-meta">
           <a href="examples/cisco_JTAG_pinout.svg">cisco JTAG</a> &middot;
           <a href="examples/cisco_UART_pinout.svg">cisco UART</a> &middot;
-          <a href="examples/xbox_JTAG_pinout.svg">xbox JTAG</a> &middot;
-          Color-coded by function
+          <a href="examples/xbox_JTAG_pinout.svg">xbox JTAG</a>
         </div>
       </div>
-      <div class="report-card">
+      <div class="card">
         <h3>Interactive Layered SVG</h3>
-        <p>Self-contained SVG with 9 layers, 10 presets, and 3 rendering styles (Photo, Schematic, X-Ray). Switch between views like Google Maps Satellite/Terrain/Roadmap.</p>
-        <div class="report-meta">
+        <p>Self-contained SVG with 9 layers, 10 presets, and 3 rendering styles. Switch views like Google Maps Satellite/Terrain/Roadmap.</p>
+        <div class="card-meta">
           <a href="examples/cisco_interactive.svg">cisco interactive</a> &middot;
-          <a href="examples/xbox_interactive.svg">xbox interactive</a> &middot;
-          Power Rails &middot; Recon &middot; Schematic &middot; X-Ray
+          <a href="examples/xbox_interactive.svg">xbox interactive</a>
         </div>
       </div>
     </div>
@@ -715,6 +1031,7 @@ footer a { color: var(--text-mid); }
 </footer>
 
 <script>
+/* ── Tab switching with animation ── */
 document.querySelectorAll('.view-tabs').forEach(tabBar => {
   tabBar.querySelectorAll('.view-tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -722,10 +1039,54 @@ document.querySelectorAll('.view-tabs').forEach(tabBar => {
       card.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
       card.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
       tab.classList.add('active');
-      card.querySelector(`.view-panel[data-view="${tab.dataset.view}"]`).classList.add('active');
+      card.querySelector('.view-panel[data-view="' + tab.dataset.view + '"]').classList.add('active');
     });
   });
 });
+
+/* ── Scroll reveal ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* ── Animated counters ── */
+function animateCounters() {
+  document.querySelectorAll('[data-target]').forEach(el => {
+    const target = parseInt(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const duration = 1200;
+    const start = performance.now();
+    el.textContent = '0';
+
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(target * eased) + suffix;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  });
+}
+
+const heroObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      animateCounters();
+      heroObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+const statsBar = document.querySelector('.stats-bar');
+if (statsBar) heroObserver.observe(statsBar);
 </script>
 </body>
 </html>
