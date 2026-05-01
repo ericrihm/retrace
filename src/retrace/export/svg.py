@@ -1135,9 +1135,9 @@ def generate_bus_topology_svg(
         return ""
 
     connected_ids: set[str] = set()
-    for f, t, _ in bus_edges:
+    for f, to_id, _ in bus_edges:
         connected_ids.add(f)
-        connected_ids.add(t)
+        connected_ids.add(to_id)
 
     nodes = [c for c in comps if c.id in connected_ids]
     if not nodes:
@@ -1697,7 +1697,7 @@ def _render_interactive_controls(svg_w: int) -> str:
         )
         parts.append(
             f'      <text x="{tx + 8}" y="{ty}" font-family={_q(_FONT)} '
-            f'font-size="9" fill="{_TEXT_HI}">{_escape(preset["label"])}</text>'
+            f'font-size="9" fill="{_TEXT_HI}">{_escape(str(preset["label"]))}</text>'
         )
         parts.append('    </g>')
 

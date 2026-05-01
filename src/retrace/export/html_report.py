@@ -5,6 +5,7 @@ from __future__ import annotations
 import html
 import time
 from collections import Counter
+from typing import Any
 from urllib.parse import urlparse
 
 from retrace import __version__
@@ -107,9 +108,9 @@ def _classify_net(trace: Trace, comp_map: dict[str, Component]) -> str:
 
 def _detect_security_findings(
     result: AnalysisResult,
-) -> list[dict[str, str]]:
+) -> list[dict[str, Any]]:
     """Scan components for exposed debug/security-relevant interfaces."""
-    findings: list[dict[str, str]] = []
+    findings: list[dict[str, Any]] = []
     seen: set[str] = set()
 
     for comp in result.components:
@@ -140,7 +141,7 @@ def _detect_security_findings(
 
 def _build_executive_summary(
     result: AnalysisResult,
-    findings: list[dict[str, str]],
+    findings: list[dict[str, Any]],
     title: str,
 ) -> str:
     """Generate 2-3 sentence executive summary."""
@@ -724,7 +725,7 @@ def _cvss_gauge_svg(score: float, size: int = 36) -> str:
     )
 
 
-def _risk_matrix_svg(findings: list[dict[str, str]]) -> str:
+def _risk_matrix_svg(findings: list[dict[str, Any]]) -> str:
     """Render an inline stacked bar showing severity distribution."""
     by_sev: dict[str, int] = Counter(f["severity"] for f in findings)
     total = len(findings) or 1
@@ -927,8 +928,8 @@ def generate_html_report(
             cwe_url = f"https://cwe.mitre.org/data/definitions/{_esc(cwe_num)}.html"
             cvss = f.get("cvss_base", "")
             cvss_str = f"{cvss}" if cvss else "—"
-            gauge = _cvss_gauge_svg(cvss) if cvss else ""
-            attack_ids = f.get("mitre_attack", [])
+            gauge = _cvss_gauge_svg(float(cvss)) if cvss else ""
+            attack_ids: list[str] = f.get("mitre_attack", [])
             attack_links = []
             for tid in attack_ids:
                 url = f"https://attack.mitre.org/techniques/{_esc(tid)}/"

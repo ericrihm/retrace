@@ -60,7 +60,7 @@ def discover_plugins() -> list[type]:
     for ep in eps:
         try:
             cls = ep.load()
-            if isinstance(cls, type) and isinstance(cls, AnalyzerPlugin.__class__):
+            if isinstance(cls, type):
                 plugins.append(cls)
                 logger.debug(f"Loaded plugin: {ep.name} -> {cls}")
             else:

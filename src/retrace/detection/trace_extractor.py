@@ -148,7 +148,7 @@ def _copper_mask(img: np.ndarray) -> np.ndarray:
     for lo, hi in _HSV_COPPER_RANGES:
         lo_arr = np.array(lo, dtype=np.uint8)
         hi_arr = np.array(hi, dtype=np.uint8)
-        mask = cv2.bitwise_or(mask, cv2.inRange(hsv, lo_arr, hi_arr))
+        mask = cv2.bitwise_or(mask, cv2.inRange(hsv, lo_arr, hi_arr))  # type: ignore[assignment]
 
     # LAB-based range (combined channel thresholds)
     l_ch, a_ch, b_ch = cv2.split(lab)
@@ -158,7 +158,7 @@ def _copper_mask(img: np.ndarray) -> np.ndarray:
         & (b_ch >= _LAB_COPPER_B[0]) & (b_ch <= _LAB_COPPER_B[1])
     ).astype(np.uint8) * 255
 
-    mask = cv2.bitwise_or(mask, lab_mask)
+    mask = cv2.bitwise_or(mask, lab_mask)  # type: ignore[assignment]
     return mask
 
 

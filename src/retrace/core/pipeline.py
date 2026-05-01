@@ -48,7 +48,7 @@ class AnalysisResult:
     pattern_matches: list[dict] = field(default_factory=list)
 
     def summary(self) -> dict:
-        by_label = {}
+        by_label: dict[str, int] = {}
         for c in self.components:
             by_label[c.label] = by_label.get(c.label, 0) + 1
         return {
@@ -156,15 +156,15 @@ class Pipeline:
             return img
         except ImportError:
             from PIL import Image
-            img = Image.open(path)
-            return np.array(img)
+            pil_img = Image.open(path)
+            return np.array(pil_img)
 
     def _detect_components(self, img: np.ndarray) -> list[Component]:
         try:
             from retrace.detection.detector import YOLODetector
             if self._detector is None:
-                self._detector = YOLODetector()
-            return self._detector.detect(img)
+                self._detector = YOLODetector()  # type: ignore[assignment]
+            return self._detector.detect(img)  # type: ignore[attr-defined]
         except ImportError:
             logger.warning("YOLO not available — using contour-based fallback")
             return self._detect_contours(img)

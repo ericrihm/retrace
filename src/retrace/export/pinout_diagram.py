@@ -496,7 +496,7 @@ def _pin_positions_in_crop(
         else:
             spacing = comp_w / (pin_count + 1)
             for i in range(pin_count):
-                px = comp_x_in_crop + spacing * (i + 1)
+                px = comp_x_in_crop + spacing * (i + 1)  # type: ignore[assignment]
                 py = comp_y_in_crop + comp_h // 2
                 positions.append((int(px), int(py)))
 
