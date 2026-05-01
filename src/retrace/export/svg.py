@@ -1071,6 +1071,165 @@ def save_svg(result: AnalysisResult, output_path: str, **kwargs) -> None:
     Path(output_path).write_text(svg, encoding="utf-8")
 
 
+# ── Power Tree Diagram ─────────────────────────────────────────────
+
+
+def generate_power_tree_svg(
+    result: AnalysisResult,
+    width: int = 800,
+) -> str:
+    """Generate a standalone schematic-style power delivery topology diagram.
+
+    Shows power flow from input sources through VRMs/LDOs/PMICs to load ICs,
+    with voltage rail labels and decoupling capacitor annotations.
+    """
+    comps = result.components or []
+    traces = result.traces or []
+
+    sources: list[Component] = []
+    regulators: list[Component] = []
+    loads: list[Component] = []
+    caps: list[Component] = []
+
+    for c in comps:
+        text = f"{c.marking} {c.part_number} {c.id}".lower()
+        if any(kw in text for kw in ("vin", "barrel", "usb", "jack", "power_in")):
+            sources.append(c)
+        elif any(kw in text for kw in ("vrm", "ldo", "regulator", "buck", "boost", "pmic", "dc-dc")):
+            regulators.append(c)
+        elif c.label == "capacitor":
+            caps.append(c)
+        elif c.label in _POWER_LABELS:
+            regulators.append(c)
+        elif c.label in ("ic", "mcu", "fpga", "memory"):
+            loads.append(c)
+
+    if not regulators and not sources:
+        for c in comps:
+            text = f"{c.marking} {c.part_number}".lower()
+            if any(kw in text for kw in _POWER_KEYWORDS):
+                regulators.append(c)
+
+    if not regulators:
+        return ""
+
+    title_h = 50
+    row_h = 60
+    node_w = 120
+    node_h = 36
+    margin = 40
+
+    src_count = max(len(sources), 1)
+    reg_count = len(regulators)
+    load_count = max(len(loads[:12]), 1)
+    max_col = max(src_count, reg_count, load_count)
+
+    svg_w = max(width, max_col * (node_w + 30) + margin * 2)
+    rows = 3
+    svg_h = title_h + rows * (row_h + node_h) + 80
+
+    parts: list[str] = []
+    parts.append(f'<svg xmlns="http://www.w3.org/2000/svg" '
+                 f'width="{svg_w}" height="{svg_h}" viewBox="0 0 {svg_w} {svg_h}">')
+    parts.append(f'  <rect width="{svg_w}" height="{svg_h}" fill="{_BG}"/>')
+
+    parts.append(f'  <rect width="{svg_w}" height="{title_h}" '
+                 f'fill="{_PANEL_BG}" fill-opacity="0.92"/>')
+    parts.append(f'  <text x="16" y="30" font-family={_q(_FONT)} '
+                 f'font-size="14" fill="#22d3ee" font-weight="bold">re:trace</text>')
+    parts.append(f'  <text x="90" y="30" font-family={_q(_FONT)} '
+                 f'font-size="12" fill="#e2e8f0">Power Delivery Topology</text>')
+
+    def _node(x: int, y: int, label: str, sublabel: str, color: str) -> None:
+        parts.append(f'  <rect x="{x}" y="{y}" width="{node_w}" height="{node_h}" '
+                     f'rx="6" fill="{_PANEL_BG}" stroke="{color}" stroke-width="1.5"/>')
+        parts.append(f'  <text x="{x + node_w // 2}" y="{y + 15}" text-anchor="middle" '
+                     f'font-family={_q(_FONT)} font-size="9" fill="{color}" '
+                     f'font-weight="bold">{html.escape(label[:18])}</text>')
+        parts.append(f'  <text x="{x + node_w // 2}" y="{y + 28}" text-anchor="middle" '
+                     f'font-family={_q(_FONT)} font-size="7" fill="#94a3b8">'
+                     f'{html.escape(sublabel[:22])}</text>')
+
+    def _arrow(x1: int, y1: int, x2: int, y2: int, color: str) -> None:
+        parts.append(f'  <line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" '
+                     f'stroke="{color}" stroke-width="2" stroke-opacity="0.7"/>')
+        parts.append(f'  <polygon points="{x2},{y2} {x2 - 4},{y2 - 6} {x2 + 4},{y2 - 6}" '
+                     f'fill="{color}"/>')
+
+    row0_y = title_h + 20
+    row1_y = row0_y + row_h + node_h
+    row2_y = row1_y + row_h + node_h
+
+    parts.append(f'  <text x="16" y="{row0_y - 4}" font-family={_q(_FONT)} '
+                 f'font-size="9" fill="#64748b">INPUT</text>')
+    parts.append(f'  <text x="16" y="{row1_y - 4}" font-family={_q(_FONT)} '
+                 f'font-size="9" fill="#64748b">REGULATORS</text>')
+    parts.append(f'  <text x="16" y="{row2_y - 4}" font-family={_q(_FONT)} '
+                 f'font-size="9" fill="#64748b">LOADS</text>')
+
+    src_positions: list[tuple[int, int]] = []
+    if sources:
+        spacing = (svg_w - margin * 2) / max(len(sources), 1)
+        for i, s in enumerate(sources):
+            nx = margin + int(i * spacing + spacing / 2 - node_w / 2)
+            _node(nx, row0_y, s.marking or s.id, s.part_number or s.label, "#ef4444")
+            src_positions.append((nx + node_w // 2, row0_y + node_h))
+    else:
+        nx = svg_w // 2 - node_w // 2
+        _node(nx, row0_y, "VIN", "External supply", "#ef4444")
+        src_positions.append((nx + node_w // 2, row0_y + node_h))
+
+    reg_positions: list[tuple[int, int]] = []
+    spacing = (svg_w - margin * 2) / max(reg_count, 1)
+    for i, r in enumerate(regulators):
+        nx = margin + int(i * spacing + spacing / 2 - node_w / 2)
+        voltage = ""
+        intel_dict = {}
+        try:
+            from retrace.identification.matcher import lookup_security_intel
+            intel_dict = lookup_security_intel(r.part_number or "") or {}
+        except ImportError:
+            pass
+        voltage = intel_dict.get("output_voltage", r.value or "")
+        sublabel = f"{r.part_number or r.label}"
+        if voltage:
+            sublabel = f"{voltage} — {r.part_number or r.label}"
+        _node(nx, row1_y, r.marking or r.id, sublabel, "#f59e0b")
+        reg_positions.append((nx + node_w // 2, row1_y))
+
+    for sx, sy in src_positions:
+        for rx, ry in reg_positions:
+            _arrow(sx, sy, rx, ry, "#ef4444")
+
+    load_list = loads[:12]
+    load_positions: list[tuple[int, int]] = []
+    spacing = (svg_w - margin * 2) / max(len(load_list), 1)
+    for i, ld in enumerate(load_list):
+        nx = margin + int(i * spacing + spacing / 2 - node_w / 2)
+        _node(nx, row2_y, ld.marking or ld.id, ld.part_number or ld.label, "#3b82f6")
+        load_positions.append((nx + node_w // 2, row2_y))
+
+    for rx, ry in reg_positions:
+        ry_bottom = ry + node_h
+        for lx, ly in load_positions:
+            _arrow(rx, ry_bottom, lx, ly, "#f59e0b")
+
+    if caps:
+        cap_y = svg_h - 40
+        parts.append(f'  <text x="16" y="{cap_y}" font-family={_q(_FONT)} '
+                     f'font-size="8" fill="#64748b">'
+                     f'Decoupling: {len(caps)} capacitor(s) detected</text>')
+
+    fy = svg_h - 20
+    parts.append(f'  <text x="{svg_w // 2}" y="{fy}" text-anchor="middle" '
+                 f'font-family={_q(_FONT)} font-size="8" fill="#64748b">'
+                 f're:trace power tree — {len(regulators)} regulator(s), '
+                 f'{len(load_list)} load(s)</text>')
+
+    parts.append('</svg>')
+    return "\n".join(parts)
+
+
 # ── Interactive Layered SVG (Google Maps-style) ─────────────────────
 
 _LAYER_DEFS = [

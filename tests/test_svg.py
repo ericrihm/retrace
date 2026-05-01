@@ -11,6 +11,7 @@ from retrace.export.svg import (
     _render_zones,
     _resolve_image_href,
     generate_attack_surface_svg,
+    generate_power_tree_svg,
     generate_svg,
     generate_zones_svg,
     save_svg,
@@ -1043,3 +1044,62 @@ class TestResolveImageHref:
         svg = generate_svg(result, image_href=str(img))
         assert "<image" in svg
         assert "data:image/png;base64," in svg
+
+
+# ---------------------------------------------------------------------------
+# Power tree diagram tests
+# ---------------------------------------------------------------------------
+
+class TestPowerTree:
+
+    def test_empty_result_returns_empty(self):
+        result = _make_result(components=[])
+        svg = generate_power_tree_svg(result)
+        assert svg == ""
+
+    def test_no_regulators_returns_empty(self):
+        c = Component(id="U1", label="ic", confidence=0.9,
+                      bbox=(10, 10, 50, 50), marking="ARM CPU")
+        result = _make_result(components=[c])
+        svg = generate_power_tree_svg(result)
+        assert svg == ""
+
+    def test_vrm_creates_power_tree(self):
+        vrm = Component(id="U1", label="ic", confidence=0.9,
+                        bbox=(10, 10, 50, 50), marking="VRM buck 3.3V")
+        cpu = Component(id="U2", label="ic", confidence=0.9,
+                        bbox=(200, 200, 60, 40), marking="ARM CPU")
+        result = _make_result(components=[vrm, cpu])
+        svg = generate_power_tree_svg(result)
+        assert svg
+        assert "<svg" in svg
+        assert "Power Delivery Topology" in svg
+        assert "REGULATORS" in svg
+        assert "LOADS" in svg
+
+    def test_power_tree_with_capacitors(self):
+        vrm = Component(id="U1", label="ic", confidence=0.9,
+                        bbox=(10, 10, 50, 50), marking="LDO regulator")
+        cap = Component(id="C1", label="capacitor", confidence=0.9,
+                        bbox=(80, 80, 10, 10), value="10uF")
+        result = _make_result(components=[vrm, cap])
+        svg = generate_power_tree_svg(result)
+        assert svg
+        assert "Decoupling" in svg
+
+    def test_power_tree_custom_width(self):
+        vrm = Component(id="U1", label="ic", confidence=0.9,
+                        bbox=(10, 10, 50, 50), marking="PMIC")
+        result = _make_result(components=[vrm])
+        svg = generate_power_tree_svg(result, width=1000)
+        assert 'width="1000"' in svg
+
+    def test_power_tree_with_input_source(self):
+        vin = Component(id="J1", label="connector", confidence=0.9,
+                        bbox=(5, 5, 20, 20), marking="VIN barrel jack")
+        vrm = Component(id="U1", label="ic", confidence=0.9,
+                        bbox=(100, 100, 50, 50), marking="buck regulator")
+        result = _make_result(components=[vin, vrm])
+        svg = generate_power_tree_svg(result)
+        assert svg
+        assert "INPUT" in svg

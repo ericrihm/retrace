@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="418" viewBox="0 0 800 418">
+  <rect width="800" height="418" fill="#0a0e1a"/>
+  <rect width="800" height="50" fill="#111827" fill-opacity="0.92"/>
+  <text x="16" y="30" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="14" fill="#22d3ee" font-weight="bold">re:trace</text>
+  <text x="90" y="30" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="12" fill="#e2e8f0">Power Delivery Topology</text>
+  <text x="16" y="66" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b">INPUT</text>
+  <text x="16" y="162" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b">REGULATORS</text>
+  <text x="16" y="258" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b">LOADS</text>
+  <rect x="340" y="70" width="120" height="36" rx="6" fill="#111827" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="400" y="85" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#ef4444" font-weight="bold">VIN USB-C</text>
+  <text x="400" y="98" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#94a3b8">connector</text>
+  <rect x="160" y="166" width="120" height="36" rx="6" fill="#111827" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="220" y="181" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#f59e0b" font-weight="bold">TPS62130 buck</text>
+  <text x="220" y="194" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#94a3b8">TPS62130</text>
+  <rect x="520" y="166" width="120" height="36" rx="6" fill="#111827" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="580" y="181" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#f59e0b" font-weight="bold">AMS1117-1.8 LDO</text>
+  <text x="580" y="194" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#94a3b8">3.3V fixed — AMS1117</text>
+  <line x1="400" y1="106" x2="220" y2="166" stroke="#ef4444" stroke-width="2" stroke-opacity="0.7"/>
+  <polygon points="220,166 216,160 224,160" fill="#ef4444"/>
+  <line x1="400" y1="106" x2="580" y2="166" stroke="#ef4444" stroke-width="2" stroke-opacity="0.7"/>
+  <polygon points="580,166 576,160 584,160" fill="#ef4444"/>
+  <rect x="160" y="262" width="120" height="36" rx="6" fill="#111827" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="220" y="277" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#3b82f6" font-weight="bold">STM32F103</text>
+  <text x="220" y="290" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#94a3b8">STM32F103C8T6</text>
+  <rect x="520" y="262" width="120" height="36" rx="6" fill="#111827" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="580" y="277" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#3b82f6" font-weight="bold">W25Q128</text>
+  <text x="580" y="290" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#94a3b8">W25Q128JV</text>
+  <line x1="220" y1="202" x2="220" y2="262" stroke="#f59e0b" stroke-width="2" stroke-opacity="0.7"/>
+  <polygon points="220,262 216,256 224,256" fill="#f59e0b"/>
+  <line x1="220" y1="202" x2="580" y2="262" stroke="#f59e0b" stroke-width="2" stroke-opacity="0.7"/>
+  <polygon points="580,262 576,256 584,256" fill="#f59e0b"/>
+  <line x1="580" y1="202" x2="220" y2="262" stroke="#f59e0b" stroke-width="2" stroke-opacity="0.7"/>
+  <polygon points="220,262 216,256 224,256" fill="#f59e0b"/>
+  <line x1="580" y1="202" x2="580" y2="262" stroke="#f59e0b" stroke-width="2" stroke-opacity="0.7"/>
+  <polygon points="580,262 576,256 584,256" fill="#f59e0b"/>
+  <text x="16" y="378" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#64748b">Decoupling: 3 capacitor(s) detected</text>
+  <text x="400" y="398" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#64748b">re:trace power tree — 2 regulator(s), 2 load(s)</text>
+</svg>

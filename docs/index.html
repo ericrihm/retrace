@@ -982,13 +982,18 @@ footer a { color: var(--text-mid); }
       </div>
       <div class="card">
         <h3 style="color: var(--orange);">IC Pinout Diagrams</h3>
-        <p>Schematic-style DIP diagrams for SOIC-8 SPI flash and I2C EEPROM packages. Pin labels, function groups, and inline security intel panels.</p>
+        <p>Schematic-style package diagrams for SOIC-8, TQFP-48, QFN-24, and TSOP-48 packages. Quad-sided rendering with function-group colors and security intel panels. Flash chips include extraction cheat sheets.</p>
         <div class="card-meta">
           <a href="examples/W25Q128_IC_pinout.svg">W25Q128JV</a> &middot;
           <a href="examples/AT24C256_IC_pinout.svg">AT24C256</a> &middot;
           <a href="examples/STM32F103_IC_pinout.svg">STM32F103</a> &middot;
           <a href="examples/iCE40UP5K_IC_pinout.svg">iCE40UP5K</a>
         </div>
+      </div>
+      <div class="card">
+        <h3 style="color: var(--yellow);">Power Tree Diagram</h3>
+        <p>Standalone schematic-style power delivery topology. Shows power flow from input sources through VRMs/LDOs to load ICs with voltage rail labels and decoupling cap counts.</p>
+        <div class="card-meta"><a href="examples/power_tree.svg">Example power tree</a> &middot; auto-classifies sources, regulators, loads</div>
       </div>
     </div>
 
