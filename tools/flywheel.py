@@ -1428,5 +1428,33 @@ def calibrate(flywheel_name: str, raw_score: float, ground_truth: float) -> None
     click.echo("")
 
 
+@cli.command()
+@click.option(
+    "--output",
+    default=None,
+    type=click.Path(),
+    help="Output path for the SVG (default: docs/examples/flywheel_heatmap.svg).",
+)
+def heatmap(output: str | None) -> None:
+    """Generate a GitHub-style contribution heatmap SVG from flywheel history."""
+    if not _HAS_BRAIN:
+        click.echo(click.style(
+            "  Intelligence layer not available (flywheel_intelligence.py not found)",
+            fg="red",
+        ))
+        return
+
+    b = FlywheelBrain()
+    out_path = Path(output) if output else None
+    click.echo(click.style("\nretrace flywheel heatmap", fg="magenta", bold=True))
+    click.echo("")
+    svg = b.generate_heatmap_svg(out_path)
+    resolved = out_path if out_path else REPO_ROOT / "docs" / "examples" / "flywheel_heatmap.svg"
+    click.echo(click.style(f"  ✓ Heatmap written to {resolved}", fg="green"))
+    lines = svg.count("\n") + 1
+    click.echo(click.style(f"  · {lines} SVG lines, {len(svg):,} bytes", fg="bright_black"))
+    click.echo("")
+
+
 if __name__ == "__main__":
     cli()

@@ -1,6 +1,7 @@
 """Smoke tests for the flywheel intelligence layer (P0/P1/P2)."""
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 from unittest.mock import patch
@@ -682,3 +683,183 @@ class TestEdgeCases:
         shadow.register_challenger("x", "v2", lambda: 50.0)
         shadow.run_shadow("x", 50.0)
         assert len(shadow.export()) <= 200
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# FlywheelBrain.generate_heatmap_svg
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+class TestGenerateHeatmapSvg:
+    """Tests for the GitHub-style contribution heatmap SVG generator."""
+
+    # Helper: build a fake history file with N entries spread over multiple days.
+    @staticmethod
+    def _write_history(path: Path, entries: list[dict]) -> None:
+        with open(path, "w") as f:
+            for entry in entries:
+                f.write(json.dumps(entry) + "\n")
+
+    def _make_brain(self, tmp_path: Path) -> "FlywheelBrain":
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                return FlywheelBrain()
+
+    # ── valid SVG structure ──────────────────────────────────────────────────
+
+    def test_svg_starts_and_ends_correctly(self, tmp_path: Path) -> None:
+        """SVG output must open with <svg and close with </svg>."""
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                brain = FlywheelBrain()
+                out = tmp_path / "heatmap.svg"
+                svg = brain.generate_heatmap_svg(out)
+        assert svg.strip().startswith("<svg"), "SVG must start with <svg"
+        assert svg.strip().endswith("</svg>"), "SVG must end with </svg>"
+
+    def test_svg_written_to_disk(self, tmp_path: Path) -> None:
+        """generate_heatmap_svg must write the file to the given path."""
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                brain = FlywheelBrain()
+                out = tmp_path / "heatmap.svg"
+                svg = brain.generate_heatmap_svg(out)
+        assert out.exists(), "SVG file must be written to disk"
+        assert out.read_text() == svg
+
+    # ── empty history ────────────────────────────────────────────────────────
+
+    def test_empty_history_produces_valid_svg(self, tmp_path: Path) -> None:
+        """An empty .flywheel_history.jsonl must still produce a valid SVG."""
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                brain = FlywheelBrain()
+                out = tmp_path / "empty_heatmap.svg"
+                svg = brain.generate_heatmap_svg(out)
+        assert svg.strip().startswith("<svg")
+        assert svg.strip().endswith("</svg>")
+        # Grid should still be rendered — 52*7 = 364 cells
+        assert svg.count("<rect") >= 364
+
+    # ── mock data spanning multiple days ────────────────────────────────────
+
+    def test_heatmap_with_multi_day_data(self, tmp_path: Path) -> None:
+        """Heatmap with 10+ entries across multiple days must produce a non-trivial SVG."""
+        from datetime import datetime, timedelta, timezone
+
+        history_file = tmp_path / "history.jsonl"
+        base = datetime.now(timezone.utc) - timedelta(days=30)
+        entries = []
+        for i in range(12):
+            ts = (base + timedelta(days=i * 2)).isoformat()
+            score = 70.0 + i * 2.0  # steadily improving
+            entries.append({
+                "ts": ts,
+                "flywheels": {
+                    "lint": {"score": score},
+                    "tests": {"score": score + 5},
+                    "coverage": {"score": score - 5},
+                },
+            })
+        self._write_history(history_file, entries)
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", history_file):
+                brain = FlywheelBrain()
+                out = tmp_path / "heatmap.svg"
+                svg = brain.generate_heatmap_svg(out)
+
+        assert svg.strip().startswith("<svg")
+        assert svg.strip().endswith("</svg>")
+        # Should have improvement-colored cells (cyan/green range)
+        assert "#22" in svg or "#1f" in svg, "Expected improvement colors in SVG"
+
+    # ── month labels ─────────────────────────────────────────────────────────
+
+    def test_month_labels_present(self, tmp_path: Path) -> None:
+        """SVG must contain at least 2 distinct month abbreviations."""
+        MONTH_ABBR = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+        ]
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                brain = FlywheelBrain()
+                out = tmp_path / "heatmap.svg"
+                svg = brain.generate_heatmap_svg(out)
+        found = [m for m in MONTH_ABBR if m in svg]
+        assert len(found) >= 2, f"Expected >= 2 month labels, found: {found}"
+
+    def test_day_of_week_labels_present(self, tmp_path: Path) -> None:
+        """SVG must include Mon/Wed/Fri day-of-week labels."""
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                brain = FlywheelBrain()
+                out = tmp_path / "heatmap.svg"
+                svg = brain.generate_heatmap_svg(out)
+        assert "Mon" in svg
+        assert "Wed" in svg
+        assert "Fri" in svg
+
+    # ── regression coloring ───────────────────────────────────────────────────
+
+    def test_regression_coloring(self, tmp_path: Path) -> None:
+        """A day with a large score drop should produce a red-hued cell."""
+        from datetime import datetime, timedelta, timezone
+
+        history_file = tmp_path / "history.jsonl"
+        # Use dates guaranteed to be inside the 52-week grid window
+        # (14 and 15 days ago are always before any recent Sunday boundary).
+        day_a = (datetime.now(timezone.utc) - timedelta(days=15)).isoformat()
+        day_b = (datetime.now(timezone.utc) - timedelta(days=14)).isoformat()
+        entries = [
+            {"ts": day_a, "flywheels": {"lint": {"score": 95.0}}},
+            {"ts": day_b, "flywheels": {"lint": {"score": 30.0}}},
+        ]
+        self._write_history(history_file, entries)
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", history_file):
+                brain = FlywheelBrain()
+                out = tmp_path / "heatmap.svg"
+                svg = brain.generate_heatmap_svg(out)
+
+        # Red palette used for regressions (the delta is -65, so a red cell must appear)
+        assert "#ef4444" in svg or "#7f1d1d" in svg, (
+            "Expected red regression color in SVG when score drops sharply"
+        )
+
+    # ── default output path ───────────────────────────────────────────────────
+
+    def test_default_output_path(self, tmp_path: Path) -> None:
+        """When output_path=None, the SVG is written to docs/examples/flywheel_heatmap.svg."""
+        import flywheel_intelligence as fi_mod
+
+        fake_root = tmp_path
+        (fake_root / "docs" / "examples").mkdir(parents=True)
+
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                with patch.object(fi_mod, "REPO_ROOT", fake_root):
+                    brain = FlywheelBrain()
+                    svg = brain.generate_heatmap_svg(None)
+
+        expected = fake_root / "docs" / "examples" / "flywheel_heatmap.svg"
+        assert expected.exists(), "Default path file must be created"
+        assert expected.read_text() == svg
+
+    # ── 52-week grid size ────────────────────────────────────────────────────
+
+    def test_grid_contains_364_cells(self, tmp_path: Path) -> None:
+        """The heatmap must have exactly 52 * 7 = 364 data cells."""
+        with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
+            with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
+                brain = FlywheelBrain()
+                out = tmp_path / "heatmap.svg"
+                svg = brain.generate_heatmap_svg(out)
+        # Count <rect elements that have a <title> child (data cells, not background/legend)
+        import re
+        cells_with_title = re.findall(r"<rect[^>]+><title>", svg)
+        assert len(cells_with_title) == 364, (
+            f"Expected 364 data cells, got {len(cells_with_title)}"
+        )
