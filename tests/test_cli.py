@@ -1610,3 +1610,70 @@ def test_glitch_output_file(runner, tmp_path):
     assert out.exists()
     data = json.loads(out.read_text())
     assert data["count"] == 1
+
+
+# ---------------------------------------------------------------------------
+# extract — firmware extraction cheat sheet
+# ---------------------------------------------------------------------------
+
+def test_extract_help(runner):
+    result = runner.invoke(main, ["extract", "--help"])
+    assert result.exit_code == 0
+    assert "firmware" in result.output.lower() or "extraction" in result.output.lower()
+
+
+def test_extract_missing_file(runner):
+    result = runner.invoke(main, ["extract", "/no/such/image.jpg"])
+    assert result.exit_code != 0
+
+
+def test_extract_json(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+    guides = [
+        {"component_id": "U1", "marking": "W25Q128JV", "part_number": "W25Q128JVSIQ",
+         "storage_type": "spi_flash", "commands": [
+             {"tool": "flashrom", "description": "Read", "command": "flashrom -r fw.bin"}
+         ]},
+    ]
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.firmware_extract.generate_extraction_guide",
+               return_value=guides):
+        result = runner.invoke(main, ["extract", str(img), "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data["count"] == 1
+    assert data["guides"][0]["storage_type"] == "spi_flash"
+
+
+def test_extract_text_output(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.firmware_extract.generate_extraction_guide",
+               return_value=[]):
+        result = runner.invoke(main, ["extract", str(img)])
+    assert result.exit_code == 0
+    assert "No extractable" in result.output
+
+
+def test_extract_output_file(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    out = tmp_path / "guide.json"
+    mock_result = _make_analysis_result(str(img))
+    guides = [
+        {"component_id": "U1", "marking": "W25Q128JV", "storage_type": "spi_flash",
+         "commands": []},
+    ]
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.firmware_extract.generate_extraction_guide",
+               return_value=guides):
+        result = runner.invoke(main, ["extract", str(img), "--json", "-o", str(out)])
+    assert result.exit_code == 0
+    assert out.exists()

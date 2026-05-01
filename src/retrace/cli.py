@@ -857,5 +857,40 @@ def glitch(ctx: click.Context, image: str, output: str, as_json: bool) -> None:
         click.echo(f"Results written to {out_path}")
 
 
+@main.command("extract")
+@click.argument("image", type=click.Path(exists=True))
+@click.option("--json", "as_json", is_flag=True, help="Output as JSON")
+@click.option("--output", "-o", type=click.Path(), help="Write output to file")
+@click.pass_context
+def extract(ctx: click.Context, image: str, as_json: bool, output: str) -> None:
+    """Generate firmware extraction cheat sheets for detected storage chips.
+
+    Identifies SPI flash, eMMC, and EEPROM chips on the board and outputs
+    ready-to-run flashrom, dd, and I2C commands with wiring diagrams.
+    """
+    from retrace.core.pipeline import Pipeline
+    from retrace.export.firmware_extract import (
+        generate_extraction_guide,
+        format_extraction_guide,
+    )
+
+    pipeline = Pipeline()
+    result = pipeline.run(image)
+    guides = generate_extraction_guide(result)
+
+    if as_json:
+        text = json.dumps({"guides": guides, "count": len(guides)}, indent=2)
+    else:
+        text = format_extraction_guide(guides)
+
+    if output:
+        out_path = Path(output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(text, encoding="utf-8")
+        click.echo(f"Extraction guide written to {out_path}")
+    else:
+        click.echo(text)
+
+
 if __name__ == "__main__":
     main()
