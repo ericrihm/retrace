@@ -710,7 +710,7 @@ def _cvss_gauge_svg(score: float, size: int = 36) -> str:
         color = "#3b82f6"
     _mono = "'JetBrains Mono','Fira Code','SF Mono',monospace"
     cx_s = f"{cx:.1f}".rstrip("0").rstrip(".")
-    cy_s = cx_s
+    cy_s = f"{cy:.1f}".rstrip("0").rstrip(".")
     r_s = f"{r:.1f}".rstrip("0").rstrip(".")
     return (
         f'<svg class="cvss-gauge" width="{size}" height="{size}" viewBox="0 0 {size} {size}">'
