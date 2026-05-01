@@ -197,6 +197,97 @@ def test_scan_helper_none_image():
     assert isinstance(result[0], str) and result[0], "First element must be a non-empty string"
 
 
+def _capture_scan(pipeline_mock=None):
+    """Extract the _scan closure registered via btn.click inside launch().
+
+    Optionally inject a mock Pipeline class so the closure captures it
+    instead of the real Pipeline.
+    """
+    import sys
+    import retrace.core.pipeline as pipeline_mod_real
+
+    gr, demo = _make_gr_mock()
+    captured: dict = {}
+
+    btn_mock = MagicMock()
+    def fake_click(fn, inputs, outputs):
+        captured["fn"] = fn
+    btn_mock.click = fake_click
+    gr.Button.return_value = btn_mock
+
+    pipeline_mod = sys.modules["retrace.core.pipeline"]
+
+    original_pipeline_cls = pipeline_mod_real.Pipeline
+    try:
+        if pipeline_mock is not None:
+            pipeline_mod_real.Pipeline = pipeline_mock
+
+        with patch.dict(
+            "sys.modules",
+            {"gradio": gr, "retrace.core.pipeline": pipeline_mod},
+        ):
+            import retrace.web as web_mod
+            web_mod.launch()
+    finally:
+        pipeline_mod_real.Pipeline = original_pipeline_cls
+
+    return captured["fn"]
+
+
+def test_scan_with_image_returns_summary_and_svg():
+    """_scan with a non-None image runs the pipeline and returns (summary, image, svg)."""
+    import numpy as np
+
+    mock_result = MagicMock()
+    mock_result.summary.return_value = {"components": 5, "traces": 3}
+
+    MockPipeline = MagicMock()
+    MockPipeline.return_value.run.return_value = mock_result
+
+    _scan = _capture_scan(pipeline_mock=MockPipeline)
+    fake_image = np.zeros((100, 100, 3), dtype=np.uint8)
+
+    with patch("retrace.export.svg.generate_svg", return_value="<svg></svg>"):
+        result = _scan(fake_image)
+
+    assert isinstance(result, tuple) and len(result) == 3
+    assert '"components": 5' in result[0]
+    assert result[2] == "<svg></svg>"
+
+
+def test_scan_with_image_cleans_up_on_error():
+    """_scan deletes the temp file even when pipeline.run raises."""
+    import numpy as np
+
+    MockPipeline = MagicMock()
+    MockPipeline.return_value.run.side_effect = RuntimeError("boom")
+
+    _scan = _capture_scan(pipeline_mock=MockPipeline)
+    fake_image = np.zeros((50, 50, 3), dtype=np.uint8)
+
+    with pytest.raises(RuntimeError, match="boom"):
+        _scan(fake_image)
+
+
+def test_scan_returns_original_image_as_second_element():
+    """The second element of _scan's return tuple is the original image."""
+    import numpy as np
+
+    mock_result = MagicMock()
+    mock_result.summary.return_value = {}
+
+    MockPipeline = MagicMock()
+    MockPipeline.return_value.run.return_value = mock_result
+
+    _scan = _capture_scan(pipeline_mock=MockPipeline)
+    fake_image = np.zeros((30, 30, 3), dtype=np.uint8)
+
+    with patch("retrace.export.svg.generate_svg", return_value="<svg/>"):
+        result = _scan(fake_image)
+
+    assert result[1] is fake_image
+
+
 # ---------------------------------------------------------------------------
 # Integration test — runs only when gradio is actually installed
 # ---------------------------------------------------------------------------
