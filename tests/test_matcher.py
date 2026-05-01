@@ -285,3 +285,162 @@ class TestLearnComponent:
         matcher_mod._LOOKUP.pop("NONLIST_RECOVER", None)
         matcher_mod._LOOKUP.pop("TESTPART", None)
         matcher_mod._LOOKUP.pop("TP9999", None)
+
+
+# ---------------------------------------------------------------------------
+# Tests: extended component coverage (automotive MCU / display / wireless / PMIC)
+# ---------------------------------------------------------------------------
+
+class TestExtendedComponentCoverage:
+    """Verify the database includes the expanded component families."""
+
+    def test_db_size_meets_target(self):
+        """The component DB must have at least 180 hardcoded entries."""
+        assert len(matcher_mod._COMPONENT_DB) >= 180
+
+    # --- Automotive MCUs --------------------------------------------------
+
+    def test_automotive_mcu_s32k144(self):
+        result = lookup_part("S32K144")
+        assert result is not None
+        assert result["manufacturer"] == "NXP"
+        assert result["category"] == "automotive_mcu"
+        assert "Cortex-M4F" in result["security_intel"]["core"]
+
+    def test_automotive_mcu_s32k3(self):
+        result = lookup_part("S32K344")
+        assert result is not None
+        assert "Cortex-M7" in result["security_intel"]["core"]
+        assert "HSE" in result["security_intel"]["readout_protection"]
+
+    def test_automotive_mcu_tms570(self):
+        result = lookup_part("TMS570LS3137")
+        assert result is not None
+        assert result["manufacturer"] == "Texas Instruments"
+        assert "Cortex-R4F" in result["security_intel"]["core"]
+
+    def test_automotive_mcu_aurix(self):
+        result = lookup_part("TC275")
+        assert result is not None
+        assert result["manufacturer"] == "Infineon"
+        assert "TriCore" in result["security_intel"]["core"]
+
+    def test_automotive_mcu_renesas_rh850(self):
+        result = lookup_part("R7F701649")
+        assert result is not None
+        assert result["manufacturer"] == "Renesas"
+
+    # --- Display drivers --------------------------------------------------
+
+    def test_display_st7789(self):
+        result = lookup_part("ST7789")
+        assert result is not None
+        assert result["category"] == "display"
+        assert result["manufacturer"] == "Sitronix"
+
+    def test_display_ili9488(self):
+        result = lookup_part("ILI9488")
+        assert result is not None
+        assert "Ilitek" == result["manufacturer"]
+
+    def test_display_ssd1351_color_oled(self):
+        result = lookup_part("SSD1351")
+        assert result is not None
+        assert "OLED" in result["description"]
+
+    def test_display_ra8875(self):
+        result = lookup_part("RA8875")
+        assert result is not None
+        assert "RAiO" == result["manufacturer"]
+
+    def test_display_gc9a01_round(self):
+        """GC9A01 is the round-display controller used in many smartwatches."""
+        result = lookup_part("GC9A01")
+        assert result is not None
+        assert "round" in result["description"].lower() or "240" in result["description"]
+
+    # --- Wireless ---------------------------------------------------------
+
+    def test_wireless_esp32_c2(self):
+        result = lookup_part("ESP32-C2")
+        assert result is not None
+        assert "RISC-V" in result["security_intel"]["core"]
+
+    def test_wireless_esp32_p4(self):
+        result = lookup_part("ESP32-P4")
+        assert result is not None
+        assert result["manufacturer"] == "Espressif"
+
+    def test_wireless_nrf52833(self):
+        result = lookup_part("nRF52833")
+        assert result is not None
+        assert "APPROTECT" in result["security_intel"]["readout_protection"]
+
+    def test_wireless_efr32mg21_zigbee_thread(self):
+        result = lookup_part("EFR32MG21")
+        assert result is not None
+        assert result["manufacturer"] == "Silicon Labs"
+        assert "Secure Vault" in result["security_intel"]["readout_protection"]
+
+    def test_wireless_bl602_riscv(self):
+        result = lookup_part("BL602")
+        assert result is not None
+        assert "RISC-V" in result["security_intel"]["core"]
+
+    # --- Power management -------------------------------------------------
+
+    def test_power_tps62130_buck(self):
+        result = lookup_part("TPS62130")
+        assert result is not None
+        assert result["category"] == "regulator"
+
+    def test_power_tps65186_epaper(self):
+        result = lookup_part("TPS65186")
+        assert result is not None
+        assert "e-paper" in result["description"].lower()
+
+    def test_power_ltc4054_charger(self):
+        result = lookup_part("LTC4054")
+        assert result is not None
+        assert result["category"] == "battery_charger"
+
+    def test_power_max17048_fuel_gauge(self):
+        result = lookup_part("MAX17048")
+        assert result is not None
+        assert result["category"] == "fuel_gauge"
+
+    def test_power_mcp73831_charger(self):
+        result = lookup_part("MCP73831")
+        assert result is not None
+        assert result["manufacturer"] == "Microchip"
+
+    def test_power_bq24074_charger_with_path_management(self):
+        result = lookup_part("BQ24074")
+        assert result is not None
+        assert "power-path" in result["description"].lower()
+
+    # --- Identify-components flow with new entries ------------------------
+
+    def test_identify_picks_up_new_part_aliases(self):
+        components = [
+            Component(id="C1", label="ic", confidence=0.9, bbox=(0, 0, 10, 10), marking="S32K144"),
+            Component(id="C2", label="ic", confidence=0.9, bbox=(0, 0, 10, 10), marking="ST7789"),
+            Component(id="C3", label="ic", confidence=0.9, bbox=(0, 0, 10, 10), marking="MAX17048"),
+        ]
+        identified = identify_components(components)
+        assert all(c.part_number != "" for c in identified)
+        assert identified[0].part_number == "S32K144"
+        assert identified[1].part_number == "ST7789"
+        assert identified[2].part_number == "MAX17048"
+
+    def test_security_intel_present_on_new_mcus(self):
+        """All new automotive MCU entries must include security_intel."""
+        for part in ("S32K144", "S32K344", "TMS570LS3137", "TC275", "R7F701649"):
+            entry = matcher_mod._LOOKUP[part.upper()]
+            assert "security_intel" in entry
+            assert "debug_interfaces" in entry["security_intel"]
+
+    def test_no_duplicate_part_numbers(self):
+        """No two DB entries should share the same part number."""
+        parts = [e["part"].upper() for e in matcher_mod._COMPONENT_DB]
+        assert len(parts) == len(set(parts)), "duplicate part numbers in _COMPONENT_DB"
