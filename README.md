@@ -6,7 +6,7 @@
 
 *Identifies components, extracts traces, maps trust chains, and tells you where to probe. No schematics. No NDA. No design files.*
 
-[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/ericrihm/retrace/releases)
+[![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)](https://github.com/ericrihm/retrace/releases)
 [![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://github.com/ericrihm/retrace)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -28,7 +28,7 @@ retrace scan board_photo.jpg
 ```
 
 ```
-  re:trace v0.1.0 — PCB Reverse Engineering Toolkit
+  re:trace v0.3.0 — PCB Reverse Engineering Toolkit
   ──────────────────────────────────────────────────
 
   [detect]   Found 177 components (20 ICs, 8 connectors, 56 caps, 29 resistors...)
@@ -47,6 +47,18 @@ retrace scan board_photo.jpg
 - **Supply chain verification** -- cross-reference component markings against known BOMs to flag counterfeit, remarked, or substituted parts
 - **Incident response** -- rapid board triage in the field when you have a device but no documentation
 - **Research and training** -- reproducible PCB RE methodology for academic labs, CTF challenges, and security training courses
+
+### Technical Highlights
+
+| Domain | Technique | Application |
+|--------|-----------|-------------|
+| Computer Vision | Adaptive thresholding, morphological filtering, HSV+LAB dual-colorspace analysis | Component detection, copper trace extraction |
+| Graph Algorithms | Adjacency graph construction, bus topology extraction, attack-path traversal | Net analysis, trust chain mapping |
+| Constraint Satisfaction | AC-3 arc consistency, pin assignment under electrical rules | Protocol inference, signal ordering |
+| Bayesian Inference | Dirichlet-prior belief networks, expected information gain ranking | Probe point optimization |
+| Information Theory | Shannon entropy profiling, block-wise classification | Firmware triage, encrypted region detection |
+| Security Assessment | CVSS 3.1 scoring, CWE/ATT&CK mapping, fault injection surface analysis | Vulnerability prioritization |
+| Protocol Analysis | Baud rate inference, SPI/I2C/JTAG/SWD parameter extraction | Sigrok session generation, OpenOCD config |
 
 <div align="center">
 <img src="docs/examples/terminal_demo.svg" width="700" alt="retrace terminal demo — scan a PCB photo, get components, traces, debug interfaces, and probe recommendations"/>
