@@ -232,3 +232,18 @@ def test_run_plugins_calls_discover_when_no_list_provided():
     with patch("retrace.plugins.base.discover_plugins", return_value=[]) as mock_discover:
         run_plugins(MagicMock())
     mock_discover.assert_called_once()
+
+
+def test_discover_plugins_skips_non_type_load_result():
+    """Line 67 — when ep.load() returns a non-type (e.g., an instance), it is skipped
+    with a warning rather than included in the plugins list."""
+    non_type_ep = MagicMock()
+    non_type_ep.name = "not_a_class"
+    # load() returns an instance (not a class), so isinstance(cls, type) is False
+    non_type_ep.load.return_value = object()  # instance, not type
+
+    with patch("retrace.plugins.base.importlib.metadata.entry_points",
+               return_value=[non_type_ep]):
+        result = discover_plugins()
+
+    assert result == []

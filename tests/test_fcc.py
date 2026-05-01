@@ -187,6 +187,32 @@ class TestSearchFcc:
         assert "fcc_id" in results[0]
         assert "url" in results[0]
 
+    def test_duplicate_fcc_ids_deduplicated(self):
+        """Line 156 — duplicate fcc_id across revisions is de-duplicated via 'seen' set."""
+        rev1 = MagicMock()
+        rev1.fcc_id = "DUPE-001"
+        rev1.name = "Rev 1"
+        rev1.year = 2020
+        rev1.model_number = "M1"
+
+        rev2 = MagicMock()
+        rev2.fcc_id = "DUPE-001"  # same fcc_id as rev1
+        rev2.name = "Rev 2"
+        rev2.year = 2021
+        rev2.model_number = "M1"
+
+        family = MagicMock()
+        family.manufacturer = "Acme"
+
+        with patch("retrace.sources.fcc.requests.get", side_effect=requests.RequestException):
+            with patch("retrace.sources.device_registry.search_registry",
+                       return_value=[(family, [rev1, rev2])]):
+                results = search_fcc("dupe test")
+
+        # Only one result for the duplicated fcc_id
+        assert len(results) == 1
+        assert results[0]["fcc_id"] == "DUPE-001"
+
 
 # ---------------------------------------------------------------------------
 # download_fcc_photos

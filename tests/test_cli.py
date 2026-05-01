@@ -1823,3 +1823,12 @@ def test_triage_output_file(runner, tmp_path):
     result = runner.invoke(main, ["triage", str(fw), "-o", str(out)])
     assert result.exit_code == 0
     assert out.exists()
+
+
+def test_triage_svg_output(runner, tmp_path):
+    fw = tmp_path / "firmware.bin"
+    fw.write_bytes(b"\x7fELF" + b"\x00" * 4092)
+    result = runner.invoke(main, ["triage", str(fw), "--svg"])
+    assert result.exit_code == 0
+    assert "<svg" in result.output
+    assert "Entropy Map" in result.output

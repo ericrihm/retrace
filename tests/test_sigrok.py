@@ -163,3 +163,16 @@ class TestFormatSummary:
     def test_import_instructions(self):
         text = format_sigrok_summary([_uart_finding()])
         assert "PulseView" in text
+
+    def test_unknown_interface_skipped_in_summary(self):
+        """Line 140 — interface not in _PROTOCOL_DECODERS is silently skipped."""
+        unknown = {"interface": "CAN", "component_id": "J5", "severity": "low"}
+        text = format_sigrok_summary([unknown])
+        # No CAN entry in summary (unknown interface skipped)
+        assert "CAN" not in text or "No interfaces" in text
+
+    def test_mixed_known_and_unknown_interface(self):
+        """Line 140 — unknown interface skipped, known interface still rendered."""
+        unknown = {"interface": "CAN", "component_id": "J5", "severity": "low"}
+        text = format_sigrok_summary([unknown, _uart_finding()])
+        assert "UART" in text

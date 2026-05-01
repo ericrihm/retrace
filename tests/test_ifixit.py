@@ -250,3 +250,21 @@ class TestDownloadGuideImages:
                 paths = download_guide_images(7, tmp_path)
 
         assert paths == []
+
+    def test_oserror_writing_image_skipped(self, tmp_path):
+        """Lines 151-152 — OSError when writing downloaded image is logged and skipped."""
+        from unittest.mock import patch, mock_open
+        steps = [
+            {"media": {"data": [{"original": "https://img.example.com/step1.jpg"}]}}
+        ]
+        guide_resp = _make_guide_response(steps)
+        img_resp = _make_image_response()
+
+        with patch("retrace.sources.ifixit.requests.get") as mock_get:
+            with patch("retrace.sources.ifixit.time.sleep"):
+                mock_get.side_effect = [guide_resp, img_resp]
+                # Patch Path.open to raise OSError on write
+                with patch("pathlib.Path.open", side_effect=OSError("disk full")):
+                    paths = download_guide_images(42, tmp_path)
+
+        assert paths == []

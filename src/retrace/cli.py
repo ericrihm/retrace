@@ -975,9 +975,10 @@ def sigrok(ctx: click.Context, image: str, output: str, sample_rate: int, board_
 @main.command("triage")
 @click.argument("firmware", type=click.Path(exists=True))
 @click.option("--json", "as_json", is_flag=True, help="Output as JSON")
+@click.option("--svg", "as_svg", is_flag=True, help="Output entropy heatmap SVG")
 @click.option("--output", "-o", type=click.Path(), help="Write report to file")
 @click.option("--block-size", type=int, default=4096, help="Entropy block size in bytes")
-def triage(firmware: str, as_json: bool, output: str, block_size: int) -> None:
+def triage(firmware: str, as_json: bool, as_svg: bool, output: str, block_size: int) -> None:
     """Triage a firmware dump — entropy, signatures, credential strings.
 
     Performs first-pass analysis on a binary firmware image: entropy profiling
@@ -994,7 +995,10 @@ def triage(firmware: str, as_json: bool, output: str, block_size: int) -> None:
 
     result = triage_firmware(firmware, block_size=block_size)
 
-    if as_json:
+    if as_svg:
+        from retrace.export.entropy_svg import generate_entropy_svg
+        text = generate_entropy_svg(result)
+    elif as_json:
         text = json.dumps(asdict(result), indent=2)
     else:
         text = format_triage_report(result)

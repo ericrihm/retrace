@@ -114,6 +114,14 @@ class TestSPIFlashGuide:
         spi_cmds = [c for c in guides[0]["commands"] if c["tool"] == "spi_manual"]
         assert any("0x9F" in c["command"] for c in spi_cmds)
 
+    def test_flash_with_read_cmd_adds_spi_manual_command(self):
+        """Line 105 — read_cmd in security intel adds a manual SPI read command."""
+        flash = _comp("U1", marking="W25Q128JV")
+        flash._security_intel = {"read_cmd": "0x03 <addr24> <data>"}
+        guides = generate_extraction_guide(_board(flash))
+        spi_cmds = [c for c in guides[0]["commands"] if c["tool"] == "spi_manual"]
+        assert any("Manual read command" in c["description"] for c in spi_cmds)
+
 
 # ---------------------------------------------------------------------------
 # Guide generation — eMMC
@@ -226,3 +234,20 @@ class TestFormatExtractionGuide:
         guides = generate_extraction_guide(_board(flash))
         text = format_extraction_guide(guides)
         assert "128Mbit" in text
+
+    def test_format_shows_part_number(self):
+        """Line 162 — part_number in guide dict appears in formatted output."""
+        flash = _comp("U1", marking="W25Q128JV", part_number="W25Q128JVSIQ")
+        guides = generate_extraction_guide(_board(flash))
+        text = format_extraction_guide(guides)
+        assert "Part:" in text
+        assert "W25Q128JVSIQ" in text
+
+    def test_format_shows_jedec_id(self):
+        """Line 167 — JEDEC ID in guide dict appears in formatted output."""
+        flash = _comp("U1", marking="W25Q128JV")
+        flash._security_intel = {"jedec_id": "0xEF4018"}
+        guides = generate_extraction_guide(_board(flash))
+        text = format_extraction_guide(guides)
+        assert "JEDEC ID:" in text
+        assert "0xEF4018" in text

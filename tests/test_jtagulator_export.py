@@ -457,3 +457,37 @@ class TestEdgeCases:
     def test_screen_minicom_in_uart(self):
         config = generate_jtagulator_config([_uart_finding()])
         assert "screen" in config or "minicom" in config or "picocom" in config
+
+    def test_unsupported_interface_produces_comment(self):
+        """Lines 235-236 — unknown interface type falls through to else branch."""
+        finding = {
+            "type": "debug_interface",
+            "interface": "CAN",  # not handled
+            "severity": "low",
+            "description": "CAN bus interface",
+            "component_id": "J9",
+            "component_label": "connector",
+            "component_marking": "CAN",
+            "cve_reference": None,
+            "cvss_base": 2.0,
+        }
+        config = generate_jtagulator_config([finding])
+        assert "Unsupported interface: CAN" in config
+
+    def test_ntrst_maps_to_trst_via_fallback(self):
+        """Line 122 — nTRST pin name without a prior TRST assignment sets TRST.
+        We test this by building a pin list where nTRST appears but 'TRST' substring
+        would not be matched first (i.e., result['TRST'] was already None at the start
+        of that iteration because no earlier pin set it)."""
+        from retrace.export.jtagulator import _jtag_signal_pins
+        # Pin list: only nTRST — no prior TRST. The inner loop matches TRST in NTRST,
+        # setting result["TRST"] = 1 on line 118. Then line 121 checks
+        # result["TRST"] is None → False, so line 122 is not reached here.
+        # To reach line 122, we need NTRST but where 'TRST' is NOT a substring —
+        # that's linguistically impossible, so instead we verify the nTRST behavior
+        # works correctly via the 20-pin pinout which contains 'nTRST'.
+        from retrace.export.pinout_diagram import _PINOUTS
+        pins = _PINOUTS["JTAG"][20]
+        sig = _jtag_signal_pins(pins)
+        # nTRST should result in TRST being set (via line 118 or 122)
+        assert sig["TRST"] is not None

@@ -233,6 +233,23 @@ class TestNets:
                 if ref == "R1":
                     assert int(pin) <= 2
 
+    def test_passive_from_component_pins_clamped(self):
+        """Line 185 — from_comp is passive, so from_pin is clamped to <= 2."""
+        r = _make_resistor()
+        ic = _make_ic()
+        comps = [r, ic]
+        # Multiple traces with passive as the from_component
+        traces = [
+            Trace(id="N1", points=[], from_component="R1", to_component="U1"),
+            Trace(id="N2", points=[], from_component="R1", to_component="U1"),
+            Trace(id="N3", points=[], from_component="R1", to_component="U1"),
+        ]
+        nets = _build_nets(comps, traces)
+        for net_name, endpoints in nets.items():
+            for ref, pin in endpoints:
+                if ref == "R1":
+                    assert int(pin) <= 2
+
 
 # ---------------------------------------------------------------------------
 # Footprint mapping
@@ -294,6 +311,18 @@ class TestPinCount:
         tp = Component(id="TP1", label="test_point", confidence=0.9,
                        bbox=(0, 0, 5, 5))
         assert _pin_count(tp) == 1
+
+    def test_connector_has_2_pins(self):
+        """Line 72 — connector label returns 2."""
+        conn = Component(id="J1", label="connector", confidence=0.9,
+                         bbox=(0, 0, 10, 10))
+        assert _pin_count(conn) == 2
+
+    def test_header_has_2_pins(self):
+        """Line 72 — header label returns 2."""
+        hdr = Component(id="J2", label="header", confidence=0.9,
+                        bbox=(0, 0, 10, 10))
+        assert _pin_count(hdr) == 2
 
 
 # ---------------------------------------------------------------------------

@@ -9,6 +9,7 @@ import re
 
 from retrace.core.pipeline import AnalysisResult, Component, Trace
 from retrace.export.bom import (
+    _esc,
     bom_to_csv,
     bom_to_json,
     bom_to_svg,
@@ -1062,3 +1063,41 @@ class TestGenerateBomEdgeCases:
         # round(3600.555, 2) yields 3600.55 due to binary float representation
         bom = generate_bom(_make_result(duration_seconds=3600.555))
         assert bom["metadata"]["duration_seconds"] == round(3600.555, 2)
+
+
+# ---------------------------------------------------------------------------
+# _esc helper and security intel exception path
+# ---------------------------------------------------------------------------
+
+class TestEscHelper:
+    def test_esc_none_returns_empty(self):
+        """Line 79 — _esc(None) returns empty string."""
+        assert _esc(None) == ""
+
+    def test_esc_string_returns_escaped(self):
+        assert _esc("<script>") == "&lt;script&gt;"
+
+    def test_esc_normal_string(self):
+        assert _esc("hello") == "hello"
+
+
+class TestSecurityIntelInBom:
+    def test_security_intel_exception_swallowed(self):
+        """Lines 119-120 — exception in security intel lookup is swallowed."""
+        from unittest.mock import patch
+        comp = _make_component("U1", part_number="STM32F103", marking="STM32F103")
+        result = _make_result(components=[comp])
+        # Patch the matcher module's lookup_security_intel so the inline import raises
+        with patch("retrace.identification.matcher.lookup_security_intel",
+                   side_effect=RuntimeError("lookup failed")):
+            bom = generate_bom(result)
+            # Must not crash — exception is swallowed inside _component_to_bom_row
+            assert "components" in bom
+            assert len(bom["components"]) == 1
+
+    def test_component_with_none_part_number_no_crash(self):
+        """_component_to_bom_row handles component with no part_number gracefully."""
+        comp = _make_component("U1", part_number="", marking="unknown")
+        result = _make_result(components=[comp])
+        bom = generate_bom(result)
+        assert len(bom["components"]) == 1
