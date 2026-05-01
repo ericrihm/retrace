@@ -434,7 +434,7 @@ def cross_board(image: str, threshold: float, as_json: bool) -> None:
 
 @main.command("export")
 @click.argument("image", type=click.Path(exists=True))
-@click.option("--format", "fmt", type=click.Choice(["json", "csv", "svg"]), default="json", show_default=True)
+@click.option("--format", "fmt", type=click.Choice(["json", "csv", "svg", "spdx", "cyclonedx"]), default="json", show_default=True)
 @click.option("--output", "-o", type=click.Path(), help="Output directory (default: <image stem>_export)")
 def export(image: str, fmt: str, output: str) -> None:
     """Scan a PCB photo and export results in the chosen format."""
@@ -450,12 +450,68 @@ def export(image: str, fmt: str, output: str) -> None:
         out_dir = Path(f"{stem}_export")
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    result.save(out_dir, fmt=fmt)
+
+    if fmt in ("spdx", "cyclonedx"):
+        from retrace.export.bom import generate_bom
+        from retrace.export.sbom import bom_to_cyclonedx, bom_to_spdx
+        bom = generate_bom(result)
+        if fmt == "spdx":
+            out_file = out_dir / "sbom.spdx.json"
+            out_file.write_text(bom_to_spdx(bom), encoding="utf-8")
+        else:
+            out_file = out_dir / "sbom.cdx.json"
+            out_file.write_text(bom_to_cyclonedx(bom), encoding="utf-8")
+        summary = result.summary()
+        click.echo(
+            f"Exported {summary['components']} component(s) to {out_file} [{fmt}]"
+        )
+    else:
+        result.save(out_dir, fmt=fmt)
+        summary = result.summary()
+        click.echo(
+            f"Exported {summary['components']} component(s), "
+            f"{summary['traces']} trace(s) to {out_dir}/ [{fmt}]"
+        )
+
+
+@main.command("sbom")
+@click.argument("image", type=click.Path(exists=True))
+@click.option("--format", "fmt", type=click.Choice(["spdx", "cyclonedx", "both"]), default="both", show_default=True)
+@click.option("--output", "-o", type=click.Path(), help="Output directory")
+@click.option("--namespace", default="", help="SPDX document namespace URI")
+def sbom(image: str, fmt: str, output: str, namespace: str) -> None:
+    """Generate SBOM exports (SPDX 2.3 and/or CycloneDX 1.5) from a PCB photo."""
+    from retrace.core.pipeline import Pipeline
+    from retrace.export.bom import generate_bom
+    from retrace.export.sbom import bom_to_cyclonedx, bom_to_spdx
+
+    pipeline = Pipeline()
+    result = pipeline.run(image)
+    bom = generate_bom(result)
+
+    if output:
+        out_dir = Path(output)
+    else:
+        stem = Path(image).stem
+        out_dir = Path(f"{stem}_sbom")
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    written: list[str] = []
+    if fmt in ("spdx", "both"):
+        spdx_file = out_dir / "sbom.spdx.json"
+        spdx_file.write_text(bom_to_spdx(bom, namespace=namespace), encoding="utf-8")
+        written.append(str(spdx_file))
+
+    if fmt in ("cyclonedx", "both"):
+        cdx_file = out_dir / "sbom.cdx.json"
+        cdx_file.write_text(bom_to_cyclonedx(bom), encoding="utf-8")
+        written.append(str(cdx_file))
 
     summary = result.summary()
     click.echo(
-        f"Exported {summary['components']} component(s), "
-        f"{summary['traces']} trace(s) to {out_dir}/ [{fmt}]"
+        f"Generated SBOM for {summary['components']} component(s): "
+        + ", ".join(written)
     )
 
 
@@ -970,6 +1026,44 @@ def sigrok(ctx: click.Context, image: str, output: str, sample_rate: int, board_
             click.echo(format_sigrok_summary(findings))
     else:
         click.echo(format_sigrok_summary(findings))
+
+
+@main.command("topology")
+@click.argument("image", type=click.Path(exists=True))
+@click.option("--json", "as_json", is_flag=True, help="JSON output")
+@click.option("--output", "-o", type=click.Path(), help="Save to file")
+@click.pass_context
+def topology(ctx: click.Context, image: str, as_json: bool, output: str) -> None:
+    """Infer protocol bus topology from a PCB photo.
+
+    Detects I2C pull-up resistors, SPI flash chips, UART level-shifters, CAN
+    transceivers, and 1-Wire devices.  Provides bus characteristics and
+    security implications for each discovered bus.
+    """
+    from retrace.analysis.protocol_topology import format_topology, infer_topology
+    from retrace.core.pipeline import Pipeline
+
+    pipeline = Pipeline()
+    result = pipeline.run(image)
+    buses = infer_topology(result)
+
+    if as_json:
+        import dataclasses
+        text = json.dumps(
+            [dataclasses.asdict(b) for b in buses],
+            indent=2,
+        )
+    else:
+        text = format_topology(buses)
+
+    if output:
+        out_path = Path(output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(text, encoding="utf-8")
+        if not ctx.obj.get("quiet"):
+            click.echo(f"Topology report written to {out_path}")
+    else:
+        click.echo(text)
 
 
 @main.command("triage")

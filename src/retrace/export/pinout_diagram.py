@@ -4,10 +4,13 @@ from __future__ import annotations
 
 import base64
 import html as html_mod
+import re
 from pathlib import Path
 from typing import Any
 
 from retrace.core.pipeline import AnalysisResult, Component
+
+_NxM_RE = re.compile(r"(\d+)\s*[xX]\s*(\d+)")
 
 # ── Pin assignments per interface type and pin count ─────────────────
 # Each pin: (name, function_group, description)
@@ -108,6 +111,16 @@ _PINOUTS: dict[str, dict[int, list[tuple[str, str, str]]]] = {
             ("TX", "data", "Transmit to host"),
             ("RX", "data", "Receive from host"),
             ("RTS", "control", "Request to send"),
+        ],
+        8: [
+            ("RTS", "control", "Request to send"),
+            ("DTR", "control", "Data terminal ready"),
+            ("TX", "data", "Transmit to host"),
+            ("GND", "ground", "Ground"),
+            ("GND", "ground", "Ground"),
+            ("RX", "data", "Receive from host"),
+            ("DSR", "control", "Data set ready"),
+            ("CTS", "control", "Clear to send"),
         ],
     },
     "SPI": {
@@ -216,10 +229,10 @@ _PROBE_GUIDES: dict[str, dict[str, list[tuple[str, str]]]] = {
             ("GND", "GND"),
         ],
         "FTDI FT232H": [
-            ("SCLK", "ADBUS0 (TCK)"),
-            ("MOSI", "ADBUS1 (TDI)"),
-            ("MISO", "ADBUS2 (TDO)"),
-            ("CS", "ADBUS3 (TMS)"),
+            ("SCLK", "ADBUS0 (SCK)"),
+            ("MOSI", "ADBUS1 (MOSI)"),
+            ("MISO", "ADBUS2 (MISO)"),
+            ("CS", "ADBUS3 (CS)"),
             ("GND", "GND"),
         ],
         "flashrom": [
@@ -817,6 +830,64 @@ def _render_legend(svg_w: int, y_offset: int) -> tuple[str, int]:
     return "\n".join(parts), 28
 
 
+def _render_probe_point_svg(
+    comp: Component,
+    interface: str,
+    finding: dict[str, Any],
+    width: int,
+) -> str:
+    """Render a minimal single-pad probe point diagram for a test point."""
+    title_h = 40
+    pad_cy = title_h + 60
+    svg_h = title_h + 140
+
+    comp_label = comp.marking or comp.label or comp.id
+    title_text = f"{interface} Probe Point — {comp_label}"
+    if finding.get("cvss_base"):
+        title_text += f" (CVSS {finding['cvss_base']})"
+
+    cx = width // 2
+    lines: list[str] = []
+    lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" '
+                 f'width="{width}" height="{svg_h}" '
+                 f'viewBox="0 0 {width} {svg_h}">')
+    lines.append('  <!-- re:trace probe point diagram -->')
+    lines.append(_render_defs())
+    lines.append(f'  <rect width="{width}" height="{svg_h}" fill="{_BG}"/>')
+
+    # Title bar
+    lines.append(f'  <rect width="{width}" height="{title_h}" '
+                 f'fill="{_PANEL_BG}" fill-opacity="0.92"/>')
+    lines.append(f'  <line x1="0" y1="{title_h}" x2="{width}" y2="{title_h}" '
+                 f'stroke="{_ACCENT}" stroke-width="1" stroke-opacity="0.4"/>')
+    lines.append(f'  <text x="12" y="26" font-family={_q(_FONT)} '
+                 f'font-size="13" fill="{_ACCENT}" font-weight="bold">re:trace</text>')
+    lines.append(f'  <text x="80" y="26" font-family={_q(_FONT)} '
+                 f'font-size="11" fill="{_TEXT_HI}">{_esc(title_text)}</text>')
+
+    # Single pad circle
+    color = _GROUP_COLORS.get("data", "#3b82f6")
+    lines.append(f'  <circle cx="{cx}" cy="{pad_cy}" r="12" '
+                 f'fill="{color}" stroke="#fff" stroke-width="2" filter="url(#glow)"/>')
+    lines.append(f'  <text x="{cx}" y="{pad_cy + 30}" text-anchor="middle" '
+                 f'font-family={_q(_FONT)} font-size="10" fill="{_TEXT_HI}">'
+                 f'{_esc(comp_label)}</text>')
+    lines.append(f'  <text x="{cx}" y="{pad_cy + 46}" text-anchor="middle" '
+                 f'font-family={_q(_FONT)} font-size="9" fill="{_TEXT_LO}">'
+                 f'single test pad — probe here for {_esc(interface)}</text>')
+
+    # Footer
+    fy = svg_h - 24
+    lines.append(f'  <rect y="{fy}" width="{width}" height="24" '
+                 f'fill="{_PANEL_BG}" fill-opacity="0.92"/>')
+    lines.append(f'  <text x="{width // 2}" y="{fy + 16}" text-anchor="middle" '
+                 f'font-family={_q(_FONT)} font-size="9" fill="{_TEXT_LO}">'
+                 f're:trace probe point — {_esc(interface)} test pad</text>')
+
+    lines.append('</svg>')
+    return "\n".join(lines)
+
+
 # ── Public API ───────────────────────────────────────────────────────
 
 def generate_pinout_svg(
@@ -846,6 +917,12 @@ def generate_pinout_svg(
 
     bbox = comp.bbox
     pin_count = _detect_pin_count(comp, interface)
+
+    # Single-pad probe point — generate a minimal diagram instead of a
+    # full multi-pin header layout.
+    if pin_count <= 1:
+        return _render_probe_point_svg(comp, interface, finding, width)
+
     dual_row = _is_dual_row(interface, pin_count)
     pins = _best_pinout(interface, pin_count)
 
@@ -960,15 +1037,35 @@ def generate_pinout_svg(
 
 def _detect_pin_count(comp: Component, interface: str) -> int:
     """Estimate pin count from component metadata or interface defaults."""
+    # Single-pad test points are not multi-pin headers
+    if (comp.label or "").lower() == "test_point":
+        return 1
+
+    # Check marking first
     marking = (comp.marking or "").lower()
+    # Try NxM pattern in marking (e.g., "2x7", "2x10")
+    m = _NxM_RE.search(marking)
+    if m:
+        n = int(m.group(1)) * int(m.group(2))
+        if 2 <= n <= 40:
+            return n
     for token in marking.replace("-", " ").replace("_", " ").split():
         if token.isdigit():
             n = int(token)
             if 2 <= n <= 40:
                 return n
 
+    # Check package field
     if comp.package:
         pkg = comp.package.lower()
+        # RJ45 / 8P8C → 8-pin console connector
+        if "rj45" in pkg or "8p8c" in pkg:
+            return 8
+        m = _NxM_RE.search(pkg)
+        if m:
+            n = int(m.group(1)) * int(m.group(2))
+            if 2 <= n <= 40:
+                return n
         for token in pkg.replace("-", " ").split():
             if token.isdigit() and 2 <= int(token) <= 40:
                 return int(token)

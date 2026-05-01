@@ -12,7 +12,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-99%25-brightgreen.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->1752<!-- /STATS --> tests** · **<!-- STATS:modules -->31<!-- /STATS --> modules** · **<!-- STATS:loc -->15436<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->1905<!-- /STATS --> tests** · **<!-- STATS:modules -->33<!-- /STATS --> modules** · **<!-- STATS:loc -->16465<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Technical Highlights](#technical-highlights) · [Architecture](#architecture) · [Design Decisions](#design-decisions) · [Quick Start](#quick-start) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/)
 
@@ -101,8 +101,8 @@ The pipeline processes a single board photograph through seven stages, each feed
 ```
 
 ```
-src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS --> lines across <!-- STATS:modules -->31<!-- /STATS --> modules
-├── cli.py                               # Click CLI: 25 commands
+src/retrace/                             # <!-- STATS:src_loc -->16465<!-- /STATS --> lines across <!-- STATS:modules -->33<!-- /STATS --> modules
+├── cli.py                               # Click CLI: 27 commands
 ├── web.py                               # Gradio web interface
 ├── core/
 │   ├── pipeline.py                      # Orchestrator: photo → AnalysisResult
@@ -118,7 +118,8 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
 │   ├── probe_advisor.py                 # Bayesian optimal probe selection (Shannon entropy)
 │   ├── constraint_solver.py             # AC-3 arc-consistency propagation
 │   ├── cross_board.py                   # Cross-board subcircuit pattern matching
-│   └── firmware_triage.py               # Entropy profiling, magic bytes, credential extraction
+│   ├── firmware_triage.py               # Entropy profiling, magic bytes, credential extraction
+│   └── protocol_topology.py             # Bus topology inference (I2C/SPI/UART/CAN/1-Wire)
 ├── sources/
 │   ├── fcc.py                           # FCC filing scraper (47 CFR § 0.457)
 │   ├── ifixit.py                        # iFixit API v2.0 client
@@ -140,6 +141,7 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
     ├── sigrok.py                        # Sigrok/PulseView session export
     ├── firmware_extract.py              # Flashrom command + SPI wiring generator
     ├── entropy_svg.py                   # Entropy heatmap SVG visualizer
+    ├── sbom.py                          # SPDX 2.3 + CycloneDX 1.5 SBOM export
     └── svg.py                           # Dark-theme SVG: zones, traces, security, topology
 ```
 
@@ -286,9 +288,9 @@ Nine output modes per board -- static overlays, component inventories, debug pin
 
 <table>
 <tr>
-<td width="33%"><img src="docs/examples/cisco_JTAG_pinout.svg" width="100%" alt="Cisco JTAG 20-pin pinout"/><br/><b>Cisco JTAG -- J15</b><br/><sub>20-pin ARM standard. TDI/TDO/TCK/TMS/TRST. Wiring for J-Link, Bus Pirate, FTDI.</sub></td>
-<td width="33%"><img src="docs/examples/cisco_UART_pinout.svg" width="100%" alt="Cisco UART console pinout"/><br/><b>Cisco UART -- J10</b><br/><sub>Serial console. TX/RX/GND labeled. Bus Pirate + FTDI FT232 wiring. Baud rates.</sub></td>
-<td width="33%"><img src="docs/examples/xbox_JTAG_pinout.svg" width="100%" alt="Xbox JTAG pinout"/><br/><b>Xbox JTAG -- J5</b><br/><sub>Debug header. Pin labels, J-Link / Bus Pirate / FTDI / OpenOCD wiring tables.</sub></td>
+<td width="33%"><img src="docs/examples/cisco_jtag_pinout.svg" width="100%" alt="Cisco JTAG 20-pin pinout"/><br/><b>Cisco JTAG -- J15</b><br/><sub>20-pin ARM standard. TDI/TDO/TCK/TMS/TRST. Wiring for J-Link, Bus Pirate, FTDI.</sub></td>
+<td width="33%"><img src="docs/examples/cisco_uart_pinout.svg" width="100%" alt="Cisco UART console pinout"/><br/><b>Cisco UART -- J10</b><br/><sub>Serial console. TX/RX/GND labeled. Bus Pirate + FTDI FT232 wiring. Baud rates.</sub></td>
+<td width="33%"><img src="docs/examples/xbox_jtag_pinout.svg" width="100%" alt="Xbox JTAG pinout"/><br/><b>Xbox JTAG -- J5</b><br/><sub>Debug header. Pin labels, J-Link / Bus Pirate / FTDI / OpenOCD wiring tables.</sub></td>
 </tr>
 </table>
 
@@ -748,10 +750,10 @@ my_analyzer = "my_package:MyAnalyzer"
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->1752<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->1905<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->99%<!-- /STATS --> |
-| Modules | <!-- STATS:modules -->31<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->15436<!-- /STATS --> |
+| Modules | <!-- STATS:modules -->33<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->16465<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->196<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -763,7 +765,7 @@ my_analyzer = "my_package:MyAnalyzer"
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->1752<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->1905<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```
