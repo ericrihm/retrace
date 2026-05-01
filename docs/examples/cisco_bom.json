@@ -6,7 +6,7 @@
       1000
     ],
     "pipeline_version": "0.1.0",
-    "timestamp": "2026-04-30T22:50:00Z",
+    "timestamp": "2026-05-01T00:43:39Z",
     "duration_seconds": 0.0
   },
   "summary": {
@@ -200,7 +200,19 @@
         100,
         60,
         42
-      ]
+      ],
+      "security_intel": {
+        "output_voltage": "0.8V\u201325V adjustable",
+        "enable_pin": "EN (pin 3)",
+        "input_range": "3.5V\u201328V",
+        "current_max": "3A",
+        "topology": "Synchronous Buck"
+      },
+      "intel_output_voltage": "0.8V\u201325V adjustable",
+      "intel_enable_pin": "EN (pin 3)",
+      "intel_input_range": "3.5V\u201328V",
+      "intel_current_max": "3A",
+      "intel_topology": "Synchronous Buck"
     },
     {
       "id": "U11",
@@ -1384,7 +1396,19 @@
         560,
         55,
         40
-      ]
+      ],
+      "security_intel": {
+        "output_voltage": "0.8V\u201325V adjustable",
+        "enable_pin": "EN (pin 3)",
+        "input_range": "3.5V\u201328V",
+        "current_max": "3A",
+        "topology": "Synchronous Buck"
+      },
+      "intel_output_voltage": "0.8V\u201325V adjustable",
+      "intel_enable_pin": "EN (pin 3)",
+      "intel_input_range": "3.5V\u201328V",
+      "intel_current_max": "3A",
+      "intel_topology": "Synchronous Buck"
     },
     {
       "id": "Q1",

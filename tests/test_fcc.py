@@ -7,14 +7,13 @@ from unittest.mock import MagicMock, patch
 import requests
 
 from retrace.sources.fcc import (
-    _PhotoLinkParser,
-    _SearchResultParser,
     _ext_from_content_type,
     _ext_from_url,
+    _PhotoLinkParser,
+    _SearchResultParser,
     download_fcc_photos,
     search_fcc,
 )
-
 
 # ---------------------------------------------------------------------------
 # _SearchResultParser

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
-
 from retrace.sources.fcc import (
     _ext_from_content_type,
     _ext_from_url,
@@ -12,7 +11,6 @@ from retrace.sources.fcc import (
     search_fcc,
 )
 from retrace.sources.ifixit import search_ifixit
-
 
 # ---------------------------------------------------------------------------
 # FCC helper tests

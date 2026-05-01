@@ -237,7 +237,7 @@ def debug(image: str, as_json: bool, output: str) -> None:
 @click.option("--output", "-o", type=click.Path(), help="Save results to a .txt file")
 def solve(image: str, output: str) -> None:
     """Run the constraint solver on a PCB photo — infer net assignments and connections."""
-    from retrace.analysis.constraint_solver import ComponentSpec, ConstraintSolver, Trace, Pin
+    from retrace.analysis.constraint_solver import ComponentSpec, ConstraintSolver, Pin, Trace
     from retrace.core.pipeline import Pipeline
 
     pipeline = Pipeline()
@@ -358,12 +358,12 @@ def learn(
 @click.option("--json", "as_json", is_flag=True, help="Output as JSON")
 def cross_board(image: str, threshold: float, as_json: bool) -> None:
     """Run cross-board subcircuit pattern analysis on a PCB photo."""
-    from retrace.core.pipeline import Pipeline
     from retrace.analysis.cross_board import (
         BoardComponent,
         BoardTrace,
         CrossBoardEngine,
     )
+    from retrace.core.pipeline import Pipeline
 
     pipeline = Pipeline()
     result = pipeline.run(image)
@@ -651,7 +651,7 @@ def batch(ctx: click.Context, directory: str, output: str, fmt: str, report: boo
 def pinout(ctx: click.Context, image: str, output: str, interface: str, as_json: bool) -> None:
     """Generate annotated pinout diagrams for detected debug interfaces."""
     from retrace.core.pipeline import Pipeline
-    from retrace.export.pinout_diagram import generate_all_pinout_svgs, save_pinout_svg
+    from retrace.export.pinout_diagram import save_pinout_svg
     from retrace.plugins.builtin.debug_interfaces import detect_debug_interfaces
 
     pipeline = Pipeline()

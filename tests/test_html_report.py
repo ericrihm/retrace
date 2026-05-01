@@ -4,11 +4,8 @@ from __future__ import annotations
 
 import html
 
-import pytest
-
 from retrace.core.pipeline import AnalysisResult, Component, Trace
 from retrace.export.html_report import generate_html_report, save_html_report
-
 
 # ── Fixtures ─────────────────────────────────────────────────────────────
 

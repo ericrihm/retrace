@@ -19,7 +19,6 @@ from retrace.identification.matcher import _best_fuzzy_match, lookup_part
 from retrace.sources.fcc import download_fcc_photos, search_fcc
 from retrace.sources.ifixit import download_guide_images, search_ifixit
 
-
 # ---------------------------------------------------------------------------
 # sources/fcc.py — network and I/O error states
 # ---------------------------------------------------------------------------

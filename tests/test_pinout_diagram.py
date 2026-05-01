@@ -2,18 +2,11 @@
 
 from __future__ import annotations
 
-import os
-import tempfile
-from pathlib import Path
-from unittest.mock import patch
-
-import pytest
-
 from retrace.core.pipeline import AnalysisResult, Component, Trace
 from retrace.export.pinout_diagram import (
+    _GROUP_COLORS,
     _PINOUTS,
     _PROBE_GUIDES,
-    _GROUP_COLORS,
     _best_pinout,
     _crop_to_base64,
     _detect_pin_count,

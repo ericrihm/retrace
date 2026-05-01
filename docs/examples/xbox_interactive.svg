@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="style-photo" width="800" height="600" viewBox="0 0 800 600">
+<svg xmlns="http://www.w3.org/2000/svg" class="style-photo" width="1600" height="1000" viewBox="0 0 1600 1000">
   <!-- re:trace interactive layered SVG — toggle layers like a map -->
   <style type="text/css">
     /* Photo mode — default */
@@ -44,87 +44,203 @@
       <path d="M 0 0 L 10 3 L 0 6 z" fill="context-stroke" fill-opacity="0.7"/>
     </marker>
   </defs>
-  <rect width="800" height="600" fill="#0a0e1a"/>
-  <rect width="800" height="600" fill="url(#grid)"/>
-  <rect x="6" y="38" width="788" height="532" rx="4" ry="4" fill="#0b1120" fill-opacity="0.55" stroke="#1e2d40" stroke-width="1.5"/>
-  <line x1="6" y1="78" x2="794" y2="78" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="6" y1="118" x2="794" y2="118" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="6" y1="158" x2="794" y2="158" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="6" y1="198" x2="794" y2="198" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="6" y1="238" x2="794" y2="238" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="6" y1="278" x2="794" y2="278" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="6" y1="318" x2="794" y2="318" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="6" y1="358" x2="794" y2="358" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="6" y1="398" x2="794" y2="398" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="6" y1="438" x2="794" y2="438" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="6" y1="478" x2="794" y2="478" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="6" y1="518" x2="794" y2="518" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="6" y1="558" x2="794" y2="558" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="46" y1="38" x2="46" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="86" y1="38" x2="86" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="126" y1="38" x2="126" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="166" y1="38" x2="166" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="206" y1="38" x2="206" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="246" y1="38" x2="246" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="286" y1="38" x2="286" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="326" y1="38" x2="326" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="366" y1="38" x2="366" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="406" y1="38" x2="406" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="446" y1="38" x2="446" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="486" y1="38" x2="486" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="526" y1="38" x2="526" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="566" y1="38" x2="566" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="606" y1="38" x2="606" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="646" y1="38" x2="646" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="686" y1="38" x2="686" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="726" y1="38" x2="726" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <line x1="766" y1="38" x2="766" y2="570" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
-  <rect x="6" y="38" width="788" height="532" rx="4" ry="4" fill="none" stroke="#2a4060" stroke-width="2.5"/>
-  <path d="M10,566 L10,42 L790,42" fill="none" stroke="#2e5070" stroke-width="0.8" stroke-opacity="0.5" stroke-linecap="round"/>
+  <rect width="1600" height="1000" fill="#0a0e1a"/>
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+  <rect x="6" y="38" width="1588" height="932" rx="4" ry="4" fill="#0b1120" fill-opacity="0.55" stroke="#1e2d40" stroke-width="1.5"/>
+  <line x1="6" y1="78" x2="1594" y2="78" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="118" x2="1594" y2="118" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="158" x2="1594" y2="158" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="198" x2="1594" y2="198" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="238" x2="1594" y2="238" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="278" x2="1594" y2="278" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="318" x2="1594" y2="318" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="358" x2="1594" y2="358" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="398" x2="1594" y2="398" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="438" x2="1594" y2="438" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="478" x2="1594" y2="478" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="518" x2="1594" y2="518" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="558" x2="1594" y2="558" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="598" x2="1594" y2="598" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="638" x2="1594" y2="638" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="678" x2="1594" y2="678" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="718" x2="1594" y2="718" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="758" x2="1594" y2="758" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="798" x2="1594" y2="798" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="838" x2="1594" y2="838" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="878" x2="1594" y2="878" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="918" x2="1594" y2="918" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="6" y1="958" x2="1594" y2="958" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="46" y1="38" x2="46" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="86" y1="38" x2="86" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="126" y1="38" x2="126" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="166" y1="38" x2="166" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="206" y1="38" x2="206" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="246" y1="38" x2="246" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="286" y1="38" x2="286" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="326" y1="38" x2="326" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="366" y1="38" x2="366" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="406" y1="38" x2="406" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="446" y1="38" x2="446" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="486" y1="38" x2="486" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="526" y1="38" x2="526" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="566" y1="38" x2="566" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="606" y1="38" x2="606" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="646" y1="38" x2="646" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="686" y1="38" x2="686" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="726" y1="38" x2="726" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="766" y1="38" x2="766" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="806" y1="38" x2="806" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="846" y1="38" x2="846" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="886" y1="38" x2="886" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="926" y1="38" x2="926" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="966" y1="38" x2="966" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1006" y1="38" x2="1006" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1046" y1="38" x2="1046" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1086" y1="38" x2="1086" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1126" y1="38" x2="1126" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1166" y1="38" x2="1166" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1206" y1="38" x2="1206" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1246" y1="38" x2="1246" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1286" y1="38" x2="1286" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1326" y1="38" x2="1326" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1366" y1="38" x2="1366" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1406" y1="38" x2="1406" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1446" y1="38" x2="1446" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1486" y1="38" x2="1486" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1526" y1="38" x2="1526" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <line x1="1566" y1="38" x2="1566" y2="970" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.35"/>
+  <rect x="6" y="38" width="1588" height="932" rx="4" ry="4" fill="none" stroke="#2a4060" stroke-width="2.5"/>
+  <path d="M10,966 L10,42 L1590,42" fill="none" stroke="#2e5070" stroke-width="0.8" stroke-opacity="0.5" stroke-linecap="round"/>
   <g id="layer-board-image" visibility="visible">
   </g>
   <g id="layer-grid-ref" visibility="hidden">
-    <line x1="0" y1="32" x2="0" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="50" y1="32" x2="50" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="100" y1="32" x2="100" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="32" x2="0" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="50" y1="32" x2="50" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="100" y1="32" x2="100" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
     <text x="100" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">100</text>
-    <line x1="150" y1="32" x2="150" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="200" y1="32" x2="200" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="150" y1="32" x2="150" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="200" y1="32" x2="200" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
     <text x="200" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">200</text>
-    <line x1="250" y1="32" x2="250" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="300" y1="32" x2="300" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="250" y1="32" x2="250" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="300" y1="32" x2="300" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
     <text x="300" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">300</text>
-    <line x1="350" y1="32" x2="350" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="400" y1="32" x2="400" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="350" y1="32" x2="350" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="400" y1="32" x2="400" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
     <text x="400" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">400</text>
-    <line x1="450" y1="32" x2="450" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="500" y1="32" x2="500" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="450" y1="32" x2="450" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="500" y1="32" x2="500" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
     <text x="500" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">500</text>
-    <line x1="550" y1="32" x2="550" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="600" y1="32" x2="600" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="550" y1="32" x2="550" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="600" y1="32" x2="600" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
     <text x="600" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">600</text>
-    <line x1="650" y1="32" x2="650" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="700" y1="32" x2="700" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="650" y1="32" x2="650" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="700" y1="32" x2="700" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
     <text x="700" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">700</text>
-    <line x1="750" y1="32" x2="750" y2="576" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="0" y1="32" x2="800" y2="32" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="0" y1="82" x2="800" y2="82" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="0" y1="132" x2="800" y2="132" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="750" y1="32" x2="750" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="800" y1="32" x2="800" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="800" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">800</text>
+    <line x1="850" y1="32" x2="850" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="900" y1="32" x2="900" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="900" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">900</text>
+    <line x1="950" y1="32" x2="950" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="1000" y1="32" x2="1000" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="1000" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">1000</text>
+    <line x1="1050" y1="32" x2="1050" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="1100" y1="32" x2="1100" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="1100" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">1100</text>
+    <line x1="1150" y1="32" x2="1150" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="1200" y1="32" x2="1200" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="1200" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">1200</text>
+    <line x1="1250" y1="32" x2="1250" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="1300" y1="32" x2="1300" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="1300" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">1300</text>
+    <line x1="1350" y1="32" x2="1350" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="1400" y1="32" x2="1400" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="1400" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">1400</text>
+    <line x1="1450" y1="32" x2="1450" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="1500" y1="32" x2="1500" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="1500" y="42" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">1500</text>
+    <line x1="1550" y1="32" x2="1550" y2="976" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="32" x2="1600" y2="32" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="82" x2="1600" y2="82" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="132" x2="1600" y2="132" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
     <text x="2" y="135" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">132</text>
-    <line x1="0" y1="182" x2="800" y2="182" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="0" y1="232" x2="800" y2="232" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="182" x2="1600" y2="182" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="232" x2="1600" y2="232" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
     <text x="2" y="235" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">232</text>
-    <line x1="0" y1="282" x2="800" y2="282" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="0" y1="332" x2="800" y2="332" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="282" x2="1600" y2="282" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="332" x2="1600" y2="332" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
     <text x="2" y="335" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">332</text>
-    <line x1="0" y1="382" x2="800" y2="382" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="0" y1="432" x2="800" y2="432" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="382" x2="1600" y2="382" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="432" x2="1600" y2="432" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
     <text x="2" y="435" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">432</text>
-    <line x1="0" y1="482" x2="800" y2="482" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
-    <line x1="0" y1="532" x2="800" y2="532" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="482" x2="1600" y2="482" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="532" x2="1600" y2="532" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
     <text x="2" y="535" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">532</text>
+    <line x1="0" y1="582" x2="1600" y2="582" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="632" x2="1600" y2="632" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="2" y="635" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">632</text>
+    <line x1="0" y1="682" x2="1600" y2="682" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="732" x2="1600" y2="732" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="2" y="735" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">732</text>
+    <line x1="0" y1="782" x2="1600" y2="782" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="832" x2="1600" y2="832" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="2" y="835" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">832</text>
+    <line x1="0" y1="882" x2="1600" y2="882" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <line x1="0" y1="932" x2="1600" y2="932" stroke="#1a3050" stroke-width="0.5" stroke-opacity="0.4"/>
+    <text x="2" y="935" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="7" fill="#64748b" fill-opacity="0.5">932</text>
   </g>
   <g id="layer-zones" visibility="hidden">
+  <g class="zones">
+    <g class="zone" data-zone="cpu">
+      <rect x="482" y="282" width="336" height="336" rx="8" fill="#06b6d4" fill-opacity="0.06" stroke="#06b6d4" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="486" y="278" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#06b6d4" fill-opacity="0.5" font-weight="bold">APU COMPLEX</text>
+    </g>
+    <g class="zone" data-zone="memory">
+      <rect x="82" y="94" width="788" height="158" rx="8" fill="#8b5cf6" fill-opacity="0.06" stroke="#8b5cf6" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="86" y="90" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#8b5cf6" fill-opacity="0.5" font-weight="bold">DDR3 MEMORY BANK A</text>
+    </g>
+    <g class="zone" data-zone="memory">
+      <rect x="82" y="662" width="788" height="150" rx="8" fill="#8b5cf6" fill-opacity="0.06" stroke="#8b5cf6" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="86" y="658" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#8b5cf6" fill-opacity="0.5" font-weight="bold">DDR3 MEMORY BANK B</text>
+    </g>
+    <g class="zone" data-zone="power">
+      <rect x="42" y="32" width="248" height="646" rx="8" fill="#f59e0b" fill-opacity="0.06" stroke="#f59e0b" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="46" y="28" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#f59e0b" fill-opacity="0.5" font-weight="bold">POWER DELIVERY</text>
+    </g>
+    <g class="zone" data-zone="io">
+      <rect x="942" y="62" width="576" height="241" rx="8" fill="#22c55e" fill-opacity="0.06" stroke="#22c55e" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="946" y="58" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#22c55e" fill-opacity="0.5" font-weight="bold">HDMI OUTPUT</text>
+    </g>
+    <g class="zone" data-zone="storage">
+      <rect x="962" y="272" width="556" height="596" rx="8" fill="#14b8a6" fill-opacity="0.06" stroke="#14b8a6" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="966" y="268" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#14b8a6" fill-opacity="0.5" font-weight="bold">STORAGE</text>
+    </g>
+    <g class="zone" data-zone="network">
+      <rect x="1012" y="462" width="486" height="310" rx="8" fill="#3b82f6" fill-opacity="0.06" stroke="#3b82f6" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="1016" y="458" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#3b82f6" fill-opacity="0.5" font-weight="bold">WIRELESS / NETWORKING</text>
+    </g>
+    <g class="zone" data-zone="io">
+      <rect x="1372" y="242" width="136" height="346" rx="8" fill="#22c55e" fill-opacity="0.06" stroke="#22c55e" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="1376" y="238" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#22c55e" fill-opacity="0.5" font-weight="bold">USB SUBSYSTEM</text>
+    </g>
+    <g class="zone" data-zone="debug">
+      <rect x="42" y="832" width="370" height="106" rx="8" fill="#ef4444" fill-opacity="0.06" stroke="#ef4444" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="46" y="828" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#ef4444" fill-opacity="0.5" font-weight="bold">DEBUG / JTAG</text>
+    </g>
+    <g class="zone" data-zone="power">
+      <rect x="432" y="142" width="556" height="572" rx="8" fill="#f59e0b" fill-opacity="0.06" stroke="#f59e0b" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="436" y="138" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#f59e0b" fill-opacity="0.5" font-weight="bold">APU DECOUPLING</text>
+    </g>
+    <g class="zone" data-zone="io">
+      <rect x="1232" y="832" width="266" height="106" rx="8" fill="#22c55e" fill-opacity="0.06" stroke="#22c55e" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="1236" y="828" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#22c55e" fill-opacity="0.5" font-weight="bold">FRONT PANEL</text>
+    </g>
+    <g class="zone" data-zone="debug">
+      <rect x="62" y="262" width="840" height="430" rx="8" fill="#ef4444" fill-opacity="0.06" stroke="#ef4444" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="6,4"/>
+      <text x="66" y="258" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#ef4444" fill-opacity="0.5" font-weight="bold">POWER RAIL TEST POINTS</text>
+    </g>
+  </g>
   </g>
   <g id="layer-traces" visibility="visible">
     <g class="traces">
@@ -1325,13 +1441,38 @@
     </g>
   </g>
   <g id="layer-security" visibility="hidden">
+    <g class="security-highlights">
+      <rect x="496" y="296" width="308" height="308" rx="4" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2.5" filter="url(#glow-red)"/>
+      <rect x="996" y="116" width="148" height="108" rx="4" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2.5" filter="url(#glow-red)"/>
+      <rect x="996" y="296" width="168" height="128" rx="4" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2.5" filter="url(#glow-red)"/>
+      <rect x="56" y="876" width="108" height="48" rx="4" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2.5" filter="url(#glow-red)"/>
+      <rect x="196" y="876" width="22" height="22" rx="4" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2.5" filter="url(#glow-red)"/>
+      <rect x="226" y="876" width="22" height="22" rx="4" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2.5" filter="url(#glow-red)"/>
+      <rect x="256" y="876" width="22" height="22" rx="4" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2.5" filter="url(#glow-red)"/>
+      <rect x="286" y="876" width="22" height="22" rx="4" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2.5" filter="url(#glow-red)"/>
+      <rect x="316" y="876" width="22" height="22" rx="4" fill="#ef4444" fill-opacity="0.12" stroke="#ef4444" stroke-width="2.5" filter="url(#glow-red)"/>
+    </g>
+    <g class="attack-paths">
+      <line x1="134" y1="880" x2="500" y2="575" stroke="#ef4444" stroke-width="3" stroke-opacity="0.9" stroke-linecap="round" marker-end="url(#arrow)"/>
+      <circle cx="134" cy="880" r="4" fill="#ef4444" fill-opacity="0.9" stroke="#0a0e1a" stroke-width="1"/>
+      <circle cx="500" cy="575" r="4" fill="#ef4444" fill-opacity="0.9" stroke="#0a0e1a" stroke-width="1"/>
+      <text x="317" y="719" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#fca5a5" font-weight="bold">JTAG debug access</text>
+      <line x1="800" y1="418" x2="1000" y2="376" stroke="#ef4444" stroke-width="3" stroke-opacity="0.9" stroke-linecap="round" marker-end="url(#arrow)"/>
+      <circle cx="800" cy="418" r="4" fill="#ef4444" fill-opacity="0.9" stroke="#0a0e1a" stroke-width="1"/>
+      <circle cx="1000" cy="376" r="4" fill="#ef4444" fill-opacity="0.9" stroke="#0a0e1a" stroke-width="1"/>
+      <text x="900" y="389" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#fca5a5" font-weight="bold">eMMC bus (firmware extraction)</text>
+      <line x1="800" y1="350" x2="1000" y2="216" stroke="#ef4444" stroke-width="3" stroke-opacity="0.9" stroke-linecap="round" marker-end="url(#arrow)"/>
+      <circle cx="800" cy="350" r="4" fill="#ef4444" fill-opacity="0.9" stroke="#0a0e1a" stroke-width="1"/>
+      <circle cx="1000" cy="216" r="4" fill="#ef4444" fill-opacity="0.9" stroke="#0a0e1a" stroke-width="1"/>
+      <text x="900" y="275" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#fca5a5" font-weight="bold">Southbridge (peripheral control)</text>
+    </g>
   <g class="security-panel" filter="url(#panel-shadow)">
-    <rect x="8" y="504" width="260" height="64" rx="6" fill="#111827" fill-opacity="0.92" stroke="#7f1d1d" stroke-width="1"/>
-    <rect x="18" y="516" width="8" height="8" rx="2" fill="#ef4444"/>
-    <text x="30" y="524" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="11" fill="#ef4444" font-weight="bold">Security Findings</text>
-    <line x1="18" y1="536" x2="258" y2="536" stroke="#7f1d1d" stroke-width="0.5"/>
-    <text x="18" y="544" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#ef4444" font-weight="bold">[HIGH]</text>
-    <text x="54" y="544" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#94a3b8">J5 JTAG debug — full CPU access (CWE-1191)</text>
+    <rect x="8" y="904" width="260" height="64" rx="6" fill="#111827" fill-opacity="0.92" stroke="#7f1d1d" stroke-width="1"/>
+    <rect x="18" y="916" width="8" height="8" rx="2" fill="#ef4444"/>
+    <text x="30" y="924" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="11" fill="#ef4444" font-weight="bold">Security Findings</text>
+    <line x1="18" y1="936" x2="258" y2="936" stroke="#7f1d1d" stroke-width="0.5"/>
+    <text x="18" y="944" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#ef4444" font-weight="bold">[HIGH]</text>
+    <text x="54" y="944" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#94a3b8">J5 JTAG debug — full CPU access (CWE-1191)</text>
   </g>
   </g>
   <g id="layer-power-rails" visibility="hidden">
@@ -1602,33 +1743,36 @@
   </g>
   <g id="layer-bom-panel" visibility="visible">
     <g class="bom-panel" filter="url(#panel-shadow)">
-      <rect x="568" y="42" width="220" height="168" rx="6" fill="#111827" fill-opacity="0.92" stroke="#1e293b" stroke-width="1"/>
-      <text x="578" y="64" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="11" fill="#22d3ee" font-weight="bold">Bill of Materials</text>
-      <line x1="578" y1="72" x2="778" y2="72" stroke="#1e293b" stroke-width="0.5"/>
-      <rect x="578" y="72" width="8" height="8" fill="#3b82f6" rx="2"/>
-      <text x="590" y="80" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">capacitor: 56</text>
-      <rect x="578" y="86" width="8" height="8" fill="#ef4444" rx="2"/>
-      <text x="590" y="94" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">ic: 34  (34 ID'd)</text>
-      <rect x="578" y="100" width="8" height="8" fill="#22c55e" rx="2"/>
-      <text x="590" y="108" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">resistor: 29</text>
-      <rect x="578" y="114" width="8" height="8" fill="#ec4899" rx="2"/>
-      <text x="590" y="122" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">test_point: 15</text>
-      <rect x="578" y="128" width="8" height="8" fill="#f59e0b" rx="2"/>
-      <text x="590" y="136" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">connector: 10</text>
-      <rect x="578" y="142" width="8" height="8" fill="#a855f7" rx="2"/>
-      <text x="590" y="150" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">inductor: 5</text>
-      <rect x="578" y="156" width="8" height="8" fill="#14b8a6" rx="2"/>
-      <text x="590" y="164" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">crystal: 1  (1 ID'd)</text>
-      <line x1="578" y1="174" x2="778" y2="174" stroke="#1e293b" stroke-width="0.5"/>
-      <text x="578" y="184" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b">150 parts, 35 ID'd, 68 traces, 68 nets</text>
+      <rect x="1288" y="42" width="300" height="308" rx="6" fill="#111827" fill-opacity="0.92" stroke="#1e293b" stroke-width="1"/>
+      <text x="1298" y="64" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="11" fill="#22d3ee" font-weight="bold">Bill of Materials</text>
+      <line x1="1298" y1="72" x2="1578" y2="72" stroke="#1e293b" stroke-width="0.5"/>
+      <rect x="1298" y="72" width="8" height="8" fill="#3b82f6" rx="2"/>
+      <text x="1310" y="80" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">capacitor: 56</text>
+      <rect x="1298" y="86" width="8" height="8" fill="#ef4444" rx="2"/>
+      <text x="1310" y="94" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">ic: 34  (34 ID'd)</text>
+      <rect x="1298" y="100" width="8" height="8" fill="#22c55e" rx="2"/>
+      <text x="1310" y="108" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">resistor: 29</text>
+      <rect x="1298" y="114" width="8" height="8" fill="#ec4899" rx="2"/>
+      <text x="1310" y="122" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">test_point: 15</text>
+      <rect x="1298" y="128" width="8" height="8" fill="#f59e0b" rx="2"/>
+      <text x="1310" y="136" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">connector: 10</text>
+      <rect x="1298" y="142" width="8" height="8" fill="#a855f7" rx="2"/>
+      <text x="1310" y="150" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">inductor: 5</text>
+      <rect x="1298" y="156" width="8" height="8" fill="#14b8a6" rx="2"/>
+      <text x="1310" y="164" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8">crystal: 1  (1 ID'd)</text>
+      <line x1="1298" y1="174" x2="1578" y2="174" stroke="#1e293b" stroke-width="0.5"/>
+      <text x="1298" y="184" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b">150 parts, 35 ID'd, 68 traces, 68 nets</text>
+      <line x1="1298" y1="190" x2="1578" y2="190" stroke="#1e293b" stroke-width="0.5"/>
+      <text x="1298" y="198" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#22d3ee" font-weight="bold">Security Intel</text>
+      <text x="1298" y="212" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#94a3b8">TPS54331DR — Synchronous Buck, 0.8V–25V</text>
     </g>
   </g>
   <g class="title-bar">
-    <rect width="800" height="32" fill="#111827" fill-opacity="0.92"/>
-    <line x1="0" y1="32" x2="800" y2="32" stroke="#22d3ee" stroke-width="1" stroke-opacity="0.4"/>
+    <rect width="1600" height="32" fill="#111827" fill-opacity="0.92"/>
+    <line x1="0" y1="32" x2="1600" y2="32" stroke="#22d3ee" stroke-width="1" stroke-opacity="0.4"/>
     <text x="12" y="21" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="13" fill="#22d3ee" font-weight="bold">re:trace</text>
-    <text x="80" y="21" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="11" fill="#e2e8f0">Xbox Interactive Analysis</text>
-    <text x="788" y="21" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b">150 components · 35 ID&#x27;d · 68 traces</text>
+    <text x="80" y="21" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="11" fill="#e2e8f0">Xbox One Model 1540 — Durango (AMD Liverpool APU, 28nm)</text>
+    <text x="1588" y="21" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b">150 components · 35 ID&#x27;d · 68 traces</text>
   </g>
   <g class="legend">
     <rect x="6" y="38" width="110" height="276" rx="6" fill="#111827" fill-opacity="0.85" stroke="#1e293b" stroke-width="0.5"/>
@@ -1667,99 +1811,99 @@
     <text x="28" y="284" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#94a3b8">unknown</text>
   </g>
   <g class="footer">
-    <rect y="576" width="800" height="24" fill="#111827" fill-opacity="0.92"/>
-    <line x1="0" y1="576" x2="800" y2="576" stroke="#22d3ee" stroke-width="1" stroke-opacity="0.3"/>
-    <text x="400" y="592" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b">150 components, 35 identified, 68 traces, 68 connections — re:trace 0.1.0</text>
+    <rect y="976" width="1600" height="24" fill="#111827" fill-opacity="0.92"/>
+    <line x1="0" y1="976" x2="1600" y2="976" stroke="#22d3ee" stroke-width="1" stroke-opacity="0.3"/>
+    <text x="800" y="992" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b">150 components, 35 identified, 68 traces, 68 connections — re:trace 0.1.0</text>
   </g>
   <g id="layer-controls" class="controls">
-    <rect x="628" y="40" width="160" height="488" rx="8" fill="#111827" fill-opacity="0.95" stroke="#1e293b" stroke-width="1" filter="url(#panel-shadow)"/>
-    <text x="638" y="58" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#22d3ee" font-weight="bold">VIEW PRESETS</text>
+    <rect x="1428" y="40" width="160" height="488" rx="8" fill="#111827" fill-opacity="0.95" stroke="#1e293b" stroke-width="1" filter="url(#panel-shadow)"/>
+    <text x="1438" y="58" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#22d3ee" font-weight="bold">VIEW PRESETS</text>
     <g class="preset-btn" data-preset="satellite" onclick="setPreset('satellite')" style="cursor: pointer;">
-      <rect x="638" y="74" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
-      <text x="646" y="88" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">📡 Satellite</text>
+      <rect x="1438" y="74" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
+      <text x="1446" y="88" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">📡 Satellite</text>
     </g>
     <g class="preset-btn" data-preset="analysis" onclick="setPreset('analysis')" style="cursor: pointer;">
-      <rect x="638" y="96" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
-      <text x="646" y="110" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">🔍 Analysis</text>
+      <rect x="1438" y="96" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
+      <text x="1446" y="110" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">🔍 Analysis</text>
     </g>
     <g class="preset-btn" data-preset="schematic" onclick="setPreset('schematic')" style="cursor: pointer;">
-      <rect x="638" y="118" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
-      <text x="646" y="132" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">📐 Schematic</text>
+      <rect x="1438" y="118" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
+      <text x="1446" y="132" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">📐 Schematic</text>
     </g>
     <g class="preset-btn" data-preset="xray" onclick="setPreset('xray')" style="cursor: pointer;">
-      <rect x="638" y="140" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
-      <text x="646" y="154" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">☢ X-Ray</text>
+      <rect x="1438" y="140" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
+      <text x="1446" y="154" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">☢ X-Ray</text>
     </g>
     <g class="preset-btn" data-preset="attack" onclick="setPreset('attack')" style="cursor: pointer;">
-      <rect x="638" y="162" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
-      <text x="646" y="176" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">🎯 Attack Surface</text>
+      <rect x="1438" y="162" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
+      <text x="1446" y="176" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">🎯 Attack Surface</text>
     </g>
     <g class="preset-btn" data-preset="recon" onclick="setPreset('recon')" style="cursor: pointer;">
-      <rect x="638" y="184" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
-      <text x="646" y="198" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">🔦 Recon</text>
+      <rect x="1438" y="184" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
+      <text x="1446" y="198" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">🔦 Recon</text>
     </g>
     <g class="preset-btn" data-preset="power" onclick="setPreset('power')" style="cursor: pointer;">
-      <rect x="638" y="206" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
-      <text x="646" y="220" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">⚡ Power Map</text>
+      <rect x="1438" y="206" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
+      <text x="1446" y="220" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">⚡ Power Map</text>
     </g>
     <g class="preset-btn" data-preset="zones" onclick="setPreset('zones')" style="cursor: pointer;">
-      <rect x="638" y="228" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
-      <text x="646" y="242" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">🗺 Zones</text>
+      <rect x="1438" y="228" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
+      <text x="1446" y="242" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">🗺 Zones</text>
     </g>
     <g class="preset-btn" data-preset="debug" onclick="setPreset('debug')" style="cursor: pointer;">
-      <rect x="638" y="250" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
-      <text x="646" y="264" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">🐛 Debug</text>
+      <rect x="1438" y="250" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
+      <text x="1446" y="264" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">🐛 Debug</text>
     </g>
     <g class="preset-btn" data-preset="all" onclick="setPreset('all')" style="cursor: pointer;">
-      <rect x="638" y="272" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
-      <text x="646" y="286" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">🌐 All Layers</text>
+      <rect x="1438" y="272" width="140" height="18" rx="4" fill="#1e293b" fill-opacity="0.6" class="preset-bg"/>
+      <text x="1446" y="286" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">🌐 All Layers</text>
     </g>
-    <line x1="638" y1="302" x2="778" y2="302" stroke="#1e293b" stroke-width="0.5"/>
-    <text x="638" y="320" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#22d3ee" font-weight="bold">LAYERS</text>
+    <line x1="1438" y1="302" x2="1578" y2="302" stroke="#1e293b" stroke-width="0.5"/>
+    <text x="1438" y="320" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#22d3ee" font-weight="bold">LAYERS</text>
     <g class="layer-toggle" data-layer="board-image" onclick="toggleLayer('board-image')" style="cursor: pointer;">
-      <rect x="638" y="334" width="12" height="12" rx="2" fill="#22d3ee" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-board-image"/>
-      <text x="644" y="344" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-board-image">✓</text>
-      <text x="656" y="344" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-board-image">Board Image</text>
+      <rect x="1438" y="334" width="12" height="12" rx="2" fill="#22d3ee" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-board-image"/>
+      <text x="1444" y="344" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-board-image">✓</text>
+      <text x="1456" y="344" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-board-image">Board Image</text>
     </g>
     <g class="layer-toggle" data-layer="components" onclick="toggleLayer('components')" style="cursor: pointer;">
-      <rect x="638" y="354" width="12" height="12" rx="2" fill="#22d3ee" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-components"/>
-      <text x="644" y="364" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-components">✓</text>
-      <text x="656" y="364" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-components">Components</text>
+      <rect x="1438" y="354" width="12" height="12" rx="2" fill="#22d3ee" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-components"/>
+      <text x="1444" y="364" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-components">✓</text>
+      <text x="1456" y="364" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-components">Components</text>
     </g>
     <g class="layer-toggle" data-layer="traces" onclick="toggleLayer('traces')" style="cursor: pointer;">
-      <rect x="638" y="374" width="12" height="12" rx="2" fill="#22d3ee" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-traces"/>
-      <text x="644" y="384" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-traces">✓</text>
-      <text x="656" y="384" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-traces">Traces</text>
+      <rect x="1438" y="374" width="12" height="12" rx="2" fill="#22d3ee" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-traces"/>
+      <text x="1444" y="384" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-traces">✓</text>
+      <text x="1456" y="384" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-traces">Traces</text>
     </g>
     <g class="layer-toggle" data-layer="zones" onclick="toggleLayer('zones')" style="cursor: pointer;">
-      <rect x="638" y="394" width="12" height="12" rx="2" fill="#1e293b" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-zones"/>
-      <text x="644" y="404" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-zones" style="display:none">✓</text>
-      <text x="656" y="404" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-zones">Zones</text>
+      <rect x="1438" y="394" width="12" height="12" rx="2" fill="#1e293b" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-zones"/>
+      <text x="1444" y="404" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-zones" style="display:none">✓</text>
+      <text x="1456" y="404" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-zones">Zones</text>
     </g>
     <g class="layer-toggle" data-layer="security" onclick="toggleLayer('security')" style="cursor: pointer;">
-      <rect x="638" y="414" width="12" height="12" rx="2" fill="#1e293b" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-security"/>
-      <text x="644" y="424" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-security" style="display:none">✓</text>
-      <text x="656" y="424" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-security">Security</text>
+      <rect x="1438" y="414" width="12" height="12" rx="2" fill="#1e293b" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-security"/>
+      <text x="1444" y="424" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-security" style="display:none">✓</text>
+      <text x="1456" y="424" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-security">Security</text>
     </g>
     <g class="layer-toggle" data-layer="power-rails" onclick="toggleLayer('power-rails')" style="cursor: pointer;">
-      <rect x="638" y="434" width="12" height="12" rx="2" fill="#1e293b" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-power-rails"/>
-      <text x="644" y="444" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-power-rails" style="display:none">✓</text>
-      <text x="656" y="444" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-power-rails">Power Rails</text>
+      <rect x="1438" y="434" width="12" height="12" rx="2" fill="#1e293b" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-power-rails"/>
+      <text x="1444" y="444" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-power-rails" style="display:none">✓</text>
+      <text x="1456" y="444" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-power-rails">Power Rails</text>
     </g>
     <g class="layer-toggle" data-layer="bom-panel" onclick="toggleLayer('bom-panel')" style="cursor: pointer;">
-      <rect x="638" y="454" width="12" height="12" rx="2" fill="#22d3ee" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-bom-panel"/>
-      <text x="644" y="464" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-bom-panel">✓</text>
-      <text x="656" y="464" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-bom-panel">BOM Panel</text>
+      <rect x="1438" y="454" width="12" height="12" rx="2" fill="#22d3ee" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-bom-panel"/>
+      <text x="1444" y="464" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-bom-panel">✓</text>
+      <text x="1456" y="464" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-bom-panel">BOM Panel</text>
     </g>
     <g class="layer-toggle" data-layer="net-labels" onclick="toggleLayer('net-labels')" style="cursor: pointer;">
-      <rect x="638" y="474" width="12" height="12" rx="2" fill="#1e293b" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-net-labels"/>
-      <text x="644" y="484" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-net-labels" style="display:none">✓</text>
-      <text x="656" y="484" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-net-labels">Net Labels</text>
+      <rect x="1438" y="474" width="12" height="12" rx="2" fill="#1e293b" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-net-labels"/>
+      <text x="1444" y="484" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-net-labels" style="display:none">✓</text>
+      <text x="1456" y="484" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-net-labels">Net Labels</text>
     </g>
     <g class="layer-toggle" data-layer="grid-ref" onclick="toggleLayer('grid-ref')" style="cursor: pointer;">
-      <rect x="638" y="494" width="12" height="12" rx="2" fill="#1e293b" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-grid-ref"/>
-      <text x="644" y="504" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-grid-ref" style="display:none">✓</text>
-      <text x="656" y="504" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-grid-ref">Grid Reference</text>
+      <rect x="1438" y="494" width="12" height="12" rx="2" fill="#1e293b" fill-opacity="0.8" stroke="#64748b" stroke-width="0.5" id="chk-grid-ref"/>
+      <text x="1444" y="504" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#0a0e1a" font-weight="bold" id="tick-grid-ref" style="display:none">✓</text>
+      <text x="1456" y="504" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#94a3b8" id="lbl-grid-ref">Grid Reference</text>
     </g>
   </g>
   <script type="text/javascript">

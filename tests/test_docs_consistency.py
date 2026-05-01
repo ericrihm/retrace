@@ -7,7 +7,6 @@ from pathlib import Path
 
 import pytest
 
-
 REPO_ROOT = Path(__file__).parent.parent.resolve()
 README = REPO_ROOT / "README.md"
 SHOWCASE = REPO_ROOT / "docs" / "index.html"

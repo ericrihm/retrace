@@ -29,8 +29,9 @@ def launch(share: bool = False, port: int = 7860) -> None:
         if image is None:
             return "No image provided.", None, ""
         pipeline = Pipeline()
-        import tempfile
         import os
+        import tempfile
+
         from PIL import Image as PILImage
 
         # Save the numpy array Gradio gives us to a temp file

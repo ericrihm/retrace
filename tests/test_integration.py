@@ -18,28 +18,16 @@ import numpy as np
 import pytest
 
 # ---------------------------------------------------------------------------
-# Core pipeline
-# ---------------------------------------------------------------------------
-from retrace.core.pipeline import AnalysisResult, Component, Pipeline, Trace
-
-# ---------------------------------------------------------------------------
-# Bayesian probe advisor
-# ---------------------------------------------------------------------------
-from retrace.analysis.probe_advisor import (
-    Component as AdvisorComponent,
-    Measurement,
-    ProbeAdvisor,
-)
-
-# ---------------------------------------------------------------------------
 # Constraint solver (AC-3)
 # ---------------------------------------------------------------------------
 from retrace.analysis.constraint_solver import (
-    ComponentSpec,
-    ConstraintSolver,
     NET_GROUND,
     NET_POWER,
+    ComponentSpec,
+    ConstraintSolver,
     Pin,
+)
+from retrace.analysis.constraint_solver import (
     Trace as SolverTrace,
 )
 
@@ -53,9 +41,20 @@ from retrace.analysis.cross_board import (
 )
 
 # ---------------------------------------------------------------------------
-# Component identification + BOM
+# Bayesian probe advisor
 # ---------------------------------------------------------------------------
-from retrace.identification.matcher import _COMPONENT_DB, identify_components, lookup_part
+from retrace.analysis.probe_advisor import (
+    Component as AdvisorComponent,
+)
+from retrace.analysis.probe_advisor import (
+    Measurement,
+    ProbeAdvisor,
+)
+
+# ---------------------------------------------------------------------------
+# Core pipeline
+# ---------------------------------------------------------------------------
+from retrace.core.pipeline import AnalysisResult, Component, Pipeline, Trace
 from retrace.export.bom import generate_bom
 
 # ---------------------------------------------------------------------------
@@ -64,10 +63,14 @@ from retrace.export.bom import generate_bom
 from retrace.export.svg import generate_svg
 
 # ---------------------------------------------------------------------------
+# Component identification + BOM
+# ---------------------------------------------------------------------------
+from retrace.identification.matcher import _COMPONENT_DB, identify_components, lookup_part
+
+# ---------------------------------------------------------------------------
 # Debug-interface detection plugin
 # ---------------------------------------------------------------------------
 from retrace.plugins.builtin.debug_interfaces import detect_debug_interfaces
-
 
 # ===========================================================================
 # Helpers shared across tests

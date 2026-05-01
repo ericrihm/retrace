@@ -5,7 +5,6 @@ from __future__ import annotations
 import html
 import time
 from collections import Counter
-from typing import Optional
 from urllib.parse import urlparse
 
 from retrace import __version__
@@ -720,7 +719,7 @@ def generate_html_report(
                 b64_svg = __import__("base64").b64encode(
                     svg_content.encode("utf-8")).decode("ascii")
                 comp_label = comp.marking if comp else comp_id
-                _a(f'<details style="margin-bottom: 1em;">')
+                _a('<details style="margin-bottom: 1em;">')
                 _a(f'<summary style="cursor: pointer; color: var(--accent); '
                    f'font-weight: bold;">{_esc(iface)} — {_esc(comp_label)}</summary>')
                 _a(f'<img src="data:image/svg+xml;base64,{b64_svg}" '
@@ -781,9 +780,9 @@ def generate_html_report(
                 ic_svg = generate_ic_pinout_svg(comp, width=560)
                 if ic_svg:
                     b64 = __import__("base64").b64encode(ic_svg.encode("utf-8")).decode("ascii")
-                    _a(f'<details style="margin-top: 8px;">')
-                    _a(f'<summary style="cursor: pointer; color: var(--accent); '
-                       f'font-size: 11px;">IC Pinout Diagram</summary>')
+                    _a('<details style="margin-top: 8px;">')
+                    _a('<summary style="cursor: pointer; color: var(--accent); '
+                       'font-size: 11px;">IC Pinout Diagram</summary>')
                     _a(f'<img src="data:image/svg+xml;base64,{b64}" '
                        f'alt="{_esc(part)} pinout" style="width: 100%; max-width: 560px; '
                        f'margin-top: 0.5em; border-radius: 6px;"/>')

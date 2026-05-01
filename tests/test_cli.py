@@ -574,7 +574,7 @@ def test_compare_identical_boards(runner, tmp_path):
 
 
 def test_compare_different_boards(runner, tmp_path):
-    from retrace.core.pipeline import AnalysisResult, Component, Trace
+    from retrace.core.pipeline import AnalysisResult, Component
     img_a = tmp_path / "board_v1.png"
     img_b = tmp_path / "board_v2.png"
     img_a.write_bytes(b"\x89PNG\r\n\x1a\n")

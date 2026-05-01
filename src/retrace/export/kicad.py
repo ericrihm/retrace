@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import html
 import time
 from collections import defaultdict
-from typing import Optional
 from xml.sax.saxutils import escape
 
 from retrace import __version__

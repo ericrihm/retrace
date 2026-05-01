@@ -6,7 +6,6 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -37,6 +36,7 @@ def _launch_with_gr_mock(share=False, port=7860, btn_click_spy=None):
     to avoid the numpy-can't-reload-twice problem on Python 3.14.
     """
     import sys
+
     import retrace.core.pipeline  # noqa: F401 — ensure cached before patch.dict removes it
 
     gr, demo = _make_gr_mock()
@@ -67,6 +67,7 @@ def _launch_with_gr_mock(share=False, port=7860, btn_click_spy=None):
 def test_launch_default_signature():
     """launch() should accept share and port keyword arguments with correct defaults."""
     import inspect
+
     from retrace.web import launch
 
     sig = inspect.signature(launch)
@@ -80,6 +81,7 @@ def test_launch_default_signature():
 def test_launch_returns_none_annotation():
     """launch() must be annotated -> None (string form due to __future__ annotations)."""
     import inspect
+
     from retrace.web import launch
 
     sig = inspect.signature(launch)
@@ -166,6 +168,7 @@ def test_launch_with_gradio_passes_custom_port():
 def test_scan_helper_none_image():
     """_scan(None) should return a 3-tuple with a non-empty string as first element."""
     import sys
+
     import retrace.core.pipeline  # noqa: F401 — ensure cached
 
     gr, demo = _make_gr_mock()
@@ -204,6 +207,7 @@ def _capture_scan(pipeline_mock=None):
     instead of the real Pipeline.
     """
     import sys
+
     import retrace.core.pipeline as pipeline_mod_real
 
     gr, demo = _make_gr_mock()

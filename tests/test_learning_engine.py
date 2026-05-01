@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-
 from retrace.learning.engine import (
     _load_knowledge,
     _save_knowledge,
@@ -14,7 +13,6 @@ from retrace.learning.engine import (
     record_detection,
     top_components,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers

@@ -5,7 +5,7 @@ from __future__ import annotations
 import base64
 import html as html_mod
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from retrace.core.pipeline import AnalysisResult, Component
 
@@ -372,7 +372,7 @@ def _crop_to_base64(
     image_path: str,
     bbox: tuple[int, int, int, int],
     padding_factor: float = 0.5,
-) -> tuple[Optional[str], tuple[int, int, int, int]]:
+) -> tuple[str | None, tuple[int, int, int, int]]:
     """Crop around bbox with padding, return (base64_png, crop_bbox).
 
     crop_bbox is (crop_x, crop_y, crop_w, crop_h) in original image coords.

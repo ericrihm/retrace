@@ -5,15 +5,12 @@ from __future__ import annotations
 import csv
 import io
 
-import pytest
-
 import retrace.identification.matcher as matcher_mod
-from retrace.identification.matcher import lookup_security_intel
 from retrace.core.pipeline import AnalysisResult, Component
 from retrace.export.bom import _component_to_bom_row, bom_to_csv, generate_bom
 from retrace.export.html_report import generate_html_report
 from retrace.export.svg import generate_svg
-
+from retrace.identification.matcher import lookup_security_intel
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -695,7 +692,7 @@ class TestSvgBomPanelSecurityIntel:
 # IC Pinout Diagram Tests
 # ---------------------------------------------------------------------------
 
-from retrace.export.pinout_diagram import generate_ic_pinout_svg, _IC_PINOUTS
+from retrace.export.pinout_diagram import _IC_PINOUTS, generate_ic_pinout_svg
 
 
 class TestICPinoutSVG:

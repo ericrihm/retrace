@@ -2,18 +2,13 @@
 
 from __future__ import annotations
 
-import xml.etree.ElementTree as ET
-from pathlib import Path
-
-import pytest
-
 from retrace.core.pipeline import AnalysisResult, Component, Trace
 from retrace.export.kicad import (
+    _build_nets,
+    _footprint_for,
+    _pin_count,
     generate_kicad_netlist,
     save_kicad_netlist,
-    _footprint_for,
-    _build_nets,
-    _pin_count,
 )
 
 

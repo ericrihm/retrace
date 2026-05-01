@@ -4,9 +4,7 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
-
 from retrace.sources.board_sourcer import download_all
-
 
 # ---------------------------------------------------------------------------
 # Helpers
