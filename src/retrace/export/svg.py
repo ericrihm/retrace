@@ -66,7 +66,7 @@ _FONT_SIZE = 10
 _BOX_OPACITY = "0.25"
 _STROKE_WIDTH = "1.5"
 
-BOM_PANEL_W = 220
+BOM_PANEL_W = 300
 BOM_PANEL_PAD = 10
 BOM_LINE_H = 14
 
@@ -399,7 +399,8 @@ def _render_bom_panel(result: AnalysisResult, svg_w: int, svg_h: int) -> str:
             id_counts[c.label] += 1
 
     sorted_types = sorted(counts.items(), key=lambda kv: -kv[1])
-    n_rows = len(sorted_types) + 3
+    n_intel = min(8, sum(1 for c in result.components if c.part_number))
+    n_rows = len(sorted_types) + 3 + (n_intel + 2 if n_intel else 0)
 
     panel_h = BOM_PANEL_PAD * 2 + n_rows * BOM_LINE_H + 8
     panel_x = max(12, svg_w - BOM_PANEL_W - 12)
@@ -459,6 +460,54 @@ def _render_bom_panel(result: AnalysisResult, svg_w: int, svg_h: int) -> str:
         f'font-size="9" fill="{_TEXT_LO}">{total} parts, {identified} ID\'d, '
         f'{n_traces} traces, {connected} nets</text>'
     )
+
+    try:
+        from retrace.identification.matcher import _LOOKUP
+        intel_lines: list[str] = []
+        for c in result.components:
+            if not c.part_number:
+                continue
+            entry = _LOOKUP.get(c.part_number.upper())
+            if not entry or "security_intel" not in entry:
+                continue
+            si = entry["security_intel"]
+            summary_parts: list[str] = []
+            if "debug_interfaces" in si:
+                summary_parts.append("+".join(si["debug_interfaces"]))
+            if "readout_protection" in si:
+                summary_parts.append(si["readout_protection"].split(",")[0].split("(")[0].strip())
+            if "jedec_id" in si:
+                summary_parts.append(si["jedec_id"])
+            if "topology" in si:
+                summary_parts.append(si["topology"])
+            if "output_voltage" in si:
+                v = si["output_voltage"].split(" ")[0]
+                summary_parts.append(v)
+            if summary_parts:
+                label = entry.get("part", c.part_number)
+                if len(label) > 14:
+                    label = label[:12] + ".."
+                intel_lines.append(f"{label} — {', '.join(summary_parts[:3])}")
+        if intel_lines:
+            ty += BOM_LINE_H + 2
+            parts.append(
+                f'      <line x1="{tx}" y1="{ty - 8}" '
+                f'x2="{panel_x + BOM_PANEL_W - BOM_PANEL_PAD}" '
+                f'y2="{ty - 8}" stroke="{_DIVIDER}" stroke-width="0.5"/>'
+            )
+            parts.append(
+                f'      <text x="{tx}" y="{ty}" font-family={_q(_FONT)} '
+                f'font-size="9" fill="{_ACCENT}" font-weight="bold">Security Intel</text>'
+            )
+            ty += BOM_LINE_H
+            for line_text in intel_lines[:8]:
+                parts.append(
+                    f'      <text x="{tx}" y="{ty}" font-family={_q(_FONT)} '
+                    f'font-size="8" fill="{_TEXT_MID}">{_escape(line_text)}</text>'
+                )
+                ty += BOM_LINE_H - 2
+    except Exception:
+        pass
 
     parts.append('    </g>')
     return "\n".join(parts)

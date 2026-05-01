@@ -26,6 +26,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "LQFP48",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32f030c8.pdf",
+        "security_intel": {
+                "debug_interfaces": ["SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 44)"],
+                "readout_protection": "RDP Level 0/1/2",
+                "core": "Cortex-M0",
+                "voltage_range": "2.4V–3.6V",
+            },
         "description": "ARM Cortex-M0 48MHz, 64KB Flash",
     },
     {
@@ -35,6 +42,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "LQFP48",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32f103c8.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 44)", "BOOT1 (pin 20)"],
+                "readout_protection": "RDP Level 0/1",
+                "core": "Cortex-M3",
+                "voltage_range": "2.0V–3.6V",
+            },
         "description": "ARM Cortex-M3 32-bit MCU, 72MHz, 64KB Flash",
     },
     {
@@ -44,6 +58,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "LQFP64",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32f205rg.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 60)", "BOOT1 (pin 37)"],
+                "readout_protection": "RDP Level 0/1/2",
+                "core": "Cortex-M3",
+                "voltage_range": "1.8V–3.6V",
+            },
         "description": "ARM Cortex-M3 120MHz, 1MB Flash",
     },
     {
@@ -53,6 +74,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "LQFP48",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32f303cc.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 44)"],
+                "readout_protection": "RDP Level 0/1/2",
+                "core": "Cortex-M4F",
+                "voltage_range": "2.0V–3.6V",
+            },
         "description": "ARM Cortex-M4 72MHz with FPU, DSP, 256KB Flash",
     },
     {
@@ -62,6 +90,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "UFQFPN48",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32f411ce.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 44)", "BOOT1 (pin 20)"],
+                "readout_protection": "RDP Level 0/1/2",
+                "core": "Cortex-M4F",
+                "voltage_range": "1.7V–3.6V",
+            },
         "description": "ARM Cortex-M4 84MHz, 512KB Flash",
     },
     {
@@ -71,6 +106,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "LQFP144",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32f429zi.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 138)", "BOOT1 (pin 37)"],
+                "readout_protection": "RDP Level 0/1/2",
+                "core": "Cortex-M4F",
+                "voltage_range": "1.8V–3.6V",
+            },
         "description": "ARM Cortex-M4 180MHz, 2MB Flash, FMC, TFT",
     },
     {
@@ -80,6 +122,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "TFBGA216",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32f746ng.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["BOOT0 (pin A7)"],
+                "readout_protection": "RDP Level 0/1/2",
+                "core": "Cortex-M7",
+                "voltage_range": "1.7V–3.6V",
+            },
         "description": "ARM Cortex-M7 216MHz, 1MB Flash",
     },
     {
@@ -89,6 +138,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "LQFP144",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32h743zi.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 138)"],
+                "readout_protection": "RDP Level 0/0.5/1/2",
+                "core": "Cortex-M7",
+                "voltage_range": "1.62V–3.6V",
+            },
         "description": "ARM Cortex-M7 480MHz, 2MB Flash, DP-FPU",
     },
     {
@@ -98,6 +154,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "LQFP48",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32l010c6.pdf",
+        "security_intel": {
+                "debug_interfaces": ["SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 44)"],
+                "readout_protection": "RDP Level 0/1/2",
+                "core": "Cortex-M0+",
+                "voltage_range": "1.8V–3.6V",
+            },
         "description": "ARM Cortex-M0+ ultra-low-power, 32KB Flash",
     },
     {
@@ -107,6 +170,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "LQFP48",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32l151cb.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 44)"],
+                "readout_protection": "RDP Level 0/1/2",
+                "core": "Cortex-M3",
+                "voltage_range": "1.8V–3.6V",
+            },
         "description": "ARM Cortex-M3 ultra-low-power 32MHz, 128KB Flash",
     },
     {
@@ -116,6 +186,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "LQFP64",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32l476rg.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 60)"],
+                "readout_protection": "RDP Level 0/1/2",
+                "core": "Cortex-M4F",
+                "voltage_range": "1.71V–3.6V",
+            },
         "description": "ARM Cortex-M4 80MHz ultra-low-power, 1MB Flash",
     },
     {
@@ -125,6 +202,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "LQFP32",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32g031k8.pdf",
+        "security_intel": {
+                "debug_interfaces": ["SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 31)"],
+                "readout_protection": "RDP Level 0/1/2",
+                "core": "Cortex-M0+",
+                "voltage_range": "2.0V–3.6V",
+            },
         "description": "ARM Cortex-M0+ 64MHz, 64KB Flash",
     },
     {
@@ -134,6 +218,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "LQFP64",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32g474re.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 60)"],
+                "readout_protection": "RDP Level 0/1/2",
+                "core": "Cortex-M4F",
+                "voltage_range": "1.71V–3.6V",
+            },
         "description": "ARM Cortex-M4 170MHz, HRTIM, 512KB Flash",
     },
     {
@@ -143,6 +234,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "LQFP48",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32u575ci.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 44)"],
+                "readout_protection": "RDP Level 0/0.5/1/2",
+                "core": "Cortex-M33",
+                "voltage_range": "1.71V–3.6V",
+            },
         "description": "ARM Cortex-M33 160MHz ultra-low-power, 2MB Flash",
     },
     {
@@ -152,6 +250,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "VFQFPN68",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32wb55rg.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 51)"],
+                "readout_protection": "RDP Level 0/1/2",
+                "core": "Cortex-M4F + M0+",
+                "voltage_range": "1.71V–3.6V",
+            },
         "description": "ARM Cortex-M4 + M0+ BLE/802.15.4 SoC, 1MB Flash",
     },
     {
@@ -161,6 +266,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "UFBGA73",
         "datasheet": "https://www.st.com/resource/en/datasheet/stm32wl55jc.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["BOOT0"],
+                "readout_protection": "RDP Level 0/1/2",
+                "core": "Cortex-M4 + M0+",
+                "voltage_range": "1.8V–3.6V",
+            },
         "description": "ARM Cortex-M4 + M0+ LoRa/Sub-GHz SoC",
     },
     # -----------------------------------------------------------------------
@@ -173,6 +285,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Espressif",
         "package": "Module",
         "datasheet": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG"],
+                "boot_mode_pins": ["GPIO0 (strapping)", "GPIO2 (strapping)"],
+                "readout_protection": "Flash Encryption + Secure Boot (eFuse)",
+                "core": "Xtensa LX6 dual-core",
+                "voltage_range": "2.2V–3.6V",
+            },
         "description": "Dual-core Xtensa 240MHz, WiFi+BT, 4MB Flash",
     },
     {
@@ -182,6 +301,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Espressif",
         "package": "Module",
         "datasheet": "https://www.espressif.com/sites/default/files/documentation/esp32-s2_datasheet_en.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "USB-JTAG"],
+                "boot_mode_pins": ["GPIO0 (strapping)", "GPIO46 (strapping)"],
+                "readout_protection": "Flash Encryption + Secure Boot V2 (eFuse)",
+                "core": "Xtensa LX7",
+                "voltage_range": "2.2V–3.6V",
+            },
         "description": "Xtensa LX7 240MHz, WiFi, USB OTG, 4MB Flash",
     },
     {
@@ -191,6 +317,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Espressif",
         "package": "Module",
         "datasheet": "https://www.espressif.com/sites/default/files/documentation/esp32-s3_datasheet_en.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "USB-JTAG"],
+                "boot_mode_pins": ["GPIO0 (strapping)", "GPIO46 (strapping)"],
+                "readout_protection": "Flash Encryption + Secure Boot V2 (eFuse)",
+                "core": "Xtensa LX7 dual-core",
+                "voltage_range": "2.2V–3.6V",
+            },
         "description": "Dual-core Xtensa LX7 240MHz, WiFi+BT5, AI accelerator",
     },
     {
@@ -200,6 +333,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Espressif",
         "package": "Module",
         "datasheet": "https://www.espressif.com/sites/default/files/documentation/esp32-c3_datasheet_en.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "USB-JTAG"],
+                "boot_mode_pins": ["GPIO2 (strapping)", "GPIO8 (strapping)", "GPIO9 (strapping)"],
+                "readout_protection": "Flash Encryption + Secure Boot V2 (eFuse)",
+                "core": "RISC-V",
+                "voltage_range": "2.2V–3.6V",
+            },
         "description": "RISC-V 160MHz, WiFi+BT5, 4MB Flash",
     },
     {
@@ -209,6 +349,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Espressif",
         "package": "Module",
         "datasheet": "https://www.espressif.com/sites/default/files/documentation/esp32-c6_datasheet_en.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "USB-JTAG"],
+                "boot_mode_pins": ["GPIO9 (strapping)"],
+                "readout_protection": "Flash Encryption + Secure Boot V2 (eFuse)",
+                "core": "RISC-V",
+                "voltage_range": "2.2V–3.6V",
+            },
         "description": "RISC-V 160MHz, WiFi6+BT5+802.15.4, 4MB Flash",
     },
     {
@@ -218,6 +365,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Espressif",
         "package": "Module",
         "datasheet": "https://www.espressif.com/sites/default/files/documentation/esp32-h2_datasheet_en.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "USB-JTAG"],
+                "boot_mode_pins": ["GPIO9 (strapping)"],
+                "readout_protection": "Flash Encryption + Secure Boot V2 (eFuse)",
+                "core": "RISC-V",
+                "voltage_range": "2.2V–3.6V",
+            },
         "description": "RISC-V 96MHz, BT5+802.15.4 (Zigbee/Thread), no WiFi",
     },
     {
@@ -227,6 +381,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Espressif",
         "package": "QFN32",
         "datasheet": "https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_en.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG"],
+                "boot_mode_pins": ["GPIO0", "GPIO2", "GPIO15"],
+                "readout_protection": "None (external flash only)",
+                "core": "Xtensa L106",
+                "voltage_range": "2.5V–3.6V",
+            },
         "description": "WiFi SoC, 80/160MHz, 802.11 b/g/n",
     },
     # -----------------------------------------------------------------------
@@ -239,6 +400,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "TQFP32",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/ATmega48A-PA-88A-PA-168A-PA-328-P-DS-DS40002061B.pdf",
+        "security_intel": {
+                "debug_interfaces": ["debugWIRE", "ISP"],
+                "boot_mode_pins": ["RESET (pin 1)"],
+                "readout_protection": "Lock bits (LB1/LB2)",
+                "core": "AVR 8-bit",
+                "voltage_range": "1.8V–5.5V",
+            },
         "description": "8-bit AVR, 20MHz, 32KB Flash",
     },
     {
@@ -248,6 +416,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "TQFP100",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/ATmega640-1280-1281-2560-2561-Datasheet-DS40002211A.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "ISP"],
+                "boot_mode_pins": ["RESET (pin 1)"],
+                "readout_protection": "Lock bits (LB1/LB2)",
+                "core": "AVR 8-bit",
+                "voltage_range": "4.5V–5.5V",
+            },
         "description": "8-bit AVR, 16MHz, 256KB Flash",
     },
     {
@@ -257,6 +432,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "TQFP44",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7766-8-bit-AVR-ATmega16U4-32U4_Datasheet.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "ISP"],
+                "boot_mode_pins": ["RESET (pin 13)", "HWB (pin 33)"],
+                "readout_protection": "Lock bits (LB1/LB2)",
+                "core": "AVR 8-bit",
+                "voltage_range": "2.7V–5.5V",
+            },
         "description": "8-bit AVR with native USB, 16MHz, 32KB Flash",
     },
     {
@@ -266,6 +448,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "SOIC8",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-2586-AVR-8-bit-Microcontroller-ATtiny25-ATtiny45-ATtiny85_Datasheet.pdf",
+        "security_intel": {
+                "debug_interfaces": ["debugWIRE", "ISP"],
+                "boot_mode_pins": ["RESET (pin 1)"],
+                "readout_protection": "Lock bits",
+                "core": "AVR 8-bit",
+                "voltage_range": "2.7V–5.5V",
+            },
         "description": "8-bit AVR, 20MHz, 8KB Flash, 8-pin",
     },
     {
@@ -275,6 +464,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "SOIC14",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/ATtiny24A-44A-84A-DataSheet-DS40002269A.pdf",
+        "security_intel": {
+                "debug_interfaces": ["debugWIRE", "ISP"],
+                "boot_mode_pins": ["RESET (pin 4)"],
+                "readout_protection": "Lock bits",
+                "core": "AVR 8-bit",
+                "voltage_range": "2.7V–5.5V",
+            },
         "description": "8-bit AVR, 20MHz, 8KB Flash, 14-pin",
     },
     {
@@ -284,6 +480,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "SOIC8",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-2535-AVR-ATtiny13_Datasheet.pdf",
+        "security_intel": {
+                "debug_interfaces": ["debugWIRE", "ISP"],
+                "boot_mode_pins": ["RESET (pin 1)"],
+                "readout_protection": "Lock bits",
+                "core": "AVR 8-bit",
+                "voltage_range": "2.7V–5.5V",
+            },
         "description": "8-bit AVR, 20MHz, 1KB Flash, 8-pin",
     },
     # -----------------------------------------------------------------------
@@ -296,6 +499,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "PDIP40",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/39582b.pdf",
+        "security_intel": {
+                "debug_interfaces": ["ICSP"],
+                "boot_mode_pins": ["MCLR (pin 1)"],
+                "readout_protection": "Code Protect (CP) fuse bits",
+                "core": "PIC 8-bit",
+                "voltage_range": "2.0V–5.5V",
+            },
         "description": "8-bit PIC, 20MHz, 14KB Flash",
     },
     {
@@ -305,6 +515,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "PDIP40",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/39632e.pdf",
+        "security_intel": {
+                "debug_interfaces": ["ICSP", "ICD"],
+                "boot_mode_pins": ["MCLR (pin 1)"],
+                "readout_protection": "Code Protect (CP) + Write Protect (WP) fuse bits",
+                "core": "PIC 8-bit",
+                "voltage_range": "2.0V–5.5V",
+            },
         "description": "8-bit PIC with USB, 48MHz, 32KB Flash",
     },
     {
@@ -314,6 +531,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "TQFP100",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/39747b.pdf",
+        "security_intel": {
+                "debug_interfaces": ["ICSP", "ICD"],
+                "boot_mode_pins": ["MCLR (pin 7)"],
+                "readout_protection": "Code Guard Security (GS) fuse bits",
+                "core": "PIC 16-bit",
+                "voltage_range": "2.0V–3.6V",
+            },
         "description": "16-bit PIC, 32MHz, 128KB Flash",
     },
     # -----------------------------------------------------------------------
@@ -326,6 +550,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Raspberry Pi",
         "package": "QFN56",
         "datasheet": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+        "security_intel": {
+                "debug_interfaces": ["SWD"],
+                "boot_mode_pins": ["QSPI_SS (pin 27) hold low for USB boot"],
+                "readout_protection": "None (no secure boot in hardware)",
+                "core": "Cortex-M0+ dual-core",
+                "voltage_range": "1.8V–3.3V",
+            },
         "description": "Dual Cortex-M0+, 133MHz, 264KB SRAM",
     },
     {
@@ -335,6 +566,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Nordic Semiconductor",
         "package": "QFN48",
         "datasheet": "https://infocenter.nordicsemi.com/pdf/nRF52832_PS_v1.4.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["RESET (pin P0.21)"],
+                "readout_protection": "APPROTECT (access port protection)",
+                "core": "Cortex-M4F",
+                "voltage_range": "1.7V–3.6V",
+            },
         "description": "ARM Cortex-M4 64MHz, BLE5, 512KB Flash",
     },
     {
@@ -344,6 +582,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Nordic Semiconductor",
         "package": "AQFN73",
         "datasheet": "https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["RESET (pin P0.18)"],
+                "readout_protection": "APPROTECT + Secure APPROTECT",
+                "core": "Cortex-M4F",
+                "voltage_range": "1.7V–5.5V",
+            },
         "description": "ARM Cortex-M4 64MHz, BLE5+USB+802.15.4, 1MB Flash",
     },
     {
@@ -353,6 +598,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Nordic Semiconductor",
         "package": "AQFN94",
         "datasheet": "https://infocenter.nordicsemi.com/pdf/nRF5340_PS_v1.3.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["RESET"],
+                "readout_protection": "APPROTECT + SECUREAPPROTECT + TrustZone",
+                "core": "Cortex-M33 + Cortex-M33",
+                "voltage_range": "1.7V–5.5V",
+            },
         "description": "Dual-core Cortex-M33, BLE5.3+802.15.4, 1MB Flash",
     },
     {
@@ -362,6 +614,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "VQFN48",
         "datasheet": "https://www.ti.com/lit/ds/symlink/cc2652r.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD", "cJTAG"],
+                "boot_mode_pins": ["DIO_13 (bootloader entry)", "DIO_14 (bootloader entry)"],
+                "readout_protection": "CCFG:BL_CONFIG disable + DAP lock",
+                "core": "Cortex-M4F",
+                "voltage_range": "1.8V–3.8V",
+            },
         "description": "ARM Cortex-M4 48MHz, multi-protocol (BLE/Zigbee/Thread)",
     },
     {
@@ -371,6 +630,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "PDIP20",
         "datasheet": "https://www.ti.com/lit/ds/symlink/msp430g2553.pdf",
+        "security_intel": {
+                "debug_interfaces": ["Spy-Bi-Wire", "JTAG"],
+                "boot_mode_pins": ["RST/NMI (pin 16)", "TEST (pin 17)"],
+                "readout_protection": "JTAG fuse blow (one-time)",
+                "core": "MSP430 16-bit",
+                "voltage_range": "1.8V–3.6V",
+            },
         "description": "16-bit ultra-low-power, 16MHz, 16KB Flash",
     },
     {
@@ -380,6 +646,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "TQFP48",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/SAM-D21DA1-Family-Data-Sheet-DS40001882G.pdf",
+        "security_intel": {
+                "debug_interfaces": ["SWD"],
+                "boot_mode_pins": ["RESET (pin 26)"],
+                "readout_protection": "Security bit (one-time, chip erase to clear)",
+                "core": "Cortex-M0+",
+                "voltage_range": "1.62V–3.63V",
+            },
         "description": "ARM Cortex-M0+ 48MHz, 256KB Flash, USB",
     },
     {
@@ -389,6 +662,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "LQFP144",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/SAM-E70-S70-V70-V71-Family-Data-Sheet-DS60001527E.pdf",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["ERASE (pin 138)", "TST (pin 136)"],
+                "readout_protection": "Security bit + GPNVM bits",
+                "core": "Cortex-M7",
+                "voltage_range": "1.7V–3.6V",
+            },
         "description": "ARM Cortex-M7 300MHz, 2MB Flash, EtherMAC",
     },
     {
@@ -398,6 +678,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "GigaDevice",
         "package": "LQFP48",
         "datasheet": "https://www.gigadevice.com/datasheet/gd32f103xx-datasheet/",
+        "security_intel": {
+                "debug_interfaces": ["JTAG", "SWD"],
+                "boot_mode_pins": ["BOOT0 (pin 44)", "BOOT1 (pin 20)"],
+                "readout_protection": "SPC (Security Protection Code) Level 0/1/2",
+                "core": "Cortex-M3",
+                "voltage_range": "2.6V–3.6V",
+            },
         "description": "ARM Cortex-M3 108MHz, 128KB Flash (STM32 clone)",
     },
     {
@@ -407,6 +694,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "QFN40",
         "datasheet": "https://www.ti.com/lit/ds/symlink/cc2540.pdf",
+        "security_intel": {
+                "debug_interfaces": ["Debug (CC Debugger)"],
+                "boot_mode_pins": ["P2_1 (DC pin)", "P2_2 (DD pin)"],
+                "readout_protection": "Debug lock via DBGDATA",
+                "core": "8051",
+                "voltage_range": "2.0V–3.6V",
+            },
         "description": "8051 BLE SoC, 32MHz, 256KB Flash",
     },
     {
@@ -416,6 +710,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "QFN40",
         "datasheet": "https://www.ti.com/lit/ds/symlink/cc2530.pdf",
+        "security_intel": {
+                "interface": "SPI/UART",
+                "frequency": "2.4GHz",
+                "protocol": "ZigBee / IEEE 802.15.4",
+                "debug_relevance": "ZigBee coordinator/router — sniffable with KillerBee/Wireshark",
+            },
         "description": "ZigBee/IEEE 802.15.4 SoC",
     },
     # -----------------------------------------------------------------------
@@ -428,6 +728,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "TO-220",
         "datasheet": "https://www.ti.com/lit/ds/symlink/lm7805.pdf",
+        "security_intel": {
+                "output_voltage": "5.0V fixed",
+                "enable_pin": "None (always on)",
+                "input_range": "7V–25V",
+                "current_max": "1A",
+            },
         "description": "1A linear regulator, 5V fixed output",
     },
     {
@@ -437,6 +743,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "TO-220",
         "datasheet": "https://www.ti.com/lit/ds/symlink/lm7812.pdf",
+        "security_intel": {
+                "output_voltage": "12V fixed",
+                "enable_pin": "None (always on)",
+                "input_range": "14.5V–27V",
+                "current_max": "1A",
+            },
         "description": "1A linear regulator, 12V fixed output",
     },
     {
@@ -446,6 +758,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "TO-220",
         "datasheet": "https://www.st.com/resource/en/datasheet/l78.pdf",
+        "security_intel": {
+                "output_voltage": "3.3V fixed",
+                "enable_pin": "None (always on)",
+                "input_range": "5V–20V",
+                "current_max": "1A",
+            },
         "description": "1A linear regulator, 3.3V fixed output",
     },
     {
@@ -455,6 +773,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "TO-220",
         "datasheet": "https://www.ti.com/lit/ds/symlink/lm317.pdf",
+        "security_intel": {
+                "output_voltage": "1.25V–37V adjustable",
+                "enable_pin": "None (always on)",
+                "input_range": "3V–40V",
+                "current_max": "1.5A",
+            },
         "description": "1.5A adjustable LDO, 1.25V–37V",
     },
     {
@@ -464,6 +788,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "SOT-223",
         "datasheet": "https://www.ti.com/lit/ds/symlink/lm1117.pdf",
+        "security_intel": {
+                "output_voltage": "3.3V fixed",
+                "enable_pin": "None (always on)",
+                "input_range": "4.75V–10V",
+                "current_max": "800mA",
+            },
         "description": "800mA LDO, 3.3V output",
     },
     {
@@ -473,6 +803,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "SOT-223",
         "datasheet": "https://www.ti.com/lit/ds/symlink/lm1117.pdf",
+        "security_intel": {
+                "output_voltage": "5.0V fixed",
+                "enable_pin": "None (always on)",
+                "input_range": "6.5V–15V",
+                "current_max": "800mA",
+            },
         "description": "800mA LDO, 5.0V output",
     },
     {
@@ -482,6 +818,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Advanced Monolithic Systems",
         "package": "SOT-223",
         "datasheet": "http://www.advanced-monolithic.com/pdf/ds1117.pdf",
+        "security_intel": {
+                "output_voltage": "3.3V fixed",
+                "enable_pin": "None (always on)",
+                "input_range": "4.5V–12V",
+                "current_max": "1A",
+            },
         "description": "1A LDO, adjustable/fixed 1.5V–5V",
     },
     {
@@ -491,6 +833,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Advanced Monolithic Systems",
         "package": "SOT-223",
         "datasheet": "http://www.advanced-monolithic.com/pdf/ds1117.pdf",
+        "security_intel": {
+                "output_voltage": "1.8V fixed",
+                "enable_pin": "None (always on)",
+                "input_range": "3V–12V",
+                "current_max": "1A",
+            },
         "description": "1A LDO, 1.8V fixed output",
     },
     {
@@ -500,6 +848,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Diodes Inc",
         "package": "SOT-25",
         "datasheet": "https://www.diodes.com/assets/Datasheets/AP2112.pdf",
+        "security_intel": {
+                "output_voltage": "3.3V fixed",
+                "enable_pin": "EN (pin 3, active high)",
+                "input_range": "2.5V–6V",
+                "current_max": "600mA",
+            },
         "description": "600mA LDO, 3.3V, CMOS low dropout",
     },
     {
@@ -509,6 +863,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "MSOP-8",
         "datasheet": "https://www.ti.com/lit/ds/symlink/tps7a33.pdf",
+        "security_intel": {
+                "output_voltage": "Adjustable (set by resistor divider)",
+                "enable_pin": "EN (pin 5, active high)",
+                "input_range": "1.4V–6.5V",
+                "current_max": "100mA",
+            },
         "description": "100mA ultra-low-noise LDO, adjustable",
     },
     {
@@ -518,6 +878,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "SOT-23",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/20001826D.pdf",
+        "security_intel": {
+                "output_voltage": "3.3V fixed",
+                "enable_pin": "None (always on)",
+                "input_range": "2.3V–6V",
+                "current_max": "250mA",
+            },
         "description": "250mA low quiescent LDO, 3.3V",
     },
     {
@@ -527,6 +893,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "onsemi",
         "package": "SOT-23-5",
         "datasheet": "https://www.onsemi.com/pdf/datasheet/ncv8114a-d.pdf",
+        "security_intel": {
+                "output_voltage": "3.3V fixed",
+                "enable_pin": "EN (pin 3, active high)",
+                "input_range": "2.5V–5.5V",
+                "current_max": "150mA",
+            },
         "description": "150mA LDO, 3.3V, low noise",
     },
     {
@@ -536,6 +908,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Richtek",
         "package": "SOT-23-5",
         "datasheet": "https://www.richtek.com/assets/product_file/RT9013/DS9013-08.pdf",
+        "security_intel": {
+                "output_voltage": "3.3V fixed",
+                "enable_pin": "EN (pin 3, active high)",
+                "input_range": "2.5V–5.5V",
+                "current_max": "500mA",
+            },
         "description": "500mA LDO, 3.3V, low noise",
     },
     {
@@ -545,6 +923,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "MaxLinear",
         "package": "SOT-23-5",
         "datasheet": "https://www.maxlinear.com/ds/spx3819.pdf",
+        "security_intel": {
+                "output_voltage": "3.3V fixed",
+                "enable_pin": "EN (pin 3, active high)",
+                "input_range": "2.5V–6V",
+                "current_max": "500mA",
+            },
         "description": "500mA LDO, 3.3V fixed",
     },
     {
@@ -554,6 +938,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "SOT-223",
         "datasheet": "https://www.ti.com/lit/ds/symlink/tlv1117.pdf",
+        "security_intel": {
+                "output_voltage": "3.3V fixed",
+                "enable_pin": "None (always on)",
+                "input_range": "4.75V–10V",
+                "current_max": "800mA",
+            },
         "description": "800mA LDO, 3.3V, TI enhanced 1117",
     },
     # -----------------------------------------------------------------------
@@ -566,6 +956,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Monolithic Power Systems",
         "package": "TSOT23-8",
         "datasheet": "https://www.monolithicpower.com/pub/media/document/MP2315_r1.0.pdf",
+        "security_intel": {
+                "output_voltage": "0.6V–Vin adjustable",
+                "enable_pin": "EN (pin 7, active high)",
+                "input_range": "4.5V–24V",
+                "current_max": "3A",
+                "topology": "Synchronous Buck",
+            },
         "description": "3A high-efficiency buck converter",
     },
     {
@@ -575,6 +972,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "WSON-8",
         "datasheet": "https://www.ti.com/lit/ds/symlink/tps62160.pdf",
+        "security_intel": {
+                "output_voltage": "Adjustable (0.9V–6V)",
+                "enable_pin": "EN (pin 6)",
+                "input_range": "3V–17V",
+                "current_max": "1A",
+                "topology": "Buck",
+            },
         "description": "1A step-down converter, 3–17V input",
     },
     {
@@ -584,6 +988,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "VSON-10",
         "datasheet": "https://www.ti.com/lit/ds/symlink/tps63020.pdf",
+        "security_intel": {
+                "output_voltage": "Adjustable (1.2V–5.5V)",
+                "enable_pin": "EN (pin 11)",
+                "input_range": "1.8V–5.5V",
+                "current_max": "2A",
+                "topology": "Buck-Boost",
+            },
         "description": "2A buck-boost converter, Li-ion range",
     },
     {
@@ -593,6 +1004,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Analog Devices",
         "package": "SSOP28",
         "datasheet": "https://www.analog.com/media/en/technical-documentation/data-sheets/3780fb.pdf",
+        "security_intel": {
+                "output_voltage": "0.8V–30V adjustable",
+                "enable_pin": "RUN (pin 13)",
+                "input_range": "4V–36V",
+                "current_max": "10A",
+                "topology": "Synchronous Buck-Boost",
+            },
         "description": "High-efficiency synchronous buck-boost, 4–30V",
     },
     {
@@ -602,6 +1020,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Monolithic Power Systems",
         "package": "SOIC8",
         "datasheet": "https://www.monolithicpower.com/pub/media/document/MP1584_r1.0.pdf",
+        "security_intel": {
+                "output_voltage": "0.8V–25V adjustable",
+                "enable_pin": "EN (pin 7, active high)",
+                "input_range": "4.5V–28V",
+                "current_max": "3A",
+                "topology": "Buck",
+            },
         "description": "3A buck converter, 4.5–28V input",
     },
     {
@@ -611,6 +1036,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Monolithic Power Systems",
         "package": "SOIC8",
         "datasheet": "https://www.monolithicpower.com/pub/media/document/MP2307_r1.9.pdf",
+        "security_intel": {
+                "output_voltage": "0.925V–20V adjustable",
+                "enable_pin": "EN (pin 5)",
+                "input_range": "4.75V–23V",
+                "current_max": "3A",
+                "topology": "Synchronous Buck",
+            },
         "description": "3A 23V synchronous rectified step-down",
     },
     {
@@ -620,6 +1052,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Richtek",
         "package": "SOT-23-5",
         "datasheet": "https://www.richtek.com/assets/product_file/RT8059/DS8059-02.pdf",
+        "security_intel": {
+                "output_voltage": "0.6V–Vin adjustable",
+                "enable_pin": "EN (pin 3)",
+                "input_range": "2.3V–5.5V",
+                "current_max": "1.5A",
+                "topology": "PWM Buck",
+            },
         "description": "1.5A PWM buck converter, 0.6V–Vin output",
     },
     {
@@ -629,6 +1068,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Silergy",
         "package": "SOT-23-5",
         "datasheet": "https://www.silergy.com/download/SY8089A.pdf",
+        "security_intel": {
+                "output_voltage": "0.6V–Vin adjustable",
+                "enable_pin": "EN (pin 3)",
+                "input_range": "2.5V–5.5V",
+                "current_max": "2A",
+                "topology": "Synchronous Buck",
+            },
         "description": "2A synchronous buck converter, 1MHz",
     },
     {
@@ -638,6 +1084,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Diodes Inc",
         "package": "SOT-23-6",
         "datasheet": "https://www.diodes.com/assets/Datasheets/AP3418.pdf",
+        "security_intel": {
+                "output_voltage": "0.6V–Vin adjustable",
+                "enable_pin": "EN (pin 4)",
+                "input_range": "2.5V–5.5V",
+                "current_max": "1.2A",
+                "topology": "Synchronous Buck",
+            },
         "description": "1.2A synchronous buck converter",
     },
     {
@@ -647,6 +1100,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "SOIC8",
         "datasheet": "https://www.ti.com/lit/ds/symlink/tps54331.pdf",
+        "security_intel": {
+                "output_voltage": "0.8V–25V adjustable",
+                "enable_pin": "EN (pin 3)",
+                "input_range": "3.5V–28V",
+                "current_max": "3A",
+                "topology": "Synchronous Buck",
+            },
         "description": "3A 28V input synchronous buck converter",
     },
     {
@@ -656,6 +1116,13 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "TO-263-5",
         "datasheet": "https://www.ti.com/lit/ds/symlink/lm2596.pdf",
+        "security_intel": {
+                "output_voltage": "5.0V fixed",
+                "enable_pin": "ON/OFF (pin 5, active low)",
+                "input_range": "7V–40V",
+                "current_max": "3A",
+                "topology": "Buck",
+            },
         "description": "3A step-down voltage regulator, 5V fixed",
     },
     # -----------------------------------------------------------------------
@@ -668,6 +1135,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "WCH",
         "package": "SOP16",
         "datasheet": "https://www.wch-ic.com/downloads/CH340DS1_PDF.html",
+        "security_intel": {"interface": "USB 2.0 Full-Speed → UART", "baud_max": "2Mbps", "debug_relevance": "UART console access — check for serial boot loaders"},
         "description": "USB-to-UART bridge",
     },
     {
@@ -677,6 +1145,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "WCH",
         "package": "SOP16",
         "datasheet": "https://www.wch-ic.com/downloads/CH340DS1_PDF.html",
+        "security_intel": {"interface": "USB 2.0 Full-Speed → UART (no ext crystal)", "baud_max": "2Mbps", "debug_relevance": "UART console access — check for serial boot loaders"},
         "description": "USB-to-UART with internal crystal",
     },
     {
@@ -686,6 +1155,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "WCH",
         "package": "ESSOP10",
         "datasheet": "https://www.wch-ic.com/downloads/CH340DS1_PDF.html",
+        "security_intel": {"interface": "USB 2.0 Full-Speed → UART", "baud_max": "2Mbps", "debug_relevance": "UART console access — compact form factor"},
         "description": "USB-to-UART compact package",
     },
     {
@@ -695,6 +1165,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "FTDI",
         "package": "SSOP28",
         "datasheet": "https://ftdichip.com/wp-content/uploads/2020/08/DS_FT232R.pdf",
+        "security_intel": {"interface": "USB 2.0 Full-Speed → UART/FIFO", "baud_max": "3Mbps", "debug_relevance": "UART console — also supports bit-bang GPIO for SPI/I2C"},
         "description": "USB-to-UART/FIFO, 3Mbaud",
     },
     {
@@ -704,6 +1175,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "FTDI",
         "package": "LQFP64",
         "datasheet": "https://ftdichip.com/wp-content/uploads/2020/07/DS_FT2232H.pdf",
+        "security_intel": {"interface": "USB 2.0 Hi-Speed → dual UART/FIFO/SPI/I2C/JTAG", "baud_max": "12Mbps", "debug_relevance": "JTAG/SWD adapter — Channel A: MPSSE (JTAG), Channel B: UART. OpenOCD compatible"},
         "description": "Dual USB HS UART/FIFO/SPI/I2C/JTAG adapter",
     },
     {
@@ -713,6 +1185,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "FTDI",
         "package": "LQFP64",
         "datasheet": "https://ftdichip.com/wp-content/uploads/2020/07/DS_FT4232H.pdf",
+        "security_intel": {"interface": "USB 2.0 Hi-Speed → quad UART", "baud_max": "12Mbps", "debug_relevance": "Multi-channel debug — Channels A/B: MPSSE capable (JTAG/SPI), C/D: UART only"},
         "description": "Quad USB HS UART adapter",
     },
     {
@@ -722,6 +1195,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Silicon Labs",
         "package": "QFN28",
         "datasheet": "https://www.silabs.com/documents/public/data-sheets/CP2102-9.pdf",
+        "security_intel": {"interface": "USB 2.0 Full-Speed → UART", "baud_max": "3Mbps", "debug_relevance": "UART console access — GPIO available for hardware flow control"},
         "description": "USB-to-UART single chip bridge",
     },
     {
@@ -731,6 +1205,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Silicon Labs",
         "package": "QFN24",
         "datasheet": "https://www.silabs.com/documents/public/data-sheets/cp2104.pdf",
+        "security_intel": {"interface": "USB 2.0 Full-Speed → UART + 4 GPIO", "baud_max": "2Mbps", "debug_relevance": "UART + GPIO — GPIOs can control BOOT0/RESET for auto-programming"},
         "description": "Single-chip USB-to-UART with 4 GPIO",
     },
     {
@@ -740,6 +1215,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Maxim",
         "package": "TSSOP16",
         "datasheet": "https://datasheets.maximintegrated.com/en/ds/MAX3222-MAX3241.pdf",
+        "security_intel": {"interface": "RS-232 level shifter (3.3V logic ↔ ±6V RS-232)", "baud_max": "250kbps", "debug_relevance": "RS-232 serial console — common on industrial/networking equipment"},
         "description": "3V RS-232 transceiver, 2 TX / 2 RX",
     },
     {
@@ -749,6 +1225,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Maxim",
         "package": "PDIP16",
         "datasheet": "https://datasheets.maximintegrated.com/en/ds/MAX220-MAX249.pdf",
+        "security_intel": {"interface": "RS-232 level shifter (5V logic ↔ ±9V RS-232)", "baud_max": "120kbps", "debug_relevance": "RS-232 serial console — presence indicates legacy serial management port"},
         "description": "5V RS-232 transceiver with internal charge pump",
     },
     # -----------------------------------------------------------------------
@@ -761,6 +1238,14 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Winbond",
         "package": "SOP8",
         "datasheet": "https://www.winbond.com/resource-files/w25q128jv%20revf%2003272018%20plus.pdf",
+        "security_intel": {
+                "interface": "SPI (modes 0, 3) / Dual / Quad",
+                "read_cmd": "0x03 (Read), 0x0B (Fast Read)",
+                "jedec_id": "0xEF4018",
+                "write_protect_pin": "WP# (pin 3)",
+                "capacity": "128Mbit (16MB)",
+                "flashrom_support": "Yes — flashrom -p <programmer> -c W25Q128.V",
+            },
         "description": "128Mbit SPI NOR Flash",
     },
     {
@@ -770,6 +1255,14 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Winbond",
         "package": "SOP8",
         "datasheet": "https://www.winbond.com/resource-files/w25q64jv%20revj%2003272018%20plus.pdf",
+        "security_intel": {
+                "interface": "SPI (modes 0, 3) / Dual / Quad",
+                "read_cmd": "0x03 (Read), 0x0B (Fast Read)",
+                "jedec_id": "0xEF4017",
+                "write_protect_pin": "WP# (pin 3)",
+                "capacity": "64Mbit (8MB)",
+                "flashrom_support": "Yes — flashrom -p <programmer> -c W25Q64.V",
+            },
         "description": "64Mbit SPI NOR Flash",
     },
     {
@@ -779,6 +1272,14 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Winbond",
         "package": "SOP8",
         "datasheet": "https://www.winbond.com/resource-files/w25q32jv%20revg%2003272018%20plus.pdf",
+        "security_intel": {
+                "interface": "SPI (modes 0, 3) / Dual / Quad",
+                "read_cmd": "0x03 (Read), 0x0B (Fast Read)",
+                "jedec_id": "0xEF4016",
+                "write_protect_pin": "WP# (pin 3)",
+                "capacity": "32Mbit (4MB)",
+                "flashrom_support": "Yes — flashrom -p <programmer> -c W25Q32.V",
+            },
         "description": "32Mbit SPI NOR Flash",
     },
     {
@@ -788,6 +1289,14 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Adesto",
         "package": "SOP8",
         "datasheet": "https://www.adestotech.com/wp-content/uploads/DS-AT25SF128A_047.pdf",
+        "security_intel": {
+                "interface": "SPI (modes 0, 3) / Dual / Quad",
+                "read_cmd": "0x03 (Read), 0x0B (Fast Read)",
+                "jedec_id": "0x1F8901",
+                "write_protect_pin": "WP# (pin 3)",
+                "capacity": "128Mbit (16MB)",
+                "flashrom_support": "Yes — flashrom -p <programmer>",
+            },
         "description": "128Mbit SPI Flash, industrial grade",
     },
     {
@@ -797,6 +1306,14 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Macronix",
         "package": "SOP8",
         "datasheet": "https://www.macronix.com/Lists/Datasheet/Attachments/7395/MX25L12835F,%203V,%20128Mb,%20v1.6.pdf",
+        "security_intel": {
+                "interface": "SPI (modes 0, 3) / Dual / Quad",
+                "read_cmd": "0x03 (Read), 0x0B (Fast Read)",
+                "jedec_id": "0xC22018",
+                "write_protect_pin": "WP# (pin 3)",
+                "capacity": "128Mbit (16MB)",
+                "flashrom_support": "Yes — flashrom -p <programmer> -c MX25L12835F/MX25L12845E/MX25L12865E",
+            },
         "description": "128Mbit SPI NOR Flash, 3V",
     },
     {
@@ -806,6 +1323,14 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "SOP8",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/S71271_04.pdf",
+        "security_intel": {
+                "interface": "SPI (modes 0, 3)",
+                "read_cmd": "0x03 (Read), 0x0B (Fast Read)",
+                "jedec_id": "0xBF2541",
+                "write_protect_pin": "WP# (pin 3)",
+                "capacity": "16Mbit (2MB)",
+                "flashrom_support": "Yes — flashrom -p <programmer> -c SST25VF016B",
+            },
         "description": "16Mbit SPI Serial Flash",
     },
     {
@@ -815,6 +1340,14 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "GigaDevice",
         "package": "SOP8",
         "datasheet": "https://www.gigadevice.com/datasheet/gd25q64c/",
+        "security_intel": {
+                "interface": "SPI (modes 0, 3) / Dual / Quad",
+                "read_cmd": "0x03 (Read), 0x0B (Fast Read)",
+                "jedec_id": "0xC84017",
+                "write_protect_pin": "WP# (pin 3)",
+                "capacity": "64Mbit (8MB)",
+                "flashrom_support": "Yes — flashrom -p <programmer> -c GD25Q64(B)",
+            },
         "description": "64Mbit SPI NOR Flash",
     },
     {
@@ -824,6 +1357,14 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "ISSI",
         "package": "SOP8",
         "datasheet": "https://www.issi.com/WW/pdf/IS25LP128F.pdf",
+        "security_intel": {
+                "interface": "SPI (modes 0, 3) / Dual / Quad",
+                "read_cmd": "0x03 (Read), 0x0B (Fast Read)",
+                "jedec_id": "0x9D6018",
+                "write_protect_pin": "WP# (pin 3)",
+                "capacity": "128Mbit (16MB)",
+                "flashrom_support": "Yes — flashrom -p <programmer>",
+            },
         "description": "128Mbit SPI NOR Flash, 133MHz",
     },
     {
@@ -833,6 +1374,14 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Infineon",
         "package": "SOP8",
         "datasheet": "https://www.infineon.com/dgdl/Infineon-S25FL256L-DataSheet-v05_00-EN.pdf",
+        "security_intel": {
+                "interface": "SPI (modes 0, 3) / Dual / Quad",
+                "read_cmd": "0x03 (Read), 0x0B (Fast Read), 0x13 (4-byte addr)",
+                "jedec_id": "0x010219",
+                "write_protect_pin": "WP# (pin 3)",
+                "capacity": "256Mbit (32MB)",
+                "flashrom_support": "Yes — flashrom -p <programmer> -c S25FL256S......0",
+            },
         "description": "256Mbit SPI NOR Flash",
     },
     # -----------------------------------------------------------------------
@@ -845,6 +1394,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "SOIC8",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/doc0670.pdf",
+        "security_intel": {"interface": "I2C (addr 0x50–0x57)", "write_protect_pin": "WP (pin 7)", "capacity": "256Kbit (32KB)"},
         "description": "256Kbit I2C EEPROM",
     },
     {
@@ -854,6 +1404,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "SOIC8",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/doc0180.pdf",
+        "security_intel": {"interface": "I2C (addr 0x50–0x57)", "write_protect_pin": "WP (pin 7)", "capacity": "2Kbit (256B)"},
         "description": "2Kbit I2C EEPROM, 1M erase/write",
     },
     # -----------------------------------------------------------------------
@@ -866,6 +1417,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Nordic Semiconductor",
         "package": "QFN20",
         "datasheet": "https://infocenter.nordicsemi.com/pdf/nRF24L01P_PS_v1.0.pdf",
+        "security_intel": {
+                "interface": "SPI",
+                "frequency": "2.4GHz ISM",
+                "protocol": "Proprietary / ShockBurst",
+                "debug_relevance": "Wireless sniffing — known protocol weaknesses (no encryption by default)",
+            },
         "description": "2.4GHz RF transceiver, -6dBm to 0dBm",
     },
     {
@@ -875,6 +1432,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "QFN20",
         "datasheet": "https://www.ti.com/lit/ds/symlink/cc1101.pdf",
+        "security_intel": {
+                "interface": "SPI",
+                "frequency": "315/433/868/915MHz Sub-GHz",
+                "protocol": "FSK/OOK/MSK",
+                "debug_relevance": "Sub-GHz RF — can be used for replay attacks if OOK; popular in garage/alarm systems",
+            },
         "description": "Sub-1GHz RF transceiver, 315/433/868/915 MHz",
     },
     {
@@ -884,6 +1447,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Semtech",
         "package": "TQFN28",
         "datasheet": "https://semtech.my.salesforce.com/sfc/p/#E0000000JelG/a/2R000000HT76/7Nka9W5WgugoZe.xwIHJy6ebj1hW8UJ.CSjV7p3nSyw",
+        "security_intel": {
+                "interface": "SPI",
+                "frequency": "868/915MHz",
+                "protocol": "LoRa / FSK",
+                "debug_relevance": "Long-range RF — LoRa packets can be intercepted with SDR",
+            },
         "description": "LoRa 868/915 MHz transceiver",
     },
     {
@@ -893,6 +1462,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Semtech",
         "package": "HCLGA24",
         "datasheet": "https://semtech.my.salesforce.com/sfc/p/#E0000000JelG/a/2R000000Un7F/bOssk1oDB7V.pXj1sEKR_T8G0gQSrGXxFcVSxX2WEJM",
+        "security_intel": {
+                "interface": "SPI",
+                "frequency": "150–960MHz",
+                "protocol": "LoRa / (G)FSK",
+                "debug_relevance": "Next-gen LoRa — improved crypto support but still application-layer dependent",
+            },
         "description": "LoRa 868/915 MHz next-gen transceiver",
     },
     {
@@ -902,6 +1477,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Realtek",
         "package": "QFN48",
         "datasheet": "https://www.realtek.com/en/products/wireless-lan-ics/item/rtl8720dn",
+        "security_intel": {
+                "interface": "SDIO/UART/SPI",
+                "frequency": "2.4GHz + 5GHz",
+                "protocol": "WiFi 5 + BT 5",
+                "debug_relevance": "Dual-band WiFi — look for UART debug console on secondary interface",
+            },
         "description": "Dual-band WiFi5+BT5 combo, ARM Cortex-M33+M0",
     },
     {
@@ -911,6 +1492,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Infineon",
         "package": "WLBGA",
         "datasheet": "https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-wi-fi-plus-bluetooth-combos/cyw43455/",
+        "security_intel": {
+                "interface": "SDIO",
+                "frequency": "2.4GHz + 5GHz",
+                "protocol": "WiFi 5 + BT 5",
+                "debug_relevance": "RPi WiFi combo — firmware loaded at boot from host; monitor SDIO bus",
+            },
         "description": "WiFi5+BT5 combo (Raspberry Pi CM4/Zero2W)",
     },
     {
@@ -920,6 +1507,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "MediaTek",
         "package": "QFN88",
         "datasheet": "https://labs.mediatek.com/fileMedia/download/9ef51e98-49b1-489a-b27e-391bac9f7bf3",
+        "security_intel": {
+                "interface": "PCIe/USB/UART/SPI",
+                "frequency": "2.4GHz",
+                "protocol": "WiFi 4 (802.11n)",
+                "debug_relevance": "Linux-based SoC — UART console at 57600 baud typical; U-Boot accessible",
+            },
         "description": "MIPS 580MHz WiFi SoC, 802.11n",
     },
     {
@@ -929,6 +1522,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "QFN40",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/ATWILC1000-MR110xB-DS40002158B.pdf",
+        "security_intel": {
+                "interface": "SPI/SDIO",
+                "frequency": "2.4GHz",
+                "protocol": "WiFi (802.11 b/g/n)",
+                "debug_relevance": "WiFi link controller — host-controlled, FW loaded from host SPI flash",
+            },
         "description": "IEEE 802.11 b/g/n WiFi link controller",
     },
     {
@@ -938,6 +1537,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "UDFN8",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/ATECC608A-TFLXTLSS-CryptoAuthentication-DS40002007B.pdf",
+        "security_intel": {
+                "interface": "I2C (0x60 default)",
+                "certification": "FIPS-compliant",
+                "key_storage": "16 key slots, hardware ECDH/ECDSA P-256",
+                "debug_relevance": "Crypto engine — if I2C bus is accessible, slot configs can be read (but keys can't)",
+            },
         "description": "CryptoAuthentication device, ECDH/ECDSA",
     },
     # -----------------------------------------------------------------------
@@ -950,6 +1555,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Bosch",
         "package": "LGA-8",
         "datasheet": "https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme280-ds002.pdf",
+        "security_intel": {"interface": "I2C (0x76/0x77) or SPI", "debug_relevance": "Environmental sensor — I2C/SPI bus presence indicator"},
         "description": "Temp/humidity/pressure combo sensor, I2C/SPI",
     },
     {
@@ -959,6 +1565,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Bosch",
         "package": "LGA-8",
         "datasheet": "https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmp280-ds001.pdf",
+        "security_intel": {"interface": "I2C or SPI", "debug_relevance": "Sensor — I2C/SPI bus presence indicator"},
         "description": "Barometric pressure/temperature sensor, I2C/SPI",
     },
     {
@@ -968,6 +1575,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "TDK InvenSense",
         "package": "QFN24",
         "datasheet": "https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf",
+        "security_intel": {"interface": "I2C or SPI", "debug_relevance": "Sensor — I2C/SPI bus presence indicator"},
         "description": "6-axis IMU (3-axis gyro + 3-axis accel), I2C",
     },
     {
@@ -977,6 +1585,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Analog Devices",
         "package": "LGA-14",
         "datasheet": "https://www.analog.com/media/en/technical-documentation/data-sheets/adxl345.pdf",
+        "security_intel": {"interface": "I2C or SPI", "debug_relevance": "Sensor — I2C/SPI bus presence indicator"},
         "description": "3-axis digital accelerometer, SPI/I2C, ±16g",
     },
     {
@@ -1004,6 +1613,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Sensirion",
         "package": "DFN-8",
         "datasheet": "https://sensirion.com/media/documents/213E6A3B/63A5A569/Datasheet_SHT3x_DIS.pdf",
+        "security_intel": {"interface": "I2C or SPI", "debug_relevance": "Sensor — I2C/SPI bus presence indicator"},
         "description": "High-accuracy temperature/humidity, I2C",
     },
     {
@@ -1070,6 +1680,7 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Texas Instruments",
         "package": "TSSOP20",
         "datasheet": "https://www.ti.com/lit/ds/symlink/pcm5102a.pdf",
+        "security_intel": {"interface": "I2S", "debug_relevance": "Audio codec — I2S bus presence indicator"},
         "description": "2VRMS 112dB 384kHz I2S DAC",
     },
     {
@@ -1091,6 +1702,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Infineon",
         "package": "QFN-32",
         "datasheet": "https://www.infineon.com/dgdl/Infineon-SLB9670VQ12-DataSheet-v14_10-EN.pdf",
+        "security_intel": {
+                "interface": "SPI (TPM 2.0 PTP)",
+                "certification": "FIPS 140-2 Level 1, CC EAL4+",
+                "key_storage": "RSA-2048, ECC P-256, SHA-256 PCR banks",
+                "attestation": "Remote attestation via TPM2_Quote, Endorsement Key (EK) certificate",
+            },
         "description": "TPM 2.0, SPI interface, FIPS 140-2 certified",
     },
     {
@@ -1100,6 +1717,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Nuvoton",
         "package": "QFP-32",
         "datasheet": "https://www.nuvoton.com/resource-files/NPCT750_DS_Ver1.0.pdf",
+        "security_intel": {
+                "interface": "LPC (TPM 2.0 PTP)",
+                "certification": "FIPS 140-2 Level 2",
+                "key_storage": "RSA-2048, ECC P-256, SHA-256 PCR banks",
+                "attestation": "Remote attestation, platform-specific EK",
+            },
         "description": "TPM 2.0, LPC interface",
     },
     {
@@ -1109,6 +1732,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "UFQFPN-32",
         "datasheet": "https://www.st.com/resource/en/datasheet/st33tphf2espi.pdf",
+        "security_intel": {
+                "interface": "SPI (TPM 2.0 PTP)",
+                "certification": "CC EAL4+",
+                "key_storage": "RSA-2048, ECC P-256/P-384, SHA-256/384 PCR banks",
+                "attestation": "Remote attestation via TPM2_Quote, ST-provided EK cert",
+            },
         "description": "TPM 2.0, SPI interface, Common Criteria EAL4+",
     },
     # -----------------------------------------------------------------------
@@ -1121,6 +1750,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "NXP",
         "package": "HX2QFN-20",
         "datasheet": "https://www.nxp.com/docs/en/data-sheet/SE050-DATASHEET.pdf",
+        "security_intel": {
+                "interface": "I2C (configurable address)",
+                "certification": "CC EAL 6+ (JCOP 4 SE)",
+                "key_storage": "RSA up to 4096, ECC up to P-521, AES-256",
+                "debug_relevance": "High-assurance SE — applet-based; I2C bus sniffing reveals APDUs but not keys",
+            },
         "description": "Secure Element, I2C, IoT security middleware, CC EAL 6+",
     },
     {
@@ -1130,6 +1765,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Microchip",
         "package": "UDFN-8",
         "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/ATECC608B-CryptoAuthentication-Device-Summary-Data-Sheet-DS40002239B.pdf",
+        "security_intel": {
+                "interface": "I2C (0x6A default, configurable)",
+                "certification": "FIPS-compliant",
+                "key_storage": "16 key slots, hardware ECDH/ECDSA P-256",
+                "debug_relevance": "Crypto engine — B revision adds Trust&GO pre-provisioned mode",
+            },
         "description": "CryptoAuthentication device, ECDH/ECDSA, hardware key storage (B revision)",
     },
     {
@@ -1139,6 +1780,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Infineon",
         "package": "SPI",
         "datasheet": "https://www.infineon.com/cms/en/product/security-smart-card-solutions/optiga-embedded-security-solutions/optiga-trust/",
+        "security_intel": {
+                "interface": "SPI (configurable)",
+                "certification": "CC EAL 5+ / NIST SP 800-90A",
+                "key_storage": "Hardware-bound ECC keys",
+                "debug_relevance": "OPTIGA Trust Anchor — SPI interface; look for platform binding certificates",
+            },
         "description": "OPTIGA Trust Anchor, SPI, mutual authentication",
     },
     {
@@ -1148,6 +1795,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "STMicroelectronics",
         "package": "SO8N",
         "datasheet": "https://www.st.com/resource/en/datasheet/stsafe-a110.pdf",
+        "security_intel": {
+                "interface": "I2C (0x20 default)",
+                "certification": "CC EAL5+ (STSAFE platform)",
+                "key_storage": "ECC P-256/P-384, pre-provisioned device certificate",
+                "debug_relevance": "TLS auth element — I2C commands use ISO 7816 APDU format",
+            },
         "description": "Secure Element, I2C, CC EAL5+ certified, TLS/IoT auth",
     },
     # -----------------------------------------------------------------------
@@ -1160,6 +1813,14 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Xilinx",
         "package": "BGA-236",
         "datasheet": "https://www.xilinx.com/support/documentation/data_sheets/ds180_7Series_Overview.pdf",
+        "security_intel": {
+                "config_interface": ["JTAG", "SPI (Master/Slave)", "BPI", "SelectMAP"],
+                "jtag_chain": True,
+                "bitstream_format": ".bit / .bin (Vivado)",
+                "toolchain": "Xilinx Vivado (also f4pga open-source)",
+                "lut_count": 20800,
+                "debug_relevance": "Bitstream readback possible if PROGRAM.B not disabled; check JTAG chain for idcode 0x0362D093",
+            },
         "description": "Artix-7 FPGA, 33280 LUTs, PCIe, 6.6Gb/s transceivers",
     },
     {
@@ -1169,6 +1830,14 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Xilinx",
         "package": "TQFP-144",
         "datasheet": "https://www.xilinx.com/support/documentation/data_sheets/ds160.pdf",
+        "security_intel": {
+                "config_interface": ["JTAG", "SPI (Master)", "BPI"],
+                "jtag_chain": True,
+                "bitstream_format": ".bit / .bin (ISE)",
+                "toolchain": "Xilinx ISE (legacy)",
+                "lut_count": 5720,
+                "debug_relevance": "Spartan-6 bitstream partially reverse-engineerable; check JTAG idcode 0x04001093",
+            },
         "description": "Spartan-6 FPGA, 9152 LUTs, low-power, LPDDR support",
     },
     {
@@ -1178,6 +1847,14 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Lattice",
         "package": "QFN-48",
         "datasheet": "https://www.latticesemi.com/view_document?document_id=51968",
+        "security_intel": {
+                "config_interface": ["SPI (Master)", "NVCM (one-time)"],
+                "jtag_chain": False,
+                "bitstream_format": ".bin (icestorm/nextpnr)",
+                "toolchain": "Open-source: Yosys + nextpnr-ice40 + icestorm",
+                "lut_count": 5280,
+                "debug_relevance": "Fully open-source reversible — icestorm can decompile bitstream back to netlist",
+            },
         "description": "iCE40 UltraPlus FPGA, 5280 LUTs, DSP, SPRAM, open-source toolchain",
     },
     {
@@ -1187,6 +1864,14 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Intel",
         "package": "EQFP-144",
         "datasheet": "https://www.intel.com/content/www/us/en/programmable/documentation/mcn1397700832153.html",
+        "security_intel": {
+                "config_interface": ["JTAG", "AS (Active Serial)"],
+                "jtag_chain": True,
+                "bitstream_format": ".sof / .pof (Quartus)",
+                "toolchain": "Intel Quartus Prime Lite (free)",
+                "lut_count": 8000,
+                "debug_relevance": "Non-volatile config — JTAG can read/write internal flash; idcode via JTAG scan",
+            },
         "description": "Intel MAX 10 FPGA, 8000 LEs, instant-on, non-volatile",
     },
     # -----------------------------------------------------------------------
@@ -1199,6 +1884,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Marvell",
         "package": "QFN-56",
         "datasheet": "https://www.marvell.com/content/dam/marvell/en/public-collateral/transceivers/marvell-phys-transceivers-alaska-88e1512-datasheet.pdf",
+        "security_intel": {
+                "mdio_phy_addr": "Configurable via CONFIG[2:0] pins (0–7)",
+                "management_interface": "MDIO/MDC (Clause 22 + 45)",
+                "rgmii_voltage": "1.8V / 2.5V / 3.3V (configurable)",
+                "debug_relevance": "Packet capture via RGMII tap; MDIO registers accessible for link status/config",
+            },
         "description": "Gigabit Ethernet PHY, SGMII/RGMII/MDIO, copper+fiber combo",
     },
     {
@@ -1208,6 +1899,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Broadcom",
         "package": "BGA-196",
         "datasheet": "https://www.broadcom.com/products/ethernet-connectivity/phy-and-poe/copper/gigabit/bcm5482",
+        "security_intel": {
+                "mdio_phy_addr": "Configurable (dual PHY: addr N and N+1)",
+                "management_interface": "MDIO/MDC (Clause 22)",
+                "rgmii_voltage": "2.5V / 3.3V",
+                "debug_relevance": "Dual-port PHY — can mirror traffic between ports via MDIO register config",
+            },
         "description": "Dual-port Gigabit Ethernet PHY, RGMII, SerDes",
     },
     {
@@ -1217,6 +1914,12 @@ _COMPONENT_DB: list[dict] = [
         "manufacturer": "Realtek",
         "package": "QFN-48",
         "datasheet": "https://www.realtek.com/en/products/communications-network-ics/item/rtl8211f-i-cg",
+        "security_intel": {
+                "mdio_phy_addr": "Configurable via PHYAD[2:0] pins",
+                "management_interface": "MDIO/MDC (Clause 22 + 45)",
+                "rgmii_voltage": "3.3V",
+                "debug_relevance": "Common Linux PHY — kernel driver well-documented; MDIO registers at standard addresses",
+            },
         "description": "Gigabit Ethernet PHY, RGMII/MII/GMII, MDIO/MDC",
     },
 ]
@@ -1368,3 +2071,11 @@ def lookup_part(marking: str) -> Optional[dict]:
         keys — or None if no match above threshold.
     """
     return _best_fuzzy_match(marking)
+
+
+def lookup_security_intel(part_number: str) -> Optional[dict]:
+    """Return the security_intel dict for a known part number, or None."""
+    entry = _LOOKUP.get(part_number.upper())
+    if entry:
+        return entry.get("security_intel")
+    return None

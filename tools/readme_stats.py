@@ -112,7 +112,7 @@ def _collect_modules() -> int:
     return sum(
         1
         for p in SRC_DIR.rglob("*.py")
-        if p.name != "__init__.py"
+        if p.name not in ("__init__.py", "__main__.py")
     )
 
 

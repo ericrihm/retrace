@@ -442,6 +442,61 @@ details summary {
     text-transform: capitalize;
 }
 
+/* ── Component Intel cards ───────────────────────────────── */
+.intel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 12px;
+}
+.intel-card {
+    background: var(--bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 16px;
+}
+.intel-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: var(--text-hi);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.intel-card h3 .intel-cat {
+    font-size: 10px;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 700;
+    background: rgba(0, 168, 255, 0.12);
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+.intel-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+.intel-table td {
+    padding: 3px 6px;
+    border: none;
+    border-bottom: 1px solid var(--panel-border);
+}
+.intel-table td:first-child {
+    color: var(--text-lo);
+    font-weight: 600;
+    white-space: nowrap;
+    width: 40%;
+}
+.intel-table td:last-child {
+    color: var(--text-hi);
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 11px;
+}
+.intel-table .intel-highlight {
+    color: #ff6b6b;
+    font-weight: 700;
+}
+
 /* ── Footer ──────────────────────────────────────────────── */
 .report-footer {
     text-align: center;
@@ -676,6 +731,54 @@ def generate_html_report(
             pass
 
     _a("</section>")
+
+    # ── 4b. Component Intelligence ─────────────────────────────────
+    _intel_components = []
+    try:
+        from retrace.identification.matcher import _LOOKUP
+        for comp in result.components:
+            if not comp.part_number:
+                continue
+            entry = _LOOKUP.get(comp.part_number.upper())
+            if entry and entry.get("security_intel"):
+                _intel_components.append((comp, entry))
+    except Exception:
+        pass
+
+    if _intel_components:
+        _a('<section class="section">')
+        _a("<h2>Component Intelligence</h2>")
+        _a('<p style="color: var(--text-mid); font-size: 0.85em; margin-bottom: 1em;">'
+           "Security-relevant specifications extracted from component datasheets. "
+           "Debug interfaces, boot mode pins, readout protection, and flash dump commands.</p>")
+        _a('<div class="intel-grid">')
+        _highlight_keys = {"debug_interfaces", "readout_protection", "boot_mode_pins",
+                           "write_protect_pin", "flashrom_support", "debug_relevance",
+                           "config_interface", "attestation", "certification"}
+        for comp, entry in _intel_components:
+            intel = entry["security_intel"]
+            cat = entry.get("category", "")
+            part = entry.get("part", comp.part_number)
+            ds_url = entry.get("datasheet", "")
+            _a('<div class="intel-card">')
+            part_link = f'<a href="{_esc(ds_url)}" target="_blank" rel="noopener">{_esc(part)}</a>' if ds_url and _safe_url(ds_url) else _esc(part)
+            _a(f'<h3>{part_link} <span class="intel-cat">{_esc(cat)}</span></h3>')
+            _a('<table class="intel-table">')
+            for k, v in intel.items():
+                display_key = k.replace("_", " ").title()
+                highlight = "intel-highlight" if k in _highlight_keys else ""
+                if isinstance(v, list):
+                    val_str = ", ".join(str(x) for x in v)
+                elif isinstance(v, bool):
+                    val_str = "Yes" if v else "No"
+                else:
+                    val_str = str(v)
+                td_class = f' class="{highlight}"' if highlight else ""
+                _a(f"<tr><td>{_esc(display_key)}</td><td{td_class}>{_esc(val_str)}</td></tr>")
+            _a("</table>")
+            _a("</div>")
+        _a("</div>")
+        _a("</section>")
 
     # ── 4. Component Inventory (BOM) ────────────────────────────────
     _a('<section class="section">')

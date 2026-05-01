@@ -97,7 +97,7 @@ def _pretty_type(label: str) -> str:
 
 
 def _component_to_bom_row(comp: Component) -> dict[str, Any]:
-    return {
+    row: dict[str, Any] = {
         "id": comp.id,
         "label": comp.label,
         "part_number": comp.part_number,
@@ -108,6 +108,17 @@ def _component_to_bom_row(comp: Component) -> dict[str, Any]:
         "confidence": round(comp.confidence, 4),
         "bbox": list(comp.bbox),
     }
+    if comp.part_number:
+        try:
+            from retrace.identification.matcher import lookup_security_intel
+            intel = lookup_security_intel(comp.part_number)
+            if intel:
+                row["security_intel"] = intel
+                for k, v in intel.items():
+                    row[f"intel_{k}"] = ", ".join(v) if isinstance(v, list) else str(v)
+        except Exception:
+            pass
+    return row
 
 
 def generate_bom(result: AnalysisResult) -> dict[str, Any]:
@@ -181,7 +192,9 @@ def bom_to_csv(bom: dict[str, Any]) -> str:
     if not components:
         return "id,label,part_number,marking,value,package,datasheet_url,confidence\n"
 
-    fieldnames = ["id", "label", "part_number", "marking", "value", "package", "datasheet_url", "confidence"]
+    base_fields = ["id", "label", "part_number", "marking", "value", "package", "datasheet_url", "confidence"]
+    intel_fields = sorted({k for row in components for k in row if k.startswith("intel_")})
+    fieldnames = base_fields + intel_fields
     buf = io.StringIO()
     writer = csv.DictWriter(buf, fieldnames=fieldnames, extrasaction="ignore")
     writer.writeheader()
