@@ -12,7 +12,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-98%25-brightgreen.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->1377<!-- /STATS --> tests** · **<!-- STATS:modules -->33<!-- /STATS --> modules** · **<!-- STATS:loc -->13238<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->1377<!-- /STATS --> tests** · **<!-- STATS:modules -->24<!-- /STATS --> modules** · **<!-- STATS:loc -->13238<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/) · [Issues](https://github.com/ericrihm/retrace/issues)
 
@@ -47,6 +47,10 @@ retrace scan board_photo.jpg
 - **Supply chain verification** -- cross-reference component markings against known BOMs to flag counterfeit, remarked, or substituted parts
 - **Incident response** -- rapid board triage in the field when you have a device but no documentation
 - **Research and training** -- reproducible PCB RE methodology for academic labs, CTF challenges, and security training courses
+
+<div align="center">
+<img src="docs/examples/terminal_demo.svg" width="700" alt="retrace terminal demo — scan a PCB photo, get components, traces, debug interfaces, and probe recommendations"/>
+</div>
 
 ### Demo: Dual-Board Analysis
 
@@ -592,6 +596,24 @@ from retrace.sources.fcc import search_fcc, download_fcc_photos
 # Search + download FCC internal photos for any product
 results = search_fcc("xbox one")
 photos = download_fcc_photos(results[0]["fcc_id"], dest_dir="./fcc_photos")
+```
+
+```python
+from retrace.learning.engine import KnowledgeBase
+
+# Cross-board component knowledge — grows with every scan
+kb = KnowledgeBase()
+print(f"{kb.total_sightings} sightings across {kb.board_count} boards")
+for comp in kb.top_components(5):
+    print(f"  {comp.part_number}: seen {comp.frequency}x")
+```
+
+```python
+from retrace.export.kicad import export_kicad_netlist
+
+# Convert analysis result to KiCad schematic for EDA import
+netlist = export_kicad_netlist(result, title="Board Rev A")
+Path("board.net").write_text(netlist)
 ```
 
 ## For Security Researchers

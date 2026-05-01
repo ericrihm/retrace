@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="800" height="896"
+     viewBox="0 0 800 896">
+
+  <!-- terminal window chrome -->
+  <rect width="800" height="896" rx="10" ry="10" fill="#0f172a"/>
+  <rect width="800" height="36" rx="10" ry="10" fill="#1e293b"/>
+  <!-- square off the bottom corners of the chrome bar -->
+  <rect y="18" width="800" height="18" fill="#1e293b"/>
+
+  <!-- traffic light dots -->
+  <g>
+    <circle cx="16" cy="18" r="6" fill="#ef4444"/>
+    <circle cx="36" cy="18" r="6" fill="#f59e0b"/>
+    <circle cx="56" cy="18" r="6" fill="#22c55e"/>
+    
+  </g>
+
+  <!-- window title -->
+  <text x="400" y="23" fill="#94a3b8" text-anchor="middle" font-size="13">retrace — board_photo.jpg</text>
+
+  <!-- terminal body -->
+  <g font-family="'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Courier New', monospace" font-size="13">
+    <text x="24" y="69" fill="#a3e635">$ retrace scan board_photo.jpg --output ./results</text>
+    <text x="24" y="89" fill="#e2e8f0"></text>
+    <text x="24" y="109" fill="#60a5fa">  re:trace v0.1.0 — PCB Reverse Engineering Toolkit</text>
+    <text x="24" y="129" fill="#4b5563">  ──────────────────────────────────────────────────</text>
+    <text x="24" y="149" fill="#e2e8f0"></text>
+    <text x="24" y="169" fill="#facc15">[detect]   Scanning board_photo.jpg ...</text>
+    <text x="24" y="189" fill="#a3e635">[detect]   Found 177 components</text>
+    <text x="24" y="209" fill="#94a3b8">           ↳ 20 ICs  · 8 connectors  · 56 caps  · 29 resistors  · 64 other</text>
+    <text x="24" y="229" fill="#e2e8f0"></text>
+    <text x="24" y="249" fill="#facc15">[ocr]      Reading IC markings ...</text>
+    <text x="24" y="269" fill="#a3e635">[ocr]      Read 18 markings — 16 matched (89%)</text>
+    <text x="24" y="289" fill="#94a3b8">           ↳ Intel Atom C2508 · Xilinx XC6SLX9 · W25Q128JV · MT47H64M16 ...</text>
+    <text x="24" y="309" fill="#e2e8f0"></text>
+    <text x="24" y="329" fill="#facc15">[trace]    Extracting copper traces ...</text>
+    <text x="24" y="349" fill="#a3e635">[trace]    Extracted 88 traces · 269 nodes · 12 junctions</text>
+    <text x="24" y="369" fill="#e2e8f0"></text>
+    <text x="24" y="389" fill="#facc15">[infer]    AC-3 constraint solver — 88 iterations</text>
+    <text x="24" y="409" fill="#a3e635">[infer]    3 inferred connections · 0 conflicts · 2 ambiguous nodes</text>
+    <text x="24" y="429" fill="#e2e8f0"></text>
+    <text x="24" y="449" fill="#facc15">[security] Scanning for exposed debug interfaces ...</text>
+    <text x="24" y="469" fill="#f87171">[security] 2 findings</text>
+    <text x="24" y="489" fill="#e2e8f0"></text>
+    <text x="24" y="509" fill="#f87171">  [HIGH]   CVSS 7.6  JTAG — full CPU debug/program access</text>
+    <text x="24" y="529" fill="#94a3b8">           Component: J15  (marking: JTAG)  ·  CWE-1191</text>
+    <text x="24" y="549" fill="#94a3b8">           ATT&amp;CK: T0819 (Exploit Public-Facing Application)</text>
+    <text x="24" y="569" fill="#e2e8f0"></text>
+    <text x="24" y="589" fill="#fb923c">  [MEDIUM] CVSS 6.8  UART — may expose bootloader or root shell</text>
+    <text x="24" y="609" fill="#94a3b8">           Component: J10  (marking: CONSOLE)  ·  CWE-1299</text>
+    <text x="24" y="629" fill="#e2e8f0"></text>
+    <text x="24" y="649" fill="#facc15">[advise]   Bayesian probe advisor — ranked by Expected Information Gain</text>
+    <text x="24" y="669" fill="#e2e8f0"></text>
+    <text x="24" y="689" fill="#e2e8f0">  #1  U1.DDR3_DQ0      EIG: 4.807 bits  (resolves ~4.81 bits of uncertainty)</text>
+    <text x="24" y="709" fill="#94a3b8">  #2  U1.DDR3_A0       EIG: 4.807 bits</text>
+    <text x="24" y="729" fill="#94a3b8">  #3  U1.PCIE_TX0      EIG: 4.807 bits</text>
+    <text x="24" y="749" fill="#e2e8f0"></text>
+    <text x="24" y="769" fill="#facc15">[export]   Writing results to ./results/ ...</text>
+    <text x="24" y="789" fill="#a3e635">[export]   annotated.svg · attack_surface.svg · zones.svg · bom.json</text>
+    <text x="24" y="809" fill="#e2e8f0"></text>
+    <text x="24" y="829" fill="#60a5fa">  Done.  177 components · 88 traces · 2 security findings → ./results/</text>
+    <text x="24" y="849" fill="#e2e8f0"></text>
+    <text x="24" y="869" fill="#a3e635">$ </text>
+  </g>
+
+</svg>
