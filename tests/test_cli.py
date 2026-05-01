@@ -1780,3 +1780,46 @@ def test_sigrok_sr_output(runner, tmp_path):
         result = runner.invoke(main, ["sigrok", str(img), "-o", str(out)])
     assert result.exit_code == 0
     assert out.exists()
+
+
+# ---------------------------------------------------------------------------
+# triage — firmware binary triage
+# ---------------------------------------------------------------------------
+
+def test_triage_help(runner):
+    result = runner.invoke(main, ["triage", "--help"])
+    assert result.exit_code == 0
+    assert "firmware" in result.output.lower() or "triage" in result.output.lower()
+
+
+def test_triage_missing_file(runner):
+    result = runner.invoke(main, ["triage", "/no/such/firmware.bin"])
+    assert result.exit_code != 0
+
+
+def test_triage_text_output(runner, tmp_path):
+    fw = tmp_path / "firmware.bin"
+    fw.write_bytes(b"\x7fELF" + b"\x00" * 4092)
+    result = runner.invoke(main, ["triage", str(fw)])
+    assert result.exit_code == 0
+    assert "Firmware Triage Report" in result.output
+    assert "ELF" in result.output
+
+
+def test_triage_json_output(runner, tmp_path):
+    fw = tmp_path / "firmware.bin"
+    fw.write_bytes(b"\x00" * 4096)
+    result = runner.invoke(main, ["triage", str(fw), "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert "sha256" in data
+    assert "entropy_map" in data
+
+
+def test_triage_output_file(runner, tmp_path):
+    fw = tmp_path / "firmware.bin"
+    fw.write_bytes(b"\x00" * 4096)
+    out = tmp_path / "report.txt"
+    result = runner.invoke(main, ["triage", str(fw), "-o", str(out)])
+    assert result.exit_code == 0
+    assert out.exists()

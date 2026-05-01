@@ -3,6 +3,7 @@
 import json
 import logging
 from pathlib import Path
+from typing import cast
 
 import click
 
@@ -126,8 +127,8 @@ def advise(image: str, as_json: bool, output: str) -> None:
 
     lines = ["\nRecommended probe points (by information gain):\n"]
     for i, rec in enumerate(recommendations[:5], 1):
-        lines.append(f"  {i}. {rec['location']} — {rec['reason']}")
-        lines.append(f"     Expected info gain: {rec['entropy_reduction']:.2f} bits")
+        lines.append(f"  {i}. {rec['location']} — {rec['reason']}")  # type: ignore[index]
+        lines.append(f"     Expected info gain: {rec['entropy_reduction']:.2f} bits")  # type: ignore[index]
     out_text = "\n".join(lines)
     click.echo(out_text)
 
@@ -478,7 +479,7 @@ def compare(image_a: str, image_b: str, as_json: bool, svg_output: str | None) -
     added = sorted(set(comps_b) - set(comps_a))
     removed = sorted(set(comps_a) - set(comps_b))
     common = sorted(set(comps_a) & set(comps_b))
-    changed = []
+    changed: list[dict[str, object]] = []
     for cid in common:
         a, b = comps_a[cid], comps_b[cid]
         diffs = {}
@@ -527,7 +528,7 @@ def compare(image_a: str, image_b: str, as_json: bool, svg_output: str | None) -
         click.echo(f"  Changed ({len(changed)}):")
         for ch in changed:
             click.echo(f"    ~ {ch['id']}:")
-            for field, vals in ch["changes"].items():
+            for field, vals in cast(dict, ch["changes"]).items():
                 click.echo(f"        {field}: {vals['a']!r} → {vals['b']!r}")
 
     if not added and not removed and not changed:
@@ -969,6 +970,42 @@ def sigrok(ctx: click.Context, image: str, output: str, sample_rate: int, board_
             click.echo(format_sigrok_summary(findings))
     else:
         click.echo(format_sigrok_summary(findings))
+
+
+@main.command("triage")
+@click.argument("firmware", type=click.Path(exists=True))
+@click.option("--json", "as_json", is_flag=True, help="Output as JSON")
+@click.option("--output", "-o", type=click.Path(), help="Write report to file")
+@click.option("--block-size", type=int, default=4096, help="Entropy block size in bytes")
+def triage(firmware: str, as_json: bool, output: str, block_size: int) -> None:
+    """Triage a firmware dump — entropy, signatures, credential strings.
+
+    Performs first-pass analysis on a binary firmware image: entropy profiling
+    to detect encrypted/compressed regions, file signature scanning (ELF,
+    U-Boot, SquashFS, JFFS2), and string extraction for credentials, keys,
+    URLs, and version info.
+    """
+    from dataclasses import asdict
+
+    from retrace.analysis.firmware_triage import (
+        format_triage_report,
+        triage_firmware,
+    )
+
+    result = triage_firmware(firmware, block_size=block_size)
+
+    if as_json:
+        text = json.dumps(asdict(result), indent=2)
+    else:
+        text = format_triage_report(result)
+
+    if output:
+        out_path = Path(output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(text, encoding="utf-8")
+        click.echo(f"Triage report written to {out_path}")
+    else:
+        click.echo(text)
 
 
 if __name__ == "__main__":
