@@ -59,12 +59,30 @@ def _collect_pytest_stats() -> tuple[int, str]:
     # --- coverage ---
     coverage_pct = "N/A"
     try:
+        # Build ignore list for test files whose modules don't exist yet
+        ignore_args: list[str] = []
+        for candidate in (REPO_ROOT / "tests").glob("test_*.py"):
+            import ast as _ast
+            try:
+                tree = _ast.parse(candidate.read_text())
+                for node in _ast.walk(tree):
+                    if isinstance(node, (_ast.Import, _ast.ImportFrom)):
+                        mod = getattr(node, "module", None) or ""
+                        if mod.startswith("retrace."):
+                            parts = mod.split(".")
+                            mod_path = REPO_ROOT / "src" / Path(*parts[:-1]) / f"{parts[-1]}.py"
+                            pkg_path = REPO_ROOT / "src" / Path(*parts) / "__init__.py"
+                            if not mod_path.exists() and not pkg_path.exists():
+                                ignore_args += ["--ignore", str(candidate)]
+                                break
+            except Exception:
+                pass
         cov_result = subprocess.run(
             [
                 sys.executable, "-m", "pytest",
                 "--cov=retrace", "--cov-report=term",
                 "-q", "--no-header", "--tb=no",
-            ],
+            ] + ignore_args,
             capture_output=True, text=True, cwd=REPO_ROOT,
         )
         output = cov_result.stdout + cov_result.stderr
