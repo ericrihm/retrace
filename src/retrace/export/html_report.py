@@ -204,6 +204,7 @@ _CSS = """\
 }
 
 *, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 
 body {
     margin: 0;
@@ -218,7 +219,83 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 24px;
+    padding: 24px 24px 24px 220px;
+}
+
+/* ── Sidebar navigation ─────────────────────────────────── */
+.sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 200px;
+    height: 100vh;
+    background: var(--panel-bg);
+    border-right: 1px solid var(--panel-border);
+    padding: 16px 0;
+    overflow-y: auto;
+    z-index: 100;
+    font-size: 12px;
+}
+.sidebar .sidebar-title {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 0 16px 12px;
+    border-bottom: 1px solid var(--panel-border);
+    margin-bottom: 8px;
+}
+.sidebar a {
+    display: block;
+    padding: 6px 16px;
+    color: var(--text-mid);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+.sidebar a:hover, .sidebar a.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    background: rgba(34,211,238,0.05);
+}
+
+/* ── Back-to-top button ─────────────────────────────────── */
+.back-to-top {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+.back-to-top.visible { display: flex; }
+
+/* ── Report classification banner ────────────────────────── */
+.report-meta {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.25);
+    border-radius: 6px;
+    padding: 10px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.report-meta .classification {
+    color: var(--severity-high);
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
 /* ── Header ──────────────────────────────────────────────── */
@@ -496,6 +573,17 @@ details summary {
     font-weight: 700;
 }
 
+/* ── CVSS gauge ─────────────────────────────────────────── */
+.cvss-gauge { display: inline-block; vertical-align: middle; margin-right: 6px; }
+
+/* ── Risk matrix bar ────────────────────────────────────── */
+.risk-bar { display: flex; height: 28px; border-radius: 4px; overflow: hidden; margin: 12px 0; }
+.risk-bar div { display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #fff; min-width: 32px; }
+
+/* ── Attack chain ───────────────────────────────────────── */
+.attack-chain-svg { max-width: 100%; margin: 16px 0; }
+
 /* ── Footer ──────────────────────────────────────────────── */
 .report-footer {
     text-align: center;
@@ -520,12 +608,22 @@ details summary {
         --row-even: #f9fafb;
         --row-odd: #ffffff;
     }
+    html { scroll-behavior: auto; }
     body { background: white; color: black; }
-    .section { break-inside: avoid; }
+    .sidebar, .back-to-top { display: none !important; }
+    .container { padding: 0; margin: 0; max-width: 100%; }
+    .report-header { page-break-after: always; }
+    .section { break-inside: avoid; page-break-before: auto; margin-bottom: 0; }
+    table { font-size: 10px; }
+    @page { size: A4; margin: 20mm 15mm 20mm 15mm;
+        @top-center { content: "CONFIDENTIAL — re:trace Hardware Security Assessment"; font-size: 8pt; color: #999; }
+        @bottom-right { content: "Page " counter(page); font-size: 8pt; color: #999; }
+    }
 }
 
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 768px) {
+    .sidebar { display: none; }
     .container { padding: 12px; }
     .report-header { padding: 16px; }
     .section { padding: 16px; }
@@ -534,10 +632,10 @@ details summary {
 }
 """
 
-# ── JavaScript for table sorting ────────────────────────────────────────
-
+# ── JavaScript ─────────────────────────────────────────────────────────
 _JS = """\
 (function() {
+    /* ── Table sorting ──────────────────────────────────── */
     document.querySelectorAll('th[data-sortable]').forEach(function(th) {
         th.addEventListener('click', function() {
             var table = th.closest('table');
@@ -545,7 +643,6 @@ _JS = """\
             var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
             var colIdx = Array.prototype.indexOf.call(th.parentNode.children, th);
             var dir = th.getAttribute('data-sort-dir') === 'asc' ? 'desc' : 'asc';
-
             th.parentNode.querySelectorAll('th').forEach(function(h) {
                 h.removeAttribute('data-sort-dir');
                 var arrow = h.querySelector('.sort-arrow');
@@ -554,7 +651,6 @@ _JS = """\
             th.setAttribute('data-sort-dir', dir);
             var arrow = th.querySelector('.sort-arrow');
             if (arrow) arrow.textContent = dir === 'asc' ? '\\u25B2' : '\\u25BC';
-
             rows.sort(function(a, b) {
                 var aText = a.children[colIdx].getAttribute('data-sort-value')
                          || a.children[colIdx].textContent.trim();
@@ -563,19 +659,142 @@ _JS = """\
                 var aNum = parseFloat(aText);
                 var bNum = parseFloat(bText);
                 var cmp;
-                if (!isNaN(aNum) && !isNaN(bNum)) {
-                    cmp = aNum - bNum;
-                } else {
-                    cmp = aText.localeCompare(bText);
-                }
+                if (!isNaN(aNum) && !isNaN(bNum)) { cmp = aNum - bNum; }
+                else { cmp = aText.localeCompare(bText); }
                 return dir === 'asc' ? cmp : -cmp;
             });
-
             rows.forEach(function(row) { tbody.appendChild(row); });
         });
     });
+
+    /* ── Scroll-spy for sidebar ─────────────────────────── */
+    var links = document.querySelectorAll('.sidebar a[href^=\"#\"]');
+    if (links.length && 'IntersectionObserver' in window) {
+        var ids = [];
+        links.forEach(function(a) { ids.push(a.getAttribute('href').slice(1)); });
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+                var a = document.querySelector('.sidebar a[href=\"#' + e.target.id + '\"]');
+                if (a) { if (e.isIntersecting) a.classList.add('active'); else a.classList.remove('active'); }
+            });
+        }, { rootMargin: '-20% 0px -70% 0px' });
+        ids.forEach(function(id) { var el = document.getElementById(id); if (el) observer.observe(el); });
+    }
+
+    /* ── Back-to-top button ─────────────────────────────── */
+    var btn = document.querySelector('.back-to-top');
+    if (btn) {
+        window.addEventListener('scroll', function() {
+            btn.classList.toggle('visible', window.scrollY > 400);
+        });
+        btn.addEventListener('click', function() { window.scrollTo({top:0,behavior:'smooth'}); });
+    }
 })();
 """
+
+
+def _cvss_gauge_svg(score: float, size: int = 36) -> str:
+    """Render a small circular CVSS gauge as inline SVG."""
+    if not score:
+        return ""
+    r = (size - 4) / 2
+    cx = cy = size / 2
+    circum = 2 * 3.14159 * r
+    frac = min(score / 10.0, 1.0)
+    dash = frac * circum
+    if score >= 7.0:
+        color = "#ef4444"
+    elif score >= 4.0:
+        color = "#f59e0b"
+    else:
+        color = "#3b82f6"
+    return (
+        f'<svg class="cvss-gauge" width="{size}" height="{size}" viewBox="0 0 {size} {size}">'
+        f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="#1e293b" stroke-width="3"/>'
+        f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="{color}" stroke-width="3" '
+        f'stroke-dasharray="{dash:.1f} {circum:.1f}" stroke-linecap="round" '
+        f'transform="rotate(-90 {cx} {cy})"/>'
+        f'<text x="{cx}" y="{cy}" text-anchor="middle" dominant-baseline="central" '
+        f'fill="{color}" font-size="{size*0.32:.0f}" font-weight="700" '
+        f'font-family="monospace">{score}</text></svg>'
+    )
+
+
+def _risk_matrix_svg(findings: list[dict[str, str]]) -> str:
+    """Render an inline stacked bar showing severity distribution."""
+    by_sev: dict[str, int] = Counter(f["severity"] for f in findings)
+    total = len(findings) or 1
+    parts: list[str] = []
+    for sev, color in [("HIGH", "#ef4444"), ("MEDIUM", "#f59e0b"), ("LOW", "#3b82f6")]:
+        count = by_sev.get(sev, 0)
+        if count:
+            pct = max(count / total * 100, 12)
+            parts.append(
+                f'<div style="width:{pct:.0f}%;background:{color};">'
+                f'{count} {sev}</div>'
+            )
+    if not parts:
+        return ""
+    return '<div class="risk-bar">' + "".join(parts) + "</div>"
+
+
+def _attack_chain_svg(attack_paths: list[tuple[str, str, str]]) -> str:
+    """Render attack paths as an inline SVG flowchart."""
+    if not attack_paths:
+        return ""
+    h_per = 60
+    total_h = len(attack_paths) * h_per + 20
+    lines: list[str] = [
+        f'<svg class="attack-chain-svg" width="700" height="{total_h}" '
+        f'viewBox="0 0 700 {total_h}" xmlns="http://www.w3.org/2000/svg">'
+    ]
+    for i, (src, tgt, desc) in enumerate(attack_paths):
+        y = 20 + i * h_per
+        # Source box
+        lines.append(f'<rect x="10" y="{y}" width="160" height="36" rx="6" '
+                      f'fill="#1e293b" stroke="#22d3ee" stroke-width="1"/>')
+        lines.append(f'<text x="90" y="{y+22}" text-anchor="middle" fill="#e2e8f0" '
+                      f'font-size="11" font-family="monospace">{_esc(src[:20])}</text>')
+        # Arrow with label
+        lines.append(f'<line x1="170" y1="{y+18}" x2="370" y2="{y+18}" '
+                      f'stroke="#64748b" stroke-width="1.5" marker-end="url(#ah)"/>')
+        lines.append(f'<text x="270" y="{y+12}" text-anchor="middle" fill="#94a3b8" '
+                      f'font-size="9" font-family="sans-serif">{_esc(desc[:30])}</text>')
+        # Target box
+        lines.append(f'<rect x="370" y="{y}" width="160" height="36" rx="6" '
+                      f'fill="#1e293b" stroke="#ef4444" stroke-width="1"/>')
+        lines.append(f'<text x="450" y="{y+22}" text-anchor="middle" fill="#e2e8f0" '
+                      f'font-size="11" font-family="monospace">{_esc(tgt[:20])}</text>')
+    # Arrowhead marker
+    lines.insert(1, '<defs><marker id="ah" viewBox="0 0 10 10" refX="10" refY="5" '
+                     'markerWidth="6" markerHeight="6" orient="auto-start-reverse">'
+                     '<path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/></marker></defs>')
+    lines.append("</svg>")
+    return "\n".join(lines)
+
+
+def _intel_components_present(result: AnalysisResult) -> bool:
+    """Check if any components have security intel data."""
+    try:
+        from retrace.identification.matcher import _LOOKUP
+        return any(
+            _LOOKUP.get((c.part_number or "").upper(), {}).get("security_intel")
+            for c in result.components if c.part_number
+        )
+    except Exception:
+        return False
+
+
+# ── Section numbering ──────────────────────────────────────────────────
+_SECTIONS = [
+    ("sec-summary", "Executive Summary"),
+    ("sec-methodology", "Methodology"),
+    ("sec-findings", "Security Findings"),
+    ("sec-intel", "Component Intelligence"),
+    ("sec-bom", "Component Inventory"),
+    ("sec-zones", "Functional Zones"),
+    ("sec-traces", "Trace Analysis"),
+]
 
 
 # ── HTML builder ────────────────────────────────────────────────────────
@@ -617,7 +836,29 @@ def generate_html_report(
     _a(f"<style>{_CSS}</style>")
     _a("</head>")
     _a("<body>")
+
+    # ── Sidebar navigation ─────────────────────────────────────────
+    _a('<nav class="sidebar">')
+    _a('<div class="sidebar-title">re:trace</div>')
+    sec_num = 1
+    for sec_id, sec_label in _SECTIONS:
+        if sec_id == "sec-intel" and not _intel_components_present(result):
+            continue
+        if sec_id == "sec-zones" and not zones:
+            continue
+        _a(f'<a href="#{sec_id}">{sec_num}. {sec_label}</a>')
+        sec_num += 1
+    _a("</nav>")
+
     _a('<div class="container">')
+
+    # ── Report metadata banner ─────────────────────────────────────
+    _a('<div class="report-meta">')
+    _a('<span class="classification">CONFIDENTIAL</span>')
+    _a(f"<span>Assessment date: {_esc(timestamp[:10])}</span>")
+    _a(f"<span>re:trace v{_esc(__version__)}</span>")
+    _a(f"<span>Pipeline v{_esc(result.pipeline_version)}</span>")
+    _a("</div>")
 
     # ── 1. Header ───────────────────────────────────────────────────
     _a('<header class="report-header">')
@@ -634,16 +875,23 @@ def generate_html_report(
     _a("</div>")
     _a("</header>")
 
+    # ── Section counter for numbering ─────────────────────────────
+    _sec = [0]
+    def _sec_heading(sec_id: str, label: str) -> str:
+        _sec[0] += 1
+        return f'<section id="{sec_id}" class="section"><h2>{_sec[0]}. {label}</h2>'
+
     # ── 2. Executive Summary ────────────────────────────────────────
-    _a('<section class="section">')
-    _a("<h2>Executive Summary</h2>")
+    _a(_sec_heading("sec-summary", "Executive Summary"))
     exec_text = _build_executive_summary(result, findings, title)
     _a(f'<div class="exec-summary">{exec_text}</div>')
+    # Risk matrix bar
+    if findings:
+        _a(_risk_matrix_svg(findings))
     _a("</section>")
 
     # ── 3. Methodology ────────────────────────────────────────────
-    _a('<section class="section">')
-    _a("<h2>Methodology</h2>")
+    _a(_sec_heading("sec-methodology", "Methodology"))
     _a('<div style="color:var(--text-mid);font-size:13px;line-height:1.7;">')
     _a("<p>This assessment was performed using automated PCB reverse engineering techniques:</p>")
     _a("<ol>")
@@ -658,8 +906,7 @@ def generate_html_report(
     _a("</section>")
 
     # ── 4. Security Findings ────────────────────────────────────────
-    _a('<section class="section">')
-    _a("<h2>Security Findings</h2>")
+    _a(_sec_heading("sec-findings", "Security Findings"))
     if findings:
         _a("<table>")
         _a("<thead><tr>")
@@ -675,18 +922,16 @@ def generate_html_report(
             cwe_url = f"https://cwe.mitre.org/data/definitions/{_esc(cwe_num)}.html"
             cvss = f.get("cvss_base", "")
             cvss_str = f"{cvss}" if cvss else "—"
+            gauge = _cvss_gauge_svg(cvss) if cvss else ""
             attack_ids = f.get("mitre_attack", [])
             attack_links = []
             for tid in attack_ids:
-                if tid.startswith("T0"):
-                    url = f"https://attack.mitre.org/techniques/{_esc(tid)}/"
-                else:
-                    url = f"https://attack.mitre.org/techniques/{_esc(tid)}/"
+                url = f"https://attack.mitre.org/techniques/{_esc(tid)}/"
                 attack_links.append(f'<a href="{url}" target="_blank" rel="noopener">{_esc(tid)}</a>')
             attack_str = ", ".join(attack_links) if attack_links else "—"
             _a("<tr>")
             _a(f'<td><span class="badge {badge_cls}">{_esc(sev)}</span></td>')
-            _a(f"<td>{_esc(cvss_str)}</td>")
+            _a(f"<td>{gauge}{_esc(cvss_str)}</td>")
             _a(f"<td>{_esc(f['interface'])}</td>")
             _a(f"<td>{_esc(f['component'])}</td>")
             _a(f'<td><a href="{cwe_url}" target="_blank" rel="noopener">{_esc(cwe)}</a></td>')
@@ -729,6 +974,11 @@ def generate_html_report(
         except Exception:
             pass
 
+    # Attack chain visualization
+    if attack_paths:
+        _a("<h3>Attack Chains</h3>")
+        _a(_attack_chain_svg(attack_paths))
+
     _a("</section>")
 
     # ── 4b. Component Intelligence ─────────────────────────────────
@@ -745,8 +995,7 @@ def generate_html_report(
         pass
 
     if _intel_components:
-        _a('<section class="section">')
-        _a("<h2>Component Intelligence</h2>")
+        _a(_sec_heading("sec-intel", "Component Intelligence"))
         _a('<p style="color: var(--text-mid); font-size: 0.85em; margin-bottom: 1em;">'
            "Security-relevant specifications extracted from component datasheets. "
            "Debug interfaces, boot mode pins, readout protection, and flash dump commands.</p>")
@@ -794,8 +1043,7 @@ def generate_html_report(
         _a("</section>")
 
     # ── 4. Component Inventory (BOM) ────────────────────────────────
-    _a('<section class="section">')
-    _a("<h2>Component Inventory</h2>")
+    _a(_sec_heading("sec-bom", "Component Inventory"))
     if result.components:
         bom_cols = [
             ("Ref", True),
@@ -867,8 +1115,7 @@ def generate_html_report(
 
     # ── 5. Functional Zones ─────────────────────────────────────────
     if zones:
-        _a('<section class="section">')
-        _a("<h2>Functional Zones</h2>")
+        _a(_sec_heading("sec-zones", "Functional Zones"))
         _a('<div class="zone-grid">')
         for zone_name, zone_type, zone_comps in zones:
             _a('<div class="zone-card">')
@@ -883,8 +1130,7 @@ def generate_html_report(
         _a("</section>")
 
     # ── 6. Trace Analysis ───────────────────────────────────────────
-    _a('<section class="section">')
-    _a("<h2>Trace Analysis</h2>")
+    _a(_sec_heading("sec-traces", "Trace Analysis"))
     if result.traces:
         connected = sum(1 for t in result.traces if t.from_component or t.to_component)
         _a(f'<p style="color:var(--text-mid);margin-bottom:16px;">'
@@ -921,6 +1167,7 @@ def generate_html_report(
     _a("</footer>")
 
     _a("</div>")  # .container
+    _a('<button class="back-to-top" aria-label="Back to top">&#9650;</button>')
     _a(f"<script>{_JS}</script>")
     _a("</body>")
     _a("</html>")

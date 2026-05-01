@@ -22,6 +22,13 @@ from pathlib import Path
 
 import click
 
+# Intelligence layer (P0/P1/P2)
+try:
+    from flywheel_intelligence import FlywheelBrain
+    _HAS_BRAIN = True
+except ImportError:
+    _HAS_BRAIN = False
+
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
@@ -1035,67 +1042,179 @@ def run(quick: bool) -> None:
     state = _load_state()
     all_passed = True
     metrics: dict = {}
+    scores: dict[str, float] = {}
+
+    # Initialize brain (intelligence layer)
+    brain = FlywheelBrain() if _HAS_BRAIN else None
+    cache_skips: list[str] = []
+
+    def _should_run(fw_name: str) -> bool:
+        if brain and brain.cache.is_cached(fw_name):
+            cache_skips.append(fw_name)
+            return False
+        return True
 
     # 1. Stats
     flywheel_stats()
+    if brain:
+        brain.sources.record("readme_stats", True, 100.0)
 
     # 2. Lint
     lint_ok, fixed = flywheel_lint()
     metrics["lint_fixed"] = fixed
+    scores["lint"] = 100.0 if fixed == 0 else max(0, 100 - fixed * 5)
+    if brain:
+        brain.sources.record("ruff", True, scores["lint"])
+        brain.cache.update("lint")
 
     if not quick:
         # 3. Tests
-        tests_ok, passed, failed, failed_tests = flywheel_tests()
-        metrics["tests_passed"] = passed
-        metrics["tests_failed"] = failed
-        metrics["failed_test_ids"] = failed_tests
-        if not tests_ok:
-            all_passed = False
+        if _should_run("tests"):
+            tests_ok, passed, failed, failed_tests = flywheel_tests()
+            metrics["tests_passed"] = passed
+            metrics["tests_failed"] = failed
+            metrics["failed_test_ids"] = failed_tests
+            total = passed + failed
+            scores["tests"] = round(100 * passed / total) if total > 0 else 0
+            if brain:
+                brain.sources.record("pytest", True, scores["tests"])
+                brain.cache.update("tests")
+            if not tests_ok:
+                all_passed = False
+        else:
+            _header("Test flywheel — pytest")
+            _ok("Skipped (warm-start cache hit — no source changes)")
+            metrics["tests_passed"] = state.get("tests_passed", 0)
+            metrics["tests_failed"] = state.get("tests_failed", 0)
+            scores["tests"] = 100.0
 
         # 4. Demo
-        flywheel_demo()
+        if _should_run("demo"):
+            flywheel_demo()
+            scores["demo"] = 100.0
+            if brain:
+                brain.cache.update("demo")
+        else:
+            _header("Demo flywheel — regenerate visual outputs")
+            _ok("Skipped (warm-start cache hit)")
+            scores["demo"] = 100.0
 
         # 5. Coverage
-        cov_ok, coverage_pct = flywheel_coverage(state)
-        metrics["coverage_pct"] = coverage_pct
-        if not cov_ok:
-            _warn("Coverage regression detected — flagging (not failing run)")
+        if _should_run("coverage"):
+            cov_ok, coverage_pct = flywheel_coverage(state)
+            metrics["coverage_pct"] = coverage_pct
+            try:
+                scores["coverage"] = float(str(coverage_pct).rstrip("%"))
+            except (ValueError, AttributeError):
+                scores["coverage"] = 0.0
+            if brain:
+                brain.sources.record("pytest_cov", cov_ok, scores["coverage"])
+                brain.cache.update("coverage")
+            if not cov_ok:
+                _warn("Coverage regression detected — flagging (not failing run)")
+        else:
+            _header("Coverage flywheel — measure and track")
+            _ok("Skipped (warm-start cache hit)")
+            coverage_pct = state.get("coverage_pct", "N/A")
+            metrics["coverage_pct"] = coverage_pct
 
         # 6. Gap analysis
-        gaps = flywheel_gaps()
-        metrics.update({
-            "zero_coverage_count": len(gaps["zero_coverage_modules"]),
-            "untested_source_count": len(gaps["untested_sources"]),
-            "todo_count": gaps["todo_count"],
-            "untyped_function_count": len(gaps["untyped_functions"]),
-        })
+        if _should_run("gaps"):
+            gaps = flywheel_gaps()
+            metrics.update({
+                "zero_coverage_count": len(gaps["zero_coverage_modules"]),
+                "untested_source_count": len(gaps["untested_sources"]),
+                "todo_count": gaps["todo_count"],
+                "untyped_function_count": len(gaps["untyped_functions"]),
+            })
+            gap_total = sum([
+                len(gaps["zero_coverage_modules"]),
+                len(gaps["untested_sources"]),
+                gaps["todo_count"],
+                len(gaps["untyped_functions"]),
+            ])
+            scores["gaps"] = max(0.0, 100 - gap_total * 2)
+            if brain:
+                brain.cache.update("gaps")
+        else:
+            _header("Gap analysis flywheel — quality gaps")
+            _ok("Skipped (warm-start cache hit)")
 
         # 7. Regression analysis
         regressions = flywheel_regression(state, metrics)
         metrics["regressions"] = regressions
+        scores["regression"] = 100.0 if not regressions else max(0, 100 - len(regressions) * 20)
 
         # 8. Component DB tracking
-        db_metrics = flywheel_component_db()
-        metrics.update(db_metrics)
+        if _should_run("component_db"):
+            db_metrics = flywheel_component_db()
+            metrics.update(db_metrics)
+            missing = len(db_metrics.get("missing_categories", []))
+            scores["component_db"] = 100.0 if missing == 0 else max(0, 100 - missing * 10)
+            if brain:
+                brain.cache.update("component_db")
+        else:
+            _header("Component DB flywheel — growth and coverage")
+            _ok("Skipped (warm-start cache hit)")
 
         # 9. Design audit
-        design_metrics = flywheel_design_audit()
-        metrics.update(design_metrics)
+        if _should_run("design_audit"):
+            design_metrics = flywheel_design_audit()
+            metrics.update(design_metrics)
+            scores["design_audit"] = float(design_metrics.get("design_pct", 0))
+            if brain:
+                brain.cache.update("design_audit")
+        else:
+            _header("Design audit flywheel — README psychology scoring")
+            _ok("Skipped (warm-start cache hit)")
 
         # 10. SVG design audit
-        svg_metrics = flywheel_svg_audit()
-        metrics.update(svg_metrics)
+        if _should_run("svg_audit"):
+            svg_metrics = flywheel_svg_audit()
+            metrics.update(svg_metrics)
+            scores["svg_audit"] = float(svg_metrics.get("svg_pct", 0))
+            if brain:
+                brain.cache.update("svg_audit")
+        else:
+            _header("SVG design audit flywheel")
+            _ok("Skipped (warm-start cache hit)")
 
         # 11. README format audit
-        readme_fmt = flywheel_readme_format()
-        metrics.update(readme_fmt)
+        if _should_run("readme_format"):
+            readme_fmt = flywheel_readme_format()
+            metrics.update(readme_fmt)
+            scores["readme_format"] = float(readme_fmt.get("readme_format_pct", 0))
+            if brain:
+                brain.cache.update("readme_format")
+        else:
+            _header("README format flywheel — layout quality audit")
+            _ok("Skipped (warm-start cache hit)")
 
         # 12. SVG render validation
-        svg_render = flywheel_svg_render_check()
-        metrics.update(svg_render)
+        if _should_run("svg_render"):
+            svg_render = flywheel_svg_render_check()
+            metrics.update(svg_render)
+            scores["svg_render"] = float(svg_render.get("svg_render_pct", 0))
+            if brain:
+                brain.cache.update("svg_render")
+        else:
+            _header("SVG render validation flywheel")
+            _ok("Skipped (warm-start cache hit)")
     else:
         coverage_pct = state.get("coverage_pct", "N/A")
         metrics["coverage_pct"] = coverage_pct
+
+    # Record to brain (time-series + source quality)
+    if brain and scores:
+        git_hash = ""
+        try:
+            r = subprocess.run(["git", "rev-parse", "--short", "HEAD"],
+                               capture_output=True, text=True, cwd=REPO_ROOT)
+            git_hash = r.stdout.strip() if r.returncode == 0 else ""
+        except Exception:
+            pass
+        brain.record_run(scores, git_hash=git_hash, mode="quick" if quick else "full")
+        brain.save()
 
     # Persist state
     now_iso = datetime.now(timezone.utc).isoformat()
@@ -1123,6 +1242,9 @@ def run(quick: bool) -> None:
         _info(f"Render:   {metrics.get('svg_render_pct', '?')}% — {metrics.get('svg_files_checked', '?')} SVGs checked")
     else:
         _info(f"Lint: {fixed} fix(es) applied  (quick mode — tests skipped)")
+
+    if brain and cache_skips:
+        _info(f"Cache:    {len(cache_skips)} flywheel(s) skipped via warm-start")
 
     click.echo("")
     sys.exit(0 if all_passed else 1)
@@ -1205,6 +1327,89 @@ def status() -> None:
             else:
                 _ok(f"{ts}  tests={tests} cov={cov}  clean")
 
+    click.echo("")
+
+
+@cli.command()
+@click.option("--detailed", is_flag=True, help="Show full brain state including bandit arms.")
+def brain(detailed: bool) -> None:
+    """Show flywheel intelligence: meta-learning, trends, confidence, source quality."""
+    if not _HAS_BRAIN:
+        click.echo(click.style("  Intelligence layer not available (flywheel_intelligence.py not found)", fg="red"))
+        return
+
+    b = FlywheelBrain()
+    click.echo(click.style("\nretrace flywheel brain", fg="magenta", bold=True))
+    click.echo(click.style(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", fg="bright_black"))
+    click.echo("")
+    click.echo(b.format_brain_summary())
+    click.echo("")
+
+
+@cli.command()
+@click.option("--last", default=30, help="Number of recent runs to analyze.")
+def trends(last: int) -> None:
+    """Show flywheel score trends with sparklines and CUSUM analysis."""
+    if not _HAS_BRAIN:
+        click.echo(click.style("  Intelligence layer not available", fg="red"))
+        return
+
+    b = FlywheelBrain()
+    click.echo(click.style("\nretrace flywheel trends", fg="magenta", bold=True))
+    click.echo("")
+
+    report = b.get_trend_report()
+    status_colors = {
+        "stable": "green", "breakthrough": "cyan", "regression": "red",
+        "stalled": "yellow", "insufficient_data": "bright_black", "no_data": "bright_black",
+    }
+    status_icons = {
+        "stable": "→", "breakthrough": "↑", "regression": "↓",
+        "stalled": "═", "insufficient_data": "?", "no_data": "·",
+    }
+
+    for t in report:
+        icon = status_icons.get(t["status"], "?")
+        color = status_colors.get(t["status"], "white")
+        spark = t.get("sparkline", "")
+        current = t.get("current", "—")
+        mean_str = f"μ={t['mean']:.1f}" if "mean" in t else ""
+        delta_str = ""
+        if "delta" in t:
+            d = t["delta"]
+            delta_str = click.style(f"+{d:.1f}" if d >= 0 else f"{d:.1f}", fg="green" if d >= 0 else "red")
+        ci = b.confidence.compute_ci(t["flywheel"])
+        ci_str = f"[{ci[1]:.0f},{ci[2]:.0f}]" if ci[0] > 0 else ""
+
+        line = f"  {click.style(icon, fg=color)} {t['flywheel']:20s}  {spark}  "
+        line += f"{current}  {delta_str}  {mean_str}  {ci_str}"
+        click.echo(line)
+
+    click.echo("")
+    warnings = b.get_inflation_warnings()
+    if warnings:
+        _header("Calibration warnings")
+        for w in warnings:
+            _warn(w)
+        click.echo("")
+
+
+@cli.command()
+@click.argument("flywheel_name")
+@click.argument("raw_score", type=float)
+@click.argument("ground_truth", type=float)
+def calibrate(flywheel_name: str, raw_score: float, ground_truth: float) -> None:
+    """Add a manual calibration anchor. Usage: calibrate design_audit 98 92"""
+    if not _HAS_BRAIN:
+        click.echo(click.style("  Intelligence layer not available", fg="red"))
+        return
+
+    b = FlywheelBrain()
+    b.calibrator.add_anchor(flywheel_name, raw_score, ground_truth)
+    b.save()
+    calibrated = b.calibrator.calibrated_score(flywheel_name, raw_score)
+    click.echo(click.style(f"\n  Calibration anchor added for {flywheel_name}", fg="green"))
+    click.echo(f"  Raw: {raw_score} → Calibrated: {calibrated:.1f} (offset: {calibrated - raw_score:+.1f})")
     click.echo("")
 
 

@@ -16,3 +16,5 @@ coverage.xml
 env/
 venv/
 .flywheel_state.json
+.flywheel_brain.json
+.flywheel_history.jsonl

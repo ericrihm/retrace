@@ -2,7 +2,7 @@ re:trace Debug Interface Detector
 ========================================
 
 Board: Xbox One Model 1540 — Durango (AMD Liverpool APU, 28nm)
-Timestamp: 2026-05-01T01:11:38Z
+Timestamp: 2026-05-01T02:07:20Z
 Total findings: 1  (HIGH=1  MEDIUM=0  LOW=0)
 
   [HIGH]  JTAG

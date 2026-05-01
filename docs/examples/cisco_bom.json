@@ -6,7 +6,7 @@
       1000
     ],
     "pipeline_version": "0.1.0",
-    "timestamp": "2026-05-01T01:11:38Z",
+    "timestamp": "2026-05-01T02:07:20Z",
     "duration_seconds": 0.0
   },
   "summary": {
@@ -56,7 +56,15 @@
         180,
         120,
         70
-      ]
+      ],
+      "security_intel": {
+        "interface": "DDR3L SDRAM",
+        "logic_voltage": "1.35V",
+        "debug_relevance": "DDR3 DRAM \u2014 cold boot attack vector; row hammer exploitable on unmitigated silicon"
+      },
+      "intel_interface": "DDR3L SDRAM",
+      "intel_logic_voltage": "1.35V",
+      "intel_debug_relevance": "DDR3 DRAM \u2014 cold boot attack vector; row hammer exploitable on unmitigated silicon"
     },
     {
       "id": "U3",
@@ -72,7 +80,15 @@
         360,
         120,
         70
-      ]
+      ],
+      "security_intel": {
+        "interface": "DDR3L SDRAM",
+        "logic_voltage": "1.35V",
+        "debug_relevance": "DDR3 DRAM \u2014 cold boot attack vector; row hammer exploitable on unmitigated silicon"
+      },
+      "intel_interface": "DDR3L SDRAM",
+      "intel_logic_voltage": "1.35V",
+      "intel_debug_relevance": "DDR3 DRAM \u2014 cold boot attack vector; row hammer exploitable on unmitigated silicon"
     },
     {
       "id": "U4",
@@ -88,7 +104,15 @@
         500,
         120,
         70
-      ]
+      ],
+      "security_intel": {
+        "interface": "DDR3L SDRAM",
+        "logic_voltage": "1.35V",
+        "debug_relevance": "DDR3 DRAM \u2014 cold boot attack vector; row hammer exploitable on unmitigated silicon"
+      },
+      "intel_interface": "DDR3L SDRAM",
+      "intel_logic_voltage": "1.35V",
+      "intel_debug_relevance": "DDR3 DRAM \u2014 cold boot attack vector; row hammer exploitable on unmitigated silicon"
     },
     {
       "id": "U5",
@@ -104,7 +128,15 @@
         640,
         120,
         70
-      ]
+      ],
+      "security_intel": {
+        "interface": "DDR3L SDRAM",
+        "logic_voltage": "1.35V",
+        "debug_relevance": "DDR3 DRAM \u2014 cold boot attack vector; row hammer exploitable on unmitigated silicon"
+      },
+      "intel_interface": "DDR3L SDRAM",
+      "intel_logic_voltage": "1.35V",
+      "intel_debug_relevance": "DDR3 DRAM \u2014 cold boot attack vector; row hammer exploitable on unmitigated silicon"
     },
     {
       "id": "U6",
