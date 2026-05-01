@@ -122,7 +122,6 @@ def build_svg() -> str:
     title = f'<text x="{WIDTH // 2}" y="{title_y}" fill="#94a3b8" text-anchor="middle" font-size="13">retrace — board_photo.jpg</text>'
 
     svg = (
-        '<?xml version="1.0" encoding="UTF-8"?>\n'
         f'<svg xmlns="http://www.w3.org/2000/svg"\n'
         f'     width="{WIDTH}" height="{total_height}"\n'
         f'     viewBox="0 0 {WIDTH} {total_height}">\n'

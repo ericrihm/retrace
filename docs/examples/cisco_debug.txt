@@ -2,7 +2,7 @@ re:trace Debug Interface Detector
 ========================================
 
 Board: CISCO ASA5506-X V05
-Timestamp: 2026-05-01T02:52:28Z
+Timestamp: 2026-05-01T03:08:34Z
 Total findings: 3  (HIGH=1  MEDIUM=2  LOW=0)
 
   [HIGH]  JTAG

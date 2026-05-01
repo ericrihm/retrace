@@ -1144,3 +1144,371 @@ def test_solve_with_conflicts(runner, tmp_path):
     assert result.exit_code == 0
     assert "Conflicts" in result.output
     assert "Domain wipeout" in result.output
+
+
+# ---------------------------------------------------------------------------
+# attack-paths command
+# ---------------------------------------------------------------------------
+
+def test_attack_paths_help(runner):
+    result = runner.invoke(main, ["attack-paths", "--help"])
+    assert result.exit_code == 0
+    assert "attack" in result.output.lower() or "path" in result.output.lower()
+
+
+def test_attack_paths_missing_file(runner):
+    result = runner.invoke(main, ["attack-paths", "/no/such/image.jpg"])
+    assert result.exit_code != 0
+
+
+def test_attack_paths_command(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+
+    from retrace.analysis.attack_path import AttackEdge, AttackPath
+
+    paths = [
+        AttackPath(
+            entry_point="JTAG",
+            target="MCU",
+            total_score=0.85,
+            description="Physical JTAG -> MCU",
+            edges=[
+                AttackEdge(from_id="J1", to_id="U1", bus="JTAG", score=0.85,
+                           rationale="Exposed header"),
+            ],
+        ),
+    ]
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.analysis.attack_path.rank_attack_paths", return_value=paths), \
+         patch("retrace.analysis.attack_path.format_attack_paths", return_value="JTAG -> MCU [0.85]"):
+        result = runner.invoke(main, ["attack-paths", str(img)])
+    assert result.exit_code == 0
+    assert "JTAG" in result.output
+
+
+def test_attack_paths_json(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+
+    from retrace.analysis.attack_path import AttackEdge, AttackPath
+
+    paths = [
+        AttackPath(
+            entry_point="UART",
+            target="CPU",
+            total_score=0.72,
+            description="UART console access",
+            edges=[
+                AttackEdge(from_id="J2", to_id="U1", bus="UART", score=0.72,
+                           rationale="Serial console"),
+            ],
+        ),
+    ]
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.analysis.attack_path.rank_attack_paths", return_value=paths):
+        result = runner.invoke(main, ["attack-paths", str(img), "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert isinstance(data, list)
+    assert data[0]["entry"] == "UART"
+    assert data[0]["target"] == "CPU"
+    assert "score" in data[0]
+    assert "edges" in data[0]
+
+
+def test_attack_paths_empty(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.analysis.attack_path.rank_attack_paths", return_value=[]), \
+         patch("retrace.analysis.attack_path.format_attack_paths", return_value="No attack paths found."):
+        result = runner.invoke(main, ["attack-paths", str(img)])
+    assert result.exit_code == 0
+
+
+def test_attack_paths_top_k(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.analysis.attack_path.rank_attack_paths", return_value=[]) as mock_rank, \
+         patch("retrace.analysis.attack_path.format_attack_paths", return_value=""):
+        runner.invoke(main, ["attack-paths", str(img), "--top", "3"])
+    mock_rank.assert_called_once()
+    _, kwargs = mock_rank.call_args
+    assert kwargs.get("top_k") == 3 or mock_rank.call_args[0][1] == 3
+
+
+# ---------------------------------------------------------------------------
+# export-kicad-pcb command
+# ---------------------------------------------------------------------------
+
+def test_export_kicad_pcb_help(runner):
+    result = runner.invoke(main, ["export-kicad-pcb", "--help"])
+    assert result.exit_code == 0
+    assert "kicad" in result.output.lower() or "pcb" in result.output.lower()
+
+
+def test_export_kicad_pcb_missing_file(runner):
+    result = runner.invoke(main, ["export-kicad-pcb", "/no/such/image.jpg"])
+    assert result.exit_code != 0
+
+
+def test_export_kicad_pcb_command(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+    out_file = tmp_path / "board.kicad_pcb"
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.kicad.save_kicad_pcb") as mock_save:
+        result = runner.invoke(main, ["export-kicad-pcb", str(img), "-o", str(out_file)])
+    assert result.exit_code == 0
+    assert "KiCad PCB saved" in result.output
+    mock_save.assert_called_once()
+
+
+def test_export_kicad_pcb_default_output(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.kicad.save_kicad_pcb"):
+        result = runner.invoke(main, ["export-kicad-pcb", str(img)])
+    assert result.exit_code == 0
+    assert "board.kicad_pcb" in result.output
+
+
+def test_export_kicad_pcb_with_title_and_scale(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+    out_file = tmp_path / "custom.kicad_pcb"
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.kicad.save_kicad_pcb") as mock_save:
+        result = runner.invoke(main, [
+            "export-kicad-pcb", str(img),
+            "-o", str(out_file),
+            "--title", "MyBoard",
+            "--scale", "0.05",
+        ])
+    assert result.exit_code == 0
+    args, kwargs = mock_save.call_args
+    assert kwargs.get("scale") == 0.05 or args[3] == 0.05
+
+
+# ---------------------------------------------------------------------------
+# jtagulator command
+# ---------------------------------------------------------------------------
+
+def test_jtagulator_help(runner):
+    result = runner.invoke(main, ["jtagulator", "--help"])
+    assert result.exit_code == 0
+    assert "jtagulator" in result.output.lower() or "jtag" in result.output.lower()
+
+
+def test_jtagulator_missing_file(runner):
+    result = runner.invoke(main, ["jtagulator", "/no/such/image.jpg"])
+    assert result.exit_code != 0
+
+
+def test_jtagulator_json(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+    findings = [
+        {"interface": "JTAG", "component_id": "J1", "severity": "high",
+         "description": "JTAG header", "component_label": "header",
+         "component_marking": "JTAG20"},
+    ]
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.debug_interfaces.detect_debug_interfaces",
+               return_value=findings):
+        result = runner.invoke(main, ["jtagulator", str(img), "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert "findings" in data
+    assert "interfaces_detected" in data
+    assert "JTAG" in data["interfaces_detected"]
+
+
+def test_jtagulator_no_findings(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.debug_interfaces.detect_debug_interfaces",
+               return_value=[]), \
+         patch("retrace.export.jtagulator.export_jtagulator_configs", return_value={}):
+        result = runner.invoke(main, ["jtagulator", str(img)])
+    assert result.exit_code == 0
+    assert "No debug interfaces" in result.output
+
+
+def test_jtagulator_with_configs(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+    findings = [
+        {"interface": "JTAG", "component_id": "J1", "severity": "high",
+         "description": "JTAG header", "component_label": "header",
+         "component_marking": "JTAG20"},
+    ]
+    configs = {
+        "jtag_scan.cfg": "# JTAGulator config\nVTREF 3.3\n",
+        "openocd.cfg": "# OpenOCD config\n",
+    }
+    out_dir = tmp_path / "jtagulator_out"
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.debug_interfaces.detect_debug_interfaces",
+               return_value=findings), \
+         patch("retrace.export.jtagulator.export_jtagulator_configs", return_value=configs):
+        result = runner.invoke(main, ["jtagulator", str(img), "-o", str(out_dir)])
+    assert result.exit_code == 0
+    assert "2 config file(s)" in result.output or "config" in result.output.lower()
+    assert (out_dir / "jtag_scan.cfg").exists()
+    assert (out_dir / "openocd.cfg").exists()
+
+
+def test_jtagulator_with_board_name_and_voltage(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+    findings = [{"interface": "SWD", "component_id": "J2", "severity": "high",
+                 "description": "SWD debug", "component_label": "header",
+                 "component_marking": "SWD"}]
+    configs = {"swd_scan.cfg": "# SWD config\nVTREF 1.8\n"}
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.debug_interfaces.detect_debug_interfaces",
+               return_value=findings), \
+         patch("retrace.export.jtagulator.export_jtagulator_configs",
+               return_value=configs) as mock_export:
+        result = runner.invoke(main, [
+            "jtagulator", str(img),
+            "--board-name", "TestBoard",
+            "--voltage", "1.8",
+        ])
+    assert result.exit_code == 0
+    _, kwargs = mock_export.call_args
+    assert kwargs.get("board_name") == "TestBoard"
+    assert kwargs.get("voltage") == "1.8"
+
+
+def test_jtagulator_json_with_board_name(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.debug_interfaces.detect_debug_interfaces",
+               return_value=[]):
+        result = runner.invoke(main, ["jtagulator", str(img), "--json", "--board-name", "MyBoard"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data["board"] == "MyBoard"
+
+
+# ---------------------------------------------------------------------------
+# compare --svg output path
+# ---------------------------------------------------------------------------
+
+def test_compare_svg_output(runner, tmp_path):
+    img_a = tmp_path / "board_a.png"
+    img_b = tmp_path / "board_b.png"
+    img_a.write_bytes(b"\x89PNG\r\n\x1a\n")
+    img_b.write_bytes(b"\x89PNG\r\n\x1a\n")
+    svg_out = tmp_path / "diff.svg"
+    mock_result = _make_analysis_result()
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.svg.generate_diff_svg", return_value="<svg/>") as mock_svg:
+        result = runner.invoke(main, ["compare", str(img_a), str(img_b), "--svg", str(svg_out)])
+    assert result.exit_code == 0
+    assert svg_out.exists()
+    assert "Diff SVG" in result.output
+    mock_svg.assert_called_once()
+
+
+def test_compare_svg_output_no_changes(runner, tmp_path):
+    """When generate_diff_svg returns None/empty, should not write the file."""
+    img_a = tmp_path / "a.png"
+    img_b = tmp_path / "b.png"
+    img_a.write_bytes(b"\x89PNG\r\n\x1a\n")
+    img_b.write_bytes(b"\x89PNG\r\n\x1a\n")
+    svg_out = tmp_path / "diff.svg"
+    mock_result = _make_analysis_result()
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.svg.generate_diff_svg", return_value=None):
+        result = runner.invoke(main, ["compare", str(img_a), str(img_b), "--svg", str(svg_out)])
+    assert result.exit_code == 0
+    assert "No changes to visualize" in result.output
+    assert not svg_out.exists()
+
+
+# ---------------------------------------------------------------------------
+# report-html with --title
+# ---------------------------------------------------------------------------
+
+def test_report_html_with_title(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+    out_file = tmp_path / "titled.html"
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.html_report.save_html_report") as mock_save:
+        result = runner.invoke(main, [
+            "report-html", str(img), "-o", str(out_file), "--title", "My Custom Board"
+        ])
+    assert result.exit_code == 0
+    _, kwargs = mock_save.call_args
+    assert kwargs.get("title") == "My Custom Board"
+
+
+# ---------------------------------------------------------------------------
+# scan --bom with quiet flag (tests the quiet path in bom output)
+# ---------------------------------------------------------------------------
+
+def test_scan_bom_quiet(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+    bom_data = {"components": [{"ref": "U1"}]}
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.export.bom.generate_bom", return_value=bom_data):
+        result = runner.invoke(main, ["--quiet", "scan", str(img), "--bom"])
+    assert result.exit_code == 0
+    # In quiet mode, BOM line should not appear
+    assert "BOM:" not in result.output
+
+
+# ---------------------------------------------------------------------------
+# export — default output dir (no -o flag)
+# ---------------------------------------------------------------------------
+
+def test_export_default_output_dir(runner, tmp_path):
+    """Without -o, export uses <stem>_export as output directory."""
+    img = tmp_path / "myboard.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result):
+        result = runner.invoke(main, ["export", str(img)], catch_exceptions=False)
+    assert result.exit_code == 0
+    assert "myboard_export" in result.output

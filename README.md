@@ -10,9 +10,9 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://github.com/ericrihm/retrace)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Coverage](https://img.shields.io/badge/coverage-97%25-brightgreen.svg)](https://github.com/ericrihm/retrace)
+[![Coverage](https://img.shields.io/badge/coverage-99%25-brightgreen.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->1442<!-- /STATS --> tests** · **<!-- STATS:modules -->25<!-- /STATS --> modules** · **<!-- STATS:loc -->14054<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->1491<!-- /STATS --> tests** · **<!-- STATS:modules -->25<!-- /STATS --> modules** · **<!-- STATS:loc -->14054<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/) · [Issues](https://github.com/ericrihm/retrace/issues)
 
@@ -54,7 +54,7 @@ retrace scan board_photo.jpg
 
 ### Demo: Dual-Board Analysis
 
-Two boards. Two worlds. Both analyzed from photos alone. Demo uses synthetic PCB images with verified real-world component data — see [Known Limitations](#known-limitations) for photo requirements on real boards.
+Two boards. Two worlds. Both analyzed from photos alone. Demo uses synthetic PCB renders with verified real-world component data (BOM, pinouts, debug interfaces, attack paths are all real). Synthetic images are used because iFixit photos are [CC BY-NC-SA](https://www.ifixit.com/Info/Licensing) (incompatible with MIT) and neither device has FCC internal photos available. Run `retrace scan your_board.jpg` on a real photo for the full experience — see [Known Limitations](#known-limitations) for photo requirements.
 
 <table>
 <tr>
@@ -745,8 +745,8 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->1442<!-- /STATS --> |
-| Coverage | <!-- STATS:coverage -->97%<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->1491<!-- /STATS --> |
+| Coverage | <!-- STATS:coverage -->99%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->25<!-- /STATS --> |
 | Lines of code | <!-- STATS:loc -->14054<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->196<!-- /STATS --> parts |
@@ -760,7 +760,7 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->1442<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->1491<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```

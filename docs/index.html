@@ -936,11 +936,11 @@ footer a { color: var(--text-mid); }
   <p class="tagline">Photo in, attack surface out. The first open-source toolkit that identifies PCB components, extracts traces, maps trust chains, and tells you where to probe.</p>
 
   <div class="stats-bar">
-    <div class="stat"><div class="stat-val" data-target="970">1377</div><div class="stat-label">Tests</div></div>
-    <div class="stat"><div class="stat-val" data-target="94" data-suffix="%">97%</div><div class="stat-label">Coverage</div></div>
-    <div class="stat"><div class="stat-val" data-target="24">25</div><div class="stat-label">Modules</div></div>
-    <div class="stat"><div class="stat-val" data-target="186">200</div><div class="stat-label">Components DB</div></div>
-    <div class="stat"><div class="stat-val" data-target="19">20</div><div class="stat-label">CLI Commands</div></div>
+    <div class="stat"><div class="stat-val" data-target="1490">1490</div><div class="stat-label">Tests</div></div>
+    <div class="stat"><div class="stat-val" data-target="99" data-suffix="%">99%</div><div class="stat-label">Coverage</div></div>
+    <div class="stat"><div class="stat-val" data-target="25">25</div><div class="stat-label">Modules</div></div>
+    <div class="stat"><div class="stat-val" data-target="196">196</div><div class="stat-label">Components DB</div></div>
+    <div class="stat"><div class="stat-val" data-target="20">20</div><div class="stat-label">CLI Commands</div></div>
   </div>
 
   <div class="hero-cta">
@@ -1016,7 +1016,7 @@ footer a { color: var(--text-mid); }
       <div class="pipe-arrow">&rarr;</div>
       <div class="pipe-stage"><div class="stage-icon">&#128204;</div><div class="stage-name">Pinout</div><div class="stage-tech">Probe diagrams</div></div>
       <div class="pipe-arrow">&rarr;</div>
-      <div class="pipe-stage"><div class="stage-icon">&#128230;</div><div class="stage-name">Export</div><div class="stage-tech">SVG / HTML / KiCad</div></div>
+      <div class="pipe-stage"><div class="stage-icon">&#128230;</div><div class="stage-name">Export</div><div class="stage-tech">SVG / HTML / KiCad / JTAGulator</div></div>
     </div>
   </div>
 </section>
@@ -1416,6 +1416,7 @@ footer a { color: var(--text-mid); }
       <span class="use-pill">Product teardowns</span>
       <span class="use-pill">Fault injection recon</span>
       <span class="use-pill">Counterfeit detection</span>
+      <span class="use-pill">JTAGulator / OpenOCD automation</span>
     </div>
   </div>
 </section>
@@ -1454,8 +1455,8 @@ footer a { color: var(--text-mid); }
     </div>
     <div class="card-grid">
       <div class="card">
-        <h3>KiCad Netlist</h3>
-        <p>Reconstructed schematic netlist. Components mapped to KiCad footprint libraries, nets from trace extraction.</p>
+        <h3>KiCad Netlist &amp; PCB</h3>
+        <p>Reconstructed schematic netlist and positional PCB layout. <code style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--accent)">retrace export-kicad</code> writes a netlist; <code style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--accent)">retrace export-kicad-pcb</code> places footprints at detected board coordinates for a fully-positioned .kicad_pcb file.</p>
         <div class="card-meta">
           <a href="examples/cisco.net">cisco.net</a> (54 KB) &middot;
           <a href="examples/xbox.net">xbox.net</a> (44 KB)
@@ -1509,6 +1510,11 @@ footer a { color: var(--text-mid); }
           <a href="examples/cisco_probe.txt">cisco probe plan</a> &middot;
           <a href="examples/cisco_solver.txt">cisco solver</a>
         </div>
+      </div>
+      <div class="card">
+        <h3>JTAGulator &amp; OpenOCD Configs</h3>
+        <p>Auto-generates JTAGulator scan configs and OpenOCD .cfg files from detected JTAG headers. Drop the output straight into your toolchain &mdash; no manual pin mapping.</p>
+        <div class="card-meta"><code style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--accent)">retrace jtagulator board.jpg</code> &mdash; JTAGulator config + OpenOCD .cfg</div>
       </div>
     </div>
   </div>

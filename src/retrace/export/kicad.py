@@ -225,7 +225,7 @@ def generate_kicad_pcb(
     _w("  (general")
     _w("    (thickness 1.6)")
     _w("  )")
-    _w('  (paper "User" {:.2f} {:.2f})'.format(bw, bh))
+    _w(f'  (paper "User" {bw:.2f} {bh:.2f})')
     _w("  (layers")
     _w('    (0 "F.Cu" signal)')
     _w('    (31 "B.Cu" signal)')
@@ -234,7 +234,7 @@ def generate_kicad_pcb(
     _w('    (44 "Edge.Cuts" user)')
     _w("  )")
 
-    _w("  (gr_rect (start 0 0) (end {:.2f} {:.2f}) (layer \"Edge.Cuts\") (width 0.1))".format(bw, bh))
+    _w(f"  (gr_rect (start 0 0) (end {bw:.2f} {bh:.2f}) (layer \"Edge.Cuts\") (width 0.1))")
 
     for comp in result.components:
         x, y, w, h = comp.bbox
@@ -245,17 +245,17 @@ def generate_kicad_pcb(
         fp = _footprint_for(comp)
 
         _w(f"  (footprint \"{escape(fp or 'retrace:Unknown')}\"")
-        _w(f"    (layer \"F.Cu\")")
+        _w("    (layer \"F.Cu\")")
         _w(f"    (at {cx:.2f} {cy:.2f})")
         _w(f"    (property \"Reference\" \"{ref}\"")
-        _w(f"      (at 0 -2) (layer \"F.SilkS\")")
-        _w(f"      (effects (font (size 1 1) (thickness 0.15)))")
-        _w(f"    )")
+        _w("      (at 0 -2) (layer \"F.SilkS\")")
+        _w("      (effects (font (size 1 1) (thickness 0.15)))")
+        _w("    )")
         _w(f"    (property \"Value\" \"{value}\"")
-        _w(f"      (at 0 2) (layer \"F.SilkS\")")
-        _w(f"      (effects (font (size 1 1) (thickness 0.15)))")
-        _w(f"    )")
-        _w(f"  )")
+        _w("      (at 0 2) (layer \"F.SilkS\")")
+        _w("      (effects (font (size 1 1) (thickness 0.15)))")
+        _w("    )")
+        _w("  )")
 
     _w(")")
     return "\n".join(lines) + "\n"

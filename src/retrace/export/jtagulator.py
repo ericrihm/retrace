@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
-from retrace.export.pinout_diagram import _best_pinout, _detect_pin_count, _PINOUTS
+from retrace.export.pinout_diagram import _PINOUTS, _best_pinout
 
 # ---------------------------------------------------------------------------
 # Voltage lookup — common interface voltages
@@ -300,8 +300,8 @@ def _jtag_config_section(finding: dict[str, Any], voltage: str) -> list[str]:
     lines.append("")
 
     lines.append("# After identifying JTAG pins, use OpenOCD:")
-    lines.append(f"#   openocd -f interface/ftdi/generic.cfg -c 'transport select jtag' \\")
-    lines.append(f"#     -c 'adapter speed 1000' -c 'init' -c 'scan_chain'")
+    lines.append("#   openocd -f interface/ftdi/generic.cfg -c 'transport select jtag' \\")
+    lines.append("#     -c 'adapter speed 1000' -c 'init' -c 'scan_chain'")
     lines.append("")
     return lines
 

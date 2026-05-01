@@ -418,6 +418,246 @@ class TestPrintStyles:
         assert "@media print" in report
 
 
+# ── Additional coverage tests ─────────────────────────────────────────────
+
+class TestClassifyNet:
+    """Tests for _classify_net net-type classification branches."""
+
+    def _make_trace(self, from_id, to_id, width_px=2.0):
+        return Trace(
+            id="T_test",
+            points=[(0, 0), (10, 10)],
+            from_component=from_id,
+            to_component=to_id,
+            width_px=width_px,
+        )
+
+    def test_debug_net_via_jtag_marking(self):
+        from retrace.export.html_report import _classify_net
+        comp_map = {
+            "J1": Component(id="J1", label="header", confidence=0.9, bbox=(0, 0, 10, 10), marking="JTAG"),
+            "U1": Component(id="U1", label="ic", confidence=0.9, bbox=(20, 20, 10, 10)),
+        }
+        trace = self._make_trace("J1", "U1")
+        assert _classify_net(trace, comp_map) == "debug"
+
+    def test_power_net_via_vcc_marking(self):
+        from retrace.export.html_report import _classify_net
+        comp_map = {
+            "U1": Component(id="U1", label="ic", confidence=0.9, bbox=(0, 0, 10, 10), marking="VCC"),
+            "C1": Component(id="C1", label="capacitor", confidence=0.9, bbox=(20, 20, 10, 10)),
+        }
+        trace = self._make_trace("U1", "C1")
+        assert _classify_net(trace, comp_map) == "power"
+
+    def test_power_net_via_wide_trace(self):
+        from retrace.export.html_report import _classify_net
+        comp_map = {
+            "R1": Component(id="R1", label="resistor", confidence=0.9, bbox=(0, 0, 10, 10)),
+            "R2": Component(id="R2", label="resistor", confidence=0.9, bbox=(20, 20, 10, 10)),
+        }
+        trace = self._make_trace("R1", "R2", width_px=6.0)
+        assert _classify_net(trace, comp_map) == "power"
+
+    def test_clock_net(self):
+        from retrace.export.html_report import _classify_net
+        comp_map = {
+            "X1": Component(id="X1", label="crystal", confidence=0.9, bbox=(0, 0, 10, 10), marking="XTAL"),
+            "U1": Component(id="U1", label="ic", confidence=0.9, bbox=(20, 20, 10, 10)),
+        }
+        trace = self._make_trace("X1", "U1")
+        assert _classify_net(trace, comp_map) == "clock"
+
+    def test_ground_net(self):
+        from retrace.export.html_report import _classify_net
+        comp_map = {
+            "GND": Component(id="GND", label="test_point", confidence=0.9, bbox=(0, 0, 5, 5), marking="GND"),
+            "R1": Component(id="R1", label="resistor", confidence=0.9, bbox=(20, 20, 10, 10)),
+        }
+        trace = self._make_trace("GND", "R1")
+        assert _classify_net(trace, comp_map) == "ground"
+
+    def test_data_net(self):
+        from retrace.export.html_report import _classify_net
+        comp_map = {
+            "U1": Component(id="U1", label="ic", confidence=0.9, bbox=(0, 0, 10, 10), marking="MOSI"),
+            "U2": Component(id="U2", label="ic", confidence=0.9, bbox=(20, 20, 10, 10)),
+        }
+        trace = self._make_trace("U1", "U2")
+        assert _classify_net(trace, comp_map) == "data"
+
+    def test_signal_net_fallback(self):
+        from retrace.export.html_report import _classify_net
+        comp_map = {
+            "R1": Component(id="R1", label="resistor", confidence=0.9, bbox=(0, 0, 10, 10)),
+            "R2": Component(id="R2", label="resistor", confidence=0.9, bbox=(20, 20, 10, 10)),
+        }
+        trace = self._make_trace("R1", "R2", width_px=1.0)
+        assert _classify_net(trace, comp_map) == "signal"
+
+    def test_unknown_component_refs(self):
+        from retrace.export.html_report import _classify_net
+        comp_map: dict = {}
+        trace = self._make_trace("MISSING_A", "MISSING_B")
+        # Should not raise; falls back to "signal"
+        net = _classify_net(trace, comp_map)
+        assert net in ("signal", "power", "debug", "clock", "ground", "data")
+
+
+class TestCvssGaugeSvg:
+    def test_no_score_returns_empty(self):
+        from retrace.export.html_report import _cvss_gauge_svg
+        assert _cvss_gauge_svg(0) == ""
+        assert _cvss_gauge_svg(0.0) == ""
+
+    def test_high_score_red(self):
+        from retrace.export.html_report import _cvss_gauge_svg
+        svg = _cvss_gauge_svg(8.5)
+        assert "#ef4444" in svg  # high severity red
+
+    def test_medium_score_yellow(self):
+        from retrace.export.html_report import _cvss_gauge_svg
+        svg = _cvss_gauge_svg(5.5)
+        assert "#f59e0b" in svg  # medium yellow
+
+    def test_low_score_blue(self):
+        from retrace.export.html_report import _cvss_gauge_svg
+        svg = _cvss_gauge_svg(2.5)
+        assert "#3b82f6" in svg  # low blue
+
+
+class TestAttackChainSvg:
+    def test_empty_returns_empty_string(self):
+        from retrace.export.html_report import _attack_chain_svg
+        assert _attack_chain_svg([]) == ""
+
+    def test_single_path_renders_svg(self):
+        from retrace.export.html_report import _attack_chain_svg
+        paths = [("JTAG", "MCU", "Physical access")]
+        svg = _attack_chain_svg(paths)
+        assert svg.startswith("<svg")
+        assert "</svg>" in svg
+        assert "JTAG" in svg
+        assert "MCU" in svg
+
+    def test_multiple_paths(self):
+        from retrace.export.html_report import _attack_chain_svg
+        paths = [
+            ("JTAG", "MCU", "Step 1"),
+            ("UART", "CPU", "Step 2"),
+        ]
+        svg = _attack_chain_svg(paths)
+        assert "JTAG" in svg
+        assert "UART" in svg
+        assert svg.count("<rect") >= 4  # 2 rects per path
+
+
+class TestAttackPathsInReport:
+    def test_attack_paths_section_rendered(self):
+        result = _basic_result()
+        paths = [("JTAG", "MCU", "Physical JTAG access")]
+        report = generate_html_report(result, attack_paths=paths)
+        assert "Attack Chains" in report
+        assert "JTAG" in report
+
+    def test_no_attack_paths_no_section(self):
+        result = _basic_result()
+        report = generate_html_report(result, attack_paths=None)
+        assert "Attack Chains" not in report
+
+    def test_empty_attack_paths_no_section(self):
+        result = _basic_result()
+        report = generate_html_report(result, attack_paths=[])
+        assert "Attack Chains" not in report
+
+
+class TestRiskMatrixSvg:
+    def test_empty_findings_returns_empty(self):
+        from retrace.export.html_report import _risk_matrix_svg
+        # No findings → no parts → empty string
+        assert _risk_matrix_svg([]) == ""
+
+    def test_single_high_finding(self):
+        from retrace.export.html_report import _risk_matrix_svg
+        findings = [{"severity": "HIGH"}]
+        bar = _risk_matrix_svg(findings)
+        assert "risk-bar" in bar
+        assert "#ef4444" in bar
+
+    def test_mixed_severities(self):
+        from retrace.export.html_report import _risk_matrix_svg
+        findings = [
+            {"severity": "HIGH"},
+            {"severity": "MEDIUM"},
+            {"severity": "LOW"},
+        ]
+        bar = _risk_matrix_svg(findings)
+        assert "#ef4444" in bar
+        assert "#f59e0b" in bar
+        assert "#3b82f6" in bar
+
+
+class TestTraceNetBreakdown:
+    """Tests for net-type breakdown in trace analysis section."""
+
+    def test_net_breakdown_shows_debug_net(self):
+        result = AnalysisResult(
+            image_path="trace_test.jpg",
+            components=[
+                Component(id="J1", label="header", confidence=0.9,
+                          bbox=(0, 0, 10, 10), marking="JTAG"),
+                Component(id="U1", label="ic", confidence=0.9,
+                          bbox=(20, 20, 10, 10)),
+            ],
+            traces=[
+                Trace(id="T1", points=[(0, 0), (20, 20)],
+                      from_component="J1", to_component="U1", width_px=2.0),
+            ],
+        )
+        report = generate_html_report(result)
+        assert "debug" in report
+
+    def test_net_breakdown_shows_power_net(self):
+        result = AnalysisResult(
+            image_path="trace_test.jpg",
+            components=[
+                Component(id="U1", label="ic", confidence=0.9,
+                          bbox=(0, 0, 10, 10), marking="VCC"),
+                Component(id="C1", label="capacitor", confidence=0.9,
+                          bbox=(20, 20, 5, 5)),
+            ],
+            traces=[
+                Trace(id="T1", points=[(0, 0), (20, 20)],
+                      from_component="U1", to_component="C1", width_px=2.0),
+            ],
+        )
+        report = generate_html_report(result)
+        assert "power" in report
+
+
+class TestSaveHtmlReport:
+    def test_save_creates_file(self, tmp_path):
+        result = _basic_result()
+        out = tmp_path / "report.html"
+        save_html_report(result, str(out))
+        assert out.exists()
+        content = out.read_text()
+        assert "<!DOCTYPE html>" in content
+
+    def test_save_creates_parent_dirs(self, tmp_path):
+        result = _empty_result()
+        nested = tmp_path / "deep" / "nested" / "report.html"
+        save_html_report(result, str(nested))
+        assert nested.exists()
+
+    def test_save_with_title_kwarg(self, tmp_path):
+        result = _basic_result()
+        out = tmp_path / "titled.html"
+        save_html_report(result, str(out), title="Custom Title")
+        content = out.read_text()
+        assert "Custom Title" in content
+
+
 class TestSaveReport:
     def test_save_creates_file(self, tmp_path):
         result = _basic_result()
