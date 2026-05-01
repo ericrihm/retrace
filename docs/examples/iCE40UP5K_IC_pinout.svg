@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="398" viewBox="0 0 600 398">
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="556" viewBox="0 0 700 556">
   <!-- re:trace IC pinout diagram -->
   <defs>
     <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
@@ -13,29 +13,101 @@
       <path d="M 0 0 L 10 3 L 0 6 z" fill="context-stroke" fill-opacity="0.8"/>
     </marker>
   </defs>
-  <rect width="600" height="398" fill="#0a0e1a"/>
-  <rect width="600" height="40" fill="#111827" fill-opacity="0.92"/>
-  <line x1="0" y1="40" x2="600" y2="40" stroke="#22d3ee" stroke-width="1" stroke-opacity="0.4"/>
+  <rect width="700" height="556" fill="#0a0e1a"/>
+  <rect width="700" height="40" fill="#111827" fill-opacity="0.92"/>
+  <line x1="0" y1="40" x2="700" y2="40" stroke="#22d3ee" stroke-width="1" stroke-opacity="0.4"/>
   <text x="12" y="26" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="13" fill="#22d3ee" font-weight="bold">re:trace</text>
   <text x="80" y="26" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="11" fill="#e2e8f0">iCE40UP5K — QFN-48</text>
-  <rect x="230" y="70" width="140" height="120" rx="4" fill="#111827" stroke="#22d3ee" stroke-width="1.5"/>
-  <path d="M 290 70 A 10 10 0 0 0 310 70" fill="#0a0e1a" stroke="#22d3ee" stroke-width="1"/>
-  <text x="300" y="122" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#e2e8f0" font-weight="bold">iCE40UP5K</text>
-  <text x="300" y="138" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#64748b">QFN-48</text>
-  <rect x="20" y="220" width="560" height="148" rx="6" fill="#111827" stroke="#1e293b" stroke-width="1"/>
-  <text x="36" y="240" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="11" fill="#22d3ee" font-weight="bold">Security Intelligence</text>
-  <text x="36" y="256" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#ff6b6b" font-weight="600">Config Interface</text>
-  <text x="200" y="256" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">SPI (Master), NVCM (one-time)</text>
-  <text x="36" y="274" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b" font-weight="600">Jtag Chain</text>
-  <text x="200" y="274" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">False</text>
-  <text x="36" y="292" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b" font-weight="600">Bitstream Format</text>
-  <text x="200" y="292" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">.bin (icestorm/nextpnr)</text>
-  <text x="36" y="310" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b" font-weight="600">Toolchain</text>
-  <text x="200" y="310" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">Open-source: Yosys + nextpnr-ice40 + icestorm</text>
-  <text x="36" y="328" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b" font-weight="600">Lut Count</text>
-  <text x="200" y="328" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">5280</text>
-  <text x="36" y="346" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#ff6b6b" font-weight="600">Debug Relevance</text>
-  <text x="200" y="346" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">Fully open-source reversible — icestorm can decompile bitstream back to netlist</text>
-  <rect y="374" width="600" height="24" fill="#111827" fill-opacity="0.92"/>
-  <text x="300" y="390" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b">re:trace IC pinout — iCE40UP5K</text>
+  <rect x="246" y="100" width="208" height="208" rx="4" fill="#111827" stroke="#22d3ee" stroke-width="1.5"/>
+  <path d="M 340 100 A 10 10 0 0 0 360 100" fill="#0a0e1a" stroke="#22d3ee" stroke-width="1"/>
+  <text x="350" y="196" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#e2e8f0" font-weight="bold">iCE40UP5K</text>
+  <text x="350" y="212" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="8" fill="#64748b">QFN-48</text>
+  <line x1="246" y1="120.0" x2="226" y2="120.0" stroke="#ef4444" stroke-width="1.5"/>
+  <circle cx="246" cy="120.0" r="2.5" fill="#ef4444"/>
+  <text x="222" y="123.0" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#ef4444">1 VDD</text>
+  <line x1="246" y1="153.6" x2="226" y2="153.6" stroke="#3b82f6" stroke-width="1.5"/>
+  <circle cx="246" cy="153.6" r="2.5" fill="#3b82f6"/>
+  <text x="222" y="156.6" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6">2 IO0</text>
+  <line x1="246" y1="187.2" x2="226" y2="187.2" stroke="#3b82f6" stroke-width="1.5"/>
+  <circle cx="246" cy="187.2" r="2.5" fill="#3b82f6"/>
+  <text x="222" y="190.2" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6">3 IO1</text>
+  <line x1="246" y1="220.8" x2="226" y2="220.8" stroke="#3b82f6" stroke-width="1.5"/>
+  <circle cx="246" cy="220.8" r="2.5" fill="#3b82f6"/>
+  <text x="222" y="223.8" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6">4 IO2</text>
+  <line x1="246" y1="254.4" x2="226" y2="254.4" stroke="#3b82f6" stroke-width="1.5"/>
+  <circle cx="246" cy="254.4" r="2.5" fill="#3b82f6"/>
+  <text x="222" y="257.4" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6">5 IO3</text>
+  <line x1="246" y1="288.0" x2="226" y2="288.0" stroke="#6b7280" stroke-width="1.5"/>
+  <circle cx="246" cy="288.0" r="2.5" fill="#6b7280"/>
+  <text x="222" y="291.0" text-anchor="end" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#6b7280">6 GND</text>
+  <line x1="266.0" y1="308" x2="266.0" y2="328" stroke="#3b82f6" stroke-width="1.5"/>
+  <circle cx="266.0" cy="308" r="2.5" fill="#3b82f6"/>
+  <text x="266.0" y="342" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6" transform="rotate(-90,266.0,342)">IO4</text>
+  <line x1="299.6" y1="308" x2="299.6" y2="328" stroke="#3b82f6" stroke-width="1.5"/>
+  <circle cx="299.6" cy="308" r="2.5" fill="#3b82f6"/>
+  <text x="299.6" y="342" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6" transform="rotate(-90,299.6,342)">IO5</text>
+  <line x1="333.2" y1="308" x2="333.2" y2="328" stroke="#3b82f6" stroke-width="1.5"/>
+  <circle cx="333.2" cy="308" r="2.5" fill="#3b82f6"/>
+  <text x="333.2" y="342" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6" transform="rotate(-90,333.2,342)">IO6</text>
+  <line x1="366.8" y1="308" x2="366.8" y2="328" stroke="#3b82f6" stroke-width="1.5"/>
+  <circle cx="366.8" cy="308" r="2.5" fill="#3b82f6"/>
+  <text x="366.8" y="342" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6" transform="rotate(-90,366.8,342)">IO7</text>
+  <line x1="400.4" y1="308" x2="400.4" y2="328" stroke="#3b82f6" stroke-width="1.5"/>
+  <circle cx="400.4" cy="308" r="2.5" fill="#3b82f6"/>
+  <text x="400.4" y="342" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6" transform="rotate(-90,400.4,342)">IO8</text>
+  <line x1="434.0" y1="308" x2="434.0" y2="328" stroke="#6b7280" stroke-width="1.5"/>
+  <circle cx="434.0" cy="308" r="2.5" fill="#6b7280"/>
+  <text x="434.0" y="342" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#6b7280" transform="rotate(-90,434.0,342)">VSS</text>
+  <line x1="454" y1="288.0" x2="474" y2="288.0" stroke="#22c55e" stroke-width="1.5"/>
+  <circle cx="454" cy="288.0" r="2.5" fill="#22c55e"/>
+  <text x="478" y="291.0" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#22c55e">CLK 13</text>
+  <line x1="454" y1="254.4" x2="474" y2="254.4" stroke="#3b82f6" stroke-width="1.5"/>
+  <circle cx="454" cy="254.4" r="2.5" fill="#3b82f6"/>
+  <text x="478" y="257.4" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6">IO9 14</text>
+  <line x1="454" y1="220.8" x2="474" y2="220.8" stroke="#3b82f6" stroke-width="1.5"/>
+  <circle cx="454" cy="220.8" r="2.5" fill="#3b82f6"/>
+  <text x="478" y="223.8" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6">IO10 15</text>
+  <line x1="454" y1="187.2" x2="474" y2="187.2" stroke="#3b82f6" stroke-width="1.5"/>
+  <circle cx="454" cy="187.2" r="2.5" fill="#3b82f6"/>
+  <text x="478" y="190.2" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6">IO11 16</text>
+  <line x1="454" y1="153.6" x2="474" y2="153.6" stroke="#3b82f6" stroke-width="1.5"/>
+  <circle cx="454" cy="153.6" r="2.5" fill="#3b82f6"/>
+  <text x="478" y="156.6" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#3b82f6">IO12 17</text>
+  <line x1="454" y1="120.0" x2="474" y2="120.0" stroke="#ef4444" stroke-width="1.5"/>
+  <circle cx="454" cy="120.0" r="2.5" fill="#ef4444"/>
+  <text x="478" y="123.0" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#ef4444">VCC 18</text>
+  <line x1="434.0" y1="100" x2="434.0" y2="80" stroke="#a855f7" stroke-width="1.5"/>
+  <circle cx="434.0" cy="100" r="2.5" fill="#a855f7"/>
+  <text x="434.0" y="76" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#a855f7" transform="rotate(-90,434.0,76)">TCK</text>
+  <line x1="400.4" y1="100" x2="400.4" y2="80" stroke="#a855f7" stroke-width="1.5"/>
+  <circle cx="400.4" cy="100" r="2.5" fill="#a855f7"/>
+  <text x="400.4" y="76" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#a855f7" transform="rotate(-90,400.4,76)">TMS</text>
+  <line x1="366.8" y1="100" x2="366.8" y2="80" stroke="#a855f7" stroke-width="1.5"/>
+  <circle cx="366.8" cy="100" r="2.5" fill="#a855f7"/>
+  <text x="366.8" y="76" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#a855f7" transform="rotate(-90,366.8,76)">TDI</text>
+  <line x1="333.2" y1="100" x2="333.2" y2="80" stroke="#a855f7" stroke-width="1.5"/>
+  <circle cx="333.2" cy="100" r="2.5" fill="#a855f7"/>
+  <text x="333.2" y="76" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#a855f7" transform="rotate(-90,333.2,76)">TDO</text>
+  <line x1="299.6" y1="100" x2="299.6" y2="80" stroke="#f59e0b" stroke-width="1.5"/>
+  <circle cx="299.6" cy="100" r="2.5" fill="#f59e0b"/>
+  <text x="299.6" y="76" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#f59e0b" transform="rotate(-90,299.6,76)">CRESET</text>
+  <line x1="266.0" y1="100" x2="266.0" y2="80" stroke="#f59e0b" stroke-width="1.5"/>
+  <circle cx="266.0" cy="100" r="2.5" fill="#f59e0b"/>
+  <text x="266.0" y="76" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="10" fill="#f59e0b" transform="rotate(-90,266.0,76)">CDONE</text>
+  <rect x="20" y="378" width="660" height="148" rx="6" fill="#111827" stroke="#1e293b" stroke-width="1"/>
+  <text x="36" y="398" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="11" fill="#22d3ee" font-weight="bold">Security Intelligence</text>
+  <text x="36" y="414" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#ff6b6b" font-weight="600">Config Interface</text>
+  <text x="200" y="414" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">SPI (Master), NVCM (one-time)</text>
+  <text x="36" y="432" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b" font-weight="600">Jtag Chain</text>
+  <text x="200" y="432" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">False</text>
+  <text x="36" y="450" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b" font-weight="600">Bitstream Format</text>
+  <text x="200" y="450" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">.bin (icestorm/nextpnr)</text>
+  <text x="36" y="468" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b" font-weight="600">Toolchain</text>
+  <text x="200" y="468" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">Open-source: Yosys + nextpnr-ice40 + icestorm</text>
+  <text x="36" y="486" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b" font-weight="600">Lut Count</text>
+  <text x="200" y="486" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">5280</text>
+  <text x="36" y="504" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#ff6b6b" font-weight="600">Debug Relevance</text>
+  <text x="200" y="504" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#e2e8f0">Fully open-source reversible — icestorm can decompile bitstream back to netlist</text>
+  <rect y="532" width="700" height="24" fill="#111827" fill-opacity="0.92"/>
+  <text x="350" y="548" text-anchor="middle" font-family="'JetBrains Mono', 'Fira Code', 'SF Mono', monospace" font-size="9" fill="#64748b">re:trace IC pinout — iCE40UP5K</text>
 </svg>

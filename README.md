@@ -11,7 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-99%25-brightgreen.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->1177<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->10964<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->1179<!-- /STATS --> tests** · **<!-- STATS:modules -->23<!-- /STATS --> modules** · **<!-- STATS:loc -->11196<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/)
 
@@ -741,10 +741,10 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->1177<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->1179<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->99%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->23<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->10964<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->11196<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -756,7 +756,7 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->1177<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->1179<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```

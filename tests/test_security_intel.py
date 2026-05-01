@@ -722,20 +722,22 @@ class TestICPinoutSVG:
         assert "SCL" in svg
         assert "WP" in svg
 
-    def test_mcu_no_package_pins_but_has_intel(self):
+    def test_mcu_tqfp_quad_pinout(self):
         comp = _make_component(cid="U3", label="ic", part_number="STM32F103C8T6",
                                package="LQFP48")
         svg = generate_ic_pinout_svg(comp)
         assert svg
         assert "Security Intelligence" in svg
-        assert "Debug Interfaces" in svg or "JTAG" in svg
+        assert "PA13" in svg
+        assert "BOOT0" in svg
 
-    def test_fpga_has_intel(self):
+    def test_fpga_qfn_quad_pinout(self):
         comp = _make_component(cid="U4", label="ic", part_number="iCE40UP5K",
                                package="QFN-48")
         svg = generate_ic_pinout_svg(comp)
         assert svg
         assert "Yosys" in svg or "icestorm" in svg or "Toolchain" in svg
+        assert "CRESET" in svg or "CDONE" in svg
 
     def test_unknown_part_returns_empty(self):
         comp = _make_component(cid="U5", label="ic", part_number="NONEXISTENT")
@@ -762,13 +764,34 @@ class TestICPinoutSVG:
         assert 'width="400"' in svg
 
     def test_ic_pinouts_data_integrity(self):
+        expected_counts = {
+            "SOIC8_SPI_FLASH": 8, "SOIC8_EEPROM": 8,
+            "TQFP48_MCU": 48, "TSOP48_NAND": 48, "QFN24_GENERIC": 24,
+        }
         for key, pins in _IC_PINOUTS.items():
-            assert len(pins) == 8, f"{key} should have 8 pins"
+            if key in expected_counts:
+                assert len(pins) == expected_counts[key], f"{key} pin count"
+            assert len(pins) >= 8, f"{key} should have at least 8 pins"
             for name, group, desc in pins:
                 assert name, f"Empty pin name in {key}"
-                assert group in ("data", "clock", "power", "ground", "control"), \
+                assert group in ("data", "clock", "power", "ground", "control", "debug"), \
                     f"Invalid group {group!r} in {key}"
                 assert desc, f"Empty description in {key}"
+
+    def test_flash_extraction_cheat_sheet(self):
+        comp = _make_component(cid="U1", label="ic", part_number="W25Q128JV",
+                               package="SOP8")
+        svg = generate_ic_pinout_svg(comp)
+        assert "Flash Extraction Cheat Sheet" in svg
+        assert "binwalk" in svg
+        assert "flashrom" in svg
+        assert "JEDEC" in svg
+
+    def test_non_flash_has_no_cheat_sheet(self):
+        comp = _make_component(cid="U3", label="ic", part_number="STM32F103C8T6",
+                               package="LQFP48")
+        svg = generate_ic_pinout_svg(comp)
+        assert "Flash Extraction" not in svg
 
     def test_tpm_has_intel(self):
         comp = _make_component(cid="U7", label="ic", part_number="SLB9670",

@@ -269,6 +269,132 @@ _IC_PINOUTS: dict[str, list[tuple[str, str, str]]] = {
         ("WP", "control", "Write protect"),
         ("VCC", "power", "Supply 1.8V–5.5V"),
     ],
+    "TQFP48_MCU": [
+        ("VBAT", "power", "Battery backup"),
+        ("PC13", "control", "GPIO / RTC"),
+        ("PC14", "clock", "OSC32_IN"),
+        ("PC15", "clock", "OSC32_OUT"),
+        ("OSC_IN", "clock", "HSE oscillator in"),
+        ("OSC_OUT", "clock", "HSE oscillator out"),
+        ("NRST", "control", "Reset (active low)"),
+        ("VSSA", "ground", "Analog ground"),
+        ("VDDA", "power", "Analog supply"),
+        ("PA0", "data", "GPIO / ADC0 / WKUP"),
+        ("PA1", "data", "GPIO / ADC1"),
+        ("PA2", "data", "GPIO / USART2_TX"),
+        ("PA3", "data", "GPIO / USART2_RX"),
+        ("PA4", "data", "GPIO / SPI1_NSS / DAC"),
+        ("PA5", "data", "GPIO / SPI1_SCK / DAC"),
+        ("PA6", "data", "GPIO / SPI1_MISO"),
+        ("PA7", "data", "GPIO / SPI1_MOSI"),
+        ("PB0", "data", "GPIO / ADC8"),
+        ("PB1", "data", "GPIO / ADC9"),
+        ("PB2", "control", "BOOT1"),
+        ("PB10", "data", "GPIO / I2C2_SCL / USART3_TX"),
+        ("PB11", "data", "GPIO / I2C2_SDA / USART3_RX"),
+        ("VSS", "ground", "Ground"),
+        ("VDD", "power", "Digital supply"),
+        ("PB12", "data", "GPIO / SPI2_NSS"),
+        ("PB13", "data", "GPIO / SPI2_SCK"),
+        ("PB14", "data", "GPIO / SPI2_MISO"),
+        ("PB15", "data", "GPIO / SPI2_MOSI"),
+        ("PA8", "clock", "GPIO / MCO"),
+        ("PA9", "data", "GPIO / USART1_TX"),
+        ("PA10", "data", "GPIO / USART1_RX"),
+        ("PA11", "data", "GPIO / USB_DM"),
+        ("PA12", "data", "GPIO / USB_DP"),
+        ("PA13", "debug", "JTMS / SWDIO"),
+        ("PA14", "debug", "JTCK / SWCLK"),
+        ("PA15", "debug", "JTDI"),
+        ("PB3", "debug", "JTDO / TRACESWO"),
+        ("PB4", "debug", "JNTRST"),
+        ("PB5", "data", "GPIO / I2C1_SMBA"),
+        ("PB6", "data", "GPIO / I2C1_SCL / USART1_TX"),
+        ("PB7", "data", "GPIO / I2C1_SDA / USART1_RX"),
+        ("BOOT0", "control", "Boot mode select"),
+        ("PB8", "data", "GPIO / CAN_RX / I2C1_SCL"),
+        ("PB9", "data", "GPIO / CAN_TX / I2C1_SDA"),
+        ("VSS", "ground", "Ground"),
+        ("VDD", "power", "Digital supply"),
+        ("PA0", "data", "GPIO / TIM2_CH1"),
+        ("PA1", "data", "GPIO / TIM2_CH2"),
+    ],
+    "TSOP48_NAND": [
+        ("R/B#", "control", "Ready/Busy (active low)"),
+        ("RE#", "control", "Read enable (active low)"),
+        ("CE#", "control", "Chip enable (active low)"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("VCC", "power", "Supply 2.7V–3.6V"),
+        ("VSS", "ground", "Ground"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("IO0", "data", "Data I/O bit 0"),
+        ("IO1", "data", "Data I/O bit 1"),
+        ("IO2", "data", "Data I/O bit 2"),
+        ("IO3", "data", "Data I/O bit 3"),
+        ("IO4", "data", "Data I/O bit 4"),
+        ("IO5", "data", "Data I/O bit 5"),
+        ("IO6", "data", "Data I/O bit 6"),
+        ("IO7", "data", "Data I/O bit 7"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("VSS", "ground", "Ground"),
+        ("VCC", "power", "Supply"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("WE#", "control", "Write enable (active low)"),
+        ("ALE", "control", "Address latch enable"),
+        ("CLE", "control", "Command latch enable"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("NC", "ground", "Not connected"),
+        ("WP#", "control", "Write protect (active low)"),
+        ("NC", "ground", "Not connected"),
+        ("VSS", "ground", "Ground"),
+        ("VCC", "power", "Supply"),
+    ],
+    "QFN24_GENERIC": [
+        ("VDD", "power", "Supply"),
+        ("IO0", "data", "I/O pin 0"),
+        ("IO1", "data", "I/O pin 1"),
+        ("IO2", "data", "I/O pin 2"),
+        ("IO3", "data", "I/O pin 3"),
+        ("GND", "ground", "Ground"),
+        ("IO4", "data", "I/O pin 4"),
+        ("IO5", "data", "I/O pin 5"),
+        ("IO6", "data", "I/O pin 6"),
+        ("IO7", "data", "I/O pin 7"),
+        ("IO8", "data", "I/O pin 8"),
+        ("VSS", "ground", "Ground"),
+        ("CLK", "clock", "Clock input"),
+        ("IO9", "data", "I/O pin 9"),
+        ("IO10", "data", "I/O pin 10"),
+        ("IO11", "data", "I/O pin 11"),
+        ("IO12", "data", "I/O pin 12"),
+        ("VCC", "power", "Supply"),
+        ("TCK", "debug", "JTAG test clock"),
+        ("TMS", "debug", "JTAG mode select"),
+        ("TDI", "debug", "JTAG data in"),
+        ("TDO", "debug", "JTAG data out"),
+        ("CRESET", "control", "Configuration reset"),
+        ("CDONE", "control", "Configuration done"),
+    ],
 }
 
 # ── Color scheme ─────────────────────────────────────────────────────
@@ -889,20 +1015,37 @@ def generate_ic_pinout_svg(
     pkg = entry.get("package", comp.package or "")
 
     ic_pinout_key = None
-    if cat == "flash" and "SOP8" in pkg.upper():
+    pkg_upper = pkg.upper()
+    if cat == "flash" and "SOP8" in pkg_upper:
         ic_pinout_key = "SOIC8_SPI_FLASH"
-    elif cat == "eeprom" and "SOIC8" in pkg.upper():
+    elif cat == "flash" and ("TSOP" in pkg_upper or "48" in pkg_upper):
+        ic_pinout_key = "TSOP48_NAND"
+    elif cat == "eeprom" and "SOIC8" in pkg_upper:
         ic_pinout_key = "SOIC8_EEPROM"
+    elif cat in ("mcu", "microcontroller") and any(
+        k in pkg_upper for k in ("TQFP", "LQFP", "QFP")
+    ):
+        ic_pinout_key = "TQFP48_MCU"
+    elif cat == "fpga" and ("QFN" in pkg_upper or "BGA" in pkg_upper):
+        ic_pinout_key = "QFN24_GENERIC"
 
     pins = _IC_PINOUTS.get(ic_pinout_key, []) if ic_pinout_key else []
+    is_quad = ic_pinout_key in ("TQFP48_MCU", "TSOP48_NAND", "QFN24_GENERIC")
 
     title_h = 40
-    chip_w = 140
-    chip_h = max(160, len(pins) // 2 * 36 + 40) if pins else 120
-    pin_label_w = 180
-    chip_x = width // 2 - chip_w // 2
-    chip_y = title_h + 30
-    intel_y = chip_y + chip_h + 30
+    if is_quad and pins:
+        side = len(pins) // 4
+        chip_w = max(160, side * 28 + 40)
+        chip_h = chip_w
+        chip_x = width // 2 - chip_w // 2
+        chip_y = title_h + 60
+        intel_y = chip_y + chip_h + 70
+    else:
+        chip_w = 140
+        chip_h = max(160, len(pins) // 2 * 36 + 40) if pins else 120
+        chip_x = width // 2 - chip_w // 2
+        chip_y = title_h + 30
+        intel_y = chip_y + chip_h + 30
     intel_line_h = 18
 
     intel_items = [(k.replace("_", " ").title(), ", ".join(v) if isinstance(v, list) else str(v))
@@ -944,12 +1087,65 @@ def generate_ic_pinout_svg(
                  f'text-anchor="middle" font-family={_q(_FONT)} font-size="8" '
                  f'fill="{_TEXT_LO}">{_esc(pkg)}</text>')
 
-    if pins:
+    if pins and is_quad:
+        side = len(pins) // 4
+        remainder = len(pins) % 4
+        sides = [side] * 4
+        for r in range(remainder):
+            sides[r] += 1
+        offsets = [0, sides[0], sides[0] + sides[1], sides[0] + sides[1] + sides[2]]
+        fs = 8 if len(pins) > 32 else 10
+        for si in range(sides[0]):
+            py = chip_y + 20 + si * ((chip_h - 40) / max(sides[0] - 1, 1))
+            name, group, _ = pins[offsets[0] + si]
+            color = _GROUP_COLORS.get(group, _TEXT_MID)
+            lines.append(f'  <line x1="{chip_x}" y1="{py}" x2="{chip_x - 20}" y2="{py}" '
+                         f'stroke="{color}" stroke-width="1.5"/>')
+            lines.append(f'  <circle cx="{chip_x}" cy="{py}" r="2.5" fill="{color}"/>')
+            lines.append(f'  <text x="{chip_x - 24}" y="{py + 3}" text-anchor="end" '
+                         f'font-family={_q(_FONT)} font-size="{fs}" fill="{color}">'
+                         f'{offsets[0] + si + 1} {_esc(name)}</text>')
+        for si in range(sides[1]):
+            px = chip_x + 20 + si * ((chip_w - 40) / max(sides[1] - 1, 1))
+            name, group, _ = pins[offsets[1] + si]
+            color = _GROUP_COLORS.get(group, _TEXT_MID)
+            lines.append(f'  <line x1="{px}" y1="{chip_y + chip_h}" '
+                         f'x2="{px}" y2="{chip_y + chip_h + 20}" '
+                         f'stroke="{color}" stroke-width="1.5"/>')
+            lines.append(f'  <circle cx="{px}" cy="{chip_y + chip_h}" r="2.5" fill="{color}"/>')
+            lines.append(f'  <text x="{px}" y="{chip_y + chip_h + 34}" text-anchor="middle" '
+                         f'font-family={_q(_FONT)} font-size="{fs}" fill="{color}" '
+                         f'transform="rotate(-90,{px},{chip_y + chip_h + 34})">'
+                         f'{_esc(name)}</text>')
+        for si in range(sides[2]):
+            py = chip_y + chip_h - 20 - si * ((chip_h - 40) / max(sides[2] - 1, 1))
+            name, group, _ = pins[offsets[2] + si]
+            color = _GROUP_COLORS.get(group, _TEXT_MID)
+            lines.append(f'  <line x1="{chip_x + chip_w}" y1="{py}" '
+                         f'x2="{chip_x + chip_w + 20}" y2="{py}" '
+                         f'stroke="{color}" stroke-width="1.5"/>')
+            lines.append(f'  <circle cx="{chip_x + chip_w}" cy="{py}" r="2.5" fill="{color}"/>')
+            lines.append(f'  <text x="{chip_x + chip_w + 24}" y="{py + 3}" '
+                         f'font-family={_q(_FONT)} font-size="{fs}" fill="{color}">'
+                         f'{_esc(name)} {offsets[2] + si + 1}</text>')
+        for si in range(sides[3]):
+            px = chip_x + chip_w - 20 - si * ((chip_w - 40) / max(sides[3] - 1, 1))
+            name, group, _ = pins[offsets[3] + si]
+            color = _GROUP_COLORS.get(group, _TEXT_MID)
+            lines.append(f'  <line x1="{px}" y1="{chip_y}" '
+                         f'x2="{px}" y2="{chip_y - 20}" '
+                         f'stroke="{color}" stroke-width="1.5"/>')
+            lines.append(f'  <circle cx="{px}" cy="{chip_y}" r="2.5" fill="{color}"/>')
+            lines.append(f'  <text x="{px}" y="{chip_y - 24}" text-anchor="middle" '
+                         f'font-family={_q(_FONT)} font-size="{fs}" fill="{color}" '
+                         f'transform="rotate(-90,{px},{chip_y - 24})">'
+                         f'{_esc(name)}</text>')
+    elif pins:
         half = len(pins) // 2
         pin_spacing = (chip_h - 20) / max(half, 1)
         for i in range(half):
             py = chip_y + 20 + i * pin_spacing + pin_spacing / 2
-            name, group, desc_pin = pins[i]
+            name, group, _ = pins[i]
             color = _GROUP_COLORS.get(group, _TEXT_MID)
             lines.append(f'  <line x1="{chip_x}" y1="{py}" '
                          f'x2="{chip_x - 30}" y2="{py}" stroke="{color}" stroke-width="1.5"/>')
@@ -962,7 +1158,7 @@ def generate_ic_pinout_svg(
         for i in range(half, len(pins)):
             mirror_i = len(pins) - 1 - i
             py = chip_y + 20 + mirror_i * pin_spacing + pin_spacing / 2
-            name, group, desc_pin = pins[i]
+            name, group, _ = pins[i]
             color = _GROUP_COLORS.get(group, _TEXT_MID)
             lines.append(f'  <line x1="{chip_x + chip_w}" y1="{py}" '
                          f'x2="{chip_x + chip_w + 30}" y2="{py}" stroke="{color}" stroke-width="1.5"/>')
@@ -990,7 +1186,43 @@ def generate_ic_pinout_svg(
                      f'font-size="9" fill="{_TEXT_HI}">{_esc(val)}</text>')
         iy += intel_line_h
 
-    fy = svg_h - 24
+    cheat_h = 0
+    if cat == "flash" and ic_pinout_key:
+        flashrom_cmd = intel.get("flashrom_support", "")
+        jedec = intel.get("jedec_id", "")
+        read_cmd = intel.get("read_cmd", "")
+        iface = intel.get("interface", "SPI")
+        cheat_lines = [
+            "1. Connect SOIC8 clip or solder fly wires to CS#, MISO, MOSI, CLK, VCC, GND",
+            f"2. Verify JEDEC ID: {jedec}" if jedec else "",
+            f"3. Read commands: {read_cmd}" if read_cmd else "",
+            f"4. Dump: {flashrom_cmd}" if flashrom_cmd else
+            "4. Dump: flashrom -p <programmer> -r firmware.bin",
+            "5. Analyze: binwalk firmware.bin && strings firmware.bin | grep -i pass",
+        ]
+        cheat_lines = [c for c in cheat_lines if c]
+        cheat_h = len(cheat_lines) * 16 + 40
+        cy = iy + 10
+        lines.append(f'  <rect x="20" y="{cy}" width="{width - 40}" height="{cheat_h}" '
+                     f'rx="6" fill="#1e293b" stroke="#ef4444" stroke-width="1" '
+                     f'stroke-dasharray="4,2"/>')
+        lines.append(f'  <text x="36" y="{cy + 20}" font-family={_q(_FONT)} '
+                     f'font-size="11" fill="#ef4444" font-weight="bold">'
+                     f'Flash Extraction Cheat Sheet</text>')
+        cly = cy + 36
+        for cl in cheat_lines:
+            lines.append(f'  <text x="36" y="{cly}" font-family={_q(_FONT)} '
+                         f'font-size="8" fill="{_TEXT_HI}">{_esc(cl)}</text>')
+            cly += 16
+
+    svg_h_final = svg_h + cheat_h
+    if cheat_h:
+        lines[3] = f'  <rect width="{width}" height="{svg_h_final}" fill="{_BG}"/>'
+        lines[0] = (f'<svg xmlns="http://www.w3.org/2000/svg" '
+                    f'width="{width}" height="{svg_h_final}" '
+                    f'viewBox="0 0 {width} {svg_h_final}">')
+
+    fy = svg_h_final - 24
     lines.append(f'  <rect y="{fy}" width="{width}" height="24" '
                  f'fill="{_PANEL_BG}" fill-opacity="0.92"/>')
     lines.append(f'  <text x="{width // 2}" y="{fy + 16}" text-anchor="middle" '
