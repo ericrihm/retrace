@@ -36,8 +36,8 @@ SPARK_BLOCKS = " ▁▂▃▄▅▆▇█"
 class TimeSeriesStore:
     """Append-only JSONL store for flywheel run history."""
 
-    def __init__(self, path: Path = HISTORY_FILE) -> None:
-        self.path = path
+    def __init__(self, path: Path | None = None) -> None:
+        self.path = path if path is not None else HISTORY_FILE
 
     def append(self, record: dict[str, Any]) -> None:
         record.setdefault("ts", datetime.now(timezone.utc).isoformat())
@@ -652,7 +652,7 @@ class FlywheelBrain:
 
     def __init__(self) -> None:
         self._brain = self._load()
-        self.store = TimeSeriesStore()
+        self.store = TimeSeriesStore(HISTORY_FILE)
         self.cache = WarmStartCache(self._brain)
         self.shadow = ShadowScorer(self._brain)
         self.learner = ActiveLearner(self._brain)
@@ -709,6 +709,274 @@ class FlywheelBrain:
             if w:
                 warnings.append(w)
         return warnings
+
+    def quality_gate(self, current_scores: dict[str, float]) -> tuple[bool, list[str]]:
+        """Hold-the-line gate: fail if any flywheel score drops below its historical floor."""
+        violations: list[str] = []
+        floors = self._brain.get("quality_floors", {})
+        for fw, score in current_scores.items():
+            floor = floors.get(fw)
+            if floor is not None and score < floor:
+                violations.append(f"{fw}: {score:.0f} < floor {floor:.0f}")
+            if floor is None or score > floor:
+                floors[fw] = score
+        self._brain["quality_floors"] = floors
+        return len(violations) == 0, violations
+
+    def explain_regression(self, flywheel: str) -> str | None:
+        """Generate human-readable explanation when a score drops >5 points."""
+        scores = self.store.scores_for(flywheel, n=10)
+        if len(scores) < 2:
+            return None
+        delta = scores[-1] - scores[-2]
+        if delta >= -5:
+            return None
+        records = self.store.read_last(2)
+        if len(records) < 2:
+            return None
+        prev_hash = records[-2].get("git_hash", "")
+        curr_hash = records[-1].get("git_hash", "")
+        explanation = f"{flywheel} dropped {scores[-2]:.0f}→{scores[-1]:.0f} ({delta:+.0f}pts)"
+        if prev_hash and curr_hash and prev_hash != curr_hash:
+            try:
+                result = subprocess.run(
+                    ["git", "diff", "--stat", prev_hash, curr_hash],
+                    capture_output=True, text=True, cwd=REPO_ROOT,
+                )
+                if result.returncode == 0:
+                    changed_files = [
+                        line.split("|")[0].strip()
+                        for line in result.stdout.splitlines()
+                        if "|" in line
+                    ]
+                    if changed_files:
+                        explanation += f" after changes to: {', '.join(changed_files[:5])}"
+                        if len(changed_files) > 5:
+                            explanation += f" (+{len(changed_files) - 5} more)"
+            except Exception:
+                pass
+        return explanation
+
+    def get_regression_explanations(self) -> list[str]:
+        explanations: list[str] = []
+        for fw in self.ALL_FLYWHEELS:
+            exp = self.explain_regression(fw)
+            if exp:
+                explanations.append(exp)
+        return explanations
+
+    def generate_heatmap_svg(self, output_path: "Path | None" = None) -> str:
+        """Generate a GitHub-style 52-week x 7-day contribution heatmap SVG.
+
+        Reads .flywheel_history.jsonl, aggregates daily flywheel score deltas,
+        and renders a self-contained SVG using the retrace dark theme.
+
+        Cell intensity encodes the aggregate flywheel score delta for that day:
+        - Improvements: dark blue (#111827) through cyan (#22d3ee) to green (#22c55e)
+        - Regressions: red (#ef4444)
+        - No data: dark (#111827)
+
+        Args:
+            output_path: Where to write the SVG. Defaults to
+                         docs/examples/flywheel_heatmap.svg.
+
+        Returns:
+            The SVG content as a string (also written to output_path).
+        """
+        from collections import defaultdict
+        from datetime import date, timedelta
+
+        if output_path is None:
+            output_path = REPO_ROOT / "docs" / "examples" / "flywheel_heatmap.svg"
+
+        # ── 1. Load history ──────────────────────────────────────────────────
+        records = self.store.read_all()
+
+        # Build dict: date_str → list of per-record mean flywheel scores
+        daily_scores: dict[str, list[float]] = defaultdict(list)
+        for rec in records:
+            ts_raw = rec.get("ts", "")
+            if not ts_raw:
+                continue
+            try:
+                dt = datetime.fromisoformat(ts_raw.replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            date_str = dt.date().isoformat()
+            fw_data = rec.get("flywheels", {})
+            scores_in_rec = [
+                v["score"]
+                for v in fw_data.values()
+                if isinstance(v, dict) and "score" in v
+            ]
+            if scores_in_rec:
+                daily_scores[date_str].append(sum(scores_in_rec) / len(scores_in_rec))
+
+        # ── 2. Compute per-day deltas ─────────────────────────────────────────
+        sorted_dates = sorted(daily_scores.keys())
+        daily_avg: dict[str, float] = {
+            d: sum(daily_scores[d]) / len(daily_scores[d]) for d in sorted_dates
+        }
+        daily_delta: dict[str, float] = {}
+        prev_avg: float | None = None
+        for d in sorted_dates:
+            avg = daily_avg[d]
+            daily_delta[d] = avg - prev_avg if prev_avg is not None else 0.0
+            prev_avg = avg
+
+        # ── 3. Build the 52-week calendar grid ──────────────────────────────
+        today = datetime.now(timezone.utc).date()
+        # Find the Sunday on or before today (isoweekday: Mon=1…Sun=7)
+        dow = today.isoweekday() % 7   # Sun=0, Mon=1 … Sat=6
+        grid_end = today - timedelta(days=dow)            # last Sunday <= today
+        grid_start = grid_end - timedelta(weeks=52) + timedelta(days=1)
+
+        # 52 columns × 7 rows — column-major order (week = column, day = row)
+        grid: list[tuple[date, float]] = []
+        for week in range(52):
+            for dow_offset in range(7):
+                d = grid_start + timedelta(weeks=week, days=dow_offset)
+                delta = daily_delta.get(d.isoformat(), 0.0)
+                grid.append((d, delta))
+
+        # ── 4. Color helpers ─────────────────────────────────────────────────
+        COLOR_EMPTY = "#111827"
+        COLOR_IMPROVE_LO = "#22d3ee"   # cyan
+        COLOR_IMPROVE_HI = "#22c55e"   # green
+        COLOR_REGRESS_LO = "#7f1d1d"
+        COLOR_REGRESS_HI = "#ef4444"   # red
+
+        non_zero = [abs(dv) for _, dv in grid if dv != 0.0]
+        max_abs = max(non_zero) if non_zero else 1.0
+
+        def _lerp_hex(c1: str, c2: str, t: float) -> str:
+            r1, g1, b1 = int(c1[1:3], 16), int(c1[3:5], 16), int(c1[5:7], 16)
+            r2, g2, b2 = int(c2[1:3], 16), int(c2[3:5], 16), int(c2[5:7], 16)
+            return (
+                f"#{int(r1 + (r2 - r1) * t):02x}"
+                f"{int(g1 + (g2 - g1) * t):02x}"
+                f"{int(b1 + (b2 - b1) * t):02x}"
+            )
+
+        def _cell_color(delta: float) -> str:
+            if delta == 0.0:
+                return COLOR_EMPTY
+            t = min(1.0, abs(delta) / max_abs)
+            if delta > 0:
+                return _lerp_hex(COLOR_IMPROVE_LO, COLOR_IMPROVE_HI, t)
+            return _lerp_hex(COLOR_REGRESS_LO, COLOR_REGRESS_HI, t)
+
+        # ── 5. SVG layout constants ───────────────────────────────────────────
+        CELL = 11
+        GAP = 2
+        STEP = CELL + GAP
+        MARGIN_LEFT = 32
+        MARGIN_TOP = 28
+        MARGIN_RIGHT = 12
+        MARGIN_BOTTOM = 20
+
+        SVG_W = MARGIN_LEFT + 52 * STEP + MARGIN_RIGHT
+        SVG_H = MARGIN_TOP + 7 * STEP + MARGIN_BOTTOM
+
+        BG = "#0a0e1a"
+        TEXT_COLOR = "#94a3b8"
+        FONT = "JetBrains Mono, monospace"
+
+        # ── 6. Month label positions ──────────────────────────────────────────
+        MONTH_ABBR = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+        ]
+        month_labels: list[tuple[int, str]] = []
+        prev_month: int | None = None
+        for week in range(52):
+            d = grid_start + timedelta(weeks=week)
+            if d.month != prev_month:
+                col_x = MARGIN_LEFT + week * STEP
+                month_labels.append((col_x, MONTH_ABBR[d.month - 1]))
+                prev_month = d.month
+
+        # Visible day-of-week rows (Mon=1, Wed=3, Fri=5)
+        DOW_VISIBLE = {1: "Mon", 3: "Wed", 5: "Fri"}
+
+        # ── 7. Build SVG ──────────────────────────────────────────────────────
+        parts: list[str] = []
+        parts.append(
+            f'<svg xmlns="http://www.w3.org/2000/svg" '
+            f'width="{SVG_W}" height="{SVG_H}" '
+            f'viewBox="0 0 {SVG_W} {SVG_H}" '
+            f'style="background:{BG};">'
+        )
+        parts.append(
+            f'<rect width="{SVG_W}" height="{SVG_H}" fill="{BG}" rx="6"/>'
+        )
+
+        # Month labels along the top
+        for col_x, label in month_labels:
+            parts.append(
+                f'<text x="{col_x}" y="{MARGIN_TOP - 6}" '
+                f'font-size="9" fill="{TEXT_COLOR}" '
+                f'font-family="{FONT}">{label}</text>'
+            )
+
+        # Day-of-week labels on the left
+        for row, label in DOW_VISIBLE.items():
+            cy = MARGIN_TOP + row * STEP + CELL // 2 + 3
+            parts.append(
+                f'<text x="{MARGIN_LEFT - 4}" y="{cy}" '
+                f'font-size="8" fill="{TEXT_COLOR}" '
+                f'text-anchor="end" font-family="{FONT}">{label}</text>'
+            )
+
+        # Cell grid
+        for idx, (d, delta) in enumerate(grid):
+            week = idx // 7
+            row = idx % 7
+            cx = MARGIN_LEFT + week * STEP
+            cy = MARGIN_TOP + row * STEP
+            color = _cell_color(delta)
+            iso = d.isoformat()
+            tip = f"{iso}: {delta:+.1f}" if delta != 0.0 else iso
+            parts.append(
+                f'<rect x="{cx}" y="{cy}" width="{CELL}" height="{CELL}" '
+                f'rx="2" fill="{color}"><title>{tip}</title></rect>'
+            )
+
+        # Legend (bottom-right)
+        legend_colors = [
+            COLOR_EMPTY,
+            _lerp_hex(COLOR_IMPROVE_LO, COLOR_IMPROVE_HI, 0.25),
+            _lerp_hex(COLOR_IMPROVE_LO, COLOR_IMPROVE_HI, 0.5),
+            _lerp_hex(COLOR_IMPROVE_LO, COLOR_IMPROVE_HI, 0.75),
+            COLOR_IMPROVE_HI,
+        ]
+        LEGEND_X = SVG_W - MARGIN_RIGHT - len(legend_colors) * STEP - 44
+        LEGEND_Y = SVG_H - MARGIN_BOTTOM + 4
+        parts.append(
+            f'<text x="{LEGEND_X - 4}" y="{LEGEND_Y + CELL - 2}" '
+            f'font-size="8" fill="{TEXT_COLOR}" text-anchor="end" '
+            f'font-family="{FONT}">less</text>'
+        )
+        for i, lc in enumerate(legend_colors):
+            lx = LEGEND_X + i * STEP
+            parts.append(
+                f'<rect x="{lx}" y="{LEGEND_Y}" width="{CELL}" height="{CELL}" '
+                f'rx="2" fill="{lc}"/>'
+            )
+        after_x = LEGEND_X + len(legend_colors) * STEP + 4
+        parts.append(
+            f'<text x="{after_x}" y="{LEGEND_Y + CELL - 2}" '
+            f'font-size="8" fill="{TEXT_COLOR}" '
+            f'font-family="{FONT}">more</text>'
+        )
+
+        parts.append("</svg>")
+        svg_content = "\n".join(parts)
+
+        # ── 8. Write to disk ──────────────────────────────────────────────────
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(svg_content, encoding="utf-8")
+        return svg_content
 
     def format_brain_summary(self) -> str:
         lines: list[str] = []

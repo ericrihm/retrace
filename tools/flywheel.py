@@ -1204,7 +1204,7 @@ def run(quick: bool) -> None:
         coverage_pct = state.get("coverage_pct", "N/A")
         metrics["coverage_pct"] = coverage_pct
 
-    # Record to brain (time-series + source quality)
+    # Record to brain (time-series + source quality + quality gate)
     if brain and scores:
         git_hash = ""
         try:
@@ -1214,6 +1214,21 @@ def run(quick: bool) -> None:
         except Exception:
             pass
         brain.record_run(scores, git_hash=git_hash, mode="quick" if quick else "full")
+
+        # Hold-the-line quality gate
+        gate_passed, gate_violations = brain.quality_gate(scores)
+        if not gate_passed:
+            _header("Quality gate — hold the line")
+            for v in gate_violations:
+                _warn(f"BELOW FLOOR: {v}")
+
+        # Regression explanations
+        explanations = brain.get_regression_explanations()
+        if explanations:
+            _header("Regression explanations")
+            for exp in explanations:
+                _warn(exp)
+
         brain.save()
 
     # Persist state
