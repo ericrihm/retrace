@@ -1512,3 +1512,101 @@ def test_export_default_output_dir(runner, tmp_path):
         result = runner.invoke(main, ["export", str(img)], catch_exceptions=False)
     assert result.exit_code == 0
     assert "myboard_export" in result.output
+
+
+# ---------------------------------------------------------------------------
+# glitch — fault injection surface detection
+# ---------------------------------------------------------------------------
+
+def test_glitch_help(runner):
+    result = runner.invoke(main, ["glitch", "--help"])
+    assert result.exit_code == 0
+    assert "fault" in result.output.lower() or "glitch" in result.output.lower()
+
+
+def test_glitch_missing_file(runner):
+    result = runner.invoke(main, ["glitch", "/no/such/image.jpg"])
+    assert result.exit_code != 0
+
+
+def test_glitch_json(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+    findings = [
+        {"type": "glitch_surface", "subtype": "voltage_glitch", "severity": "high",
+         "description": "VR near MCU", "component_id": "U2",
+         "target_component_id": "U1", "distance_px": 50,
+         "cve_reference": "CWE-1247", "cvss_base": 6.8,
+         "cvss_vector": "CVSS:3.1/AV:P/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:N",
+         "mitre_attack": ["T1200"], "remediation": "Add voltage supervisor"},
+    ]
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.glitch_surface.detect_glitch_surfaces",
+               return_value=findings):
+        result = runner.invoke(main, ["glitch", str(img), "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data["count"] == 1
+    assert data["findings"][0]["subtype"] == "voltage_glitch"
+
+
+def test_glitch_no_findings(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.glitch_surface.detect_glitch_surfaces",
+               return_value=[]):
+        result = runner.invoke(main, ["glitch", str(img)])
+    assert result.exit_code == 0
+    assert "No fault-injection" in result.output
+
+
+def test_glitch_text_output(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+    findings = [
+        {"type": "glitch_surface", "subtype": "voltage_glitch", "severity": "high",
+         "description": "AMS1117 near STM32", "component_id": "U2",
+         "target_component_id": "U1", "distance_px": 50,
+         "cve_reference": "CWE-1247", "cvss_base": 6.8,
+         "cvss_vector": "CVSS:3.1/AV:P/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:N",
+         "mitre_attack": ["T1200"], "remediation": "Add voltage supervisor"},
+    ]
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.glitch_surface.detect_glitch_surfaces",
+               return_value=findings):
+        result = runner.invoke(main, ["glitch", str(img)])
+    assert result.exit_code == 0
+    assert "[HIGH]" in result.output
+    assert "Voltage Glitch" in result.output
+    assert "Remediation" in result.output
+
+
+def test_glitch_output_file(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    out = tmp_path / "results.json"
+    mock_result = _make_analysis_result(str(img))
+    findings = [
+        {"type": "glitch_surface", "subtype": "emfi", "severity": "medium",
+         "description": "QFN package", "component_id": "U1",
+         "target_component_id": "U1", "distance_px": 0,
+         "cve_reference": "CWE-1247", "cvss_base": 5.9,
+         "cvss_vector": "CVSS:3.1/AV:P/AC:H/PR:N/UI:N/S:C/C:H/I:L/A:N",
+         "mitre_attack": ["T1200"], "remediation": "Use metal-lidded package"},
+    ]
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.glitch_surface.detect_glitch_surfaces",
+               return_value=findings):
+        result = runner.invoke(main, ["glitch", str(img), "-o", str(out)])
+    assert result.exit_code == 0
+    assert out.exists()
+    data = json.loads(out.read_text())
+    assert data["count"] == 1

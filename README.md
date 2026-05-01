@@ -12,7 +12,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Coverage](https://img.shields.io/badge/coverage-99%25-brightgreen.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->1491<!-- /STATS --> tests** · **<!-- STATS:modules -->25<!-- /STATS --> modules** · **<!-- STATS:loc -->14054<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->1549<!-- /STATS --> tests** · **<!-- STATS:modules -->26<!-- /STATS --> modules** · **<!-- STATS:loc -->14290<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/) · [Issues](https://github.com/ericrihm/retrace/issues)
 
@@ -705,7 +705,7 @@ my_analyzer = "my_package:MyAnalyzer"
 ## Architecture
 
 ```
-src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS --> lines across <!-- STATS:modules -->25<!-- /STATS --> modules
+src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS --> lines across <!-- STATS:modules -->26<!-- /STATS --> modules
 ├── cli.py                               # Click CLI: 20 commands (scan, search, trace, advise, identify, debug, solve, learn, compare, cross-board, export, export-kicad, export-kicad-pcb, jtagulator, attack-paths, batch, pinout, report, report-html, ui)
 ├── web.py                               # Gradio web interface
 ├── core/
@@ -745,10 +745,10 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
 
 | Metric | Value |
 |--------|-------|
-| Tests | <!-- STATS:tests -->1491<!-- /STATS --> |
+| Tests | <!-- STATS:tests -->1549<!-- /STATS --> |
 | Coverage | <!-- STATS:coverage -->99%<!-- /STATS --> |
-| Modules | <!-- STATS:modules -->25<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->14054<!-- /STATS --> |
+| Modules | <!-- STATS:modules -->26<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->14290<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->196<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 
@@ -760,7 +760,7 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
 git clone https://github.com/ericrihm/retrace.git
 cd retrace
 pip install -e ".[dev]"
-pytest                         # <!-- STATS:tests -->1491<!-- /STATS --> tests, <1s
+pytest                         # <!-- STATS:tests -->1549<!-- /STATS --> tests, <1s
 ruff check src/ tests/         # lint
 retrace --help                 # CLI reference
 ```

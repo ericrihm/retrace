@@ -809,5 +809,53 @@ def jtagulator(ctx: click.Context, image: str, output: str, board_name: str, vol
     )
 
 
+@main.command("glitch")
+@click.argument("image", type=click.Path(exists=True))
+@click.option("--output", "-o", type=click.Path(), help="Output file (default: stdout)")
+@click.option("--json", "as_json", is_flag=True, help="Output as JSON")
+@click.pass_context
+def glitch(ctx: click.Context, image: str, output: str, as_json: bool) -> None:
+    """Detect fault-injection attack surfaces (voltage glitch, clock glitch, EMFI).
+
+    Scans for voltage regulators near security ICs, external clock sources
+    feeding crypto logic, and thin-die packages vulnerable to EMFI.
+    """
+    from retrace.core.pipeline import Pipeline
+    from retrace.plugins.builtin.glitch_surface import detect_glitch_surfaces
+
+    pipeline = Pipeline()
+    result = pipeline.run(image)
+    findings = detect_glitch_surfaces(result)
+
+    if as_json:
+        click.echo(json.dumps({"findings": findings, "count": len(findings)}, indent=2))
+        return
+
+    if not findings:
+        click.echo("No fault-injection surfaces detected.")
+        raise SystemExit(0)
+
+    quiet = ctx.obj.get("quiet", False)
+    for f in findings:
+        sev = f["severity"].upper()
+        subtype = f["subtype"].replace("_", " ").title()
+        if not quiet:
+            click.echo(f"  [{sev}] {subtype}: {f['description']}")
+            if f.get("remediation"):
+                click.echo(f"         Remediation: {f['remediation']}")
+            click.echo()
+
+    click.echo(f"{len(findings)} glitch surface(s) detected.")
+
+    if output:
+        out_path = Path(output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(
+            json.dumps({"findings": findings, "count": len(findings)}, indent=2),
+            encoding="utf-8",
+        )
+        click.echo(f"Results written to {out_path}")
+
+
 if __name__ == "__main__":
     main()
