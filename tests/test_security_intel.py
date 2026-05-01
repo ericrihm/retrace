@@ -327,9 +327,9 @@ class TestComponentDBIntegrity:
             )
 
     def test_total_intel_count_matches_expected(self):
-        # 119 of 128 entries have security_intel per the task description
+        # 134 of 143 entries have security_intel
         intel_entries = self._intel_entries()
-        assert len(intel_entries) == 119
+        assert len(intel_entries) == 134
 
 
 # ---------------------------------------------------------------------------

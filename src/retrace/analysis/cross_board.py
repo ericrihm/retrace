@@ -473,7 +473,7 @@ class CrossBoardEngine:
         return {"patterns": [pat_to_d(p) for p in self._patterns]}
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any], **kwargs) -> CrossBoardEngine:
+    def from_dict(cls: type[CrossBoardEngine], data: dict[str, Any], **kwargs: Any) -> CrossBoardEngine:
         """Restore a CrossBoardEngine from a serialised dict."""
         engine = cls(**kwargs)
         engine._patterns = []

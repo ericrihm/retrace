@@ -1921,6 +1921,233 @@ _COMPONENT_DB: list[dict] = [
             },
         "description": "Gigabit Ethernet PHY, RGMII/MII/GMII, MDIO/MDC",
     },
+    # -----------------------------------------------------------------------
+    # Network — CAN/LIN/FlexRay transceivers
+    # -----------------------------------------------------------------------
+    {
+        "part": "TJA1050",
+        "aliases": ["TJA1050", "TJA1050T"],
+        "category": "network",
+        "manufacturer": "NXP",
+        "package": "SOIC8",
+        "datasheet": "https://www.nxp.com/docs/en/data-sheet/TJA1050.pdf",
+        "security_intel": {
+            "interface": "CAN 2.0A/B",
+            "logic_voltage": "5V",
+            "debug_relevance": "CAN transceiver — attach CANH/CANL probes for bus sniffing; no debug auth",
+        },
+        "description": "High-speed CAN transceiver, 1Mbps, SOIC8",
+    },
+    {
+        "part": "MCP2515",
+        "aliases": ["MCP2515", "MCP2515-I/SO"],
+        "category": "network",
+        "manufacturer": "Microchip",
+        "package": "SOIC18",
+        "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/MCP2515-Stand-Alone-CAN-Controller-with-SPI-20001801J.pdf",
+        "security_intel": {
+            "interface": "CAN 2.0B via SPI",
+            "logic_voltage": "2.7V–5.5V",
+            "debug_relevance": "SPI-attached CAN controller — SPI MOSI/MISO/SCK accessible for bus replay",
+        },
+        "description": "Stand-alone CAN controller with SPI interface",
+    },
+    {
+        "part": "SN65HVD230",
+        "aliases": ["SN65HVD230", "SN65HVD230D"],
+        "category": "network",
+        "manufacturer": "Texas Instruments",
+        "package": "SOIC8",
+        "datasheet": "https://www.ti.com/lit/ds/symlink/sn65hvd230.pdf",
+        "security_intel": {
+            "interface": "CAN 2.0",
+            "logic_voltage": "3.3V",
+            "debug_relevance": "3.3V CAN transceiver common in industrial IoT; bus directly sniffable",
+        },
+        "description": "3.3V CAN bus transceiver, 1Mbps",
+    },
+    # -----------------------------------------------------------------------
+    # PMIC — power management ICs
+    # -----------------------------------------------------------------------
+    {
+        "part": "MAX77620",
+        "aliases": ["MAX77620", "MAX77620A"],
+        "category": "pmic",
+        "manufacturer": "Maxim Integrated",
+        "package": "WLP40",
+        "datasheet": "https://www.analog.com/media/en/technical-documentation/data-sheets/MAX77620.pdf",
+        "security_intel": {
+            "interface": "I2C (0x3C)",
+            "logic_voltage": "1.8V–3.3V",
+            "debug_relevance": "I2C PMIC — address 0x3C; can reconfigure rail voltages to fault system or unlock boot modes",
+        },
+        "description": "Multi-output PMIC, 4 buck converters + 9 LDOs, I2C",
+    },
+    {
+        "part": "TPS65988",
+        "aliases": ["TPS65988", "TPS65988DH"],
+        "category": "pmic",
+        "manufacturer": "Texas Instruments",
+        "package": "VQFN-64",
+        "datasheet": "https://www.ti.com/lit/ds/symlink/tps65988.pdf",
+        "security_intel": {
+            "interface": "I2C, USB PD negotiation",
+            "logic_voltage": "3.3V",
+            "debug_relevance": "USB PD controller with I2C; PD policy tables sometimes updateable over I2C for voltage injection",
+        },
+        "description": "Dual-port USB Type-C and USB PD controller",
+    },
+    {
+        "part": "BD71837MWV",
+        "aliases": ["BD71837", "BD71837MWV"],
+        "category": "pmic",
+        "manufacturer": "Rohm Semiconductor",
+        "package": "WLCSP60",
+        "datasheet": "https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator/bd71837mwv-e.pdf",
+        "security_intel": {
+            "interface": "I2C",
+            "logic_voltage": "1.8V",
+            "debug_relevance": "I2C PMIC used in i.MX8 designs; rail manipulation can bypass ROP fuses",
+        },
+        "description": "8-buck/7-LDO PMIC for i.MX8M, I2C programmable",
+    },
+    # -----------------------------------------------------------------------
+    # Memory — DRAM / NAND / eMMC
+    # -----------------------------------------------------------------------
+    {
+        "part": "MT41K256M16HA",
+        "aliases": ["MT41K256M16", "DDR3L", "MT41K256M16HA-125"],
+        "category": "memory",
+        "manufacturer": "Micron",
+        "package": "FBGA96",
+        "datasheet": "https://www.micron.com/products/dram/ddr3-sdram",
+        "security_intel": {
+            "interface": "DDR3L SDRAM",
+            "logic_voltage": "1.35V",
+            "debug_relevance": "DDR3 DRAM — cold boot attack vector; row hammer exploitable on unmitigated silicon",
+        },
+        "description": "4Gb DDR3L SDRAM, 1600MHz, x16",
+    },
+    {
+        "part": "KLMAG1JETD",
+        "aliases": ["KLMAG1JETD", "eMMC 32GB", "Samsung eMMC"],
+        "category": "memory",
+        "manufacturer": "Samsung",
+        "package": "BGA153",
+        "datasheet": "https://semiconductor.samsung.com/consumer-storage/internal-ssd/",
+        "security_intel": {
+            "interface": "eMMC 5.1 (HS400)",
+            "logic_voltage": "1.8V / 3.3V",
+            "debug_relevance": "eMMC — replay-protected write protect; boot partition often RO but accessible via CMD0/CMD1 in download mode",
+        },
+        "description": "32GB eMMC 5.1 NAND flash, HS400",
+    },
+    {
+        "part": "MT29F4G08ABAEA",
+        "aliases": ["MT29F4G08", "NAND Flash 512MB"],
+        "category": "memory",
+        "manufacturer": "Micron",
+        "package": "TSOP48",
+        "datasheet": "https://www.micron.com/products/nand-flash",
+        "security_intel": {
+            "interface": "NAND (async, 8-bit)",
+            "logic_voltage": "3.3V",
+            "debug_relevance": "Parallel NAND — ALE/CLE/WE/RE accessible on TSOP48; clip-on adapters enable offline dump",
+        },
+        "description": "4Gb SLC NAND Flash, x8, TSOP48",
+    },
+    # -----------------------------------------------------------------------
+    # Display — display drivers and controllers
+    # -----------------------------------------------------------------------
+    {
+        "part": "ILI9341",
+        "aliases": ["ILI9341", "ILI9341V"],
+        "category": "display",
+        "manufacturer": "Ilitek",
+        "package": "COF",
+        "datasheet": "https://cdn-shop.adafruit.com/datasheets/ILI9341.pdf",
+        "security_intel": {
+            "interface": "SPI / 8080-I / 8080-II parallel",
+            "logic_voltage": "3.3V",
+            "debug_relevance": "SPI display driver — intercept MOSI to capture framebuffer; no auth",
+        },
+        "description": "262K color 240×320 TFT LCD controller, SPI/parallel",
+    },
+    {
+        "part": "SSD1306",
+        "aliases": ["SSD1306", "SSD1306Z"],
+        "category": "display",
+        "manufacturer": "Solomon Systech",
+        "package": "COF",
+        "datasheet": "https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf",
+        "security_intel": {
+            "interface": "I2C (0x3C or 0x3D) / SPI",
+            "logic_voltage": "1.65V–3.3V",
+            "debug_relevance": "OLED driver — I2C address fixed by SA0 pin; trivial to sniff displayed content",
+        },
+        "description": "128×64 OLED display controller, I2C/SPI",
+    },
+    {
+        "part": "TC358743XBG",
+        "aliases": ["TC358743", "TC358743XBG"],
+        "category": "display",
+        "manufacturer": "Toshiba",
+        "package": "BGA100",
+        "datasheet": "https://toshiba.semicon-storage.com/info/TC358743XBG_datasheet_en_20150805.pdf",
+        "security_intel": {
+            "interface": "HDMI 1.4 → MIPI CSI-2",
+            "logic_voltage": "1.8V / 3.3V",
+            "debug_relevance": "HDMI bridge — HDCP keys stored in EEPROM; CSI-2 output unencrypted after HDCP strip",
+        },
+        "description": "HDMI 1.4 to MIPI CSI-2 bridge, up to 1080p60",
+    },
+    # -----------------------------------------------------------------------
+    # Automotive — automotive-grade transceivers and controllers
+    # -----------------------------------------------------------------------
+    {
+        "part": "TJA1145",
+        "aliases": ["TJA1145", "TJA1145T"],
+        "category": "automotive",
+        "manufacturer": "NXP",
+        "package": "SOIC14",
+        "datasheet": "https://www.nxp.com/docs/en/data-sheet/TJA1145.pdf",
+        "security_intel": {
+            "interface": "CAN FD + SPI",
+            "logic_voltage": "3.3V / 5V",
+            "debug_relevance": "CAN FD transceiver with SPI config — SPI accessible for mode changes; wake-up filter configurable",
+        },
+        "description": "Automotive CAN FD transceiver with SPI, partial networking",
+    },
+    {
+        "part": "SPC5748G",
+        "aliases": ["SPC5748G", "MPC5748G"],
+        "category": "automotive",
+        "manufacturer": "NXP",
+        "package": "PBGA516",
+        "datasheet": "https://www.nxp.com/products/processors-and-microcontrollers/power-architecture/mpc5xxx-microcontrollers/ultra-reliable-mpc57xx-series/mpc5748g-scalable-and-ultra-reliable-mcu-for-automotive-industrial-and-general-purpose-market:MPC5748G",
+        "security_intel": {
+            "debug_interfaces": ["JTAG", "Nexus Class 3"],
+            "boot_mode_pins": ["BOOTCFG[0:1]", "TEST"],
+            "readout_protection": "HSM (Hardware Security Module) + lifecycle state",
+            "core": "3× Power Architecture e200z4",
+            "voltage_range": "3.0V–5.5V",
+        },
+        "description": "Triple-core Power Architecture MCU, ISO 26262 ASIL-D, CAN/LIN/FlexRay",
+    },
+    {
+        "part": "TCAN4550",
+        "aliases": ["TCAN4550", "TCAN4550-Q1"],
+        "category": "automotive",
+        "manufacturer": "Texas Instruments",
+        "package": "WQFN-20",
+        "datasheet": "https://www.ti.com/lit/ds/symlink/tcan4550-q1.pdf",
+        "security_intel": {
+            "interface": "CAN FD + SPI",
+            "logic_voltage": "3.3V",
+            "debug_relevance": "CAN FD controller/transceiver combo via SPI — full CAN FD bus accessible; register file configurable over SPI",
+        },
+        "description": "AEC-Q100 CAN FD controller + transceiver combo, SPI host interface",
+    },
 ]
 
 
