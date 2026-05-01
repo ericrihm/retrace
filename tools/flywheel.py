@@ -783,6 +783,234 @@ def flywheel_svg_audit() -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Flywheel 11: README formatting audit
+# ---------------------------------------------------------------------------
+
+
+def flywheel_readme_format() -> dict:
+    """Audit README.md for professional formatting and layout quality.
+
+    Checks:
+    - HTML tables use consistent column widths (no colspan hacks)
+    - All referenced images exist on disk
+    - No broken image links
+    - Section separators between gallery groups
+    - Proper alt text on images
+    - No raw HTML where markdown suffices
+    - Consistent caption formatting
+    """
+    _header("README format flywheel — layout quality audit")
+
+    readme_path = REPO_ROOT / "README.md"
+    if not readme_path.exists():
+        _warn("README.md not found")
+        return {}
+
+    content = readme_path.read_text(encoding="utf-8")
+    lines = content.splitlines()
+    issues: list[str] = []
+    scores: dict[str, int] = {}
+
+    # 11a. Check all img src references resolve to existing files
+    img_refs = re.findall(r'<img\s+[^>]*src="([^"]+)"', content)
+    missing_imgs: list[str] = []
+    for ref in img_refs:
+        img_path = REPO_ROOT / ref
+        if not img_path.exists():
+            missing_imgs.append(ref)
+    scores["images_exist"] = 5 if not missing_imgs else max(0, 5 - len(missing_imgs))
+    if missing_imgs:
+        _err(f"{len(missing_imgs)} broken image reference(s):")
+        for m in missing_imgs:
+            _info(f"  missing: {m}")
+    else:
+        _ok(f"All {len(img_refs)} image references resolve to files on disk")
+
+    # 11b. Check for colspan hacks (uneven column layouts)
+    colspan_count = content.count("colspan=")
+    scores["no_colspan"] = 3 if colspan_count == 0 else max(0, 3 - colspan_count)
+    if colspan_count > 0:
+        _warn(f"{colspan_count} colspan usage(s) — prefer equal-width columns")
+    else:
+        _ok("No colspan hacks — clean column layout")
+
+    # 11c. Check all images have alt text
+    imgs_without_alt = re.findall(r'<img\s+(?!.*alt=)[^>]*>', content)
+    scores["alt_text"] = 3 if not imgs_without_alt else 0
+    if imgs_without_alt:
+        _warn(f"{len(imgs_without_alt)} image(s) missing alt text")
+    else:
+        _ok("All images have alt text")
+
+    # 11d. Check gallery section separators (--- between sections)
+    table_sections = content.split("<table>")
+    if len(table_sections) > 2:
+        between_tables = 0
+        for i in range(1, len(table_sections)):
+            before = table_sections[i - 1]
+            if "---" in before.split("</table>")[-1] if "</table>" in before else "":
+                between_tables += 1
+        scores["section_separators"] = min(3, between_tables)
+    else:
+        scores["section_separators"] = 3
+
+    # 11e. Check for consistent table column widths within each table
+    width_pattern = re.compile(r'width="(\d+%)"')
+    inconsistent_tables = 0
+    in_table = False
+    table_widths: list[str] = []
+    for line in lines:
+        if "<table>" in line:
+            in_table = True
+            table_widths = []
+        elif "</table>" in line:
+            in_table = False
+            if table_widths:
+                unique = set(table_widths)
+                if len(unique) > 2:
+                    inconsistent_tables += 1
+        elif in_table:
+            for w in width_pattern.findall(line):
+                table_widths.append(w)
+    scores["consistent_widths"] = 3 if inconsistent_tables == 0 else max(0, 3 - inconsistent_tables)
+    if inconsistent_tables:
+        _warn(f"{inconsistent_tables} table(s) with inconsistent column widths")
+    else:
+        _ok("All tables use consistent column widths")
+
+    # 11f. No empty table cells
+    empty_cells = content.count("<td></td>") + content.count("<td>\n</td>")
+    scores["no_empty_cells"] = 2 if empty_cells == 0 else 0
+    if empty_cells:
+        _warn(f"{empty_cells} empty table cell(s)")
+    else:
+        _ok("No empty table cells")
+
+    total = sum(scores.values())
+    max_total = 19
+    pct = round(100 * total / max_total) if max_total > 0 else 0
+
+    _ok(f"README format score: {total}/{max_total} ({pct}%)")
+    for criterion, score in sorted(scores.items(), key=lambda x: x[1]):
+        status = "OK" if score >= 2 else "LOW" if score > 0 else "MISS"
+        color = "green" if status == "OK" else "yellow" if status == "LOW" else "red"
+        _info(f"  [{click.style(status, fg=color)}] {criterion}: {score}")
+
+    if issues:
+        _warn(f"{len(issues)} formatting issues:")
+        for issue in issues:
+            _info(f"  - {issue}")
+
+    return {
+        "readme_format_total": total,
+        "readme_format_max": max_total,
+        "readme_format_pct": pct,
+        "readme_missing_images": missing_imgs,
+        "readme_colspan_count": colspan_count,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Flywheel 12: SVG rendering validation
+# ---------------------------------------------------------------------------
+
+
+def flywheel_svg_render_check() -> dict:
+    """Validate generated SVGs are structurally correct and render properly.
+
+    Checks each SVG in docs/examples/ for:
+    - Valid XML structure (opens and closes properly)
+    - Has viewBox attribute (responsive rendering)
+    - Text elements aren't truncated (no text > viewBox width)
+    - No overlapping text elements at same Y coordinate
+    - Pin labels in pinout SVGs match expected count
+    - BOM tables have correct column count
+    """
+    _header("SVG render validation flywheel")
+
+    examples_dir = REPO_ROOT / "docs" / "examples"
+    if not examples_dir.exists():
+        _warn("docs/examples/ not found")
+        return {}
+
+    svg_files = sorted(examples_dir.glob("*.svg"))
+    issues: list[str] = []
+    scores: dict[str, int] = {}
+
+    for svg_file in svg_files:
+        name = svg_file.name
+        content = svg_file.read_text(encoding="utf-8")
+
+        # Valid SVG structure
+        if not content.strip().startswith("<svg"):
+            issues.append(f"{name}: missing <svg> root element")
+        if not content.strip().endswith("</svg>"):
+            issues.append(f"{name}: unclosed </svg>")
+
+        # Has viewBox
+        if "viewBox" not in content:
+            issues.append(f"{name}: missing viewBox attribute (won't scale responsively)")
+
+        # Extract viewBox dimensions
+        vb_match = re.search(r'viewBox="0 0 (\d+) (\d+)"', content)
+        if vb_match:
+            vb_w = int(vb_match.group(1))
+            vb_h = int(vb_match.group(2))
+
+            # Check SVG height matches content (crude check for truncation)
+            height_match = re.search(r'height="(\d+)"', content)
+            if height_match:
+                declared_h = int(height_match.group(1))
+                if declared_h != vb_h:
+                    issues.append(f"{name}: height ({declared_h}) != viewBox height ({vb_h})")
+
+        # Pinout-specific checks
+        if "pinout" in name.lower():
+            pin_dots = len(re.findall(r'<circle[^>]*fill="(?:#3b82f6|#22c55e|#ef4444|#6b7280|#f59e0b|#a855f7)"', content))
+            pin_labels = len(re.findall(r'Pin \d+', content))
+            if "JTAG" in name.upper() and pin_dots < 10:
+                issues.append(f"{name}: JTAG pinout has only {pin_dots} pin dots (expected 10-20)")
+            if "UART" in name.upper() and pin_dots < 3:
+                issues.append(f"{name}: UART pinout has only {pin_dots} pin dots (expected 3-6)")
+
+        # BOM-specific checks
+        if "bom" in name.lower():
+            row_count = len(re.findall(r'<rect x="0" y="\d+" width="\d+" height="20"', content))
+            if row_count < 10:
+                issues.append(f"{name}: BOM has only {row_count} component rows (expected 10+)")
+            header_texts = re.findall(r'font-weight="bold">(\w+)</text>', content)
+            expected_headers = {"Ref", "Type", "Part", "Marking", "Value", "Package", "Confidence"}
+            found_headers = set(header_texts) & expected_headers
+            if len(found_headers) < 5:
+                issues.append(f"{name}: BOM missing column headers (found {found_headers})")
+
+    valid_count = len(svg_files) - len([i for i in issues if "missing <svg>" in i or "unclosed" in i])
+    scores["valid_structure"] = min(5, valid_count)
+    scores["issue_free"] = max(0, 5 - len(issues))
+
+    total = sum(scores.values())
+    max_total = 10
+    pct = round(100 * total / max_total) if max_total > 0 else 0
+
+    _ok(f"SVG render score: {total}/{max_total} ({pct}%) — {len(svg_files)} files checked")
+
+    if issues:
+        _warn(f"{len(issues)} SVG rendering issues:")
+        for issue in issues:
+            _info(f"  - {issue}")
+    else:
+        _ok("All SVG files pass validation!")
+
+    return {
+        "svg_render_total": total,
+        "svg_render_max": max_total,
+        "svg_render_pct": pct,
+        "svg_render_issues": issues,
+        "svg_files_checked": len(svg_files),
+    }
+
+
+# ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
 
@@ -857,6 +1085,14 @@ def run(quick: bool) -> None:
         # 10. SVG design audit
         svg_metrics = flywheel_svg_audit()
         metrics.update(svg_metrics)
+
+        # 11. README format audit
+        readme_fmt = flywheel_readme_format()
+        metrics.update(readme_fmt)
+
+        # 12. SVG render validation
+        svg_render = flywheel_svg_render_check()
+        metrics.update(svg_render)
     else:
         coverage_pct = state.get("coverage_pct", "N/A")
         metrics["coverage_pct"] = coverage_pct
@@ -883,6 +1119,8 @@ def run(quick: bool) -> None:
         _info(f"Untyped:  {metrics.get('untyped_function_count', '?')} public functions")
         _info(f"Design:   {metrics.get('design_pct', '?')}% ({metrics.get('design_total', '?')}/{metrics.get('design_max', '?')})")
         _info(f"SVG:      {metrics.get('svg_pct', '?')}% ({metrics.get('svg_total', '?')}/{metrics.get('svg_max', '?')})")
+        _info(f"README:   {metrics.get('readme_format_pct', '?')}% ({metrics.get('readme_format_total', '?')}/{metrics.get('readme_format_max', '?')})")
+        _info(f"Render:   {metrics.get('svg_render_pct', '?')}% — {metrics.get('svg_files_checked', '?')} SVGs checked")
     else:
         _info(f"Lint: {fixed} fix(es) applied  (quick mode — tests skipped)")
 

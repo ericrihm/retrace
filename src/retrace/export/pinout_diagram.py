@@ -161,7 +161,7 @@ _PROBE_GUIDES: dict[str, dict[str, list[tuple[str, str]]]] = {
             ("TMS", "Pin 7 (TMS)"),
             ("TCK", "Pin 9 (TCK)"),
             ("TDO", "Pin 13 (TDO)"),
-            ("RESET", "Pin 15 (nRESET)"),
+            ("RESET", "Pin 15 (RESET)"),
             ("GND", "Pin 4 (GND)"),
         ],
         "Bus Pirate": [
@@ -184,7 +184,7 @@ _PROBE_GUIDES: dict[str, dict[str, list[tuple[str, str]]]] = {
             ("SWDIO", "Pin 7 (SWDIO)"),
             ("SWCLK", "Pin 9 (SWCLK)"),
             ("SWO", "Pin 13 (SWO)"),
-            ("RESET", "Pin 15 (nRESET)"),
+            ("RESET", "Pin 15 (RESET)"),
             ("VTref", "Pin 1 (VTref)"),
             ("GND", "Pin 4 (GND)"),
         ],

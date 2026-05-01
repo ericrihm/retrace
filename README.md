@@ -77,114 +77,80 @@ Intel Atom C2508 (Rangeley), Xilinx Spartan-6 Trust Anchor FPGA, 4x DDR3 ECC —
 
 ### Visualization Modes
 
-Seven output modes per board — static overlays, pinout close-ups, and an interactive layered SVG with Google Maps-style layer toggles:
+Nine output modes per board — static overlays, component inventories, debug pinouts, circuit topology diagrams, and interactive layered SVGs with Google Maps-style layer toggles:
+
+---
+
+#### Board Analysis
 
 <table>
-<tr><th colspan="3">Cisco ASA 5506-X (Thrangrycat target)</th></tr>
 <tr>
-<td width="33%">
-
-**Annotated Board**
-<img src="docs/examples/cisco_annotated.svg" width="100%" alt="Cisco ASA 5506-X annotated board -- full BOM overlay, trace routing, security findings"/>
-Full component overlay with BOM, traces, and security findings
-
-</td>
-<td width="33%">
-
-**Attack Surface**
-<img src="docs/examples/cisco_attack_surface.svg" width="100%" alt="Cisco ASA 5506-X attack surface -- Thrangrycat path from JTAG to FPGA via unencrypted SPI flash"/>
-Thrangrycat path: JTAG (J15) -> CPU (U1) -> FPGA (U6) <- unencrypted SPI flash (U7, W25Q128JV)
-
-</td>
-<td width="33%">
-
-**Zone Map**
-<img src="docs/examples/cisco_zones.svg" width="100%" alt="Cisco ASA 5506-X functional zone map -- 16 zones including CPU, memory, VRM, network, Trust Anchor"/>
-16 functional zones -- CPU, memory, VRM, network, Trust Anchor FPGA
-
-</td>
+<td width="33%"><img src="docs/examples/cisco_annotated.svg" width="100%" alt="Cisco ASA 5506-X annotated board"/><br/><b>Cisco ASA — Annotated</b><br/><sub>177 components, BOM overlay, trace routing, security findings</sub></td>
+<td width="33%"><img src="docs/examples/cisco_attack_surface.svg" width="100%" alt="Cisco ASA 5506-X attack surface"/><br/><b>Cisco ASA — Attack Surface</b><br/><sub>Thrangrycat: JTAG → CPU → FPGA ← unencrypted SPI flash</sub></td>
+<td width="33%"><img src="docs/examples/cisco_zones.svg" width="100%" alt="Cisco ASA 5506-X zone map"/><br/><b>Cisco ASA — Zones</b><br/><sub>16 functional zones — CPU, memory, VRM, Trust Anchor FPGA</sub></td>
 </tr>
-<tr><th colspan="3">Xbox One Model 1540 (Durango)</th></tr>
 <tr>
-<td width="33%">
-
-**Annotated Board**
-<img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One Model 1540 annotated board -- AMD Liverpool APU, 150 components"/>
-150 components -- APU, DDR3 banks, Southbridge, eMMC, debug headers
-
-</td>
-<td width="33%">
-
-**Attack Surface**
-<img src="docs/examples/xbox_attack_surface.svg" width="100%" alt="Xbox One Model 1540 attack surface -- JTAG header, APU debug interface, eMMC storage"/>
-JTAG (J5) -> AMD Liverpool APU (U1) -> eMMC (U8), Southbridge (U9)
-
-</td>
-<td width="33%">
-
-**Zone Map**
-<img src="docs/examples/xbox_zones.svg" width="100%" alt="Xbox One Model 1540 functional zone map -- 12 zones including CPU, memory, power, I/O, debug"/>
-12 functional zones -- CPU, memory, power, I/O, debug, storage, network
-
-</td>
+<td width="33%"><img src="docs/examples/xbox_annotated.svg" width="100%" alt="Xbox One 1540 annotated board"/><br/><b>Xbox One — Annotated</b><br/><sub>150 components — APU, DDR3, Southbridge, eMMC, debug headers</sub></td>
+<td width="33%"><img src="docs/examples/xbox_attack_surface.svg" width="100%" alt="Xbox One 1540 attack surface"/><br/><b>Xbox One — Attack Surface</b><br/><sub>JTAG → AMD Liverpool APU → eMMC, Southbridge</sub></td>
+<td width="33%"><img src="docs/examples/xbox_zones.svg" width="100%" alt="Xbox One 1540 zone map"/><br/><b>Xbox One — Zones</b><br/><sub>12 functional zones — CPU, memory, power, I/O, debug, storage</sub></td>
 </tr>
-<tr><th colspan="3">Bill of Materials — Dark-Themed SVG Tables</th></tr>
+</table>
+
+---
+
+#### Bill of Materials
+
+<table>
 <tr>
-<td width="50%" colspan="2">
-
-**Cisco ASA 5506-X BOM**
-<img src="docs/examples/cisco_bom_table.svg" width="100%" alt="Cisco ASA 5506-X BOM — grouped components with type badges and confidence bars"/>
-Grouped by type, color-coded badges, per-component confidence bars
-
-</td>
-<td width="50%">
-
-**Xbox One Model 1540 BOM**
-<img src="docs/examples/xbox_bom_table.svg" width="100%" alt="Xbox One Model 1540 BOM — 150 components with identification confidence"/>
-150 components with OCR confidence and part identification
-
-</td>
+<td width="50%"><img src="docs/examples/cisco_bom_table.svg" width="100%" alt="Cisco ASA 5506-X BOM table"/><br/><b>Cisco ASA 5506-X — 177 Components</b><br/><sub>Grouped by type (IC, connector, passive) with color-coded badges, part numbers, OCR markings, packages, and per-component confidence bars. 24.3% identification rate.</sub></td>
+<td width="50%"><img src="docs/examples/xbox_bom_table.svg" width="100%" alt="Xbox One 1540 BOM table"/><br/><b>Xbox One Model 1540 — 150 Components</b><br/><sub>Full inventory with confidence scoring. AMD Liverpool APU, SK Hynix DDR3 banks, eMMC storage, voltage regulators identified by OCR + database matching.</sub></td>
 </tr>
-<tr><th colspan="3">Pinout Diagrams — Annotated Debug Header Close-Ups</th></tr>
+</table>
+
+---
+
+#### Debug Interface Pinouts
+
+<table>
 <tr>
-<td width="33%">
-
-**Cisco JTAG (J15)**
-<img src="docs/examples/cisco_JTAG_pinout.svg" width="100%" alt="Cisco ASA 5506-X JTAG pinout -- 20-pin ARM standard with J-Link, Bus Pirate, FTDI wiring"/>
-20-pin ARM standard JTAG. TDI/TDO/TCK/TMS/TRST labeled, probe wiring for J-Link, Bus Pirate, FTDI
-
-</td>
-<td width="33%">
-
-**Cisco UART (J10)**
-<img src="docs/examples/cisco_UART_pinout.svg" width="100%" alt="Cisco ASA 5506-X UART console pinout -- TX/RX/GND with baud rate guide"/>
-Serial console. TX/RX/GND labeled, Bus Pirate and FTDI FT232 wiring, common baud rates
-
-</td>
-<td width="33%">
-
-**Xbox JTAG (J5)**
-<img src="docs/examples/xbox_JTAG_pinout.svg" width="100%" alt="Xbox One Model 1540 JTAG pinout -- debug header with probe wiring guide"/>
-JTAG debug header. Pin labels, J-Link / Bus Pirate / FTDI / OpenOCD wiring tables
-
-</td>
+<td width="33%"><img src="docs/examples/cisco_JTAG_pinout.svg" width="100%" alt="Cisco JTAG 20-pin pinout"/><br/><b>Cisco JTAG — J15</b><br/><sub>20-pin ARM standard. TDI/TDO/TCK/TMS/TRST. Wiring for J-Link, Bus Pirate, FTDI.</sub></td>
+<td width="33%"><img src="docs/examples/cisco_UART_pinout.svg" width="100%" alt="Cisco UART console pinout"/><br/><b>Cisco UART — J10</b><br/><sub>Serial console. TX/RX/GND labeled. Bus Pirate + FTDI FT232 wiring. Baud rates.</sub></td>
+<td width="33%"><img src="docs/examples/xbox_JTAG_pinout.svg" width="100%" alt="Xbox JTAG pinout"/><br/><b>Xbox JTAG — J5</b><br/><sub>Debug header. Pin labels, J-Link / Bus Pirate / FTDI / OpenOCD wiring tables.</sub></td>
 </tr>
-<tr><th colspan="3">Interactive Layered SVG — Google Maps-Style Layer Toggles</th></tr>
+</table>
+
+---
+
+#### IC Package Pinouts
+
+<table>
 <tr>
-<td width="50%" colspan="2">
+<td width="25%"><img src="docs/examples/W25Q128_IC_pinout.svg" width="100%" alt="W25Q128 SOIC-8 SPI flash pinout"/><br/><b>W25Q128 — SOIC-8</b><br/><sub>SPI flash. CS#/MISO/MOSI/CLK/VCC/GND. Flashrom extraction guide.</sub></td>
+<td width="25%"><img src="docs/examples/AT24C256_IC_pinout.svg" width="100%" alt="AT24C256 SOIC-8 EEPROM pinout"/><br/><b>AT24C256 — SOIC-8</b><br/><sub>I2C EEPROM. SDA/SCL/A0-A2/WP/VCC/GND.</sub></td>
+<td width="25%"><img src="docs/examples/STM32F103_IC_pinout.svg" width="100%" alt="STM32F103 TQFP-48 MCU pinout"/><br/><b>STM32F103 — TQFP-48</b><br/><sub>ARM Cortex-M3 MCU. 48-pin quad layout with SWD/JTAG debug.</sub></td>
+<td width="25%"><img src="docs/examples/iCE40UP5K_IC_pinout.svg" width="100%" alt="iCE40UP5K QFN-24 FPGA pinout"/><br/><b>iCE40UP5K — QFN-24</b><br/><sub>Lattice FPGA. 24-pin quad layout with configuration pins.</sub></td>
+</tr>
+</table>
 
-**Cisco ASA 5506-X**
-<img src="docs/examples/cisco_interactive.svg" width="100%" alt="Cisco ASA 5506-X interactive SVG -- 8 toggleable layers, 6 view presets"/>
-9 layers, 10 presets, 3 styles (Photo / Schematic / X-Ray). Satellite, Analysis, Schematic, X-Ray, Attack Surface, Recon, Power Map, Zones, Debug, All. [Open in browser →](https://ericrihm.github.io/retrace/examples/cisco_interactive.svg)
+---
 
-</td>
-<td width="50%">
+#### Circuit Topology
 
-**Xbox One Model 1540**
-<img src="docs/examples/xbox_interactive.svg" width="100%" alt="Xbox One Model 1540 interactive SVG -- 8 toggleable layers"/>
-Switch between Photo, Schematic (vector-only), and X-Ray (dimmed photo + high-contrast) rendering. [Open in browser →](https://ericrihm.github.io/retrace/examples/xbox_interactive.svg)
+<table>
+<tr>
+<td width="50%"><img src="docs/examples/power_tree.svg" width="100%" alt="Power tree voltage rail topology"/><br/><b>Power Tree</b><br/><sub>Schematic-style voltage rail topology — input sources, regulators, and load paths. Auto-generated from component detection.</sub></td>
+<td width="50%"><img src="docs/examples/bus_topology.svg" width="100%" alt="Bus topology protocol interconnection graph"/><br/><b>Bus Topology</b><br/><sub>Protocol-aware component interconnection graph — SPI, I2C, JTAG, UART buses with color-coded nodes by component type.</sub></td>
+</tr>
+</table>
 
-</td>
+---
+
+#### Interactive Layered SVG
+
+<table>
+<tr>
+<td width="50%"><img src="docs/examples/cisco_interactive.svg" width="100%" alt="Cisco ASA interactive SVG"/><br/><b>Cisco ASA 5506-X</b><br/><sub>9 layers, 10 presets, 3 styles (Photo / Schematic / X-Ray). JavaScript-powered — open in any browser. <a href="https://ericrihm.github.io/retrace/examples/cisco_interactive.svg">Open in browser →</a></sub></td>
+<td width="50%"><img src="docs/examples/xbox_interactive.svg" width="100%" alt="Xbox One interactive SVG"/><br/><b>Xbox One Model 1540</b><br/><sub>Same layer system. Toggle components, traces, zones, security findings, power rails, BOM panel, net labels, grid. <a href="https://ericrihm.github.io/retrace/examples/xbox_interactive.svg">Open in browser →</a></sub></td>
 </tr>
 </table>
 
