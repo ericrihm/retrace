@@ -700,7 +700,7 @@ class TestGenerateHeatmapSvg:
             for entry in entries:
                 f.write(json.dumps(entry) + "\n")
 
-    def _make_brain(self, tmp_path: Path) -> "FlywheelBrain":
+    def _make_brain(self, tmp_path: Path) -> FlywheelBrain:
         with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
             with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
                 return FlywheelBrain()
@@ -873,7 +873,7 @@ class TestGenerateHeatmapSvg:
 class TestExportPrometheus:
     """Tests for the Prometheus text exposition format exporter."""
 
-    def _make_brain(self, tmp_path: Path) -> "FlywheelBrain":
+    def _make_brain(self, tmp_path: Path) -> FlywheelBrain:
         with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
             with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
                 return FlywheelBrain()
@@ -959,8 +959,8 @@ class TestExportPrometheus:
         text = brain.export_prometheus(tmp_path / "m.prom")
         # Every data line must use label format with double-quoted values
         data_lines = [
-            l for l in text.splitlines()
-            if l and not l.startswith("#")
+            line for line in text.splitlines()
+            if line and not line.startswith("#")
         ]
         assert data_lines, "Expected at least one data line"
         for line in data_lines:
@@ -1027,7 +1027,7 @@ class TestExportPrometheus:
 class TestSuggestAutoFixes:
     """Tests for the auto-fix suggestion engine."""
 
-    def _make_brain(self, tmp_path: Path) -> "FlywheelBrain":
+    def _make_brain(self, tmp_path: Path) -> FlywheelBrain:
         with patch("flywheel_intelligence.BRAIN_FILE", tmp_path / "brain.json"):
             with patch("flywheel_intelligence.HISTORY_FILE", tmp_path / "history.jsonl"):
                 return FlywheelBrain()
