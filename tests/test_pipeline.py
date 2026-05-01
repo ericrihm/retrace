@@ -427,7 +427,7 @@ def test_pipeline_run_learning_disabled():
          patch.object(p, "_identify_components", return_value=[]), \
          patch.object(p, "_record_learnings") as mock_learn, \
          patch.object(p, "_run_cross_board") as mock_cross:
-        result = p.run("/fake/board.jpg")
+        p.run("/fake/board.jpg")
 
     mock_learn.assert_not_called()
     mock_cross.assert_not_called()
@@ -534,7 +534,7 @@ def test_detect_contours_no_cv2():
 def test_detect_contours_labels():
     """_detect_contours assigns connector, ic, capacitor, and resistor labels."""
     try:
-        import cv2
+        import cv2  # noqa: F401
     except ImportError:
         pytest.skip("OpenCV not available")
 
@@ -556,7 +556,7 @@ def test_detect_contours_labels():
 
     p = Pipeline()
     components = p._detect_contours(img)
-    labels = {c.label for c in components}
+    {c.label for c in components}
     # At least some labels should be detected
     assert isinstance(components, list)
     # Check that connector label is possible (wide blob)
@@ -566,7 +566,7 @@ def test_detect_contours_labels():
 def test_detect_contours_capacitor_label():
     """_detect_contours assigns capacitor label for small near-square blobs."""
     try:
-        import cv2
+        import cv2  # noqa: F401
     except ImportError:
         pytest.skip("OpenCV not available")
 
@@ -579,7 +579,7 @@ def test_detect_contours_capacitor_label():
 
     p = Pipeline()
     components = p._detect_contours(img)
-    cap_components = [c for c in components if c.label == "capacitor"]
+    [c for c in components if c.label == "capacitor"]
     # The square blob should be detected as capacitor if area/aspect conditions are met
     assert isinstance(components, list)
 

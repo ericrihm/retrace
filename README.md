@@ -10,9 +10,9 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/ericrihm/retrace/ci.yml?label=CI&logo=github)](https://github.com/ericrihm/retrace/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg?logo=python&logoColor=white)](https://github.com/ericrihm/retrace)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Coverage](https://img.shields.io/badge/coverage-99%25-brightgreen.svg)](https://github.com/ericrihm/retrace)
+[![Coverage](https://img.shields.io/badge/coverage-98%25-brightgreen.svg)](https://github.com/ericrihm/retrace)
 
-**<!-- STATS:tests -->1222<!-- /STATS --> tests** · **<!-- STATS:modules -->24<!-- /STATS --> modules** · **<!-- STATS:loc -->12038<!-- /STATS --> LOC** · **Zero required ML deps**
+**<!-- STATS:tests -->1222<!-- /STATS --> tests** · **<!-- STATS:modules -->24<!-- /STATS --> modules** · **<!-- STATS:loc -->12085<!-- /STATS --> LOC** · **Zero required ML deps**
 
 [Quick Start](#quick-start) · [How It Works](#how-it-works) · [For Security Researchers](#for-security-researchers) · [API Examples](#api-examples) · [Live Demo](https://ericrihm.github.io/retrace/) · [Issues](https://github.com/ericrihm/retrace/issues)
 
@@ -758,9 +758,9 @@ src/retrace/                             # <!-- STATS:src_loc -->9912<!-- /STATS
 | Metric | Value |
 |--------|-------|
 | Tests | <!-- STATS:tests -->1222<!-- /STATS --> |
-| Coverage | <!-- STATS:coverage -->99%<!-- /STATS --> |
+| Coverage | <!-- STATS:coverage -->98%<!-- /STATS --> |
 | Modules | <!-- STATS:modules -->24<!-- /STATS --> |
-| Lines of code | <!-- STATS:loc -->12038<!-- /STATS --> |
+| Lines of code | <!-- STATS:loc -->12085<!-- /STATS --> |
 | Component DB | <!-- STATS:components -->128<!-- /STATS --> parts |
 | Circuit patterns | <!-- STATS:patterns -->15<!-- /STATS --> built-in |
 

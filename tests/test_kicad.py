@@ -223,7 +223,7 @@ class TestNets:
             Trace(id="N2", points=[], from_component="U1", to_component="R1"),
             Trace(id="N3", points=[], from_component="U1", to_component="R1"),
         ]
-        result = _make_result(components=comps, traces=traces)
+        _make_result(components=comps, traces=traces)
         nets = _build_nets(comps, traces)
         for net_name, endpoints in nets.items():
             for ref, pin in endpoints:

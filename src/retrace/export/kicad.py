@@ -86,7 +86,7 @@ def generate_kicad_netlist(
     """
     ts = result.timestamp or time.strftime("%Y-%m-%d %H:%M:%S")
     source = escape(result.image_path)
-    board_title = escape(title or result.image_path)
+    escape(title or result.image_path)
 
     nets = _build_nets(result.components, result.traces)
 

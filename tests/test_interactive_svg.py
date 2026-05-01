@@ -337,7 +337,7 @@ class TestPowerRails:
             Component("C1", "capacitor", 0.9, (210, 100, 12, 8),
                       value="10uF"),
         ]
-        result = _make_result(components=comps)
+        _make_result(components=comps)
         comp_map = {c.id: c for c in comps}
         html = _render_power_rails(comps, [], comp_map)
         assert "U10" not in html or "f59e0b" in html

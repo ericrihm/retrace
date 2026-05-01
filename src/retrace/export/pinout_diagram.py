@@ -463,7 +463,6 @@ def _pin_positions_in_crop(
     positions: list[tuple[int, int]] = []
 
     if dual_row:
-        cols = 2
         rows = (pin_count + 1) // 2
         row_spacing = comp_h / (rows + 1)
         col_inset = int(comp_w * 0.15)
@@ -1055,7 +1054,7 @@ def generate_ic_pinout_svg(
     svg_h = intel_y + intel_h + 30
 
     part_name = entry.get("part", comp.part_number or "IC")
-    desc = entry.get("description", "")
+    entry.get("description", "")
 
     lines: list[str] = []
     lines.append(f'<svg xmlns="http://www.w3.org/2000/svg" '
@@ -1191,7 +1190,7 @@ def generate_ic_pinout_svg(
         flashrom_cmd = intel.get("flashrom_support", "")
         jedec = intel.get("jedec_id", "")
         read_cmd = intel.get("read_cmd", "")
-        iface = intel.get("interface", "SPI")
+        intel.get("interface", "SPI")
         cheat_lines = [
             "1. Connect SOIC8 clip or solder fly wires to CS#, MISO, MOSI, CLK, VCC, GND",
             f"2. Verify JEDEC ID: {jedec}" if jedec else "",

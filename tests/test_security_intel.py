@@ -9,6 +9,7 @@ import retrace.identification.matcher as matcher_mod
 from retrace.core.pipeline import AnalysisResult, Component
 from retrace.export.bom import _component_to_bom_row, bom_to_csv, generate_bom
 from retrace.export.html_report import generate_html_report
+from retrace.export.pinout_diagram import _IC_PINOUTS, generate_ic_pinout_svg
 from retrace.export.svg import generate_svg
 from retrace.identification.matcher import lookup_security_intel
 
@@ -691,8 +692,6 @@ class TestSvgBomPanelSecurityIntel:
 # ---------------------------------------------------------------------------
 # IC Pinout Diagram Tests
 # ---------------------------------------------------------------------------
-
-from retrace.export.pinout_diagram import _IC_PINOUTS, generate_ic_pinout_svg
 
 
 class TestICPinoutSVG:

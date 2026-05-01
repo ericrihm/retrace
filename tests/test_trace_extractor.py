@@ -419,7 +419,7 @@ class TestSkeletonizeSkimagePath:
         # Create a fake skimage.morphology module with a real skeletonize impl
         from retrace.detection.trace_extractor import _skeletonize
 
-        fake_skel_result = (mask > 0).astype(np.uint8) * 255  # identity passthrough
+        (mask > 0).astype(np.uint8) * 255  # identity passthrough
 
         fake_morph = types.ModuleType("skimage.morphology")
         fake_morph.skeletonize = lambda binary: binary.astype(np.uint8)

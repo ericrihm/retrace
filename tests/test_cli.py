@@ -278,7 +278,8 @@ def test_export_help(runner):
 def test_trace_command(runner, tmp_path):
     img = tmp_path / "board.png"
     img.write_bytes(b"\x89PNG\r\n\x1a\n")
-    save_mock = lambda path: None
+    def save_mock(path):
+        return None
     trace_result = {
         "trace_count": 12,
         "junction_count": 3,
@@ -655,7 +656,7 @@ def test_report_html_default_output(runner, tmp_path):
     mock_result = _make_analysis_result(str(img))
 
     with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
-         patch("retrace.export.html_report.save_html_report") as mock_save:
+         patch("retrace.export.html_report.save_html_report"):
         result = runner.invoke(main, ["report-html", str(img)])
     assert result.exit_code == 0
     assert "board_report.html" in result.output
@@ -754,7 +755,7 @@ def test_export_kicad_default_output(runner, tmp_path):
     mock_result = _make_analysis_result(str(img))
 
     with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
-         patch("retrace.export.kicad.save_kicad_netlist") as mock_save:
+         patch("retrace.export.kicad.save_kicad_netlist"):
         result = runner.invoke(main, ["export-kicad", str(img)])
     assert result.exit_code == 0
     assert "board.net" in result.output

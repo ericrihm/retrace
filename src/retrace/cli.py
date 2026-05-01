@@ -462,7 +462,9 @@ def export(image: str, fmt: str, output: str) -> None:
 @click.argument("image_a", type=click.Path(exists=True))
 @click.argument("image_b", type=click.Path(exists=True))
 @click.option("--json", "as_json", is_flag=True, help="Output diff as JSON")
-def compare(image_a: str, image_b: str, as_json: bool) -> None:
+@click.option("--svg", "svg_output", type=click.Path(), default=None,
+              help="Write visual diff SVG to file")
+def compare(image_a: str, image_b: str, as_json: bool, svg_output: str | None) -> None:
     """Compare two PCB photos — diff components, traces, and debug interfaces."""
     from retrace.core.pipeline import Pipeline
 
@@ -530,6 +532,52 @@ def compare(image_a: str, image_b: str, as_json: bool) -> None:
 
     if not added and not removed and not changed:
         click.echo("  No differences found.")
+
+    if svg_output:
+        from retrace.export.svg import generate_diff_svg
+
+        svg = generate_diff_svg(result_a, result_b, label_a=image_a, label_b=image_b)
+        if svg:
+            Path(svg_output).write_text(svg)
+            click.echo(f"\n  Diff SVG → {svg_output}")
+        else:
+            click.echo("\n  No changes to visualize — diff SVG not written.")
+
+
+@main.command("attack-paths")
+@click.argument("image", type=click.Path(exists=True))
+@click.option("--top", "-k", "top_k", default=10, type=int, help="Number of paths to show")
+@click.option("--json", "as_json", is_flag=True, help="Output as JSON")
+def attack_paths_cmd(image: str, top_k: int, as_json: bool) -> None:
+    """Rank chip-to-chip attack paths by exploitability score."""
+    from retrace.analysis.attack_path import format_attack_paths, rank_attack_paths
+    from retrace.core.pipeline import Pipeline
+
+    pipeline = Pipeline()
+    result = pipeline.run(image)
+    paths = rank_attack_paths(result, top_k=top_k)
+
+    if as_json:
+        import json as json_mod
+
+        data = [
+            {
+                "entry": p.entry_point,
+                "target": p.target,
+                "score": round(p.total_score, 4),
+                "hops": len(p.edges),
+                "description": p.description,
+                "edges": [
+                    {"from": e.from_id, "to": e.to_id, "bus": e.bus,
+                     "score": round(e.score, 3)}
+                    for e in p.edges
+                ],
+            }
+            for p in paths
+        ]
+        click.echo(json_mod.dumps(data, indent=2))
+    else:
+        click.echo(format_attack_paths(paths))
 
 
 @main.command("report-html")
