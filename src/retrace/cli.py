@@ -892,5 +892,84 @@ def extract(ctx: click.Context, image: str, as_json: bool, output: str) -> None:
         click.echo(text)
 
 
+@main.command("boot-mode")
+@click.argument("image", type=click.Path(exists=True))
+@click.option("--json", "as_json", is_flag=True, help="Output as JSON")
+@click.pass_context
+def boot_mode(ctx: click.Context, image: str, as_json: bool) -> None:
+    """Detect MCUs with accessible boot mode pins (BOOT0, GPIO0, ISP, etc.).
+
+    Identifies microcontrollers with known bootloader entry pins and checks
+    if those pins are exposed on test points or headers.
+    """
+    from retrace.core.pipeline import Pipeline
+    from retrace.plugins.builtin.boot_mode import detect_boot_mode_pins
+
+    pipeline = Pipeline()
+    result = pipeline.run(image)
+    findings = detect_boot_mode_pins(result)
+
+    if as_json:
+        click.echo(json.dumps({"findings": findings, "count": len(findings)}, indent=2))
+        return
+
+    if not findings:
+        click.echo("No MCUs with known boot mode pins detected.")
+        raise SystemExit(0)
+
+    quiet = ctx.obj.get("quiet", False)
+    for f in findings:
+        sev = f["severity"].upper()
+        if not quiet:
+            click.echo(f"  [{sev}] {f['component_marking']}: {f['description']}")
+            click.echo(f"         Boot pins: {', '.join(f['boot_pins'])}")
+            if f["accessible_pins"]:
+                click.echo(f"         ACCESSIBLE: {', '.join(f['accessible_pins'])} (test point/header)")
+            click.echo(f"         Tool: {f['extraction_tool']}")
+            click.echo()
+
+    accessible = sum(1 for f in findings if f["accessible_pins"])
+    click.echo(f"{len(findings)} MCU(s) with boot mode pins, {accessible} accessible.")
+
+
+@main.command("sigrok")
+@click.argument("image", type=click.Path(exists=True))
+@click.option("--output", "-o", type=click.Path(), help="Output .sr file path")
+@click.option("--sample-rate", type=int, default=1_000_000, help="Sample rate in Hz (default: 1MHz)")
+@click.option("--board-name", default="", help="Session label for PulseView")
+@click.pass_context
+def sigrok(ctx: click.Context, image: str, output: str, sample_rate: int, board_name: str) -> None:
+    """Export a Sigrok/PulseView session with pre-labeled channels.
+
+    Detects debug interfaces and maps them to logic analyzer channels
+    with protocol decoders pre-configured. Import the .sr file into
+    PulseView to start capturing immediately.
+    """
+    from retrace.core.pipeline import Pipeline
+    from retrace.export.sigrok import (
+        format_sigrok_summary,
+        generate_sigrok_session,
+    )
+    from retrace.plugins.builtin.debug_interfaces import detect_debug_interfaces
+
+    pipeline = Pipeline()
+    result = pipeline.run(image)
+    findings = detect_debug_interfaces(result)
+
+    name = board_name or Path(image).stem
+    quiet = ctx.obj.get("quiet", False)
+
+    if output:
+        sr_data = generate_sigrok_session(findings, sample_rate, name)
+        out_path = Path(output)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_bytes(sr_data)
+        if not quiet:
+            click.echo(f"Sigrok session written to {out_path}")
+            click.echo(format_sigrok_summary(findings))
+    else:
+        click.echo(format_sigrok_summary(findings))
+
+
 if __name__ == "__main__":
     main()

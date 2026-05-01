@@ -1677,3 +1677,106 @@ def test_extract_output_file(runner, tmp_path):
         result = runner.invoke(main, ["extract", str(img), "--json", "-o", str(out)])
     assert result.exit_code == 0
     assert out.exists()
+
+
+# ---------------------------------------------------------------------------
+# boot-mode — boot mode pin detection
+# ---------------------------------------------------------------------------
+
+def test_boot_mode_help(runner):
+    result = runner.invoke(main, ["boot-mode", "--help"])
+    assert result.exit_code == 0
+    assert "boot" in result.output.lower()
+
+
+def test_boot_mode_missing_file(runner):
+    result = runner.invoke(main, ["boot-mode", "/no/such/image.jpg"])
+    assert result.exit_code != 0
+
+
+def test_boot_mode_json(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+    findings = [
+        {"type": "boot_mode", "severity": "high", "description": "STM32 BOOT0",
+         "component_id": "U1", "component_marking": "STM32F103",
+         "boot_pins": ["BOOT0"], "accessible_pins": ["BOOT0"],
+         "bootloader_protocol": "UART", "extraction_tool": "stm32flash",
+         "cve_reference": "CWE-1191", "cvss_base": 7.6,
+         "cvss_vector": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+         "mitre_attack": ["T1200"]},
+    ]
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.boot_mode.detect_boot_mode_pins",
+               return_value=findings):
+        result = runner.invoke(main, ["boot-mode", str(img), "--json"])
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data["count"] == 1
+
+
+def test_boot_mode_no_findings(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.boot_mode.detect_boot_mode_pins",
+               return_value=[]):
+        result = runner.invoke(main, ["boot-mode", str(img)])
+    assert result.exit_code == 0
+    assert "No MCU" in result.output
+
+
+# ---------------------------------------------------------------------------
+# sigrok — Sigrok/PulseView session export
+# ---------------------------------------------------------------------------
+
+def test_sigrok_help(runner):
+    result = runner.invoke(main, ["sigrok", "--help"])
+    assert result.exit_code == 0
+    assert "sigrok" in result.output.lower() or "pulseview" in result.output.lower()
+
+
+def test_sigrok_missing_file(runner):
+    result = runner.invoke(main, ["sigrok", "/no/such/image.jpg"])
+    assert result.exit_code != 0
+
+
+def test_sigrok_text_output(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    mock_result = _make_analysis_result(str(img))
+    findings = [
+        {"interface": "UART", "component_id": "J1", "severity": "medium",
+         "description": "UART console", "component_marking": "CONSOLE",
+         "component_label": "header"},
+    ]
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.debug_interfaces.detect_debug_interfaces",
+               return_value=findings):
+        result = runner.invoke(main, ["sigrok", str(img)])
+    assert result.exit_code == 0
+    assert "UART" in result.output
+
+
+def test_sigrok_sr_output(runner, tmp_path):
+    img = tmp_path / "board.png"
+    img.write_bytes(b"\x89PNG\r\n\x1a\n")
+    out = tmp_path / "session.sr"
+    mock_result = _make_analysis_result(str(img))
+    findings = [
+        {"interface": "SPI", "component_id": "J2", "severity": "medium",
+         "description": "SPI flash", "component_marking": "SPI",
+         "component_label": "header"},
+    ]
+
+    with patch("retrace.core.pipeline.Pipeline.run", return_value=mock_result), \
+         patch("retrace.plugins.builtin.debug_interfaces.detect_debug_interfaces",
+               return_value=findings):
+        result = runner.invoke(main, ["sigrok", str(img), "-o", str(out)])
+    assert result.exit_code == 0
+    assert out.exists()

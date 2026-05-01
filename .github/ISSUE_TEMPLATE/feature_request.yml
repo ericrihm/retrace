@@ -1,0 +1,34 @@
+name: Feature Request
+description: Propose a new feature or enhancement for retrace
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement. Please describe your idea below.
+
+  - type: textarea
+    id: feature_description
+    attributes:
+      label: Feature Description
+      description: A clear description of the feature you'd like to see added.
+      placeholder: What should retrace be able to do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use Case
+      description: Describe the PCB reverse engineering or security research workflow this would support.
+      placeholder: When analyzing a board with X, it would help to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any workarounds or alternative approaches you have tried or considered.
+    validations:
+      required: false

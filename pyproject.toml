@@ -58,6 +58,8 @@ Issues = "https://github.com/ericrihm/retrace/issues"
 
 [project.entry-points."retrace.plugins"]
 debug_interfaces = "retrace.plugins.builtin.debug_interfaces:DebugInterfaceAnalyzer"
+glitch_surface = "retrace.plugins.builtin.glitch_surface:GlitchSurfaceAnalyzer"
+boot_mode = "retrace.plugins.builtin.boot_mode:BootModeAnalyzer"
 
 [tool.setuptools.packages.find]
 where = ["src"]
