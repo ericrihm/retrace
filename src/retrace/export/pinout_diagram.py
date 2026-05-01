@@ -433,11 +433,13 @@ def _render_pin_annotations(
     img_w: int,
     svg_w: int,
     dual_row: bool,
+    img_h: int = 0,
 ) -> str:
     """Render pin dots on the image and leader lines to labels on the sides."""
     parts: list[str] = []
-    label_margin = 8
-    line_h = 22
+    label_margin = 12
+    max_line_h = 22
+    min_line_h = 14
 
     left_labels: list[tuple[int, str, str, str, int, int]] = []
     right_labels: list[tuple[int, str, str, str, int, int]] = []
@@ -467,39 +469,47 @@ def _render_pin_annotations(
             else:
                 right_labels.append((pin_num, name, group, desc, abs_px, abs_py))
 
-    if left_labels:
-        start_y = min(py for _, _, _, _, _, py in left_labels) - line_h // 2
-        for idx, (pin_num, name, group, desc, abs_px, abs_py) in enumerate(left_labels):
+    avail_h = img_h if img_h > 0 else 300
+
+    def _draw_side(labels: list, side: str) -> None:
+        if not labels:
+            return
+        count = len(labels)
+        line_h = min(max_line_h, max(min_line_h, avail_h // max(count, 1)))
+        total_h = count * line_h
+        center_y = sum(py for _, _, _, _, _, py in labels) / count
+        start_y = int(center_y - total_h / 2)
+        start_y = max(img_y, start_y)
+
+        for idx, (pin_num, name, group, desc, abs_px, abs_py) in enumerate(labels):
             color = _GROUP_COLORS.get(group, "#6b7280")
-            label_x = label_margin
             label_y = start_y + idx * line_h
-            label_text = f"{pin_num}  {name}"
 
-            parts.append(f'  <line x1="{label_x + len(label_text) * 7 + 4}" y1="{label_y}" '
-                         f'x2="{abs_px}" y2="{abs_py}" '
-                         f'stroke="{color}" stroke-width="1" stroke-opacity="0.5" '
-                         f'marker-end="url(#pin-arrow)"/>')
+            if side == "left":
+                lx = label_margin
+                label_text = f"{pin_num}  {name}"
+                text_end_x = lx + len(label_text) * 7 + 4
+                parts.append(f'  <line x1="{text_end_x}" y1="{label_y}" '
+                             f'x2="{abs_px}" y2="{abs_py}" '
+                             f'stroke="{color}" stroke-width="1" stroke-opacity="0.4" '
+                             f'marker-end="url(#pin-arrow)"/>')
+                parts.append(f'  <text x="{lx}" y="{label_y + 4}" '
+                             f'font-family={_q(_FONT)} font-size="10" fill="{color}" '
+                             f'font-weight="bold">{_esc(label_text)}</text>')
+            else:
+                lx = svg_w - label_margin
+                label_text = f"{name}  {pin_num}"
+                text_start_x = lx - len(label_text) * 7 - 4
+                parts.append(f'  <line x1="{abs_px}" y1="{abs_py}" '
+                             f'x2="{text_start_x}" y2="{label_y}" '
+                             f'stroke="{color}" stroke-width="1" stroke-opacity="0.4" '
+                             f'marker-end="url(#pin-arrow)"/>')
+                parts.append(f'  <text x="{lx}" y="{label_y + 4}" '
+                             f'text-anchor="end" font-family={_q(_FONT)} font-size="10" '
+                             f'fill="{color}" font-weight="bold">{_esc(label_text)}</text>')
 
-            parts.append(f'  <text x="{label_x}" y="{label_y + 4}" '
-                         f'font-family={_q(_FONT)} font-size="10" fill="{color}" '
-                         f'font-weight="bold">{_esc(label_text)}</text>')
-
-    if right_labels:
-        start_y = min(py for _, _, _, _, _, py in right_labels) - line_h // 2
-        for idx, (pin_num, name, group, desc, abs_px, abs_py) in enumerate(right_labels):
-            color = _GROUP_COLORS.get(group, "#6b7280")
-            label_x = svg_w - label_margin
-            label_y = start_y + idx * line_h
-            label_text = f"{name}  {pin_num}"
-
-            parts.append(f'  <line x1="{abs_px}" y1="{abs_py}" '
-                         f'x2="{label_x - len(label_text) * 7 - 4}" y2="{label_y}" '
-                         f'stroke="{color}" stroke-width="1" stroke-opacity="0.5" '
-                         f'marker-end="url(#pin-arrow)"/>')
-
-            parts.append(f'  <text x="{label_x}" y="{label_y + 4}" '
-                         f'text-anchor="end" font-family={_q(_FONT)} font-size="10" '
-                         f'fill="{color}" font-weight="bold">{_esc(label_text)}</text>')
+    _draw_side(left_labels, "left")
+    _draw_side(right_labels, "right")
 
     return "\n".join(parts)
 
@@ -678,12 +688,12 @@ def generate_pinout_svg(
     dual_row = _is_dual_row(interface, pin_count)
     pins = _best_pinout(interface, pin_count)
 
-    label_margin = 180
+    label_margin = 160
     title_h = 40
-    img_padding = 16
-    footer_gap = 12
+    img_padding = 20
+    footer_gap = 16
 
-    crop_b64, crop_bbox = _crop_to_base64(result.image_path, bbox, padding_factor=0.5)
+    crop_b64, crop_bbox = _crop_to_base64(result.image_path, bbox, padding_factor=0.6)
 
     if crop_b64:
         crop_x, crop_y, crop_w, crop_h = crop_bbox
@@ -767,6 +777,7 @@ def generate_pinout_svg(
 
     lines.append(_render_pin_annotations(
         pins, pin_positions, img_x, img_y, disp_w, width, dual_row,
+        img_h=disp_h,
     ))
 
     if probe_svg:
