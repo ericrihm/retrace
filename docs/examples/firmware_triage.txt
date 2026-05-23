@@ -17,7 +17,7 @@ Firmware Triage Report
 
   Interesting strings (12):
     0x00001B3A  [credential]  password=admin:changeme123
-    0x00001B55  [api_key]  api_key=sk_live_4eC39HqLyjWDarjtT1zdp7dc
+    0x00001B55  [api_key]  api_key=sk_test_EXAMPLE_KEY_REPLACE_ME
     0x00001B95  [ssh_key]  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC7
     0x00001C1A  [crypto_key]  -----BEGIN RSA PRIVATE KEY-----
     0x00001A9B  [url]  https://dlcdnets.asus.com/pub/ASUS/wireless/RT-AC68U/
